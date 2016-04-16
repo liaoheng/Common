@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="lcp_list_swipe_container" type="id"/>
+    <item name="lcp_list_recycler_view" type="id"/>
+    <item name="lcp_list_footer_none_btn" type="id"/>
+
+    <item name="lcp_toolbar" type="id"/>
+    <item name="lcp_toolbar_title" type="id"/>
+    <item name="lcp_toolbar_spinner" type="id"/>
+    <item name="lcp_toolbar_toggle" type="id"/>
+    <item name="lcp_toolbar_right" type="id"/>
+    <item name="lcp_toolbar_left" type="id"/>
+
+    <item name="lcp_progress" type="id"/>
+    <item name="lcp_tab_pager_view_tab" type="id"/>
+    <item name="lcp_tab_pager_view_pager" type="id"/>
+
+    <item name="lcp_web_view" type="id"/>
+</resources>

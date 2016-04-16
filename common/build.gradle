@@ -1,0 +1,51 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+    }
+    lintOptions {
+        // set to true 关闭lint报告
+        quiet true
+        // lint错误停止构建
+        abortOnError false
+        // if true, 只报告错误
+        ignoreWarnings true
+    }
+    packagingOptions {
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
+    }
+}
+
+def JoddVersion = '3.6.4'
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile deps.supportv4
+    compile deps.appcompatv7
+    compile deps.design
+
+    provided 'commons-io:commons-io:2.4'
+    provided 'joda-time:joda-time:2.9.1'
+
+    //json:http://jackson.codehaus.org/
+    provided 'com.fasterxml.jackson.core:jackson-annotations:2.5.1'
+    provided 'com.fasterxml.jackson.core:jackson-databind:2.5.1'
+    provided 'com.fasterxml.jackson.core:jackson-core:2.5.1'
+    //日志:https://github.com/orhanobut/logger
+    provided 'com.orhanobut:logger:1.8'
+    //函数响应式编程:https://github.com/ReactiveX/RxAndroid
+    provided 'io.reactivex:rxandroid:1.1.0'
+    provided 'io.reactivex:rxjava:1.1.0'
+
+    testCompile "junit:junit:4.10"
+    //testCompile "org.robolectric:robolectric:3.0"
+}

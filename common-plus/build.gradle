@@ -1,0 +1,68 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+    }
+    lintOptions {
+        // set to true 关闭lint报告
+        quiet true
+        // lint错误停止构建
+        abortOnError false
+        // if true, 只报告错误
+        ignoreWarnings true
+    }
+    packagingOptions {
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
+    }
+}
+
+def ORMLiteVersion = '4.48'
+def JacksonVersion = '2.5.1'
+dependencies {
+    //android system
+    compile deps.supportv4
+    compile deps.appcompatv7
+    compile deps.recyclerviewv7
+    compile deps.cardviewv7
+    compile deps.design
+    compile deps.percent
+    //json:http://jackson.codehaus.org/
+    compile "com.fasterxml.jackson.core:jackson-annotations:$JacksonVersion"
+    compile "com.fasterxml.jackson.core:jackson-databind:$JacksonVersion"
+    compile "com.fasterxml.jackson.core:jackson-core:$JacksonVersion"
+    //日志:https://github.com/orhanobut/logger
+    compile 'com.orhanobut:logger:1.8'
+    //db:http://ormlite.com/sqlite_java_android_orm.shtml
+    compile "com.j256.ormlite:ormlite-core:$ORMLiteVersion"
+    compile "com.j256.ormlite:ormlite-android:$ORMLiteVersion"
+    //事件驱动开发:https://github.com/greenrobot/EventBus
+    compile 'org.greenrobot:eventbus:3.0.0'
+    //函数响应式编程:https://github.com/ReactiveX/RxAndroid
+    compile 'io.reactivex:rxandroid:1.1.0'
+    compile 'io.reactivex:rxjava:1.1.0'
+    compile 'com.trello:rxlifecycle:0.4.0'
+    compile 'com.jakewharton.rxbinding:rxbinding:0.3.0'
+    //TabLayout:https://github.com/h6ah4i/android-tablayouthelper
+    compile 'com.h6ah4i.android.tablayouthelper:tablayouthelper:0.7.0'
+    //图片加载:https://github.com/square/picasso
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    //HTTP+SPDY 客户端//https://github.com/square/okhttp
+    compile 'com.squareup.okhttp:okhttp:2.4.0'
+    //下拉加载:https://github.com/vinaysshenoy/mugen
+    compile 'com.vinaysshenoy:mugen:1.0.2'
+    //io utils:http://commons.apache.org/proper/commons-io/
+    compile 'commons-io:commons-io:2.4'
+    //time:http://www.joda.org/joda-time/
+    compile 'joda-time:joda-time:2.9.1'
+    compile project(':common')
+}
