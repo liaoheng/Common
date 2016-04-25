@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.view.View;
 
-import com.leng.common.plus.R;
+import com.github.liaoheng.common.plus.R;
 import com.github.liaoheng.common.plus.view.WebViewLayout;
 import com.github.liaoheng.common.util.OperateCallback;
 import com.github.liaoheng.common.util.UIUtils;

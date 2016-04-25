@@ -36,7 +36,7 @@
         android:visibility="gone" />
 
 
-    <com.leng.common.plus.view.ToggleImageButton
+    <com.github.liaoheng.common.plus.view.ToggleImageButton
         android:id="@id/lcp_toolbar_toggle"
         style="@style/Widget.AppCompat.ActionButton"
         android:layout_width="wrap_content"

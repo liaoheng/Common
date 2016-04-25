@@ -14,7 +14,7 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.leng.common.plus.R;
+import com.github.liaoheng.common.plus.R;
 import com.github.liaoheng.common.plus.adapter.SpinnerAdapter;
 import com.github.liaoheng.common.plus.model.SpinnerItem;
 import com.github.liaoheng.common.plus.view.ToggleImageButton;

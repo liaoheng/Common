@@ -47,5 +47,5 @@ dependencies {
     provided 'io.reactivex:rxjava:1.1.0'
 
     testCompile "junit:junit:4.10"
-    //testCompile "org.robolectric:robolectric:3.0"
+    testCompile "org.robolectric:robolectric:3.0"
 }

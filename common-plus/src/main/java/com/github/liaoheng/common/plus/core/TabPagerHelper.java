@@ -13,7 +13,7 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 
 import com.h6ah4i.android.tablayouthelper.TabLayoutHelper;
-import com.leng.common.plus.R;
+import com.github.liaoheng.common.plus.R;
 import com.github.liaoheng.common.plus.adapter.TabPagerAdapter;
 import com.github.liaoheng.common.plus.model.PagerTab;
 import com.github.liaoheng.common.util.UIUtils;

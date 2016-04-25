@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.leng.common.plus.R;
+import com.github.liaoheng.common.plus.R;
 
 /**
  * @author liaoheng

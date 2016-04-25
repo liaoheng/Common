@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import com.leng.common.plus.R;
+import com.github.liaoheng.common.plus.R;
 import com.github.liaoheng.common.util.UIUtils;
 
 /**

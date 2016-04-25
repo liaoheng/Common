@@ -10,7 +10,7 @@ import android.support.annotation.DrawableRes;
 import android.text.TextUtils;
 import android.widget.ImageView;
 
-import com.leng.common.plus.R;
+import com.github.liaoheng.common.plus.R;
 import com.github.liaoheng.common.util.FileUtils;
 import com.github.liaoheng.common.util.OperateCallback;
 import com.github.liaoheng.common.util.SystemException;

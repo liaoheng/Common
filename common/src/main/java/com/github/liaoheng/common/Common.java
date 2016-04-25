@@ -18,7 +18,8 @@ import com.github.liaoheng.common.util.SystemRuntimeException;
  */
 public class Common {
 
-    private static String  PROJECT_NAME = BuildConfig.APPLICATION_ID;
+//    private static String  PROJECT_NAME = BuildConfig.APPLICATION_ID;
+    private static String  PROJECT_NAME = "";
     private static boolean DEBUG;
     private static File    mExternalCacheDir;
 
