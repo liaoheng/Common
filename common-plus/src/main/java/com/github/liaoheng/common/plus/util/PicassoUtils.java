@@ -305,8 +305,22 @@ public class PicassoUtils {
     }
 
     public RequestCreator placeImage(RequestCreator creator) {
-        return creator.placeholder(mDefaultLoading)//当图片正在加载时显示的图片(optional)
-            .error(mDefaultError);//当图片加载失败时显示的图片(optional)
+        return placeImage(creator,mDefaultLoading,mDefaultError);
+    }
+
+    public RequestCreator placeImage(RequestCreator creator, @DrawableRes int loading,
+                                     @DrawableRes int error) {
+        if (loading != 0) {//当图片正在加载时显示的图片(optional)
+            creator.placeholder(loading);
+        }
+        if (error != 0) {//当图片加载失败时显示的图片(optional)
+            creator.error(error);
+        }
+        return creator;
+    }
+
+    public RequestCreator placeImage(RequestCreator creator, @DrawableRes int error) {
+        return placeImage(creator, 0, error);
     }
 
     public boolean imageError(String url, ImageView imageView) {
@@ -364,12 +378,12 @@ public class PicassoUtils {
         this.mDefaultLoading = default_loading;
     }
 
-    public void setDefaultErrorImage(@DrawableRes int Error) {
-        this.mDefaultError = Error;
+    public void setDefaultErrorImage(@DrawableRes int error) {
+        this.mDefaultError = error;
     }
 
-    public void setDefaultLoadingImage(@DrawableRes int Loading) {
-        this.mDefaultLoading = Loading;
+    public void setDefaultLoadingImage(@DrawableRes int loading) {
+        this.mDefaultLoading = loading;
     }
 
     public Picasso getPicasso() {
