@@ -1,8 +1,5 @@
 package com.github.liaoheng.common.plus.adapter;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 import android.support.annotation.LayoutRes;
 import android.support.v7.widget.RecyclerView;
@@ -10,20 +7,23 @@ import android.util.AndroidRuntimeException;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.github.liaoheng.common.plus.adapter.holder.RVBaseViewHolder;
 import com.github.liaoheng.common.util.UIUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * RecyclerView列表基础通用适配器
+ *
  * @author liaoheng
  * @version 2015-05-04 10:41
  */
 public abstract class RVBaseListAdapter<K, V extends RecyclerView.ViewHolder>
-                                       extends RecyclerView.Adapter<V>implements IBaseAdapter<K> {
+        extends RecyclerView.Adapter<V> implements IBaseAdapter<K> {
 
-    private Context                mContext;
-    private List<K>                mList;
-    private int                    oldSize;
+    private Context mContext;
+    private List<K> mList;
+    private int oldSize;
     private OnItemClickListener<K> mOnItemClickListener;
 
     @Override
@@ -33,7 +33,7 @@ public abstract class RVBaseListAdapter<K, V extends RecyclerView.ViewHolder>
 
     @Override
     public View inflate(@LayoutRes int resource, ViewGroup root) {
-        return UIUtils.inflate(getContext(), resource, root,false);
+        return UIUtils.inflate(getContext(), resource, root, false);
     }
 
     @Override
@@ -43,8 +43,9 @@ public abstract class RVBaseListAdapter<K, V extends RecyclerView.ViewHolder>
 
     /**
      * list适配器
+     *
      * @param mContext {@link Context}
-     * @param list 为空时使用ArrayList
+     * @param list     为空时使用ArrayList
      */
     public RVBaseListAdapter(Context mContext, List<K> list) {
         this.mContext = mContext;
@@ -141,15 +142,6 @@ public abstract class RVBaseListAdapter<K, V extends RecyclerView.ViewHolder>
     }
 
     public abstract void onBindViewHolderItem(V holder, K k, int position);
-
-    @Override
-    public void onViewRecycled(V holder) {
-        if (holder instanceof RVBaseViewHolder) {
-            ((RVBaseViewHolder) holder).recycle();
-        }else{
-            super.onViewRecycled(holder);
-        }
-    }
 
     @Override
     public int getItemCount() {

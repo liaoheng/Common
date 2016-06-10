@@ -18,16 +18,11 @@ public class RVBaseViewHolder extends RecyclerView.ViewHolder {
     }
 
     public <T extends View> T findViewById(@IdRes int id) {
-        if (itemView != null)
-            return UIUtils.findViewById(itemView, id);
+        if (itemView != null) return UIUtils.findViewById(itemView, id);
         return null;
     }
 
     public Context getContext() {
-        if (itemView == null)
-            return null;
-        return itemView.getContext();
+        return itemView == null ? null : itemView.getContext();
     }
-
-    public void recycle(){}
 }
