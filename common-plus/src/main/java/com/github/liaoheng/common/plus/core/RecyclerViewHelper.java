@@ -290,11 +290,6 @@ public class RecyclerViewHelper {
         });
     }
 
-    public void setLoadingRefresh(boolean loading) {
-        setLoading(loading);
-        setRefreshCallback(loading);
-    }
-
     public void setHasLoadedAllItems(boolean hasLoaded) {
         this.hasLoadedAllItems = hasLoaded;
         noneVisible();

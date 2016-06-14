@@ -13,12 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * RecyclerView列表基础通用适配器
+ * Base Adapter for RecyclerView
  *
  * @author liaoheng
  * @version 2015-05-04 10:41
  */
-public abstract class RVBaseListAdapter<K, V extends RecyclerView.ViewHolder>
+public abstract class BaseRecyclerAdapter<K, V extends RecyclerView.ViewHolder>
         extends RecyclerView.Adapter<V> implements IBaseAdapter<K> {
 
     private Context mContext;
@@ -26,29 +26,20 @@ public abstract class RVBaseListAdapter<K, V extends RecyclerView.ViewHolder>
     private int oldSize;
     private OnItemClickListener<K> mOnItemClickListener;
 
-    @Override
     public View inflate(@LayoutRes int resource) {
         return UIUtils.inflate(getContext(), resource);
     }
 
-    @Override
     public View inflate(@LayoutRes int resource, ViewGroup root) {
         return UIUtils.inflate(getContext(), resource, root, false);
     }
 
-    @Override
     public View inflate(@LayoutRes int resource, ViewGroup root, boolean attachToRoot) {
         return UIUtils.inflate(getContext(), resource, root, attachToRoot);
     }
 
-    /**
-     * list适配器
-     *
-     * @param mContext {@link Context}
-     * @param list     为空时使用ArrayList
-     */
-    public RVBaseListAdapter(Context mContext, List<K> list) {
-        this.mContext = mContext;
+    public BaseRecyclerAdapter(Context context, List<K> list) {
+        this.mContext = context;
         this.mList = list != null ? list : new ArrayList<K>();
     }
 

@@ -1,49 +1,38 @@
 package com.github.liaoheng.common.plus.adapter;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
-import android.support.annotation.LayoutRes;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.AndroidRuntimeException;
-import android.view.View;
-import android.view.ViewGroup;
 
-import com.github.liaoheng.common.util.UIUtils;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * {@link FragmentStatePagerAdapter}
+ *
  * @author liaoheng
  * @version 2015-11-27 14:56:32
  */
-public abstract class BaseFragmentStatePagerAdapter<K> extends FragmentStatePagerAdapter
-                                                   implements IBaseAdapter<K> {
+public abstract class BaseFragmentStatePagerAdapter<T> extends FragmentStatePagerAdapter
+        implements IBaseAdapter<T> {
 
     private Context mContext;
-    private List<K> mList;
+    private List<T> mList;
 
-    public BaseFragmentStatePagerAdapter(FragmentManager fm, Context context, List<K> list) {
+    public BaseFragmentStatePagerAdapter(FragmentManager fm, Context context, List<T> list) {
         super(fm);
         this.mContext = context;
-        this.mList = list != null ? list : new ArrayList<K>();
+        this.mList = list != null ? list : new ArrayList<T>();
     }
 
     @Override
-    public View inflate(@LayoutRes int resource) {
-        return UIUtils.inflate(getContext(), resource);
+    public Fragment getItem(int position) {
+        return getItemView(getList() == null ? null : getList().get(position), position);
     }
 
-    @Override
-    public View inflate(@LayoutRes int resource, ViewGroup root) {
-        return UIUtils.inflate(getContext(), resource, root,false);
-    }
-
-    @Override
-    public View inflate(@LayoutRes int resource, ViewGroup root, boolean attachToRoot) {
-        return UIUtils.inflate(getContext(), resource, root, attachToRoot);
-    }
+    public abstract Fragment getItemView(T item, int position);
 
     @Override
     public void clear() {
@@ -64,17 +53,17 @@ public abstract class BaseFragmentStatePagerAdapter<K> extends FragmentStatePage
     }
 
     @Override
-    public List<K> getList() {
+    public List<T> getList() {
         return mList;
     }
 
     @Override
-    public void update(List<K> mList) {
+    public void update(List<T> mList) {
         this.mList = mList;
     }
 
     @Override
-    public void addAll(List<K> mList) {
+    public void addAll(List<T> mList) {
         if (null == this.mList) {
             this.mList = mList;
         } else {
@@ -83,7 +72,7 @@ public abstract class BaseFragmentStatePagerAdapter<K> extends FragmentStatePage
     }
 
     @Override
-    public void addAll(int index, List<K> mList) {
+    public void addAll(int index, List<T> mList) {
         if (null == this.mList) {
             this.mList = mList;
         } else {
@@ -92,7 +81,7 @@ public abstract class BaseFragmentStatePagerAdapter<K> extends FragmentStatePage
     }
 
     @Override
-    public void add(int index, K o) {
+    public void add(int index, T o) {
         if (null == this.mList) {
             throw new AndroidRuntimeException("add list is null");
         }
@@ -100,7 +89,7 @@ public abstract class BaseFragmentStatePagerAdapter<K> extends FragmentStatePage
     }
 
     @Override
-    public void add(K o) {
+    public void add(T o) {
         if (null == this.mList) {
             throw new AndroidRuntimeException("add list is null");
         }
@@ -116,7 +105,7 @@ public abstract class BaseFragmentStatePagerAdapter<K> extends FragmentStatePage
     }
 
     @Override
-    public void remove(K item) {
+    public void remove(T item) {
         if (null == item) {
             throw new AndroidRuntimeException("remove list is null");
         }

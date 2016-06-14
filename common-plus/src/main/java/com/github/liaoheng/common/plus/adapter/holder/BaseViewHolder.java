@@ -7,10 +7,12 @@ import android.view.View;
 import com.github.liaoheng.common.util.UIUtils;
 
 /**
+ * Base ViewHolder for ListView
+ *
  * @author liaoheng
  * @version 2015年10月21日
  */
-public class BaseViewHolder {
+public class BaseViewHolder<K> implements IBaseViewHolder<K> {
     private View itemView;
 
     public BaseViewHolder(View itemView) {
@@ -20,6 +22,11 @@ public class BaseViewHolder {
         this.itemView = itemView;
     }
 
+    @Override
+    public void onHandle(K item) {
+    }
+
+    @Override
     public <T extends View> T findViewById(@IdRes int id) {
         if (itemView != null)
             return UIUtils.findViewById(itemView, id);

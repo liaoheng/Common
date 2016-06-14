@@ -1,17 +1,18 @@
 package com.github.liaoheng.common.plus.adapter;
 
-import java.util.List;
-
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.github.liaoheng.common.plus.adapter.holder.BaseViewHolder;
 import com.github.liaoheng.common.plus.model.SpinnerItem;
 
+import java.util.List;
+
 /**
- *  Spinner 适配器
- * 
+ * Spinner 适配器
+ *
  * @author liaoheng
  * @version 2015年9月22日
  */
@@ -25,18 +26,27 @@ public class SpinnerAdapter extends BaseListAdapter<SpinnerItem> {
     public View getItemView(SpinnerItem item, int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
         if (convertView == null) {
-            holder = new ViewHolder();
             convertView = inflate(android.R.layout.simple_spinner_dropdown_item, parent, false);
-            holder.textView = (TextView) convertView.findViewById(android.R.id.text1);
-            convertView.setTag(holder);
+            holder = new ViewHolder(convertView);
+            holder.setTag();
         } else {
-            holder = (ViewHolder) convertView.getTag();
+            holder = ViewHolder.getTag(convertView);
         }
-        holder.textView.setText(item.getName());
+        holder.onHandle(item);
         return convertView;
     }
 
-    class ViewHolder {
+    class ViewHolder extends BaseViewHolder<SpinnerItem> {
         TextView textView;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            textView = findViewById(android.R.id.text1);
+        }
+
+        @Override
+        public void onHandle(SpinnerItem item) {
+            textView.setText(item.getName());
+        }
     }
 }

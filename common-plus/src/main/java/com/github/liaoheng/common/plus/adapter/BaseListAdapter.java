@@ -1,7 +1,5 @@
 package com.github.liaoheng.common.plus.adapter;
 
-import java.util.List;
-
 import android.content.Context;
 import android.support.annotation.LayoutRes;
 import android.util.AndroidRuntimeException;
@@ -11,8 +9,11 @@ import android.widget.BaseAdapter;
 
 import com.github.liaoheng.common.util.UIUtils;
 
+import java.util.List;
+
 /**
- * 列表基础通用适配器
+ * Base Adapter for ListView
+ *
  * @author liaoheng
  * @version 2015-04-24 15:50
  */
@@ -21,19 +22,17 @@ public abstract class BaseListAdapter<T> extends BaseAdapter implements IBaseAda
     private List<T> mList;
     private Context mContext;
 
-    public BaseListAdapter(Context mContext, List<T> mList) {
-        this.mContext = mContext;
+    public BaseListAdapter(Context context, List<T> mList) {
+        this.mContext = context;
         this.mList = mList;
     }
 
-    @Override
     public View inflate(@LayoutRes int resource) {
         return UIUtils.inflate(getContext(), resource);
     }
 
-    @Override
     public View inflate(@LayoutRes int resource, ViewGroup root) {
-        return UIUtils.inflate(getContext(), resource, root,false);
+        return UIUtils.inflate(getContext(), resource, root, false);
     }
 
     public View inflate(@LayoutRes int resource, ViewGroup root, boolean attachToRoot) {
@@ -130,7 +129,7 @@ public abstract class BaseListAdapter<T> extends BaseAdapter implements IBaseAda
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        return getItemView(getList().get(position), position, convertView, parent);
+        return getItemView(getList() == null ? null : getList().get(position), position, convertView, parent);
     }
 
     public abstract View getItemView(T item, int position, View convertView, ViewGroup parent);

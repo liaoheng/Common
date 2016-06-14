@@ -1,21 +1,21 @@
 package com.github.liaoheng.common.plus.adapter;
 
-import java.util.List;
-
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
-import com.github.liaoheng.common.plus.model.PagerTab;
 import com.github.liaoheng.common.plus.core.TabPagerHelper;
+import com.github.liaoheng.common.plus.model.PagerTab;
 import com.github.liaoheng.common.util.L;
+
+import java.util.List;
 
 /**
  * @author liaoheng
  * @version 2015-12-08 11:13
  */
 public class TabPagerAdapter extends BaseFragmentStatePagerAdapter<PagerTab> {
-    private static final String              TAG = TabPagerAdapter.class.getSimpleName();
+    private static final String TAG = TabPagerAdapter.class.getSimpleName();
     private TabPagerHelper.TabPagerOperation mTabPagerOperation;
 
     public TabPagerAdapter(FragmentManager fm, Context context, List<PagerTab> list,
@@ -47,9 +47,9 @@ public class TabPagerAdapter extends BaseFragmentStatePagerAdapter<PagerTab> {
     }
 
     @Override
-    public Fragment getItem(int position) {
+    public Fragment getItemView(PagerTab item, int position) {
         if (mTabPagerOperation != null) {
-            return mTabPagerOperation.getItem(getList().get(position), position);
+            return mTabPagerOperation.getItem(item, position);
         } else {
             L.Log.w(TAG, "TabPagerOperation is null");
             return new Fragment();
