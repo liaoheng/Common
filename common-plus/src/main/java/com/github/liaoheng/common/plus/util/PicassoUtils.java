@@ -1,7 +1,5 @@
 package com.github.liaoheng.common.plus.util;
 
-import java.io.File;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -9,18 +7,20 @@ import android.net.Uri;
 import android.support.annotation.DrawableRes;
 import android.text.TextUtils;
 import android.widget.ImageView;
-
+import com.github.liaoheng.common.plus.CommonPlus;
 import com.github.liaoheng.common.plus.R;
 import com.github.liaoheng.common.util.FileUtils;
 import com.github.liaoheng.common.util.OperateCallback;
 import com.github.liaoheng.common.util.SystemException;
 import com.github.liaoheng.common.util.Utils;
+import com.jakewharton.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Downloader;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.OkHttpDownloader;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 import com.squareup.picasso.Target;
+import java.io.File;
 
 /**
  * 图片工具
@@ -29,10 +29,10 @@ import com.squareup.picasso.Target;
  */
 public class PicassoUtils {
     private final String TAG = PicassoUtils.class.getSimpleName();
-    private Picasso      mPicasso;
-    private File         mCache;
-    public int           mDefaultError;
-    public int           mDefaultLoading;
+    private             Picasso mPicasso;
+    private             File    mCache;
+    @DrawableRes public int     mDefaultError;
+    @DrawableRes public int     mDefaultLoading;
 
     private PicassoUtils(int defaultLoading, int defaultError, Picasso mPicasso, File cache) {
         this.mDefaultLoading = defaultLoading;
@@ -55,24 +55,22 @@ public class PicassoUtils {
     }
 
     public static class Init {
-        private long       IMAGE_DISK_CACHE_SIZE = 500 * 1024 * 1024; // 500MB;
         private Picasso    picasso;
         private Downloader downloader;
         private File       cache;
-        private boolean    debug                 = true;
-        @DrawableRes
-        int                defaultError;
-        @DrawableRes
-        int                defaultLoading;
+        private boolean debug = true;
+        @DrawableRes int defaultError;
+        @DrawableRes int defaultLoading;
 
         public Init setDefaultDownloader() {
-            return setDefaultDownloader(IMAGE_DISK_CACHE_SIZE);
+            return setDefaultDownloader(CommonPlus.IMAGE_DISK_CACHE_SIZE);
         }
 
         public Init setDefaultDownloader(long imageDiskCacheSize) {
             try {
-                if (cache == null)
+                if (cache == null) {
                     cache = getDefaultCacheFile();
+                }
                 downloader = getDefaultDownloader(cache, imageDiskCacheSize);
             } catch (SystemException ignored) {
             }
@@ -80,15 +78,23 @@ public class PicassoUtils {
         }
 
         public File getDefaultCacheFile() throws SystemException {
-            return FileUtils.createCacheSDAndroidDirectory("imgCache");
+            return FileUtils.createCacheSDAndroidDirectory(CommonPlus.DISK_CACHE_DIR);
         }
 
-        public Downloader getDefaultDownloader(File cache,
-                                               long imageDiskCacheSize) throws SystemException {
+        /**
+         * default use okhttp3
+         */
+        public Downloader getDefaultDownloader(File cache, long imageDiskCacheSize)
+                throws SystemException {
             if (imageDiskCacheSize == 0) {
-                imageDiskCacheSize = IMAGE_DISK_CACHE_SIZE;
+                imageDiskCacheSize = CommonPlus.IMAGE_DISK_CACHE_SIZE;
             }
-            return new OkHttpDownloader(cache, imageDiskCacheSize);
+            try {
+                Class.forName("com.jakewharton.picasso.OkHttp3Downloader");
+            } catch (ClassNotFoundException ignored) {
+                return new OkHttpDownloader(cache, imageDiskCacheSize);
+            }
+            return new OkHttp3Downloader(cache, imageDiskCacheSize);
         }
 
         public void initialization(Context context) {
@@ -105,7 +111,8 @@ public class PicassoUtils {
                 }
                 if (debug) {
                     builder.loggingEnabled(true);//打开日志，即log中会打印出目前下载的进度、情况
-                    builder.indicatorsEnabled(true);//开启调模式，它能够在图片左上角显示小三角形，这个小三角形的颜色标明了图片的来源：网络、内存缓存、磁盘缓存
+                    builder.indicatorsEnabled(
+                            true);//开启调模式，它能够在图片左上角显示小三角形，这个小三角形的颜色标明了图片的来源：网络、内存缓存、磁盘缓存
                 }
                 picasso = builder.build();
             }
@@ -136,8 +143,7 @@ public class PicassoUtils {
             return this;
         }
 
-        @DrawableRes
-        public int getDefaultError() {
+        @DrawableRes public int getDefaultError() {
             return defaultError;
         }
 
@@ -146,8 +152,7 @@ public class PicassoUtils {
             return this;
         }
 
-        @DrawableRes
-        public int getDefaultLoading() {
+        @DrawableRes public int getDefaultLoading() {
             return defaultLoading;
         }
 
@@ -238,8 +243,7 @@ public class PicassoUtils {
                                   final OperateCallback.EmptyOperateCallback<Bitmap> listener) {
         Target target = new Target() {
             //当图片加载时调用
-            @Override
-            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+            @Override public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                 imageView.setImageBitmap(bitmap);
                 listener.onPostExecute();
                 listener.onSuccess(bitmap);
@@ -247,16 +251,14 @@ public class PicassoUtils {
             }
 
             //当图片加载失败时调用
-            @Override
-            public void onBitmapFailed(Drawable errorDrawable) {
+            @Override public void onBitmapFailed(Drawable errorDrawable) {
                 listener.onPostExecute();
                 listener.onError(null);
                 listener.onFinish(null);
             }
 
             //当任务被提交时调用
-            @Override
-            public void onPrepareLoad(Drawable placeHolderDrawable) {
+            @Override public void onPrepareLoad(Drawable placeHolderDrawable) {
                 listener.onPreExecute();
             }
         };
@@ -281,7 +283,8 @@ public class PicassoUtils {
     }
 
     public RequestCreator noCacheImage(RequestCreator creator) {
-        return creator.memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE);//不要从缓存中取图片,不要把加载的图片放入缓存
+        return creator
+                .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE);//不要从缓存中取图片,不要把加载的图片放入缓存
     }
 
     public RequestCreator noCachePlaceImage(File file) {
@@ -305,7 +308,7 @@ public class PicassoUtils {
     }
 
     public RequestCreator placeImage(RequestCreator creator) {
-        return placeImage(creator,mDefaultLoading,mDefaultError);
+        return placeImage(creator, mDefaultLoading, mDefaultError);
     }
 
     public RequestCreator placeImage(RequestCreator creator, @DrawableRes int loading,

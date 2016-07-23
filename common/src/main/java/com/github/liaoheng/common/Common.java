@@ -1,13 +1,11 @@
 package com.github.liaoheng.common;
 
-import java.io.File;
-
 import android.content.Context;
 import android.text.TextUtils;
-
 import com.github.liaoheng.common.util.FileUtils;
 import com.github.liaoheng.common.util.L;
 import com.github.liaoheng.common.util.SystemRuntimeException;
+import java.io.File;
 
 /**
  *
@@ -18,7 +16,7 @@ import com.github.liaoheng.common.util.SystemRuntimeException;
  */
 public class Common {
 
-    private static String  PROJECT_NAME = BuildConfig.APPLICATION_ID;
+    private static String PROJECT_NAME = BuildConfig.APPLICATION_ID;
     private static boolean DEBUG;
     private static File    mExternalCacheDir;
 
@@ -45,6 +43,9 @@ public class Common {
     }
 
     public static File getSDExternalPath() {
+        if (mExternalCacheDir == null) {
+            throw new IllegalStateException("not init Common");
+        }
         return mExternalCacheDir;
     }
 }

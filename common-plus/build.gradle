@@ -7,8 +7,8 @@ android {
     defaultConfig {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode Integer.parseInt(VERSION_CODE)
+        versionName VERSION_NAME
     }
     lintOptions {
         // set to true 关闭lint报告
@@ -26,6 +26,10 @@ android {
     }
 }
 
+//configurations.all {
+//    // check for updates every build
+//    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+//}
 
 def JacksonVersion = '2.5.1'
 dependencies {
@@ -36,10 +40,14 @@ dependencies {
     compile deps.cardviewv7
     compile deps.design
     compile deps.percent
-    //json:http://jackson.codehaus.org/
-    compile "com.fasterxml.jackson.core:jackson-annotations:$JacksonVersion"
-    compile "com.fasterxml.jackson.core:jackson-databind:$JacksonVersion"
-    compile "com.fasterxml.jackson.core:jackson-core:$JacksonVersion"
+
+    //https://github.com/FasterXML/jackson-annotations
+    provided "com.fasterxml.jackson.core:jackson-annotations:$JacksonVersion"
+    //https://github.com/FasterXML/jackson-databind
+    provided "com.fasterxml.jackson.core:jackson-databind:$JacksonVersion"
+    //https://github.com/FasterXML/jackson-core
+    provided "com.fasterxml.jackson.core:jackson-core:$JacksonVersion"
+
     //日志:https://github.com/orhanobut/logger
     compile 'com.orhanobut:logger:1.8'
     //事件驱动开发:https://github.com/greenrobot/EventBus
@@ -49,16 +57,28 @@ dependencies {
     compile 'io.reactivex:rxjava:1.1.0'
     compile 'com.trello:rxlifecycle:0.4.0'
     //TabLayout:https://github.com/h6ah4i/android-tablayouthelper
-    compile 'com.h6ah4i.android.tablayouthelper:tablayouthelper:0.7.0'
+    provided('com.h6ah4i.android.tablayouthelper:tablayouthelper:0.7.0'){
+        exclude module: 'support-v4'
+        exclude module: 'appcompat-v7'
+        exclude module: 'design'
+    }
+    //图片加载:https://github.com/bumptech/glide
+    provided 'com.github.bumptech.glide:glide:3.7.0'
     //图片加载:https://github.com/square/picasso
-    compile 'com.squareup.picasso:picasso:2.5.2'
+    provided 'com.squareup.picasso:picasso:2.5.2'
+    //https://github.com/JakeWharton/picasso2-okhttp3-downloader
+    provided 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.0.2'
     //HTTP+SPDY 客户端//https://github.com/square/okhttp
-    compile 'com.squareup.okhttp:okhttp:2.4.0'
+    provided 'com.squareup.okhttp:okhttp:2.4.0'
+    provided 'com.squareup.okhttp3:okhttp:3.3.1'
     //下拉加载:https://github.com/vinaysshenoy/mugen
-    compile 'com.vinaysshenoy:mugen:1.0.2'
-    //io utils:http://commons.apache.org/proper/commons-io/
+    compile 'com.vinaysshenoy:mugen:1.0.3'
+    //io utils:https://github.com/apache/commons-io
     compile 'commons-io:commons-io:2.4'
-    //time:http://www.joda.org/joda-time/
+    //time:https://github.com/JodaOrg/joda-time
     compile 'joda-time:joda-time:2.9.1'
-    compile project(':common')
+//    compile project(':common')
+    compile 'com.github.liaoheng:common:0.0.1-SNAPSHOT'
 }
+
+apply from: rootProject.file('gradle/gradle-mvn-push.gradle')

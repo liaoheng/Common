@@ -1,0 +1,41 @@
+apply plugin: 'com.android.application'
+
+android {
+  compileSdkVersion rootProject.ext.compileSdkVersion
+  buildToolsVersion rootProject.ext.buildToolsVersion
+
+  defaultConfig {
+    minSdkVersion rootProject.ext.minSdkVersion
+    targetSdkVersion rootProject.ext.targetSdkVersion
+    applicationId "com.github.liaoheng.common.sample"
+    versionCode 1
+    versionName "1.0"
+  }
+  buildTypes {
+    release {
+      minifyEnabled false
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    }
+  }
+  lintOptions {
+    // set to true 关闭lint报告
+    quiet true
+    // lint错误停止构建
+    abortOnError false
+    // if true, 只报告错误
+    ignoreWarnings true
+  }
+}
+
+dependencies {
+  compile fileTree(dir: 'libs', include: ['*.jar'])
+  testCompile 'junit:junit:4.12'
+
+  compile deps.supportv4
+  compile deps.appcompatv7
+  compile 'com.github.bumptech.glide:glide:3.7.0'
+  compile 'com.github.bumptech.glide:okhttp3-integration:1.4.0@aar'
+  compile 'com.squareup.okhttp3:okhttp:3.3.1'
+
+  compile project(':common-plus')
+}

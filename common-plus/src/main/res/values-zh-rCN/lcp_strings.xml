@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="lcp_download_complete">下载完成</string>
+    <string name="lcp_success">成功</string>
+    <string name="lcp_fail">失败</string>
+    <string name="lcp_ok">确定</string>
+    <string name="lcp_no">取消</string>
+    <string name="lcp_share">分享</string>
+    <string name="lcp_open_with_browser">打开浏览器</string>
+    <string name="lcp_copy_url">复制链接</string>
+    <string name="lcp_about">关于</string>
+    <string name="lcp_download">下载</string>
+    <string name="lcp_downloading">下载中</string>
+
+</resources>

@@ -1,19 +1,18 @@
 package com.github.liaoheng.common.util;
 
+import android.app.Activity;
+import android.app.DownloadManager;
+import android.content.Context;
+import android.net.Uri;
+import android.text.TextUtils;
+import android.widget.Toast;
 import java.io.File;
 import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Map;
-
 import rx.Subscription;
-
-import android.app.Activity;
-import android.content.Context;
-import android.net.Uri;
-import android.text.TextUtils;
-import android.widget.Toast;
 
 /**
  * @author liaoheng
@@ -84,13 +83,13 @@ public class Utils {
             return url;
         }
         Uri uri = Uri.parse(url);
-        if (uri.getBooleanQueryParameter(key,false)){//有KEY值不修改
+        if (uri.getBooleanQueryParameter(key, false)) {//有KEY值不修改
             return url;
         }
         return new Uri.Builder().scheme(uri.getScheme()).encodedAuthority(uri.getEncodedAuthority())
-            .encodedPath(uri.getEncodedPath()).encodedQuery(uri.getEncodedQuery())
-            .appendQueryParameter(key, value).encodedFragment(uri.getEncodedFragment()).build()
-            .toString();
+                .encodedPath(uri.getEncodedPath()).encodedQuery(uri.getEncodedQuery())
+                .appendQueryParameter(key, value).encodedFragment(uri.getEncodedFragment()).build()
+                .toString();
     }
 
     private static long exitTime;
@@ -101,8 +100,7 @@ public class Utils {
      */
     public static void doubleExitActivity(final Activity activity) {
         doubleOperation(activity, 2000, "再按一次退出程序！", new Callback.EmptyCallback<Void>() {
-            @Override
-            public void onSuccess(Void o) {
+            @Override public void onSuccess(Void o) {
                 activity.finish();
             }
         });
@@ -136,10 +134,10 @@ public class Utils {
     }
 
     public static String getContentDispositionFileName(String contentDisposition, String def) {
-        if (TextUtils.isEmpty(contentDisposition)){
+        if (TextUtils.isEmpty(contentDisposition)) {
             return def;
         }
-        String[] f = TextUtils.split(contentDisposition,"=");
+        String[] f = TextUtils.split(contentDisposition, "=");
         String fileName;
         if (f.length < 2) {
             return def;
@@ -147,6 +145,61 @@ public class Utils {
             fileName = f[1];
             return fileName.replaceAll("\"", "");
         }
+    }
+
+    /**
+     * download file to sd /
+     * setDestinationInExternalPublicDir
+     * @param context
+     * @param title
+     * @param url
+     * @param dir
+     * @param fileName
+     * @return
+     */
+    public static long systemDownloadPublicDir(Context context, String title, String url,
+                                                   String dir, String fileName) {
+        Uri downUrl = Uri.parse(url);
+        DownloadManager downloadManager = (DownloadManager) context
+                .getSystemService(Context.DOWNLOAD_SERVICE);
+        DownloadManager.Request request = getSystemDownloadRequest(title, downUrl,
+                DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+                .setDestinationInExternalPublicDir(dir, fileName);
+        return downloadManager.enqueue(request);
+    }
+
+    /**
+     * download file to sd /Android/data/:package/files/
+     * setDestinationInExternalFilesDir
+     * @param context
+     * @param title
+     * @param url
+     * @param dir
+     * @param fileName
+     * @return
+     */
+    public static long systemDownloadFilesDir(Context context, String title, String url,
+                                                  String dir, String fileName) {
+        Uri downUrl = Uri.parse(url);
+        DownloadManager downloadManager = (DownloadManager) context
+                .getSystemService(Context.DOWNLOAD_SERVICE);
+        DownloadManager.Request request = getSystemDownloadRequest(title, downUrl,
+                DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+                .setDestinationInExternalFilesDir(context, dir, fileName);
+        return downloadManager.enqueue(request);
+    }
+
+    public static DownloadManager.Request getSystemDownloadRequest(String title, Uri downloadUrl,
+                                                                   int notificationVisibility) {
+        DownloadManager.Request request = new DownloadManager.Request(downloadUrl);
+        request.setAllowedNetworkTypes(
+                DownloadManager.Request.NETWORK_MOBILE | DownloadManager.Request.NETWORK_WIFI);
+        // 设置标题
+        request.setTitle(title);
+        // 显示下载进度的提示
+        request.setNotificationVisibility(notificationVisibility);
+        request.setVisibleInDownloadsUi(true);
+        return request;
     }
 
     /**

@@ -1,11 +1,8 @@
 package com.github.liaoheng.common.plus.view;
 
-import java.util.Map;
-
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.DownloadManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -26,11 +23,11 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
-
+import com.github.liaoheng.common.plus.R;
 import com.github.liaoheng.common.plus.core.ProgressHelper;
 import com.github.liaoheng.common.util.L;
-import com.github.liaoheng.common.util.UIUtils;
 import com.github.liaoheng.common.util.Utils;
+import java.util.Map;
 
 /**
  * WebView
@@ -39,7 +36,7 @@ import com.github.liaoheng.common.util.Utils;
  */
 public class WebViewLayout extends FrameLayout {
 
-    private final String       TAG                      = WebViewLayout.class.getSimpleName();
+    private final       String TAG                      = WebViewLayout.class.getSimpleName();
     public static final int    FILE_CHOOSER_RESULT_CODE = 9801;
     private ProgressHelper     mProgressUtils;
     private WebView            mWebView;
@@ -59,8 +56,10 @@ public class WebViewLayout extends FrameLayout {
         init();
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public WebViewLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP) public WebViewLayout(Context context,
+                                                                  AttributeSet attrs,
+                                                                  int defStyleAttr,
+                                                                  int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init();
     }
@@ -104,16 +103,15 @@ public class WebViewLayout extends FrameLayout {
         return true;
     }
 
-    @SuppressLint({ "SetJavaScriptEnabled" })
-    private void init() {
+    @SuppressLint({ "SetJavaScriptEnabled" }) private void init() {
         mWebView = new WebView(getContext());
         FrameLayout.LayoutParams wParams = new FrameLayout.LayoutParams(
-            FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
+                FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
         addView(mWebView, wParams);
 
-        mProgressUtils =new ProgressHelper(new ProgressBar(getContext()));
+        mProgressUtils = new ProgressHelper(new ProgressBar(getContext()));
         FrameLayout.LayoutParams bParams = new FrameLayout.LayoutParams(
-            FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+                FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
         bParams.gravity = Gravity.CENTER;
         addView(mProgressUtils.getProgressBar(), bParams);
 
@@ -184,20 +182,11 @@ public class WebViewLayout extends FrameLayout {
             this.downloadFilePath = downloadFilePath;
         }
 
-        @Override
-        public void onDownloadStart(String url, String userAgent, String contentDisposition,
-                                    String mimetype, long contentLength) {
+        @Override public void onDownloadStart(String url, String userAgent,
+                                              String contentDisposition, String mimetype,
+                                              long contentLength) {
             String fileName = Utils.getContentDispositionFileName(contentDisposition, "noname");
-            UIUtils.showToast(getContext(), "文件正在下载到SD卡" + downloadFilePath + "目录中");
-            DownloadManager downloadManager = (DownloadManager) getContext()
-                .getSystemService(Context.DOWNLOAD_SERVICE);
-
-            Uri uri = Uri.parse(url);
-            DownloadManager.Request request = new DownloadManager.Request(uri);
-            request.setDestinationInExternalPublicDir(downloadFilePath, fileName); //表示设置下载地址为sd卡的
-            request.setNotificationVisibility(
-                DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-            downloadManager.enqueue(request);
+            Utils.systemDownloadPublicDir(getContext(), "", url, downloadFilePath, fileName);
         }
     }
 
@@ -243,27 +232,25 @@ public class WebViewLayout extends FrameLayout {
             }
         }
 
-        @Override
-        public boolean onJsAlert(WebView view, String url, String message, final JsResult result) {
+        @Override public boolean onJsAlert(WebView view, String url, String message,
+                                           final JsResult result) {
             new AlertDialog.Builder(getContext()).setMessage(message)
-                .setPositiveButton("知道了", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        result.confirm();
-                    }
-                }).setOnCancelListener(new DialogInterface.OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface dialog) {
-                        result.cancel();
-                    }
-                }).create().show();
+                    .setPositiveButton(R.string.lcp_ok, new DialogInterface.OnClickListener() {
+                        @Override public void onClick(DialogInterface dialog, int which) {
+                            result.confirm();
+                        }
+                    }).setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override public void onCancel(DialogInterface dialog) {
+                    result.cancel();
+                }
+            }).create().show();
             return true;
         }
 
         //For Android 5.0+
-        @Override
-        public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback,
-                                         FileChooserParams fileChooserParams) {
+        @Override public boolean onShowFileChooser(WebView webView,
+                                                   ValueCallback<Uri[]> filePathCallback,
+                                                   FileChooserParams fileChooserParams) {
             setFilePathCallback(filePathCallback);
             open();
             return true;
@@ -276,13 +263,14 @@ public class WebViewLayout extends FrameLayout {
 
             if (context instanceof Activity) {
                 ((Activity) context).startActivityForResult(Intent.createChooser(i, "Select file"),
-                    WebViewLayout.FILE_CHOOSER_RESULT_CODE);
+                        WebViewLayout.FILE_CHOOSER_RESULT_CODE);
             } else if (context instanceof Fragment) {
                 ((Fragment) context).startActivityForResult(Intent.createChooser(i, "Select file"),
-                    WebViewLayout.FILE_CHOOSER_RESULT_CODE);
+                        WebViewLayout.FILE_CHOOSER_RESULT_CODE);
             } else if (context instanceof android.app.Fragment) {
-                ((android.app.Fragment) context).startActivityForResult(
-                    Intent.createChooser(i, "Select file"), WebViewLayout.FILE_CHOOSER_RESULT_CODE);
+                ((android.app.Fragment) context)
+                        .startActivityForResult(Intent.createChooser(i, "Select file"),
+                                WebViewLayout.FILE_CHOOSER_RESULT_CODE);
             }
         }
 
@@ -305,8 +293,9 @@ public class WebViewLayout extends FrameLayout {
 
     }
 
-    @SuppressWarnings("unchecked")
-    public static void onActivityResult(int requestCode, int resultCode, Intent intent) {
+    @SuppressWarnings("unchecked") public static void onActivityResult(int requestCode,
+                                                                       int resultCode,
+                                                                       Intent intent) {
         if (requestCode == WebViewLayout.FILE_CHOOSER_RESULT_CODE) {
             Uri result = resultCode == Activity.RESULT_OK ? intent.getData() : null;
             ValueCallback filePathCallback = WebViewLayout.getFilePathCallback();
@@ -330,17 +319,17 @@ public class WebViewLayout extends FrameLayout {
             this.progressHelper = progressHelper;
         }
 
-        @Override
-        public void onPageStarted(WebView view, String url, Bitmap favicon) {
-            if (progressHelper != null)
+        @Override public void onPageStarted(WebView view, String url, Bitmap favicon) {
+            if (progressHelper != null) {
                 progressHelper.visible();
+            }
             super.onPageStarted(view, url, favicon);
         }
 
-        @Override
-        public void onPageFinished(WebView view, String url) {
-            if (progressHelper != null)
+        @Override public void onPageFinished(WebView view, String url) {
+            if (progressHelper != null) {
                 progressHelper.gone();
+            }
             super.onPageFinished(view, url);
         }
     }
