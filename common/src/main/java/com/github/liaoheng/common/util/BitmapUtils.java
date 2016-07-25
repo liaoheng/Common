@@ -34,7 +34,6 @@ import android.os.Build;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 
-import com.github.liaoheng.common.assists.Base64;
 
 /**
  * Bitmap工具类
@@ -89,7 +88,7 @@ public class BitmapUtils {
      * 把bitmap转换成Base64编码String
      */
     public static String bitmapToString(Bitmap bitmap) {
-        return Base64.encodeToString(bitmapToByte(bitmap), Base64.DEFAULT);
+        return Base64.encodeToString(bitmapToByte(bitmap));
     }
 
     /**

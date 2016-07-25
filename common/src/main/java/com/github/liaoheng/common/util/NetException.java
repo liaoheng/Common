@@ -1,7 +1,5 @@
 package com.github.liaoheng.common.util;
 
-import android.support.annotation.NonNull;
-
 /**
  * 自定网络服务异常
  * @author liaoheng
@@ -9,7 +7,8 @@ import android.support.annotation.NonNull;
  */
 public class NetException extends SystemException {
     public final static String NET_ERROR             = "网络操作错误！";
-    public NetException(String errorMessage, @NonNull Throwable e) {
+
+    public NetException(String errorMessage, Throwable e) {
         super(errorMessage, e);
     }
 
@@ -17,15 +16,7 @@ public class NetException extends SystemException {
         super(errorMessage);
     }
 
-    public NetException(@NonNull Throwable e) {
+    public NetException(Throwable e) {
         super(e);
-    }
-
-    public NetException(String errorMessage, String errorCode) {
-        super(errorMessage, errorCode);
-    }
-
-    public NetException(String errorMessage, String errorCode, @NonNull Throwable e) {
-        super(errorMessage, errorCode, e);
     }
 }

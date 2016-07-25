@@ -1,41 +1,18 @@
 package com.github.liaoheng.common.plus.util;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-
-import okio.Buffer;
-
-import org.apache.commons.io.FilenameUtils;
-
-import rx.Observable;
-import rx.Subscriber;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
-
 import com.github.liaoheng.common.util.BitmapUtils;
 import com.github.liaoheng.common.util.Callback;
 import com.github.liaoheng.common.util.FileUtils;
 import com.github.liaoheng.common.util.L;
 import com.github.liaoheng.common.util.NetException;
+import com.github.liaoheng.common.util.NetLocalException;
+import com.github.liaoheng.common.util.NetServerException;
+import com.github.liaoheng.common.util.ServerError;
 import com.github.liaoheng.common.util.SystemException;
 import com.github.liaoheng.common.util.SystemRuntimeException;
 import com.github.liaoheng.common.util.Utils;
@@ -50,6 +27,27 @@ import com.squareup.okhttp.Response;
 import com.squareup.okhttp.internal.Util;
 import com.trello.rxlifecycle.ActivityEvent;
 import com.trello.rxlifecycle.RxLifecycle;
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import okio.Buffer;
+import org.apache.commons.io.FilenameUtils;
+import rx.Observable;
+import rx.Subscriber;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 /**
  * OKHttp 工具类
@@ -425,9 +423,30 @@ public class OkHttpUtils {
         return observable.observeOn(AndroidSchedulers.mainThread()).subscribe(subscriber);
     }
 
-    public void error(Response response) throws IOException {
+    public class MServerError implements ServerError {
+        String message;
+
+        public MServerError(String message) {
+            this.message = message;
+        }
+
+        @Override public String message() {
+            return message;
+        }
+    }
+
+    public void error(Response response) throws NetServerException {
         if (!response.isSuccessful()) {
-            throw new IOException(String.format("Network Error: %s", response));
+            String string = null;
+            try {
+                string = response.body().string();
+            } catch (IOException ignored) {
+            }
+            if (TextUtils.isEmpty(string)) {
+                throw new NetServerException(new MServerError(string));
+            } else {
+                throw new NetServerException(new MServerError("error code : " + response.code()));
+            }
         }
     }
 
@@ -456,7 +475,7 @@ public class OkHttpUtils {
             L.json(TAG, json);
             return json;
         } catch (IOException e) {
-            throw new NetException(NetException.NET_ERROR, e);
+            throw new NetLocalException(NetException.NET_ERROR, e);
         }
     }
 
@@ -492,7 +511,7 @@ public class OkHttpUtils {
             L.json(TAG, json);
             return json;
         } catch (IOException e) {
-            throw new NetException(NetException.NET_ERROR, e);
+            throw new NetLocalException(NetException.NET_ERROR, e);
         }
     }
 
@@ -519,7 +538,7 @@ public class OkHttpUtils {
             }
             return response;
         } catch (IOException e) {
-            throw new NetException(NetException.NET_ERROR, e);
+            throw new NetLocalException(NetException.NET_ERROR, e);
         }
     }
 
@@ -731,7 +750,7 @@ public class OkHttpUtils {
                             error(response);
                             return Observable.just(new FileDownload(fileDownload.getFileName(),
                                 response.body().bytes()));
-                        } catch (IOException e) {
+                        } catch (IOException | NetServerException e) {
                             throw new SystemRuntimeException(e);
                         }
                     }
