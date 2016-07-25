@@ -81,4 +81,4 @@ dependencies {
     compile 'com.github.liaoheng:common:0.0.1-SNAPSHOT'
 }
 
-apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
+apply from: rootProject.file('gradle-mvn-push.gradle')
