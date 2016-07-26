@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="lcm_ok">@android:string/ok</string>
+    <string name="lcm_no">@android:string/no</string>\
+    <string name="lcm_loading">加载中</string>
+</resources>

@@ -4,8 +4,9 @@ import com.github.liaoheng.common.BaseTest;
 import com.github.liaoheng.common.BuildConfig;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
+import org.robolectric.internal.SdkConfig;
 import org.robolectric.shadows.ShadowLog;
 
 import static org.junit.Assert.assertEquals;
@@ -16,36 +17,47 @@ import static org.junit.Assert.assertTrue;
  * @author liaoheng
  * @version 2016-07-25 15:30
  */
-@RunWith(RobolectricGradleTestRunner.class) @Config(constants = BuildConfig.class, sdk = 21) public class NetServerExceptionTest extends BaseTest {
+@RunWith(RobolectricTestRunner.class) @Config(constants = BuildConfig.class, sdk = SdkConfig.FALLBACK_SDK_VERSION) public class NetServerExceptionTest
+        extends BaseTest {
 
-    public class MServerError implements ServerError {
-        String message;
-
-        @Override public String message() {
-            return message;
+    @Test public void NetServerExceptionTest1() {
+        try {
+            throw new NetServerException("404", "404");
+        } catch (NetServerException e) {
+            SystemException exception = new SystemException(e);
+            Throwable cause = exception.getCause();
+            assertNotNull("is null", cause);
+            //ShadowLog.d(TAG, "", cause);
+            assertTrue("is not NetServerException", cause instanceof NetServerException);
+            assertEquals("msg is error", exception.getMessage(), "404");
         }
 
-        public MServerError setMessage(String message) {
-            this.message = message;
-            return this;
-        }
     }
 
-
-    @Test
-    public void NetServerExceptionTest1(){
-        MServerError mServerError=new MServerError().setMessage("404");
-
+    @Test public void NetServerExceptionTest2() {
         try {
-            throw new NetServerException(mServerError);
-        } catch (NetServerException e) {
+            throw new SystemRuntimeException(new NetServerException("404", "404"));
+        } catch (SystemRuntimeException e) {
             SystemException exception=new SystemException(e);
             Throwable cause = exception.getCause();
             assertNotNull("is null", cause);
-            ShadowLog.d(TAG,"",cause);
+            //ShadowLog.d(TAG,"",cause);
             assertTrue("is not NetServerException",
                     cause instanceof NetServerException);
             assertEquals("msg is error", exception.getMessage(), "404");
+        }
+
+    }
+
+    @Test public void NetServerExceptionTest3() {
+        try {
+            throw new SystemRuntimeException(new NetServerException("404", "404"));
+        } catch (SystemRuntimeException e) {
+            Throwable cause = e.getCause();
+            assertNotNull("is null", cause);
+            //ShadowLog.d(TAG, "", cause);
+            assertTrue("is not NetServerException", cause instanceof NetServerException);
+            assertEquals("msg is error", e.getMessage(), "404");
         }
 
     }

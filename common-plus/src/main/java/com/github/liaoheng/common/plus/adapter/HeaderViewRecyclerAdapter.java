@@ -217,7 +217,7 @@ public class HeaderViewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
         return mFooterViews;
     }
 
-    private void setWrappedAdapter(RecyclerView.Adapter adapter) {
+    private void setWrappedAdapter(RecyclerView.Adapter<RecyclerView.ViewHolder> adapter) {
         if (mWrappedAdapter != null)
             mWrappedAdapter.unregisterAdapterDataObserver(mDataObserver);
         mWrappedAdapter = adapter;

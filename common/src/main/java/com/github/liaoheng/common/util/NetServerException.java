@@ -7,34 +7,28 @@ package com.github.liaoheng.common.util;
  */
 @SystemExceptionNoVessel
 public class NetServerException extends NetException {
+    private String mErrorBody;
 
-    private ServerError errorObject;
-
-    public NetServerException(String errorMessage) {
+    public NetServerException(String errorMessage, String errorBody) {
         super(errorMessage);
+        mErrorBody = errorBody;
     }
 
-    public NetServerException(String errorMessage, ServerError errorObject) {
-        super(errorMessage);
-        this.errorObject = errorObject;
+    public NetServerException(String errorBody) {
+        super("");
+        mErrorBody = errorBody;
     }
 
-    public NetServerException(ServerError errorObject) {
-        super(errorObject.message());
-        this.errorObject = errorObject;
+    public String getErrorBody() {
+        return mErrorBody;
     }
 
-    public ServerError getErrorObject() {
-        return errorObject;
-    }
-
-    public void setErrorObject(ServerError errorObject) {
-        this.errorObject = errorObject;
+    public void setErrorBody(String mErrorBody) {
+        this.mErrorBody = mErrorBody;
     }
 
     @Override public String toString() {
-        return "NetServerException{" +
-               "errorObject=" + errorObject +
-               '}';
+        String s = super.toString();
+        return s + "  ErrorBody:{ " + mErrorBody + " }";
     }
 }

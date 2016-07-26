@@ -3,11 +3,11 @@ package com.github.liaoheng.common.sample;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.Environment;
 import android.view.View;
 import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.github.liaoheng.common.plus.ui.CPBaseActivity;
+import com.github.liaoheng.common.plus.ui.WebViewActivity;
 import com.github.liaoheng.common.plus.util.GlideCompressTransformation;
 import com.github.liaoheng.common.plus.util.OkHttp3Utils;
 import com.github.liaoheng.common.util.Callback;
@@ -15,7 +15,6 @@ import com.github.liaoheng.common.util.L;
 import com.github.liaoheng.common.util.SystemException;
 import com.github.liaoheng.common.util.UIUtils;
 import com.github.liaoheng.common.util.Utils;
-import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,15 +36,11 @@ public class MainActivity extends CPBaseActivity {
             }
         });
 
-        File externalFilesDir = getExternalFilesDir(null);
-        File externalFilesDir1 = getExternalFilesDir("123");
-
-        File externalStoragePublicDirectory1 = Environment.getExternalStoragePublicDirectory("321");
-
         image = UIUtils.findViewById(this, R.id.image);
         UIUtils.findViewById(this, R.id.load_image).setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 photo();
+                //WebViewActivity.start(getActivity(), "http://www.baidu.com", true);
             }
         });
     }

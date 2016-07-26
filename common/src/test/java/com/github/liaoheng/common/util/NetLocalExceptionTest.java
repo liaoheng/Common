@@ -5,8 +5,9 @@ import com.github.liaoheng.common.BuildConfig;
 import java.util.concurrent.TimeoutException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
+import org.robolectric.internal.SdkConfig;
 import org.robolectric.shadows.ShadowLog;
 
 import static org.junit.Assert.assertEquals;
@@ -17,7 +18,8 @@ import static org.junit.Assert.assertTrue;
  * @author liaoheng
  * @version 2016-07-25 13:26
  */
-@RunWith(RobolectricGradleTestRunner.class) @Config(constants = BuildConfig.class, sdk = 21) public class NetLocalExceptionTest extends BaseTest {
+@RunWith(RobolectricTestRunner.class) @Config(constants = BuildConfig.class, sdk = SdkConfig.FALLBACK_SDK_VERSION) public class NetLocalExceptionTest
+        extends BaseTest {
 
     @Test public void NetLocalExceptionTest1() {
         try {
@@ -29,7 +31,7 @@ import static org.junit.Assert.assertTrue;
         } catch (SystemException e) {
             Throwable cause = e.getCause();
             assertNotNull("is null", cause);
-            ShadowLog.d(TAG, "", cause);
+            //ShadowLog.d(TAG, "", cause);
             assertTrue("is not TimeoutException", cause instanceof TimeoutException);
             assertEquals("msg is error", e.getMessage(), NetLocalException.NET_ERROR);
         }
@@ -45,7 +47,7 @@ import static org.junit.Assert.assertTrue;
         } catch (NetLocalException e) {
             Throwable cause = e.getCause();
             assertNotNull("is null", cause);
-            ShadowLog.d(TAG, "", cause);
+            //ShadowLog.d(TAG, "", cause);
             assertTrue("is not TimeoutException", cause instanceof TimeoutException);
             assertEquals("msg is error", e.getMessage(), NetLocalException.NET_ERROR);
         }

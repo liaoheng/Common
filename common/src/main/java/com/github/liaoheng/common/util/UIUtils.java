@@ -8,8 +8,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
@@ -20,19 +18,15 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatDialog;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.CompoundButton;
-import android.widget.FrameLayout;
-import android.widget.GridLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
+import com.github.liaoheng.common.R;
 
 /**
  * 界面工具
@@ -46,7 +40,6 @@ public class UIUtils {
     public static int SNACK_LENGTH_SHORT = Snackbar.LENGTH_SHORT;
     public static int SNACK_LENGTH_LONG  = Snackbar.LENGTH_LONG;
 
-    private final static Handler mainHandler = new Handler(Looper.getMainLooper());
     private static Toast         mToast;
 
     /**
@@ -57,21 +50,6 @@ public class UIUtils {
      */
     public static void showToast(@NonNull Context context, String hint) {
         showToast(context, hint, LENGTH_LONG);
-    }
-
-    /**
-     * 吐丝提示 UI线程
-     *
-     * @param context
-     * @param hint
-     */
-    public static void showToastUI(@NonNull final Context context, final String hint) {
-        mainHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                showToast(context, hint, LENGTH_LONG);
-            }
-        });
     }
 
     /**
@@ -125,24 +103,6 @@ public class UIUtils {
      * Snack  start
      ********/
 
-    public static void showSnackUI(@NonNull final Window window, final String hint) {
-        mainHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                showSnack(window, hint);
-            }
-        });
-    }
-
-    public static void showSnackUI(@NonNull final View view, final String hint) {
-        mainHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                showSnack(view, hint);
-            }
-        });
-    }
-
     public static void showSnack(@NonNull Activity activity, String hint) {
         showSnack(activity.getWindow(), hint);
     }
@@ -157,9 +117,8 @@ public class UIUtils {
 
     public static void showSnack(@NonNull final Window window, final String hint,
                                  final int duration) {
-        getRootView(window, new OperateCallback.EmptyOperateCallback<View>() {
-            @Override
-            public void onSuccess(View view) {
+        getCoordinatorLayout(window, new Callback4.EmptyCallback4<View>() {
+            @Override public void onYes(View view) {
                 showSnack(view, hint, duration);
             }
         });
@@ -169,12 +128,17 @@ public class UIUtils {
         showSnack(view, hint, SNACK_LENGTH_LONG);
     }
 
-    public static void showSnack(@NonNull View view, String hint, int duration) {
-        Snackbar.make(view, hint, duration).setAction("知道了", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+    public static void showSnack(@NonNull View view, final String hint, final int duration) {
+        getCoordinatorLayout(view, new Callback4.EmptyCallback4<View>() {
+            @Override public void onYes(View view) {
+                Snackbar.make(view, hint, duration)
+                        .setAction(view.getResources().getText(R.string.lcm_ok),
+                                new View.OnClickListener() {
+                                    @Override public void onClick(View v) {
+                                    }
+                                }).show();
             }
-        }).show();
+        });
     }
 
     public static void showLogSnack(String TAG, @NonNull View view, String hint, int duration) {
@@ -201,49 +165,56 @@ public class UIUtils {
     /*******  Snack  end ********/
 
     /**
-     * Activity的根Layout对象
+     * 得到CoordinatorLayout
      *
      * @param window
-     * @param mCall
+     * @param call
      * @return
      */
-    private static void getRootView(Window window, final OperateCallback<View> mCall) {
+    private static void getCoordinatorLayout(Window window, final Callback4<View> call) {
         if (window == null) {
             return;
         }
         ViewGroup group = (ViewGroup) window.findViewById(android.R.id.content);
         View view = group.getChildAt(0);
-        if (!isRootView(view)) {
-            findRootView(view, mCall);
+        getCoordinatorLayout(view, call);
+    }
+
+    /**
+     * 得到CoordinatorLayout
+     *
+     * @param view
+     * @param call
+     * @return
+     */
+    private static void getCoordinatorLayout(View view, final Callback4<View> call) {
+        try {
+            Class.forName("android.support.design.widget.CoordinatorLayout");
+        } catch (ClassNotFoundException e) {
+            throw new IllegalArgumentException("CoordinatorLayout is null");
+        }
+        if (view == null) {
+            return;
+        }
+        if (!isCoordinatorLayout(view)) {
+            findCoordinatorLayout(view, call);
         } else {
-            mCall.onSuccess(view);
+            call.onYes(view);
         }
     }
 
-    private static void findRootView(View view, OperateCallback<View> mCall) {
+    public static boolean isCoordinatorLayout(View view) {
+        return view instanceof CoordinatorLayout;
+    }
+
+    private static void findCoordinatorLayout(View view, Callback4<View> mCall) {
         ViewGroup group = (ViewGroup) view;
         for (int i = 0; i < group.getChildCount(); i++) {
             View view1 = group.getChildAt(i);
-            if (isRootView(view1)) {
-                mCall.onSuccess(view1);
+            if (isCoordinatorLayout(view1)) {
+                mCall.onYes(view1);
                 return;
             }
-        }
-    }
-
-    private static boolean isRootView(View view) {
-        if (view instanceof CoordinatorLayout) {
-            return true;
-        } else if (view instanceof FrameLayout) {
-            return true;
-        } else if (view instanceof LinearLayout) {
-            return true;
-        } else if (view instanceof RelativeLayout) {
-            return true;
-        } else if (view instanceof GridLayout) {
-            return true;
-        } else {
-            return false;
         }
     }
 
@@ -268,7 +239,7 @@ public class UIUtils {
      * @return
      */
     public static ProgressDialog showProgressDialog(@NonNull Context context) {
-        return showProgressDialog(context, "加载中...");
+        return showProgressDialog(context, ResourceUtils.getText(context, R.string.lcm_loading));
     }
 
     /**
@@ -334,32 +305,6 @@ public class UIUtils {
     }
 
     /**
-     * 保存提示框
-     *
-     * @param context
-     * @param call
-     * @return
-     */
-    public static AlertDialog createSaveAlertDialog(Context context,
-                                                    final OperateCallback<DialogInterface> call) {
-        return createAlertDialog(context, "是否保存当前内容?", call);
-    }
-
-    /**
-     * 保存提示框
-     *
-     * @param context
-     * @param call
-     * @return
-     */
-    public static AlertDialog showSaveAlertDialog(Context context,
-                                                  final OperateCallback<DialogInterface> call) {
-        AlertDialog alb = createSaveAlertDialog(context, call);
-        alb.show();
-        return alb;
-    }
-
-    /**
      * 是否提示框
      *
      * @param context
@@ -367,7 +312,7 @@ public class UIUtils {
      * @return
      */
     public static AlertDialog createYNAlertDialog(Context context, String message,
-                                                  final OperateCallback<DialogInterface> call) {
+                                                  final Callback4<DialogInterface> call) {
         return createAlertDialog(context, message, call);
     }
 
@@ -379,7 +324,7 @@ public class UIUtils {
      * @return
      */
     public static AlertDialog showYNAlertDialog(Context context, String message,
-                                                final OperateCallback<DialogInterface> call) {
+                                                final Callback4<DialogInterface> call) {
         AlertDialog dialog = createYNAlertDialog(context, message, call);
         dialog.show();
         return dialog;
@@ -394,12 +339,11 @@ public class UIUtils {
      * @return
      */
     public static AlertDialog createInfoAlertDialog(Context context, String message,
-                                                    final OperateCallback<DialogInterface> call) {
-        return createAlertDialog(context, message, "知道了", null,
-            new OperateCallback.EmptyOperateCallback<DialogInterface>() {
-                @Override
-                public void onSuccess(DialogInterface result) {
-                    call.onSuccess(result);
+                                                    final Callback4<DialogInterface> call) {
+        return createAlertDialog(context, message, ResourceUtils.getText(context, R.string.lcm_ok),
+                null, new Callback4.EmptyCallback4<DialogInterface>() {
+                    @Override public void onYes(DialogInterface result) {
+                        call.onYes(result);
                     result.dismiss();
                 }
             });
@@ -414,7 +358,7 @@ public class UIUtils {
      * @return
      */
     public static AlertDialog showInfoAlertDialog(Context context, String message,
-                                                  final OperateCallback<DialogInterface> call) {
+                                                  final Callback4<DialogInterface> call) {
         AlertDialog alb = createInfoAlertDialog(context, message, call);
         alb.show();
         return alb;
@@ -429,8 +373,9 @@ public class UIUtils {
      * @return
      */
     public static AlertDialog createAlertDialog(Context context, String message,
-                                                final OperateCallback<DialogInterface> call) {
-        return createAlertDialog(context, message, "是", "否", call);
+                                                final Callback4<DialogInterface> call) {
+        return createAlertDialog(context, message, ResourceUtils.getText(context, R.string.lcm_ok),
+                ResourceUtils.getText(context, R.string.lcm_no), call);
     }
 
     /**
@@ -442,7 +387,7 @@ public class UIUtils {
      * @return
      */
     public static AlertDialog showAlertDialog(Context context, String message,
-                                              final OperateCallback<DialogInterface> call) {
+                                              final Callback4<DialogInterface> call) {
         AlertDialog alb = createAlertDialog(context, message, call);
         alb.show();
         return alb;
@@ -461,22 +406,22 @@ public class UIUtils {
     public static AlertDialog createAlertDialog(Context context, String message,
                                                 String positiveButtonText,
                                                 String negativeButtonText,
-                                                final OperateCallback<DialogInterface> call) {
+                                                final Callback4<DialogInterface> call) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context).setMessage(message);
-        if (StringUtils.isNotEmpty(positiveButtonText)) {
+        if (!TextUtils.isEmpty(positiveButtonText)) {
             builder.setPositiveButton(positiveButtonText, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    call.onSuccess(dialog);
+                    call.onYes(dialog);
                     call.onFinish(dialog);
                 }
             });
         }
-        if (StringUtils.isNotEmpty(negativeButtonText)) {
+        if (!TextUtils.isEmpty(negativeButtonText)) {
             builder.setNegativeButton(negativeButtonText, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    call.onError(dialog);
+                    call.onNo(dialog);
                     call.onFinish(dialog);
                 }
             });
@@ -490,7 +435,6 @@ public class UIUtils {
      * @param window
      */
     public static void fullscreen(Window window) {
-        //全屏
         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
             WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
@@ -549,28 +493,6 @@ public class UIUtils {
             newUiOptions ^= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
         }
         window.getDecorView().setSystemUiVisibility(newUiOptions);
-    }
-
-    public static void findCompoundButton(View view, OperateCallback<CompoundButton> mCall) {
-        if (view instanceof ViewGroup) {
-            ViewGroup group = (ViewGroup) view;
-            for (int i = 0; i < group.getChildCount(); i++) {
-                findCompoundButton(group.getChildAt(i), mCall);
-            }
-        } else if (view instanceof CompoundButton) {
-            mCall.onSuccess((CompoundButton) view);
-        }
-    }
-
-    public static void findImage(View view, OperateCallback<ImageView> mCall) {
-        if (view instanceof ViewGroup) {
-            ViewGroup group = (ViewGroup) view;
-            for (int i = 0; i < group.getChildCount(); i++) {
-                findImage(group.getChildAt(i), mCall);
-            }
-        } else if (view instanceof ImageView) {
-            mCall.onSuccess((ImageView) view);
-        }
     }
 
     public static void startActivity(Context context, Class<? extends Activity> clazz) {

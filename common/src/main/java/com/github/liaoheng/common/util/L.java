@@ -295,26 +295,6 @@ public class L {
          * @param userHint    给用户与系统的提示内容
          */
         void e(String TAG, @NonNull Context context, @StringRes int userHint);
-
-        /**
-         * 提示TOAST，并写入系统日志（ UI线程）
-         *
-         * @param context {@link Context}
-         * @param e       {@link Throwable}
-         */
-        @Deprecated
-        void eu(String TAG, @NonNull Context context, @NonNull Throwable e);
-
-        /**
-         * 提示TOAST，并写入系统日志（ UI线程）
-         *
-         * @param context  {@link Context}
-         * @param userHint 给用户的提示内容
-         * @param e        {@link Throwable}
-         */
-        @Deprecated
-        void eu(String TAG, @NonNull Context context, String userHint, @NonNull Throwable e);
-
     }
 
     public interface ILogSnack {

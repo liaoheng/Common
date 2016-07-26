@@ -37,5 +37,8 @@ dependencies {
   compile 'com.github.bumptech.glide:okhttp3-integration:1.4.0@aar'
   compile 'com.squareup.okhttp3:okhttp:3.3.1'
 
+  //https://github.com/square/okhttp
+//  compile 'com.squareup.okhttp:okhttp:2.4.0'
+
   compile project(':common-plus')
 }

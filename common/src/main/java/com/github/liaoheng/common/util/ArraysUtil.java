@@ -27,13 +27,13 @@ package com.github.liaoheng.common.util;
 
 import java.lang.reflect.Array;
 
+import static com.github.liaoheng.common.util.StringPool.NULL;
+
 /**
  * Array utilities.
  * <b>DO NOT MODIFY: this source is generated.</b>
  */
 public class ArraysUtil {
-	static String NULL = "null";
-
 	// ---------------------------------------------------------------- wrap
 
 	/**

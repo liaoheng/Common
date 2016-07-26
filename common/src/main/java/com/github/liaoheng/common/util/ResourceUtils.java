@@ -1,19 +1,19 @@
 package com.github.liaoheng.common.util;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.annotation.AttrRes;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * ResourceUtils
@@ -25,6 +25,11 @@ public class ResourceUtils {
 
     private ResourceUtils() {
         throw new AssertionError();
+    }
+
+    public static String getText(@NonNull Context context, @StringRes int res) {
+        CharSequence text = context.getText(res);
+        return TextUtils.isEmpty(text) ? "" : text.toString();
     }
 
     @ColorInt

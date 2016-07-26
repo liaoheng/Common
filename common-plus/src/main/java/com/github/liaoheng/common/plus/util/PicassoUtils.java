@@ -9,8 +9,8 @@ import android.text.TextUtils;
 import android.widget.ImageView;
 import com.github.liaoheng.common.plus.CommonPlus;
 import com.github.liaoheng.common.plus.R;
+import com.github.liaoheng.common.util.Callback4;
 import com.github.liaoheng.common.util.FileUtils;
-import com.github.liaoheng.common.util.OperateCallback;
 import com.github.liaoheng.common.util.SystemException;
 import com.github.liaoheng.common.util.Utils;
 import com.jakewharton.picasso.OkHttp3Downloader;
@@ -240,20 +240,20 @@ public class PicassoUtils {
     }
 
     public Target getDisplayImage(final ImageView imageView,
-                                  final OperateCallback.EmptyOperateCallback<Bitmap> listener) {
+                                  final Callback4.EmptyCallback4<Bitmap> listener) {
         Target target = new Target() {
             //当图片加载时调用
             @Override public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                 imageView.setImageBitmap(bitmap);
                 listener.onPostExecute();
-                listener.onSuccess(bitmap);
+                listener.onYes(bitmap);
                 listener.onFinish(null);
             }
 
             //当图片加载失败时调用
             @Override public void onBitmapFailed(Drawable errorDrawable) {
                 listener.onPostExecute();
-                listener.onError(null);
+                listener.onNo(null);
                 listener.onFinish(null);
             }
 

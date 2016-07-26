@@ -5,11 +5,14 @@ import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import com.github.liaoheng.common.plus.CommonPlus;
 import com.github.liaoheng.common.util.BitmapUtils;
 import com.github.liaoheng.common.util.Callback;
 import com.github.liaoheng.common.util.FileUtils;
 import com.github.liaoheng.common.util.L;
 import com.github.liaoheng.common.util.NetException;
+import com.github.liaoheng.common.util.NetLocalException;
+import com.github.liaoheng.common.util.NetServerException;
 import com.github.liaoheng.common.util.SystemException;
 import com.github.liaoheng.common.util.SystemRuntimeException;
 import com.github.liaoheng.common.util.Utils;
@@ -57,11 +60,12 @@ public class OkHttp3Utils {
     public final  MediaType JSON         = MediaType.parse("application/json; charset=utf-8");
     private final Handler   mMainHandler = new Handler(Looper.getMainLooper());
 
-    private final OkHttpClient        mClient;
-    private final Map<String, String> mHeaders;
-    private final List<HeaderPlus>    mHeaderPlus;
+    private final OkHttpClient             mClient;
+    private       ErrorHandleListener      mErrorHandleListener;
+    private final Map<String, String>      mHeaders;
+    private final List<HeaderPlusListener> mHeaderPlus;
 
-    public interface HeaderPlus {
+    public interface HeaderPlusListener {
         /**
          * http请求拦截
          * @param originalRequest 原始Request
@@ -73,12 +77,24 @@ public class OkHttp3Utils {
                                           Map<String, Object> parameters);
     }
 
-    private OkHttp3Utils(OkHttpClient.Builder builder, List<HeaderPlus> headerPluses,
+    public interface ErrorHandleListener {
+        /**
+         *
+         * @param response {@link Response}
+         * @return Response body
+         * @throws NetServerException
+         */
+        String checkError(Response response) throws NetServerException;
+    }
+
+    private OkHttp3Utils(OkHttpClient.Builder builder, ErrorHandleListener errorHandleListener,
+                         List<HeaderPlusListener> headerPluses,
                          Map<String, String> headers) {
         builder.networkInterceptors().add(new HeaderPlusInterceptor());
         builder.networkInterceptors().add(new LogInterceptor(TAG));
 
         this.mClient = builder.build();
+        this.mErrorHandleListener = errorHandleListener;
         this.mHeaderPlus = headerPluses;
         this.mHeaders = headers;
     }
@@ -120,10 +136,11 @@ public class OkHttp3Utils {
 
     public static class Init {
         private final int DEFAULT_HTTP_DISK_CACHE_SIZE = 50 * 1024 * 1024; // 50MB;
-        private OkHttpClient.Builder builder;
-        private Map<String, String>  headers;
-        private List<HeaderPlus>     headerPlus;
-        private Cache                cache;
+        private OkHttpClient.Builder     builder;
+        private ErrorHandleListener      errorHandleListener;
+        private Map<String, String>      headers;
+        private List<HeaderPlusListener> headerPlus;
+        private Cache                    cache;
 
         public Init setDefaultCache() {
             return setDefaultCache(DEFAULT_HTTP_DISK_CACHE_SIZE);
@@ -138,7 +155,7 @@ public class OkHttp3Utils {
         }
 
         public Cache getDefaultCache(long httpDiskCacheSize) throws SystemException {
-            File cacheFile = FileUtils.createCacheSDAndroidDirectory("httpCache");
+            File cacheFile = FileUtils.createCacheSDAndroidDirectory(CommonPlus.HTTP_CACHE_DIR);
             if (httpDiskCacheSize == 0) {
                 httpDiskCacheSize = DEFAULT_HTTP_DISK_CACHE_SIZE;
             }
@@ -153,6 +170,27 @@ public class OkHttp3Utils {
             if (builder == null) {
                 builder = new OkHttpClient.Builder();
             }
+            if (errorHandleListener == null) {
+                errorHandleListener = new ErrorHandleListener() {
+                    @Override public String checkError(Response response)
+                            throws NetServerException {
+                        String string = "";
+                        try {
+                            string = response.body().string();
+                        } catch (IOException ignored) {
+                        }
+                        if (!response.isSuccessful()) {
+                            if (TextUtils.isEmpty(string)) {
+                                throw new NetServerException(response.message(),
+                                        "code : " + response.code());
+                            } else {
+                                throw new NetServerException(response.message(),string);
+                            }
+                        }
+                        return string;
+                    }
+                };
+            }
             if (headerPlus == null) {
                 headerPlus = new LinkedList<>();
             }
@@ -162,7 +200,7 @@ public class OkHttp3Utils {
             if (cache != null) {
                 builder.cache(cache);
             }
-            return new OkHttp3Utils(builder, headerPlus, headers);
+            return new OkHttp3Utils(builder, errorHandleListener, headerPlus, headers);
         }
 
         public OkHttpClient.Builder getBuilder() {
@@ -191,16 +229,16 @@ public class OkHttp3Utils {
             return this;
         }
 
-        public List<HeaderPlus> getHeaderPlus() {
+        public List<HeaderPlusListener> getHeaderPlus() {
             return headerPlus;
         }
 
-        public Init setHeaderPlus(List<HeaderPlus> headerPlus) {
+        public Init setHeaderPlus(List<HeaderPlusListener> headerPlus) {
             this.headerPlus = new LinkedList<>(headerPlus);
             return this;
         }
 
-        public Init addHeaderPlus(HeaderPlus... headerPlus) {
+        public Init addHeaderPlus(HeaderPlusListener... headerPlus) {
             this.headerPlus = new LinkedList<>(Arrays.asList(headerPlus));
             return this;
         }
@@ -211,6 +249,15 @@ public class OkHttp3Utils {
 
         public Init setCache(Cache cache) {
             this.cache = cache;
+            return this;
+        }
+
+        public ErrorHandleListener getErrorHandleListener() {
+            return errorHandleListener;
+        }
+
+        public Init setErrorHandleListener(ErrorHandleListener errorHandleListener) {
+            this.errorHandleListener = errorHandleListener;
             return this;
         }
     }
@@ -265,33 +312,33 @@ public class OkHttp3Utils {
         getHeaders().put(key, value);
     }
 
-    public List<HeaderPlus> getHeaderPlus() {
+    public List<HeaderPlusListener> getHeaderPlus() {
         if (mHeaderPlus == null) {
             throw new IllegalStateException("Not Initialize");
         }
         return mHeaderPlus;
     }
 
-    public void addHeaderPlus(List<HeaderPlus> headerPluses) {
+    public void addHeaderPlus(List<HeaderPlusListener> headerPluses) {
         getHeaderPlus().addAll(headerPluses);
     }
 
-    public void addHeaderPlus(HeaderPlus... headerPluses) {
+    public void addHeaderPlus(HeaderPlusListener... headerPluses) {
         getHeaderPlus().addAll(Arrays.asList(headerPluses));
     }
 
-    public void updateHeaderPlus(int location, HeaderPlus headerPlus) {
+    public void updateHeaderPlus(int location, HeaderPlusListener headerPlus) {
         getHeaderPlus().remove(location);
         addHeaderPlus(headerPlus);
     }
 
     @SuppressWarnings("SuspiciousMethodCalls") public void updateHeaderPlus(Objects location,
-                                                                            HeaderPlus headerPlus) {
+                                                                            HeaderPlusListener headerPlus) {
         getHeaderPlus().remove(location);
         addHeaderPlus(headerPlus);
     }
 
-    public void addHeaderPlus(HeaderPlus headerPlus) {
+    public void addHeaderPlus(HeaderPlusListener headerPlus) {
         getHeaderPlus().add(headerPlus);
     }
 
@@ -341,7 +388,7 @@ public class OkHttp3Utils {
             Map<String, Object> map = new HashMap<>();
 
             if (!getHeaderPlus().isEmpty()) {
-                for (HeaderPlus mHeaderPlu : getHeaderPlus()) {
+                for (HeaderPlusListener mHeaderPlu : getHeaderPlus()) {
                     builder = mHeaderPlu.headerInterceptor(request, builder, map);
                 }
             }
@@ -420,10 +467,8 @@ public class OkHttp3Utils {
         return observable.observeOn(AndroidSchedulers.mainThread()).subscribe(subscriber);
     }
 
-    public void error(Response response) throws IOException {
-        if (!response.isSuccessful()) {
-            throw new IOException(String.format("Network Error: %s", response));
-        }
+    public String error(Response response) throws NetServerException {
+        return mErrorHandleListener.checkError(response);
     }
 
     public String getSync(String url) throws NetException {
@@ -446,12 +491,11 @@ public class OkHttp3Utils {
     public String getSync(OkHttpClient client, Request request) throws NetException {
         try {
             Response response = client.newCall(request).execute();
-            String json = response.body().string();
-            error(response);
+            String json = error(response);
             L.json(TAG, json);
             return json;
         } catch (IOException e) {
-            throw new NetException(NetException.NET_ERROR, e);
+            throw new NetLocalException(NetException.NET_ERROR, e);
         }
     }
 
@@ -482,12 +526,11 @@ public class OkHttp3Utils {
     public String postSync(OkHttpClient client, Request request) throws NetException {
         try {
             Response response = client.newCall(request).execute();
-            String json = response.body().string();
-            error(response);
+            String json = error(response);
             L.json(TAG, json);
             return json;
         } catch (IOException e) {
-            throw new NetException(NetException.NET_ERROR, e);
+            throw new NetLocalException(NetException.NET_ERROR, e);
         }
     }
 
@@ -514,7 +557,7 @@ public class OkHttp3Utils {
             }
             return response;
         } catch (IOException e) {
-            throw new NetException(NetException.NET_ERROR, e);
+            throw new NetLocalException(NetException.NET_ERROR, e);
         }
     }
 
@@ -726,7 +769,7 @@ public class OkHttp3Utils {
                                     return Observable
                                             .just(new FileDownload(fileDownload.getFileName(),
                                                     response.body().bytes()));
-                                } catch (IOException e) {
+                                } catch (IOException | NetServerException e) {
                                     throw new SystemRuntimeException(e);
                                 }
                             }

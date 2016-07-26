@@ -19,7 +19,7 @@ public class LogToast implements L.ILogToast {
     @Override
     public void e(String TAG, @NonNull Context context, String userHint, String sysHint,
                   @NonNull Throwable e) {
-            L.e(TAG, e, sysHint);
+        L.e(TAG, e, sysHint);
         if (TextUtils.isEmpty(userHint)) {
             userHint =e.getMessage();
         }
@@ -45,18 +45,5 @@ public class LogToast implements L.ILogToast {
     @Override
     public void e(String TAG, @NonNull Context context, @StringRes int userHint) {
         e(TAG, context, context.getResources().getString(userHint));
-    }
-
-
-    @Override
-    public void eu(String TAG, @NonNull Context context, @NonNull Throwable e) {
-        L.e(TAG, e);
-        UIUtils.showToastUI(context, e.getMessage());
-    }
-
-    @Override
-    public void eu(String TAG, @NonNull Context context, String userHint, @NonNull Throwable e) {
-        L.e(TAG, e);
-        UIUtils.showToastUI(context, userHint);
     }
 }

@@ -6,9 +6,9 @@ import java.io.FileNotFoundException;
 import java.util.concurrent.TimeoutException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
-import org.robolectric.shadows.ShadowLog;
+import org.robolectric.internal.SdkConfig;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -18,7 +18,8 @@ import static org.junit.Assert.assertTrue;
  * @author liaoheng
  * @version 2016-07-25 11:35
  */
-@RunWith(RobolectricGradleTestRunner.class) @Config(constants = BuildConfig.class, sdk = 21) public class SystemExceptionTest extends BaseTest {
+@RunWith(RobolectricTestRunner.class) @Config(constants = BuildConfig.class, sdk = SdkConfig.FALLBACK_SDK_VERSION) public class SystemExceptionTest
+        extends BaseTest {
 
     @Test public void addExceptionTest() {
         String[] s = new String[] { "123", "456" };
@@ -28,6 +29,7 @@ import static org.junit.Assert.assertTrue;
             SystemException exception = new SystemException(e);
             Throwable cause = exception.getCause();
             assertNotNull("is null", cause);
+            //ShadowLog.d(TAG, "", cause);
             assertTrue("is not ArrayIndexOutOfBoundsException",
                     cause instanceof ArrayIndexOutOfBoundsException);
             assertEquals("msg is error", exception.getMessage(), "3");
@@ -40,6 +42,7 @@ import static org.junit.Assert.assertTrue;
         } catch (SystemException e) {
             Throwable cause = e.getCause();
             assertNotNull("is null", cause);
+            //ShadowLog.d(TAG, "", cause);
             assertEquals("msg is error", e.getMessage(), "one error");
         }
     }
@@ -50,6 +53,7 @@ import static org.junit.Assert.assertTrue;
         } catch (SystemException e) {
             Throwable cause = e.getCause();
             assertNotNull("is null", cause);
+            //ShadowLog.d(TAG, "", cause);
             assertEquals("msg is error", e.getMessage(), "one error");
         }
     }
@@ -60,6 +64,7 @@ import static org.junit.Assert.assertTrue;
         } catch (SystemException e) {
             Throwable cause = e.getCause();
             assertNotNull("is null", cause);
+            //ShadowLog.d(TAG, "", cause);
             assertEquals("msg is error", e.getMessage(), "two error");
         }
     }
@@ -75,6 +80,7 @@ import static org.junit.Assert.assertTrue;
         } catch (SystemException e) {
             Throwable cause = e.getCause();
             assertNotNull("is null", cause);
+            //ShadowLog.d(TAG, "", cause);
             assertTrue("is not ArrayIndexOutOfBoundsException",
                     cause instanceof ArrayIndexOutOfBoundsException);
             assertEquals("msg is error", e.getMessage(), SystemException.DATA_ERROR);
@@ -88,7 +94,7 @@ import static org.junit.Assert.assertTrue;
             SystemException e = new SystemException(ex);
             Throwable cause = e.getCause();
             assertNotNull("is null", cause);
-            ShadowLog.d(TAG, "", cause);
+            //ShadowLog.d(TAG, "", cause);
             assertTrue("is not TimeoutException", cause instanceof TimeoutException);
             assertEquals("msg is error", e.getMessage(), "timeout");
         }
@@ -101,7 +107,7 @@ import static org.junit.Assert.assertTrue;
             SystemException e = new SystemException(ex);
             Throwable cause = e.getCause();
             assertNotNull("is null", cause);
-            ShadowLog.d(TAG, "", cause);
+            //ShadowLog.d(TAG, "", cause);
             assertTrue("is not SystemException", cause instanceof IllegalArgumentException);
             assertEquals("msg is error", e.getMessage(),
                     "com.github.liaoheng.common.util.SystemException: arg is null");
@@ -116,10 +122,10 @@ import static org.junit.Assert.assertTrue;
             SystemException e = new SystemException(ex);
             Throwable cause = e.getCause();
             assertNotNull("is null", cause);
-            ShadowLog.d(TAG, "", cause);
+            //ShadowLog.d(TAG, "", cause);
             assertTrue("is not SystemException", cause instanceof IllegalArgumentException);
             assertEquals("msg is error", e.getMessage(),
-                    "com.github.liaoheng.common.util.SystemException: not can file found");
+                    "java.io.FileNotFoundException: java.io.FileNotFoundException: not can file found");
         }
     }
 
@@ -131,10 +137,10 @@ import static org.junit.Assert.assertTrue;
             SystemException e = new SystemException(ex);
             Throwable cause = e.getCause();
             assertNotNull("is null", cause);
-            ShadowLog.d(TAG, "", cause);
+            //ShadowLog.d(TAG, "", cause);
             assertTrue("is not SystemException", cause instanceof IllegalArgumentException);
             assertEquals("msg is error", e.getMessage(),
-                    "com.github.liaoheng.common.util.SystemException: not can file found");
+                    "java.io.FileNotFoundException: java.io.FileNotFoundException: not can file found");
         }
     }
 }
