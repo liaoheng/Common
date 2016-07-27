@@ -1,2 +1,3 @@
-include ':common', ':sample'
+include ':common-core'
 include ':common-plus'
+include ':sample'
