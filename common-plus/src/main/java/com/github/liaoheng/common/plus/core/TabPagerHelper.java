@@ -1,7 +1,5 @@
 package com.github.liaoheng.common.plus.core;
 
-import java.util.List;
-
 import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -11,12 +9,13 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
-
-import com.h6ah4i.android.tablayouthelper.TabLayoutHelper;
 import com.github.liaoheng.common.plus.R;
 import com.github.liaoheng.common.plus.adapter.TabPagerAdapter;
 import com.github.liaoheng.common.plus.model.PagerTab;
 import com.github.liaoheng.common.util.UIUtils;
+import com.github.liaoheng.common.util.ValidateUtils;
+import com.h6ah4i.android.tablayouthelper.TabLayoutHelper;
+import java.util.List;
 
 /**
  *may use {@link R.layout#lcp_layout_tab_pager}
@@ -25,7 +24,6 @@ import com.github.liaoheng.common.util.UIUtils;
  */
 public class TabPagerHelper {
 
-    private final String    TAG = TabPagerHelper.class.getSimpleName();
     private ViewPager       mViewPager;
     private TabLayout       mTabLayout;
     private TabLayoutHelper mTabLayoutHelper;
@@ -46,12 +44,8 @@ public class TabPagerHelper {
     }
 
     public TabPagerHelper(ViewPager viewPager, TabLayout tabLayout) {
-        if (viewPager == null) {
-            throw new IllegalArgumentException("ViewPager is null");
-        }
-        if (tabLayout == null) {
-            throw new IllegalArgumentException("TabLayout is null");
-        }
+        ValidateUtils.checkArgument(viewPager == null, "ViewPager is null");
+        ValidateUtils.checkArgument(tabLayout == null, "TabLayout is null");
         this.mViewPager = viewPager;
         this.mTabLayout = tabLayout;
     }

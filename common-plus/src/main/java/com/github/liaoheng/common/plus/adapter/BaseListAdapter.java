@@ -2,13 +2,12 @@ package com.github.liaoheng.common.plus.adapter;
 
 import android.content.Context;
 import android.support.annotation.LayoutRes;
-import android.util.AndroidRuntimeException;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-
 import com.github.liaoheng.common.util.UIUtils;
-
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,20 +21,20 @@ public abstract class BaseListAdapter<T> extends BaseAdapter implements IBaseAda
     private List<T> mList;
     private Context mContext;
 
-    public BaseListAdapter(Context context, List<T> mList) {
-        this.mContext = context;
-        this.mList = mList;
+    public BaseListAdapter(Context context) {
+        this(context, new ArrayList<T>());
     }
 
-    public View inflate(@LayoutRes int resource) {
-        return UIUtils.inflate(getContext(), resource);
+    public BaseListAdapter(Context context, List<T> list) {
+        mContext = context;
+        mList = list;
     }
 
-    public View inflate(@LayoutRes int resource, ViewGroup root) {
-        return UIUtils.inflate(getContext(), resource, root, false);
+    public View inflate(@LayoutRes int resource, @NonNull ViewGroup root) {
+        return inflate(resource, root, false);
     }
 
-    public View inflate(@LayoutRes int resource, ViewGroup root, boolean attachToRoot) {
+    public View inflate(@LayoutRes int resource, @NonNull ViewGroup root, boolean attachToRoot) {
         return UIUtils.inflate(getContext(), resource, root, attachToRoot);
     }
 
@@ -49,88 +48,86 @@ public abstract class BaseListAdapter<T> extends BaseAdapter implements IBaseAda
         return mList;
     }
 
+    @Override public void setList(List<T> list) {
+        mList = list;
+    }
+
+    @Override public boolean isEmpty() {
+        return getList() == null || getList().isEmpty();
+    }
+
     @Override
     public void update(List<T> list) {
-        this.mList = list;
+        setList(list);
     }
 
     @Override
     public void clear() {
-        if (mList == null) {
+        if (isEmpty()) {
             return;
         }
-        mList.clear();
+        getList().clear();
     }
 
-    @Override
-    public void addAll(List<T> mList) {
-        if (this.mList == null) {
-            this.mList = mList;
+    @Override public void addAll(List<T> list) {
+        if (null == getList()) {
+            setList(list);
         } else {
-            this.mList.addAll(mList);
+            getList().addAll(list);
         }
     }
 
-    @Override
-    public void addAll(int index, List<T> list) {
-        if (this.mList == null) {
-            this.mList = list;
+    @Override public void addAll(int location, List<T> list) {
+        if (null == getList()) {
+            setList(list);
         } else {
-            this.mList.addAll(index, mList);
+            getList().addAll(location, list);
         }
     }
 
-    @Override
-    public void add(int index, T item) {
-        if (this.mList == null) {
-            throw new AndroidRuntimeException("add list is null");
-        }
-        this.mList.add(index, item);
+    @Override public void add(int location, T item) {
+        getList().add(location, item);
     }
 
     @Override
     public void add(T o) {
-        if (this.mList == null) {
-            throw new AndroidRuntimeException("add list is null");
-        }
-        this.mList.add(o);
+        getList().add(o);
     }
 
     @Override
     public void remove(int location) {
-        if (location < 0) {
-            throw new AndroidRuntimeException("remove location < 0");
-        }
-        this.mList.remove(location);
+        getList().remove(location);
     }
 
     @Override
     public void remove(T object) {
-        if (this.mList == null) {
-            throw new AndroidRuntimeException("remove list is null");
-        }
-        this.mList.remove(object);
+        getList().remove(object);
     }
 
     @Override
     public int getCount() {
-        return mList == null ? 0 : mList.size();
+        return getList() == null ? 0 : getList().size();
     }
 
     @Override
     public Object getItem(int position) {
-        return mList == null ? null : mList.get(position);
+        return isEmpty() ? null : getList().get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        return mList == null ? 0 : position;
+        return isEmpty() ? 0 : position;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        return getItemView(getList() == null ? null : getList().get(position), position, convertView, parent);
+        return getItemView(isEmpty() ? null : getList().get(position), position, convertView,
+                parent);
     }
 
+    /**
+     * @see BaseAdapter#getView(int, View, ViewGroup)
+     * @param item Current list item
+     */
     public abstract View getItemView(T item, int position, View convertView, ViewGroup parent);
 }

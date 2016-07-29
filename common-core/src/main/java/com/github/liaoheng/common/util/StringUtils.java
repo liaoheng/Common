@@ -1,5 +1,6 @@
 package com.github.liaoheng.common.util;
 
+import android.text.TextUtils;
 import java.io.UnsupportedEncodingException;
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -17,6 +18,21 @@ import android.text.Spanned;
  * @author <a href="http://jodd.org" target="_blank">jodd</a>
  */
 public class StringUtils {
+
+    /**
+     * Substitutes each {@code %s} in {@code template} with an argument. These are matched by
+     * position: the first {@code %s} gets {@code args[0]}, etc. If there are more arguments than
+     * placeholders, the unmatched arguments will be appended to the end of the formatted message in
+     * square braces.
+     *
+     * @param template a non-null string containing 0 or more {@code %s} placeholders.
+     * @param args the arguments to be substituted into the message template. Arguments are converted
+     *     to strings using {@link String#valueOf(Object)}. Arguments can be null.
+     */
+    public static String format(String template, Object... args) {
+        ValidateUtils.checkArgument(isEmpty(template));
+        return String.format(template, args);
+    }
 
     /**
      * 将字符对像转入INT
@@ -344,22 +360,23 @@ public class StringUtils {
      * Determines if a string is empty (<code>null</code> or zero-length).
      */
     public static boolean isEmpty(CharSequence string) {
-        return ((string == null) || (string.length() == 0));
+        return TextUtils.isEmpty(string);
     }
 
     /**
      * Determines if string is not blank.
      */
     public static boolean isNotEmpty(String string) {
-        return (string != null) && (string.length() > 0);
+        return !TextUtils.isEmpty(string);
     }
+
     /**
      * Determines if string array contains null strings.
      * @see #isEmpty(CharSequence)
      */
     public static boolean isAllEmpty(String... strings) {
         for (String string : strings) {
-            if (isEmpty(string) == false) {
+            if (!isNotEmpty(string)) {
                 return false;
             }
         }
@@ -385,7 +402,7 @@ public class StringUtils {
      */
     public static boolean isAllBlank(String... strings) {
         for (String string : strings) {
-            if (isBlank(string) == false) {
+            if (isNotBlank(string)) {
                 return false;
             }
         }
@@ -1647,7 +1664,7 @@ public class StringUtils {
     }
     public static int indexOfNonWhitespace(String string, int startindex, int endindex) {
         for (int i = startindex; i < endindex; i++) {
-            if (isWhitespace(string.charAt(i)) == false) {
+            if (!isWhitespace(string.charAt(i))) {
                 return i;
             }
         }

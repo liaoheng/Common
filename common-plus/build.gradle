@@ -26,11 +26,6 @@ android {
     }
 }
 
-//configurations.all {
-//    // check for updates every build
-//    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
-//}
-
 def JacksonVersion = '2.5.1'
 dependencies {
     //android system
@@ -78,7 +73,12 @@ dependencies {
     //time:https://github.com/JodaOrg/joda-time
     compile 'joda-time:joda-time:2.9.1'
     compile project(':common-core')
-//    compile 'com.github.liaoheng:common:0.0.1-SNAPSHOT'
+//    compile 'com.github.liaoheng:common-core:0.0.3-SNAPSHOT'
+
+
+    testCompile "org.robolectric:robolectric:3.1.1"
+    testCompile "org.robolectric:robolectric-annotations:3.1.1"
+    testCompile "junit:junit:4.10"
 }
 
-apply from: rootProject.file('gradle-mvn-push.gradle')
+//apply from: rootProject.file('gradle-mvn-push.gradle')

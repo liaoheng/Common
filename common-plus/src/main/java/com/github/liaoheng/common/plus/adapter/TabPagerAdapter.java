@@ -47,7 +47,7 @@ public class TabPagerAdapter extends BaseFragmentStatePagerAdapter<PagerTab> {
     }
 
     @Override
-    public Fragment getItemView(PagerTab item, int position) {
+    public Fragment getItemFragment(PagerTab item, int position) {
         if (mTabPagerOperation != null) {
             return mTabPagerOperation.getItem(item, position);
         } else {

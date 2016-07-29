@@ -8,7 +8,6 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 import org.robolectric.internal.SdkConfig;
-import org.robolectric.shadows.ShadowLog;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -18,8 +17,8 @@ import static org.junit.Assert.assertTrue;
  * @author liaoheng
  * @version 2016-07-25 13:26
  */
-@RunWith(RobolectricTestRunner.class) @Config(constants = BuildConfig.class, sdk = SdkConfig.FALLBACK_SDK_VERSION) public class NetLocalExceptionTest
-        extends BaseTest {
+@RunWith(RobolectricTestRunner.class) @Config(constants = BuildConfig.class, sdk = SdkConfig.FALLBACK_SDK_VERSION)
+public class NetLocalExceptionTest extends BaseTest {
 
     @Test public void NetLocalExceptionTest1() {
         try {

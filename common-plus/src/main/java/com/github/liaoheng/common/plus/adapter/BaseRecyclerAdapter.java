@@ -2,15 +2,14 @@ package com.github.liaoheng.common.plus.adapter;
 
 import android.content.Context;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.AndroidRuntimeException;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.github.liaoheng.common.util.UIUtils;
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Base Adapter for RecyclerView
@@ -21,34 +20,38 @@ import java.util.List;
 public abstract class BaseRecyclerAdapter<K, V extends RecyclerView.ViewHolder>
         extends RecyclerView.Adapter<V> implements IBaseAdapter<K> {
 
-    private Context mContext;
-    private List<K> mList;
-    private int oldSize;
+    private Context                mContext;
+    private List<K>                mList;
+    private AtomicInteger          mOldSize;
     private OnItemClickListener<K> mOnItemClickListener;
 
-    public View inflate(@LayoutRes int resource) {
-        return UIUtils.inflate(getContext(), resource);
-    }
-
-    public View inflate(@LayoutRes int resource, ViewGroup root) {
-        return UIUtils.inflate(getContext(), resource, root, false);
-    }
-
-    public View inflate(@LayoutRes int resource, ViewGroup root, boolean attachToRoot) {
-        return UIUtils.inflate(getContext(), resource, root, attachToRoot);
+    public BaseRecyclerAdapter(Context context) {
+        this(context, new ArrayList<K>());
     }
 
     public BaseRecyclerAdapter(Context context, List<K> list) {
-        this.mContext = context;
-        this.mList = list != null ? list : new ArrayList<K>();
+        mContext = context;
+        mList = list;
+    }
+
+    public View inflate(@LayoutRes int resource, @NonNull ViewGroup root) {
+        return inflate(resource, root, false);
+    }
+
+    public View inflate(@LayoutRes int resource, @NonNull ViewGroup root, boolean attachToRoot) {
+        return UIUtils.inflate(getContext(), resource, root, attachToRoot);
     }
 
     public int getOldSize() {
-        return oldSize;
+        return mOldSize.get();
     }
 
     public void setOldSize() {
-        this.oldSize = getItemCount();
+        mOldSize.set(getItemCount());
+    }
+
+    public void setOldSize(int size) {
+        mOldSize.set(size);
     }
 
     @Override
@@ -61,65 +64,61 @@ public abstract class BaseRecyclerAdapter<K, V extends RecyclerView.ViewHolder>
         return mList;
     }
 
+    @Override public void setList(List<K> list) {
+        mList = list;
+    }
+
+    @Override public boolean isEmpty() {
+        return getList() == null || getList().isEmpty();
+    }
+
     @Override
     public void update(List<K> list) {
-        this.mList = list;
+        setList(list);
     }
 
     @Override
     public void clear() {
-        this.mList = null;
-        notifyDataSetChanged();
+        if (isEmpty()) {
+            return;
+        }
+        getList().clear();
     }
 
     @Override
     public void addAll(List<K> list) {
-        if (null == this.mList) {
-            this.mList = list;
+        if (null == getList()) {
+            setList(list);
         } else {
-            this.mList.addAll(list);
+            getList().addAll(list);
         }
     }
 
-    @Override
-    public void addAll(int index, List<K> list) {
-        if (null == this.mList) {
-            this.mList = list;
+    @Override public void addAll(int location, List<K> list) {
+        if (null == getList()) {
+            setList(list);
         } else {
-            this.mList.addAll(index, list);
+            getList().addAll(location, list);
         }
     }
 
-    @Override
-    public void add(int index, K o) {
-        if (null == this.mList) {
-            throw new AndroidRuntimeException("add list is null");
-        }
-        this.mList.add(index, o);
+    @Override public void add(int location, K o) {
+        getList().add(location, o);
     }
 
     @Override
     public void add(K o) {
-        if (null == this.mList) {
-            throw new AndroidRuntimeException("add list is null");
-        }
-        this.mList.add(o);
+        getList().add(o);
     }
 
     @Override
     public void remove(int location) {
-        if (location < 0) {
-            throw new AndroidRuntimeException("remove location < 0");
-        }
-        this.mList.remove(location);
+        getList().remove(location);
     }
 
     @Override
     public void remove(K item) {
-        if (null == item) {
-            throw new AndroidRuntimeException("remove list is null");
-        }
-        this.mList.remove(item);
+        getList().remove(item);
     }
 
     @Override
@@ -132,11 +131,15 @@ public abstract class BaseRecyclerAdapter<K, V extends RecyclerView.ViewHolder>
         onBindViewHolderItem(holder, item, position);
     }
 
-    public abstract void onBindViewHolderItem(V holder, K k, int position);
+    /**
+     * @see RecyclerView.Adapter#onBindViewHolder(RecyclerView.ViewHolder, int)
+     * @param item  Current list item
+     */
+    public abstract void onBindViewHolderItem(V holder, K item, int position);
 
     @Override
     public int getItemCount() {
-        return mList == null ? 0 : mList.size();
+        return isEmpty() ? 0 : getList().size();
     }
 
     public void setOnItemClickListener(OnItemClickListener<K> mOnItemClickListener) {

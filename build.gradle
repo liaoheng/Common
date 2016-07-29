@@ -4,8 +4,11 @@ buildscript {
         mavenCentral()
         jcenter()
         maven {
-            url "https://oss.sonatype.org/content/repositories/snapshots/"
+            url "http://localhost:8081/nexus/content/repositories/snapshots/"
         }
+//        maven {
+//            url "https://oss.sonatype.org/content/repositories/snapshots/"
+//        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.1.2'
@@ -18,8 +21,11 @@ allprojects {
         mavenCentral()
         jcenter()
         maven {
-            url "https://oss.sonatype.org/content/repositories/snapshots/"
+            url "http://localhost:8081/nexus/content/repositories/snapshots/"
         }
+//        maven {
+//            url "https://oss.sonatype.org/content/repositories/snapshots/"
+//        }
     }
 }
 

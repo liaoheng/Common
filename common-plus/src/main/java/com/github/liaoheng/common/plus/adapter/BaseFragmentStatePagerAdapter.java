@@ -4,13 +4,11 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.util.AndroidRuntimeException;
-
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * {@link FragmentStatePagerAdapter}
+ * Base Adapter for FragmentStatePagerAdapter
  *
  * @author liaoheng
  * @version 2015-11-27 14:56:32
@@ -21,30 +19,19 @@ public abstract class BaseFragmentStatePagerAdapter<T> extends FragmentStatePage
     private Context mContext;
     private List<T> mList;
 
+    public BaseFragmentStatePagerAdapter(FragmentManager fm, Context context) {
+        this(fm, context, new ArrayList<T>());
+    }
+
     public BaseFragmentStatePagerAdapter(FragmentManager fm, Context context, List<T> list) {
         super(fm);
-        this.mContext = context;
-        this.mList = list != null ? list : new ArrayList<T>();
-    }
-
-    @Override
-    public Fragment getItem(int position) {
-        return getItemView(getList() == null ? null : getList().get(position), position);
-    }
-
-    public abstract Fragment getItemView(T item, int position);
-
-    @Override
-    public void clear() {
-        if (mList == null) {
-            return;
-        }
-        mList.clear();
+        mContext = context;
+        mList = list;
     }
 
     @Override
     public int getCount() {
-        return mList == null ? 0 : mList.size();
+        return isEmpty() ? 0 : getList().size();
     }
 
     @Override
@@ -57,58 +44,68 @@ public abstract class BaseFragmentStatePagerAdapter<T> extends FragmentStatePage
         return mList;
     }
 
-    @Override
-    public void update(List<T> mList) {
-        this.mList = mList;
+    @Override public void setList(List<T> list) {
+        mList = list;
     }
 
-    @Override
-    public void addAll(List<T> mList) {
-        if (null == this.mList) {
-            this.mList = mList;
+    @Override public void update(List<T> list) {
+        setList(list);
+    }
+
+    @Override public boolean isEmpty() {
+        return getList() == null || getList().isEmpty();
+    }
+
+    @Override public void addAll(List<T> list) {
+        if (null == getList()) {
+            setList(list);
         } else {
-            this.mList.addAll(mList);
+            getList().addAll(list);
         }
     }
 
-    @Override
-    public void addAll(int index, List<T> mList) {
-        if (null == this.mList) {
-            this.mList = mList;
+    @Override public void addAll(int location, List<T> list) {
+        if (null == getList()) {
+            setList(list);
         } else {
-            this.mList.addAll(index, mList);
+            getList().addAll(location, list);
         }
     }
 
-    @Override
-    public void add(int index, T o) {
-        if (null == this.mList) {
-            throw new AndroidRuntimeException("add list is null");
-        }
-        this.mList.add(index, o);
+    @Override public void add(int location, T o) {
+        getList().add(location, o);
     }
 
     @Override
     public void add(T o) {
-        if (null == this.mList) {
-            throw new AndroidRuntimeException("add list is null");
-        }
-        this.mList.add(o);
+        getList().add(o);
     }
 
     @Override
     public void remove(int location) {
-        if (location < 0) {
-            throw new AndroidRuntimeException("remove location < 0");
-        }
-        this.mList.remove(location);
+        getList().remove(location);
     }
 
     @Override
     public void remove(T item) {
-        if (null == item) {
-            throw new AndroidRuntimeException("remove list is null");
-        }
-        this.mList.remove(item);
+        getList().remove(item);
     }
+
+    @Override public void clear() {
+        if (isEmpty()) {
+            return;
+        }
+        getList().clear();
+    }
+
+    @Override public Fragment getItem(int position) {
+        return getItemFragment(isEmpty() ? null : getList().get(position), position);
+    }
+
+    /**
+     * @see FragmentStatePagerAdapter#getItem
+     * @param item Current list item
+     */
+    public abstract Fragment getItemFragment(T item, int position);
+
 }
