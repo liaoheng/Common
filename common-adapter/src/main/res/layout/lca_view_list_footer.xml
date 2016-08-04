@@ -4,7 +4,7 @@
     android:layout_height="80dp">
 
     <Button
-        android:id="@id/lcp_list_footer_none_btn"
+        android:id="@id/lca_list_footer_none_btn"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/transparent"
@@ -13,7 +13,7 @@
         android:visibility="gone" />
 
     <LinearLayout
-        android:id="@+id/lcp_list_footer_load"
+        android:id="@+id/lca_list_footer_load"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"

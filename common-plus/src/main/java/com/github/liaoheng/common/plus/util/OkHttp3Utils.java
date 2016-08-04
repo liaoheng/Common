@@ -43,9 +43,7 @@ import okhttp3.internal.Util;
 import okio.Buffer;
 import org.apache.commons.io.FilenameUtils;
 import rx.Observable;
-import rx.Subscriber;
 import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
@@ -88,8 +86,7 @@ public class OkHttp3Utils {
     }
 
     private OkHttp3Utils(OkHttpClient.Builder builder, ErrorHandleListener errorHandleListener,
-                         List<HeaderPlusListener> headerPluses,
-                         Map<String, String> headers) {
+                         List<HeaderPlusListener> headerPluses, Map<String, String> headers) {
         builder.networkInterceptors().add(new HeaderPlusInterceptor());
         builder.networkInterceptors().add(new LogInterceptor(TAG));
 
@@ -184,7 +181,7 @@ public class OkHttp3Utils {
                                 throw new NetServerException(response.message(),
                                         "code : " + response.code());
                             } else {
-                                throw new NetServerException(response.message(),string);
+                                throw new NetServerException(response.message(), string);
                             }
                         }
                         return string;
@@ -431,40 +428,9 @@ public class OkHttp3Utils {
         }
     }
 
+    @Deprecated
     public <T> Subscription addSubscribe(Observable<T> observable, final Callback<T> listener) {
-        Subscriber<T> subscriber = new Subscriber<T>() {
-            @Override public void onStart() {
-                super.onStart();
-                if (listener != null) {
-                    mMainHandler.post(new Runnable() {
-                        @Override public void run() {
-                            listener.onPreExecute();
-                        }
-                    });
-                }
-            }
-
-            @Override public void onCompleted() {
-                if (listener != null) {
-                    listener.onFinish();
-                }
-            }
-
-            @Override public void onError(Throwable e) {
-                if (listener != null) {
-                    listener.onPostExecute();
-                    listener.onError(new SystemException(e));
-                }
-            }
-
-            @Override public void onNext(T t) {
-                if (listener != null) {
-                    listener.onPostExecute();
-                    listener.onSuccess(t);
-                }
-            }
-        };
-        return observable.observeOn(AndroidSchedulers.mainThread()).subscribe(subscriber);
+        return Utils.addSubscribe(observable, listener);
     }
 
     public String error(Response response) throws NetServerException {

@@ -40,7 +40,7 @@ public class UIUtils {
     public static int SNACK_LENGTH_SHORT = Snackbar.LENGTH_SHORT;
     public static int SNACK_LENGTH_LONG  = Snackbar.LENGTH_LONG;
 
-    private static Toast         mToast;
+    private static Toast mToast;
 
     /**
      * 吐丝提示
@@ -104,22 +104,35 @@ public class UIUtils {
      ********/
 
     public static void showSnack(@NonNull Activity activity, String hint) {
-        showSnack(activity.getWindow(), hint);
+        showSnack(activity, hint, SNACK_LENGTH_LONG);
     }
 
     public static void showSnack(@NonNull Activity activity, @StringRes int hint) {
         showSnack(activity, activity.getResources().getString(hint));
     }
 
-    public static void showSnack(@NonNull Window window, String hint) {
-        showSnack(window, hint, SNACK_LENGTH_LONG);
+    public static void showSnack(@NonNull final Activity activity, final String hint,
+                                 final int duration) {
+        showSnack(activity, hint, duration, activity.getText(R.string.lcm_ok).toString(), null);
     }
 
-    public static void showSnack(@NonNull final Window window, final String hint,
-                                 final int duration) {
-        getCoordinatorLayout(window, new Callback4.EmptyCallback4<View>() {
+    public static void showSnack(@NonNull Activity activity, final String hint, final String action,
+                                 final Callback2<View> callback2) {
+        showSnack(activity, hint, SNACK_LENGTH_LONG, action, callback2);
+    }
+
+    public static void showSnack(@NonNull Activity activity, final String hint, final int duration,
+                                 final String action, final Callback2<View> callback2) {
+        getCoordinatorLayout(activity, new Callback4.EmptyCallback<View>() {
             @Override public void onYes(View view) {
-                showSnack(view, hint, duration);
+                Snackbar.make(view, hint, duration).setAction(action, new View.OnClickListener() {
+                    @Override public void onClick(View v) {
+                        if (callback2 == null) {
+                            return;
+                        }
+                        callback2.onSuccess(v);
+                    }
+                }).show();
             }
         });
     }
@@ -129,14 +142,27 @@ public class UIUtils {
     }
 
     public static void showSnack(@NonNull View view, final String hint, final int duration) {
-        getCoordinatorLayout(view, new Callback4.EmptyCallback4<View>() {
+        showSnack(view, hint, duration, view.getResources().getText(R.string.lcm_ok).toString(),
+                null);
+    }
+
+    public static void showSnack(@NonNull View view, final String hint, final String action,
+                                 final Callback2<View> callback2) {
+        showSnack(view, hint, SNACK_LENGTH_LONG, action, callback2);
+    }
+
+    public static void showSnack(@NonNull View view, final String hint, final int duration,
+                                 final String action, final Callback2<View> callback2) {
+        getCoordinatorLayout(view, new Callback4.EmptyCallback<View>() {
             @Override public void onYes(View view) {
-                Snackbar.make(view, hint, duration)
-                        .setAction(view.getResources().getText(R.string.lcm_ok),
-                                new View.OnClickListener() {
-                                    @Override public void onClick(View v) {
-                                    }
-                                }).show();
+                Snackbar.make(view, hint, duration).setAction(action, new View.OnClickListener() {
+                    @Override public void onClick(View v) {
+                        if (callback2 == null) {
+                            return;
+                        }
+                        callback2.onSuccess(v);
+                    }
+                }).show();
             }
         });
     }
@@ -148,7 +174,7 @@ public class UIUtils {
 
     public static void showLogSnack(String TAG, @NonNull final Activity activity, final String hint,
                                     final int duration) {
-        showSnack(activity.getWindow(), hint, duration);
+        showSnack(activity, hint, duration);
         L.i(TAG, hint);
     }
 
@@ -164,20 +190,23 @@ public class UIUtils {
 
     /*******  Snack  end ********/
 
+    public static View getActivityContentView(Activity activity) {
+        if (activity == null) {
+            return null;
+        }
+        ViewGroup group = findViewById(activity, android.R.id.content);
+        return group.getChildAt(0);
+    }
+
     /**
      * 得到CoordinatorLayout
      *
-     * @param window
+     * @param activity
      * @param call
      * @return
      */
-    private static void getCoordinatorLayout(Window window, final Callback4<View> call) {
-        if (window == null) {
-            return;
-        }
-        ViewGroup group = (ViewGroup) window.findViewById(android.R.id.content);
-        View view = group.getChildAt(0);
-        getCoordinatorLayout(view, call);
+    public static void getCoordinatorLayout(Activity activity, final Callback4<View> call) {
+        getCoordinatorLayout(getActivityContentView(activity), call);
     }
 
     /**
@@ -187,7 +216,7 @@ public class UIUtils {
      * @param call
      * @return
      */
-    private static void getCoordinatorLayout(View view, final Callback4<View> call) {
+    public static void getCoordinatorLayout(View view, final Callback4<View> call) {
         try {
             Class.forName("android.support.design.widget.CoordinatorLayout");
         } catch (ClassNotFoundException e) {
@@ -341,12 +370,12 @@ public class UIUtils {
     public static AlertDialog createInfoAlertDialog(Context context, String message,
                                                     final Callback4<DialogInterface> call) {
         return createAlertDialog(context, message, ResourceUtils.getText(context, R.string.lcm_ok),
-                null, new Callback4.EmptyCallback4<DialogInterface>() {
+                null, new Callback4.EmptyCallback<DialogInterface>() {
                     @Override public void onYes(DialogInterface result) {
                         call.onYes(result);
-                    result.dismiss();
-                }
-            });
+                        result.dismiss();
+                    }
+                });
     }
 
     /**
@@ -410,8 +439,7 @@ public class UIUtils {
         AlertDialog.Builder builder = new AlertDialog.Builder(context).setMessage(message);
         if (!TextUtils.isEmpty(positiveButtonText)) {
             builder.setPositiveButton(positiveButtonText, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
+                @Override public void onClick(DialogInterface dialog, int which) {
                     call.onYes(dialog);
                     call.onFinish(dialog);
                 }
@@ -419,8 +447,7 @@ public class UIUtils {
         }
         if (!TextUtils.isEmpty(negativeButtonText)) {
             builder.setNegativeButton(negativeButtonText, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
+                @Override public void onClick(DialogInterface dialog, int which) {
                     call.onNo(dialog);
                     call.onFinish(dialog);
                 }
@@ -436,7 +463,7 @@ public class UIUtils {
      */
     public static void fullscreen(Window window) {
         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-            WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 
     /**
@@ -600,19 +627,20 @@ public class UIUtils {
         return inflate(context, resource, root, root != null);
     }
 
-    @SuppressWarnings("unchecked")
-    public static <T extends View> T inflate(Context context, @LayoutRes int resource,
-                                             ViewGroup root, boolean attachToRoot) {
+    @SuppressWarnings("unchecked") public static <T extends View> T inflate(Context context,
+                                                                            @LayoutRes int resource,
+                                                                            ViewGroup root,
+                                                                            boolean attachToRoot) {
         return (T) LayoutInflater.from(context).inflate(resource, root, attachToRoot);
     }
 
-    @SuppressWarnings("unchecked")
-    public static <T extends View> T findViewById(@NonNull View view, @IdRes int resource) {
+    @SuppressWarnings("unchecked") public static <T extends View> T findViewById(@NonNull View view,
+                                                                                 @IdRes int resource) {
         return (T) view.findViewById(resource);
     }
 
-    @SuppressWarnings("unchecked")
-    public static <T extends View> T findViewById(@NonNull Activity activity, @IdRes int resource) {
+    @SuppressWarnings("unchecked") public static <T extends View> T findViewById(
+            @NonNull Activity activity, @IdRes int resource) {
         return (T) activity.findViewById(resource);
     }
 

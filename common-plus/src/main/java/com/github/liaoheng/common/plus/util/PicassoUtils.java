@@ -240,7 +240,7 @@ public class PicassoUtils {
     }
 
     public Target getDisplayImage(final ImageView imageView,
-                                  final Callback4.EmptyCallback4<Bitmap> listener) {
+                                  final Callback4.EmptyCallback<Bitmap> listener) {
         Target target = new Target() {
             //当图片加载时调用
             @Override public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {

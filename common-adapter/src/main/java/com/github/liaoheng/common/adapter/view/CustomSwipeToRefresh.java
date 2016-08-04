@@ -1,4 +1,4 @@
-package com.github.liaoheng.common.plus.view;
+package com.github.liaoheng.common.adapter.view;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -12,7 +12,7 @@ import android.view.ViewConfiguration;
  */
 public class CustomSwipeToRefresh extends SwipeRefreshLayout {
 
-    private int mTouchSlop;
+    private int   mTouchSlop;
     private float mPrevX;
 
     public CustomSwipeToRefresh(Context context, AttributeSet attrs) {
@@ -21,9 +21,7 @@ public class CustomSwipeToRefresh extends SwipeRefreshLayout {
         mTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
     }
 
-    @SuppressLint("Recycle")
-    @Override
-    public boolean onInterceptTouchEvent(MotionEvent event) {
+    @SuppressLint("Recycle") @Override public boolean onInterceptTouchEvent(MotionEvent event) {
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:

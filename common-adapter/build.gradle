@@ -1,0 +1,38 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode Integer.parseInt(VERSION_CODE)
+        versionName VERSION_NAME
+    }
+    lintOptions {
+        // set to true 关闭lint报告
+        quiet true
+        // lint错误停止构建
+        abortOnError false
+        // if true, 只报告错误
+        ignoreWarnings true
+    }
+}
+
+dependencies {
+    //android system
+    compile deps.supportv4
+    compile deps.appcompatv7
+    compile deps.recyclerviewv7
+    compile deps.design
+
+    //下拉加载:https://github.com/vinaysshenoy/mugen
+    compile 'com.vinaysshenoy:mugen:1.0.3'
+
+    testCompile "org.robolectric:robolectric:3.1.1"
+    testCompile "org.robolectric:robolectric-annotations:3.1.1"
+    testCompile "junit:junit:4.10"
+}
+
+apply from: rootProject.file('gradle-mvn-push.gradle')

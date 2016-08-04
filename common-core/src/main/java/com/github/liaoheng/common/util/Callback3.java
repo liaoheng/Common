@@ -35,7 +35,7 @@ public interface Callback3 {
     /**
      * 无操作通用回调
      */
-    class EmptyCallback3 implements Callback3 {
+    class EmptyCallback implements Callback3 {
         @Override public void onPreExecute() {
 
         }

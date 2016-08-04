@@ -44,12 +44,12 @@ dependencies {
     //日志:https://github.com/orhanobut/logger
     provided 'com.orhanobut:logger:1.8'
     //函数响应式编程:https://github.com/ReactiveX/RxAndroid
-    provided 'io.reactivex:rxandroid:1.1.0'
-    provided 'io.reactivex:rxjava:1.1.0'
+    provided 'io.reactivex:rxandroid:1.2.1'
+    provided 'io.reactivex:rxjava:1.1.6'
 
     testCompile "org.robolectric:robolectric:3.1.1"
     testCompile "org.robolectric:robolectric-annotations:3.1.1"
     testCompile "junit:junit:4.10"
 }
 
-//apply from: rootProject.file('gradle-mvn-push.gradle')
+apply from: rootProject.file('gradle-mvn-push.gradle')

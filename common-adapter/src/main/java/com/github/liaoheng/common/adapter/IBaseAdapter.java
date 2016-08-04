@@ -1,4 +1,4 @@
-package com.github.liaoheng.common.plus.adapter;
+package com.github.liaoheng.common.adapter;
 
 import android.content.Context;
 import android.view.View;

@@ -1,4 +1,4 @@
-package com.github.liaoheng.common.plus.core;
+package com.github.liaoheng.common.adapter.core;
 
 import android.app.Activity;
 import android.content.Context;
@@ -11,16 +11,15 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
+import android.view.LayoutInflater;
 import android.view.View;
-
-import com.github.liaoheng.common.plus.R;
-import com.github.liaoheng.common.plus.adapter.HeaderViewRecyclerAdapter;
-import com.github.liaoheng.common.util.UIUtils;
+import com.github.liaoheng.common.adapter.HeaderViewRecyclerAdapter;
+import com.github.liaoheng.common.adapter.R;
 import com.mugen.Mugen;
 import com.mugen.MugenCallbacks;
 
 /**
- * RecyclerView帮助{@link R.layout#lcp_view_list}
+ * RecyclerView帮助{@link R.layout#lca_view_list}
  *
  * @author liaoheng
  * @version 2015年10月19日
@@ -33,8 +32,8 @@ public class RecyclerViewHelper {
     SwipeRefreshLayout        mSwipeRefreshLayout;
     HeaderViewRecyclerAdapter mHeaderViewRecyclerAdapter;
     View                      none, load;
-    LoadMoreListener          mLoadMoreListener;
-    RefreshListener           mRefreshListener;
+    LoadMoreListener mLoadMoreListener;
+    RefreshListener  mRefreshListener;
 
     public static class KSpanSizeLookup extends GridLayoutManager.SpanSizeLookup {
 
@@ -47,12 +46,13 @@ public class RecyclerViewHelper {
             this.mViewRecyclerAdapter = mViewRecyclerAdapter;
         }
 
-        @Override
-        public int getSpanSize(int position) {
+        @Override public int getSpanSize(int position) {
             if (mViewRecyclerAdapter != null) {
                 if ((mViewRecyclerAdapter.hasHeader() && mViewRecyclerAdapter.isHeader(position))
-                    || mViewRecyclerAdapter.hasFooter() && mViewRecyclerAdapter.isFooter(position))
+                    || mViewRecyclerAdapter.hasFooter() && mViewRecyclerAdapter
+                        .isFooter(position)) {
                     return mLayoutManager.getSpanCount();
+                }
             }
             return 1;
         }
@@ -65,19 +65,19 @@ public class RecyclerViewHelper {
         RecyclerView.LayoutManager layoutManager;
         HeaderViewRecyclerAdapter  headerViewRecyclerAdapter;
         View                       none, load;
-        LoadMoreListener           loadMoreListener;
-        RefreshListener            refreshListener;
+        LoadMoreListener loadMoreListener;
+        RefreshListener  refreshListener;
 
-        public Builder( @NonNull Context context) {
+        public Builder(@NonNull Context context) {
             this.context = context;
         }
 
-        public Builder (@NonNull Context context,@NonNull View contentView){
+        public Builder(@NonNull Context context, @NonNull View contentView) {
             this.context = context;
             initView(contentView);
         }
 
-        public Builder (@NonNull Activity activity){
+        public Builder(@NonNull Activity activity) {
             this.context = activity;
             initView(activity);
         }
@@ -110,42 +110,43 @@ public class RecyclerViewHelper {
         }
 
         /**
-         * 添加底部加载{@link R.layout#lcp_view_list_footer}
+         * 添加底部加载{@link R.layout#lca_view_list_footer}
          *
          * @return
          */
         public Builder addLoadMoreFooterView() {
-            addLoadMoreFooterView(
-                    UIUtils.inflate(context, R.layout.lcp_view_list_footer, getRecyclerView(), false));
+            addLoadMoreFooterView(LayoutInflater.from(context)
+                    .inflate(R.layout.lca_view_list_footer, getRecyclerView(), false));
             return this;
         }
 
         /**
-         * 添加底部加载{@link R.layout#lcp_view_list_footer}
+         * 添加底部加载{@link R.layout#lca_view_list_footer}
          *
          * @return
          */
         public Builder addLoadMoreFooterView(@NonNull View footer) {
-            none = footer.findViewById(R.id.lcp_list_footer_none_btn);
-            load = footer.findViewById(R.id.lcp_list_footer_load);
+            none = footer.findViewById(R.id.lca_list_footer_none_btn);
+            load = footer.findViewById(R.id.lca_list_footer_load);
             addFooterView(footer);
             return this;
         }
 
         /**
-         * 添加底部加载{@link R.layout#lcp_view_list_footer}
+         * 添加底部加载{@link R.layout#lca_view_list_footer}
          *
          * @return
          */
-        public Builder addLoadMoreFooterView(@LayoutRes int footerRes,HandleView handleView) {
-            View footer = UIUtils.inflate(context, footerRes, getRecyclerView(), false);
+        public Builder addLoadMoreFooterView(@LayoutRes int footerRes, HandleView handleView) {
+            View footer = LayoutInflater.from(context).inflate(footerRes, getRecyclerView(), false);
             handleView.handle(footer);
             addLoadMoreFooterView(footer);
             return this;
         }
 
-        public GridLayoutManager.SpanSizeLookup getLoadMoreSpanSizeLookup(GridLayoutManager gridLayoutManager,
-                                                                          HeaderViewRecyclerAdapter headerViewRecyclerAdapter) {
+        public GridLayoutManager.SpanSizeLookup getLoadMoreSpanSizeLookup(
+                GridLayoutManager gridLayoutManager,
+                HeaderViewRecyclerAdapter headerViewRecyclerAdapter) {
             return new KSpanSizeLookup(gridLayoutManager, headerViewRecyclerAdapter);
         }
 
@@ -165,12 +166,12 @@ public class RecyclerViewHelper {
             return this;
         }
 
-        public interface HandleView{
+        public interface HandleView {
             void handle(View view);
         }
 
-        public Builder addHeaderView(@LayoutRes int headerRes,HandleView handleView) {
-            View header = UIUtils.inflate(context, headerRes, getRecyclerView(), false);
+        public Builder addHeaderView(@LayoutRes int headerRes, HandleView handleView) {
+            View header = LayoutInflater.from(context).inflate(headerRes, getRecyclerView(), false);
             handleView.handle(header);
             addHeaderView(header);
             return this;
@@ -204,10 +205,10 @@ public class RecyclerViewHelper {
         public Builder setFooterLoadMoreListener(final LoadMoreListener loadMoreListener) {
             if (none != null) {
                 none.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (loadMoreListener != null)
+                    @Override public void onClick(View v) {
+                        if (loadMoreListener != null) {
                             loadMoreListener.onLoadMore();
+                        }
                     }
                 });
             }
@@ -217,17 +218,17 @@ public class RecyclerViewHelper {
         public Builder setFooterLoadMoreListener() {
             if (none != null) {
                 none.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (loadMoreListener != null)
+                    @Override public void onClick(View v) {
+                        if (loadMoreListener != null) {
                             loadMoreListener.onLoadMore();
+                        }
                     }
                 });
             }
             return this;
         }
 
-        public Builder addRecyclerViewOnScrollListener(RVPauseOnScrollListener listener) {
+        public Builder addRecyclerViewOnScrollListener(RecyclerView.OnScrollListener listener) {
             getRecyclerView().addOnScrollListener(listener);
             return this;
         }
@@ -241,11 +242,11 @@ public class RecyclerViewHelper {
 
         private void initView(@NonNull View contentView) {
             if (recyclerView == null) {
-                recyclerView = (RecyclerView) contentView.findViewById(R.id.lcp_list_recycler_view);
+                recyclerView = (RecyclerView) contentView.findViewById(R.id.lca_list_recycler_view);
             }
             if (swipeRefreshLayout == null) {
                 swipeRefreshLayout = (SwipeRefreshLayout) contentView
-                    .findViewById(R.id.lcp_list_swipe_container);
+                        .findViewById(R.id.lca_list_swipe_container);
                 if (swipeRefreshLayout != null) {
                     swipeRefreshLayout.setEnabled(false);
                 }
@@ -258,7 +259,7 @@ public class RecyclerViewHelper {
 
         public RecyclerViewHelper build() {
             return new RecyclerViewHelper(recyclerView, swipeRefreshLayout,
-                headerViewRecyclerAdapter, none, load, loadMoreListener, refreshListener);
+                    headerViewRecyclerAdapter, none, load, loadMoreListener, refreshListener);
         }
     }
 
@@ -283,8 +284,7 @@ public class RecyclerViewHelper {
 
     public void setRefreshCallback(final boolean refresh) {
         mSwipeRefreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
+            @Override public void run() {
                 mSwipeRefreshLayout.setRefreshing(refresh);
             }
         });
@@ -313,9 +313,9 @@ public class RecyclerViewHelper {
     private void noneVisible() {
         if (none != null) {
             if (getHasLoadedAllItems()) {
-                UIUtils.viewVisible(none);
+                none.setVisibility(View.VISIBLE);
             } else {
-                UIUtils.viewGone(none);
+                none.setVisibility(View.GONE);
             }
         }
     }
@@ -323,9 +323,9 @@ public class RecyclerViewHelper {
     private void loadVisible() {
         if (load != null) {
             if (getHasLoadedAllItems()) {
-                UIUtils.viewGone(load);
+                load.setVisibility(View.GONE);
             } else {
-                UIUtils.viewVisible(load);
+                load.setVisibility(View.VISIBLE);
             }
         }
     }
@@ -336,18 +336,15 @@ public class RecyclerViewHelper {
         }
         Mugen.with(mRecyclerView, new MugenCallbacks() {
 
-            @Override
-            public void onLoadMore() {
+            @Override public void onLoadMore() {
                 mLoadMoreListener.onLoadMore();
             }
 
-            @Override
-            public boolean isLoading() {
+            @Override public boolean isLoading() {
                 return loading;
             }
 
-            @Override
-            public boolean hasLoadedAllItems() {
+            @Override public boolean hasLoadedAllItems() {
                 return getHasLoadedAllItems();
             }
         }).start();
@@ -361,8 +358,7 @@ public class RecyclerViewHelper {
             mSwipeRefreshLayout.setEnabled(true);
             mSwipeRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
 
-                @Override
-                public void onRefresh() {
+                @Override public void onRefresh() {
                     mRefreshListener.onRefresh();
                 }
             });

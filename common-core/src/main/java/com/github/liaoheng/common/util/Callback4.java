@@ -38,7 +38,7 @@ public interface Callback4<T> {
      * 无操作通用回调
      * @param <T>
      */
-    class EmptyCallback4<T> implements Callback4<T> {
+    class EmptyCallback<T> implements Callback4<T> {
         @Override public void onPreExecute() {
 
         }

@@ -12,7 +12,10 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Map;
+import rx.Observable;
+import rx.Subscriber;
 import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * @author liaoheng
@@ -133,6 +136,88 @@ public class Utils {
         subscription.unsubscribe();
     }
 
+    public static <T> Subscriber<T> getSubscribe(final Callback<T> listener) {
+        return new Subscriber<T>() {
+            @Override public void onStart() {
+                super.onStart();
+                if (listener != null) {
+                    HandlerUtils.runOnUiThread(new Runnable() {
+                        @Override public void run() {
+                            listener.onPreExecute();
+                        }
+                    });
+                }
+            }
+
+            @Override public void onCompleted() {
+                if (listener != null) {
+                    listener.onFinish();
+                }
+            }
+
+            @Override public void onError(Throwable e) {
+                if (listener != null) {
+                    listener.onPostExecute();
+                    listener.onError(new SystemException(e));
+                }
+            }
+
+            @Override public void onNext(T t) {
+                if (listener != null) {
+                    listener.onPostExecute();
+                    listener.onSuccess(t);
+                }
+            }
+        };
+    }
+
+    public static <T> Subscriber<T> getSubscribe2(final Callback2<T> listener) {
+        return new Subscriber<T>() {
+            @Override public void onStart() {
+                super.onStart();
+                if (listener != null) {
+                    HandlerUtils.runOnUiThread(new Runnable() {
+                        @Override public void run() {
+                            listener.onPreExecute();
+                        }
+                    });
+                }
+            }
+
+            @Override public void onCompleted() {
+                if (listener != null) {
+                    listener.onFinish();
+                }
+            }
+
+            @Override public void onError(Throwable e) {
+                if (listener != null) {
+                    listener.onPostExecute();
+                    listener.onError(e);
+                }
+            }
+
+            @Override public void onNext(T t) {
+                if (listener != null) {
+                    listener.onPostExecute();
+                    listener.onSuccess(t);
+                }
+            }
+        };
+    }
+
+    public static <T> Subscription addSubscribe(Observable<T> observable,
+                                                final Callback<T> listener) {
+        return observable.observeOn(AndroidSchedulers.mainThread())
+                .subscribe(getSubscribe(listener));
+    }
+
+    public static <T> Subscription addSubscribe2(Observable<T> observable,
+                                                final Callback2<T> listener) {
+        return observable.observeOn(AndroidSchedulers.mainThread())
+                .subscribe(getSubscribe2(listener));
+    }
+
     public static String getContentDispositionFileName(String contentDisposition, String def) {
         if (TextUtils.isEmpty(contentDisposition)) {
             return def;
@@ -158,7 +243,7 @@ public class Utils {
      * @return
      */
     public static long systemDownloadPublicDir(Context context, String title, String url,
-                                                   String dir, String fileName) {
+                                               String dir, String fileName) {
         Uri downUrl = Uri.parse(url);
         DownloadManager downloadManager = (DownloadManager) context
                 .getSystemService(Context.DOWNLOAD_SERVICE);
@@ -178,8 +263,8 @@ public class Utils {
      * @param fileName
      * @return
      */
-    public static long systemDownloadFilesDir(Context context, String title, String url,
-                                                  String dir, String fileName) {
+    public static long systemDownloadFilesDir(Context context, String title, String url, String dir,
+                                              String fileName) {
         Uri downUrl = Uri.parse(url);
         DownloadManager downloadManager = (DownloadManager) context
                 .getSystemService(Context.DOWNLOAD_SERVICE);

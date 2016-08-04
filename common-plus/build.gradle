@@ -48,9 +48,9 @@ dependencies {
     //事件驱动开发:https://github.com/greenrobot/EventBus
     compile 'org.greenrobot:eventbus:3.0.0'
     //函数响应式编程:https://github.com/ReactiveX/RxAndroid
-    compile 'io.reactivex:rxandroid:1.1.0'
-    compile 'io.reactivex:rxjava:1.1.0'
-    compile 'com.trello:rxlifecycle:0.4.0'
+    compile 'io.reactivex:rxandroid:1.2.1'
+    compile 'io.reactivex:rxjava:1.1.6'
+    compile 'com.trello:rxlifecycle:0.6.1'
     //TabLayout:https://github.com/h6ah4i/android-tablayouthelper
     provided('com.h6ah4i.android.tablayouthelper:tablayouthelper:0.7.0'){
         exclude module: 'support-v4'
@@ -73,12 +73,13 @@ dependencies {
     //time:https://github.com/JodaOrg/joda-time
     compile 'joda-time:joda-time:2.9.1'
     compile project(':common-core')
-//    compile 'com.github.liaoheng:common-core:0.0.3-SNAPSHOT'
-
+//    compile 'com.github.liaoheng:common-core:0.0.4-SNAPSHOT'
+    compile project(':common-adapter')
+//    compile 'com.github.liaoheng:common-adapter:0.0.4-SNAPSHOT'
 
     testCompile "org.robolectric:robolectric:3.1.1"
     testCompile "org.robolectric:robolectric-annotations:3.1.1"
     testCompile "junit:junit:4.10"
 }
 
-//apply from: rootProject.file('gradle-mvn-push.gradle')
+apply from: rootProject.file('gradle-mvn-push.gradle')

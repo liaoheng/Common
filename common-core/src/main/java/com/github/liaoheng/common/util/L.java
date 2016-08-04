@@ -166,6 +166,19 @@ public class L {
         }
 
         /**
+         * IFNO
+         *
+         * @param TAG       LOG TAG
+         * @param message   提示模板 %s
+         * @param parameter 参数
+         */
+        public static void i(String TAG, String message, Object... parameter) {
+            if (isPrint()) {
+                android.util.Log.i(TAG, String.format(message, parameter));
+            }
+        }
+
+        /**
          * WARN
          *
          * @param TAG       LOG TAG

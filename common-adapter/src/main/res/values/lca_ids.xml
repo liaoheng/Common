@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="lca_list_swipe_container" type="id"/>
+    <item name="lca_list_recycler_view" type="id"/>
+    <item name="lca_list_footer_none_btn" type="id"/>
+</resources>

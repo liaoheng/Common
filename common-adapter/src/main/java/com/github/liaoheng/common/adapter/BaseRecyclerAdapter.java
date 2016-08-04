@@ -1,12 +1,12 @@
-package com.github.liaoheng.common.plus.adapter;
+package com.github.liaoheng.common.adapter;
 
 import android.content.Context;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.github.liaoheng.common.util.UIUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -20,9 +20,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 public abstract class BaseRecyclerAdapter<K, V extends RecyclerView.ViewHolder>
         extends RecyclerView.Adapter<V> implements IBaseAdapter<K> {
 
-    private Context                mContext;
-    private List<K>                mList;
-    private AtomicInteger          mOldSize;
+    private Context mContext;
+    private List<K> mList;
+    private AtomicInteger mOldSize = new AtomicInteger(0);
     private OnItemClickListener<K> mOnItemClickListener;
 
     public BaseRecyclerAdapter(Context context) {
@@ -39,7 +39,7 @@ public abstract class BaseRecyclerAdapter<K, V extends RecyclerView.ViewHolder>
     }
 
     public View inflate(@LayoutRes int resource, @NonNull ViewGroup root, boolean attachToRoot) {
-        return UIUtils.inflate(getContext(), resource, root, attachToRoot);
+        return LayoutInflater.from(getContext()).inflate(resource,root,attachToRoot);
     }
 
     public int getOldSize() {
@@ -54,13 +54,11 @@ public abstract class BaseRecyclerAdapter<K, V extends RecyclerView.ViewHolder>
         mOldSize.set(size);
     }
 
-    @Override
-    public Context getContext() {
+    @Override public Context getContext() {
         return mContext;
     }
 
-    @Override
-    public List<K> getList() {
+    @Override public List<K> getList() {
         return mList;
     }
 
@@ -72,21 +70,18 @@ public abstract class BaseRecyclerAdapter<K, V extends RecyclerView.ViewHolder>
         return getList() == null || getList().isEmpty();
     }
 
-    @Override
-    public void update(List<K> list) {
+    @Override public void update(List<K> list) {
         setList(list);
     }
 
-    @Override
-    public void clear() {
+    @Override public void clear() {
         if (isEmpty()) {
             return;
         }
         getList().clear();
     }
 
-    @Override
-    public void addAll(List<K> list) {
+    @Override public void addAll(List<K> list) {
         if (null == getList()) {
             setList(list);
         } else {
@@ -106,26 +101,21 @@ public abstract class BaseRecyclerAdapter<K, V extends RecyclerView.ViewHolder>
         getList().add(location, o);
     }
 
-    @Override
-    public void add(K o) {
+    @Override public void add(K o) {
         getList().add(o);
     }
 
-    @Override
-    public void remove(int location) {
+    @Override public void remove(int location) {
         getList().remove(location);
     }
 
-    @Override
-    public void remove(K item) {
+    @Override public void remove(K item) {
         getList().remove(item);
     }
 
-    @Override
-    public abstract V onCreateViewHolder(ViewGroup parent, int viewType);
+    @Override public abstract V onCreateViewHolder(ViewGroup parent, int viewType);
 
-    @Override
-    public void onBindViewHolder(V holder, int position) {
+    @Override public void onBindViewHolder(V holder, int position) {
         K item = getList().get(position);
         setOnItemClick(item, holder.itemView, position);
         onBindViewHolderItem(holder, item, position);
@@ -137,8 +127,7 @@ public abstract class BaseRecyclerAdapter<K, V extends RecyclerView.ViewHolder>
      */
     public abstract void onBindViewHolderItem(V holder, K item, int position);
 
-    @Override
-    public int getItemCount() {
+    @Override public int getItemCount() {
         return isEmpty() ? 0 : getList().size();
     }
 
@@ -148,8 +137,7 @@ public abstract class BaseRecyclerAdapter<K, V extends RecyclerView.ViewHolder>
 
     protected void setOnItemClick(final K item, View view, final int position) {
         view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            @Override public void onClick(View v) {
                 if (mOnItemClickListener != null) {
                     mOnItemClickListener.onItemClick(item, v, position);
                 }

@@ -4,10 +4,9 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import com.github.liaoheng.common.plus.adapter.holder.BaseViewHolder;
+import com.github.liaoheng.common.adapter.BaseListAdapter;
+import com.github.liaoheng.common.adapter.holder.BaseViewHolder;
 import com.github.liaoheng.common.plus.model.SpinnerItem;
-
 import java.util.List;
 
 /**
@@ -22,8 +21,8 @@ public class SpinnerAdapter extends BaseListAdapter<SpinnerItem> {
         super(mContext, mList);
     }
 
-    @Override
-    public View getItemView(SpinnerItem item, int position, View convertView, ViewGroup parent) {
+    @Override public View getItemView(SpinnerItem item, int position, View convertView,
+                                      ViewGroup parent) {
         ViewHolder holder;
         if (convertView == null) {
             convertView = inflate(android.R.layout.simple_spinner_dropdown_item, parent, false);
@@ -32,7 +31,7 @@ public class SpinnerAdapter extends BaseListAdapter<SpinnerItem> {
         } else {
             holder = ViewHolder.getTag(convertView);
         }
-        holder.onHandle(item);
+        holder.onHandle(item, position);
         return convertView;
     }
 
@@ -44,8 +43,7 @@ public class SpinnerAdapter extends BaseListAdapter<SpinnerItem> {
             textView = findViewById(android.R.id.text1);
         }
 
-        @Override
-        public void onHandle(SpinnerItem item) {
+        @Override public void onHandle(SpinnerItem item, int position) {
             textView.setText(item.getName());
         }
     }
