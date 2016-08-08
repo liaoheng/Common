@@ -40,5 +40,6 @@ dependencies {
   //https://github.com/square/okhttp
 //  compile 'com.squareup.okhttp:okhttp:2.4.0'
 
+//  compile 'com.github.liaoheng:common-plus:0.0.2-SNAPSHOT'
   compile project(':common-plus')
 }
