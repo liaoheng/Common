@@ -31,7 +31,7 @@ public class ValidateUtils {
      * @throws SystemException
      */
     public static String isEmpty(String key, SystemException hint) throws SystemException {
-        if (StringUtils.isEmpty(key)) {
+        if (TextUtils.isEmpty(key)) {
             throw hint;
         }
         return key;

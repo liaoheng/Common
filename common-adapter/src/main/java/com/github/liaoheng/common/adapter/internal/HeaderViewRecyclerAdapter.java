@@ -1,4 +1,4 @@
-package com.github.liaoheng.common.adapter;
+package com.github.liaoheng.common.adapter.internal;
 
 /*
  * Copyright (C) 2014 darnmason

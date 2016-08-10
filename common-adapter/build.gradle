@@ -35,4 +35,4 @@ dependencies {
     testCompile "junit:junit:4.10"
 }
 
-apply from: rootProject.file('gradle-mvn-push.gradle')
+//apply from: rootProject.file('gradle-mvn-push.gradle')

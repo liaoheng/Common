@@ -8,14 +8,15 @@ import android.view.MotionEvent;
 import android.view.ViewConfiguration;
 
 /**
+ * SwipeRefreshLayout solve the drop-down and left and right swipe gestures conflict
  * @author http://stackoverflow.com/questions/23989910/horizontalscrollview-inside-swiperefreshlayout
  */
-public class CustomSwipeToRefresh extends SwipeRefreshLayout {
+public class FixTouchSlopSwipeRefreshLayout extends SwipeRefreshLayout {
 
     private int   mTouchSlop;
     private float mPrevX;
 
-    public CustomSwipeToRefresh(Context context, AttributeSet attrs) {
+    public FixTouchSlopSwipeRefreshLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
 
         mTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();

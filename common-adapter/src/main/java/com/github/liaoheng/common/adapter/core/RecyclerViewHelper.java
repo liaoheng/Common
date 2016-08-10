@@ -13,7 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
 import android.view.View;
-import com.github.liaoheng.common.adapter.HeaderViewRecyclerAdapter;
+import com.github.liaoheng.common.adapter.internal.HeaderViewRecyclerAdapter;
 import com.github.liaoheng.common.adapter.R;
 import com.mugen.Mugen;
 import com.mugen.MugenCallbacks;

@@ -9,7 +9,7 @@
         android:layout_height="match_parent"
         android:background="@android:color/transparent"
         android:gravity="center"
-        android:text="没有更多"
+        android:text="@string/lca_no_more"
         android:visibility="gone" />
 
     <LinearLayout
@@ -30,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:text="加载中..."
+            android:text="@string/lca_loading"
             android:textIsSelectable="false" />
     </LinearLayout>
 </FrameLayout>

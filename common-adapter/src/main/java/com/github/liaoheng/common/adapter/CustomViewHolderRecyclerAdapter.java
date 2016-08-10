@@ -7,10 +7,11 @@ import com.github.liaoheng.common.adapter.holder.BaseRecyclerViewHolder;
 import java.util.List;
 
 /**
+ * Custom ViewHolder for RecyclerAdapter
  * @author liaoheng
  * @version 2016-08-01 18:07
  */
-public class OperationRecyclerAdapter<K, H extends BaseRecyclerViewHolder>
+public class CustomViewHolderRecyclerAdapter<K, H extends BaseRecyclerViewHolder>
         extends BaseRecyclerAdapter<K, H> {
     public interface RecyclerAdapterOperation<T, V extends BaseRecyclerViewHolder> {
         V createView(ViewGroup parent, int viewType);
@@ -20,14 +21,14 @@ public class OperationRecyclerAdapter<K, H extends BaseRecyclerViewHolder>
 
     private RecyclerAdapterOperation<K, H> mOperation;
 
-    public OperationRecyclerAdapter(Context context,
-                                    @NonNull RecyclerAdapterOperation<K, H> mOperation) {
+    public CustomViewHolderRecyclerAdapter(Context context,
+                                           @NonNull RecyclerAdapterOperation<K, H> mOperation) {
         super(context);
         this.mOperation = mOperation;
     }
 
-    public OperationRecyclerAdapter(Context context, List<K> list,
-                                    @NonNull RecyclerAdapterOperation<K, H> mOperation) {
+    public CustomViewHolderRecyclerAdapter(Context context, List<K> list,
+                                           @NonNull RecyclerAdapterOperation<K, H> mOperation) {
         super(context, list);
         this.mOperation = mOperation;
     }
