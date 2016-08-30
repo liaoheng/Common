@@ -17,6 +17,11 @@ public class SpinnerItem {
         this.name = name;
     }
 
+    public SpinnerItem(String name, Object object) {
+        this.name = name;
+        this.object = object;
+    }
+
     public String getName() {
         return name;
     }

@@ -1,6 +1,7 @@
 package com.github.liaoheng.common.plus;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import com.github.liaoheng.common.Common;
 import com.github.liaoheng.common.plus.util.OkHttp3Utils;
 import com.github.liaoheng.common.plus.util.OkHttpUtils;
@@ -16,14 +17,14 @@ public class CommonPlus {
     public static String HTTP_CACHE_DIR        = "httpCache";
     public static long   IMAGE_DISK_CACHE_SIZE = 500 * 1024 * 1024; // 500MB;
 
-    public static void init(Context context, String projectName, boolean isDebug) {
+    public static void init(@NonNull Context context, String projectName, boolean isDebug) {
         Common.init(context, projectName, isDebug);
         OkHttpUtils.init().setDefaultCache().initialization();
         PicassoUtils.init().setDefaultDownloader().setDebug(isDebug).initialization(context);
         PreferencesUtils.init(context);
     }
 
-    public static void init2(Context context, String projectName, boolean isDebug) {
+    public static void init2(@NonNull Context context, String projectName, boolean isDebug) {
         Common.init(context, projectName, isDebug);
         OkHttp3Utils.init().setDefaultCache().initialization();
         PreferencesUtils.init(context);

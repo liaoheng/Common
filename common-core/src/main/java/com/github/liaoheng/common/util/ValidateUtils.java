@@ -1,6 +1,7 @@
 package com.github.liaoheng.common.util;
 
 import android.text.TextUtils;
+
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -37,27 +38,61 @@ public class ValidateUtils {
         return key;
     }
 
-    public static void isNumber(String s, String hint) throws SystemException {
+    /**
+     * 判断邮箱是否合法
+     *
+     * @see <a href='http://blog.csdn.net/gao_chun/article/details/39580363'>csdn</a>
+     */
+    public static boolean isEmail(String email) {
+        if (TextUtils.isEmpty(email)) return false;
+        Pattern p = Pattern.compile("\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*");//复杂匹配
+        return p.matcher(email).matches();
+    }
+
+    public static void isEmail(String email, String hint) throws SystemException {
+        if (!isEmail(email)) {
+            throw new SystemException(hint);
+        }
+    }
+
+    public static boolean isNumber(String number) {
+        if (TextUtils.isEmpty(number)) return false;
         Pattern pattern = Pattern.compile("([0-9]+[.][0-9]+)||([0-9]*)");
-        if (!pattern.matcher(s).matches()) {
+        return pattern.matcher(number).matches();
+    }
+
+    public static void isNumber(String number, String hint) throws SystemException {
+        if (!isNumber(number)) {
             throw new SystemException(hint);
         }
     }
 
     public static Integer setInteger(String s, String hint) throws SystemException {
-        isEmpty(s, hint);
         isNumber(s, hint);
         return Integer.parseInt(s);
     }
 
     public static Double setDouble(String s, String hint) throws SystemException {
-        isEmpty(s, hint);
         isNumber(s, hint);
         return Double.parseDouble(s);
     }
 
-    public static void judgeLength(String s, int length, String hint) throws SystemException {
-        if (s.length() > length) {
+    public static boolean greaterLength(String s, int length) {
+        return s.length() > length;
+    }
+
+    public static boolean lessLength(String s, int length) {
+        return s.length() < length;
+    }
+
+    public static void greaterLength(String s, int length, String hint) throws SystemException {
+        if (greaterLength(s, length)) {
+            throw new SystemException(hint);
+        }
+    }
+
+    public static void lessLength(String s, int length, String hint) throws SystemException {
+        if (lessLength(s, length)) {
             throw new SystemException(hint);
         }
     }

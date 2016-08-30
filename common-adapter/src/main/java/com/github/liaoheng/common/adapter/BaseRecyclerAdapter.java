@@ -23,7 +23,8 @@ public abstract class BaseRecyclerAdapter<K, V extends RecyclerView.ViewHolder>
     private Context mContext;
     private List<K> mList;
     private AtomicInteger mOldSize = new AtomicInteger(0);
-    private OnItemClickListener<K> mOnItemClickListener;
+    private OnItemClickListener<K>     mOnItemClickListener;
+    private OnItemLongClickListener<K> mOnItemLongClickListener;
 
     public BaseRecyclerAdapter(Context context) {
         this(context, new ArrayList<K>());
@@ -118,6 +119,7 @@ public abstract class BaseRecyclerAdapter<K, V extends RecyclerView.ViewHolder>
     @Override public void onBindViewHolder(V holder, int position) {
         K item = getList().get(position);
         setOnItemClick(item, holder.itemView, position);
+        setOnItemLongClick(item, holder.itemView, position, getItemId(position));
         onBindViewHolderItem(holder, item, position);
     }
 
@@ -131,16 +133,33 @@ public abstract class BaseRecyclerAdapter<K, V extends RecyclerView.ViewHolder>
         return isEmpty() ? 0 : getList().size();
     }
 
-    public void setOnItemClickListener(OnItemClickListener<K> mOnItemClickListener) {
-        this.mOnItemClickListener = mOnItemClickListener;
+    public void setOnItemClickListener(OnItemClickListener<K> onItemClickListener) {
+        mOnItemClickListener = onItemClickListener;
     }
 
     protected void setOnItemClick(final K item, View view, final int position) {
+        if (mOnItemClickListener == null) {
+            return;
+        }
         view.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
-                if (mOnItemClickListener != null) {
                     mOnItemClickListener.onItemClick(item, v, position);
-                }
+            }
+        });
+    }
+
+    public void setOnItemLongClickListener(OnItemLongClickListener<K> onItemLongClickListener) {
+        mOnItemLongClickListener = onItemLongClickListener;
+    }
+
+    protected void setOnItemLongClick(final K item, final View view, final int position,
+                                      final long id) {
+        if (mOnItemLongClickListener == null) {
+            return;
+        }
+        view.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override public boolean onLongClick(View v) {
+                return mOnItemLongClickListener.onItemLongClick(item, view, position, id);
             }
         });
     }

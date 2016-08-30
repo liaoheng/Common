@@ -143,6 +143,7 @@ public class MimeTypeMap {
                                          { "dbproj", "text/plain" },
                                          { "dcr", "application/x-director" },
                                          { "def", "text/plain" },
+                                         { "text", "text/plain" },
                                          { "deploy", "application/octet-stream" },
                                          { "der", "application/x-x509-ca-cert" },
                                          { "dgml", "application/xml" }, { "dib", "image/bmp" },

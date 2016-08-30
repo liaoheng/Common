@@ -34,7 +34,6 @@ dependencies {
     compile deps.recyclerviewv7
     compile deps.cardviewv7
     compile deps.design
-    compile deps.percent
 
     //https://github.com/FasterXML/jackson-annotations
     provided "com.fasterxml.jackson.core:jackson-annotations:$JacksonVersion"
@@ -66,12 +65,6 @@ dependencies {
     //HTTP+SPDY 客户端//https://github.com/square/okhttp
     provided 'com.squareup.okhttp:okhttp:2.4.0'
     provided 'com.squareup.okhttp3:okhttp:3.3.1'
-    //下拉加载:https://github.com/vinaysshenoy/mugen
-    compile 'com.vinaysshenoy:mugen:1.0.3'
-    //io utils:https://github.com/apache/commons-io
-    compile 'commons-io:commons-io:2.4'
-    //time:https://github.com/JodaOrg/joda-time
-    compile 'joda-time:joda-time:2.9.1'
     compile project(':common-core')
 //    compile 'com.github.liaoheng:common-core:0.0.4-SNAPSHOT'
     compile project(':common-adapter')

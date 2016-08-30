@@ -7,6 +7,9 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Parcelable;
+import android.telephony.TelephonyManager;
+
+import java.util.UUID;
 
 /**
  * 其它工具
@@ -89,5 +92,23 @@ public class AppUtils {
         addSC.putExtra(Intent.EXTRA_SHORTCUT_INTENT, launcherIntent);
         //向系统发送添加快捷键的广播
         context.sendBroadcast(addSC);
+    }
+
+    /**
+     *  得到唯一设备ID,需要权限:uses-permission android:name="android.permission.READ_PHONE_STATE"
+     *  @see <a href='http://stackoverflow.com/questions/2785485/is-there-a-unique-android-device-id/2853253#2853253'>stackoverflow</a>
+     * @param context
+     * @return
+     */
+    public static String getDeviceId(Context context) {
+        final TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+
+        final String tmDevice, tmSerial, androidId;
+        tmDevice = "" + tm.getDeviceId();
+        tmSerial = "" + tm.getSimSerialNumber();
+        androidId = "" + android.provider.Settings.Secure.getString(context.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+
+        UUID deviceUuid = new UUID(androidId.hashCode(), ((long) tmDevice.hashCode() << 32) | tmSerial.hashCode());
+        return deviceUuid.toString();
     }
 }

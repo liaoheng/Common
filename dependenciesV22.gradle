@@ -10,6 +10,5 @@ ext.deps = [
         appcompatv7: 'com.android.support:appcompat-v7:22.2.1',
         recyclerviewv7: 'com.android.support:recyclerview-v7:22.2.1',
         cardviewv7: 'com.android.support:cardview-v7:22.2.1',
-        design: 'com.android.support:design:22.2.1',
-        percent: 'com.android.support:percent:22.2.1'
+        design: 'com.android.support:design:22.2.1'
 ]

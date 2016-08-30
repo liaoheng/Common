@@ -1,11 +1,13 @@
 package com.github.liaoheng.common;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import com.github.liaoheng.common.util.FileUtils;
 import com.github.liaoheng.common.util.L;
 import com.github.liaoheng.common.util.SystemRuntimeException;
 import java.io.File;
+import net.danlew.android.joda.JodaTimeAndroid;
 
 /**
  *
@@ -20,7 +22,7 @@ public class Common {
     private static boolean DEBUG;
     private static File    mExternalCacheDir;
 
-    public static void init(Context context, String projectName, boolean isDebug) {
+    public static void init(@NonNull Context context, String projectName, boolean isDebug) {
         if (TextUtils.isEmpty(projectName)) {
             PROJECT_NAME = context.getPackageName();
         } else {
@@ -28,6 +30,7 @@ public class Common {
         }
         DEBUG = isDebug;
         mExternalCacheDir = FileUtils.getSDExternalPath(context);
+        JodaTimeAndroid.init(context);
         L.init(PROJECT_NAME, isDebug);
     }
 

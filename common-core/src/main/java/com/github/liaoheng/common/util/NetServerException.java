@@ -7,23 +7,23 @@ package com.github.liaoheng.common.util;
  */
 @SystemExceptionNoVessel
 public class NetServerException extends NetException {
-    private String mErrorBody;
+    private Object mErrorBody;
 
-    public NetServerException(String errorMessage, String errorBody) {
+    public NetServerException(String errorMessage, Object errorBody) {
         super(errorMessage);
         mErrorBody = errorBody;
     }
 
-    public NetServerException(String errorBody) {
+    public NetServerException(Object errorBody) {
         super("");
         mErrorBody = errorBody;
     }
 
-    public String getErrorBody() {
-        return mErrorBody;
+    @SuppressWarnings("unchecked") public <T> T getErrorBody() {
+        return (T) mErrorBody;
     }
 
-    public void setErrorBody(String mErrorBody) {
+    public void setErrorBody(Object mErrorBody) {
         this.mErrorBody = mErrorBody;
     }
 

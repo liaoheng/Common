@@ -32,8 +32,10 @@ dependencies {
     compile deps.appcompatv7
     provided deps.design
 
-    provided 'commons-io:commons-io:2.4'
-    provided 'joda-time:joda-time:2.9.1'
+    //io utils:https://github.com/apache/commons-io
+    compile 'commons-io:commons-io:2.4'
+    //time:https://github.com/dlew/joda-time-android
+    compile 'net.danlew:android.joda:2.9.4.1'
 
     //https://github.com/FasterXML/jackson-annotations
     provided 'com.fasterxml.jackson.core:jackson-annotations:2.5.1'

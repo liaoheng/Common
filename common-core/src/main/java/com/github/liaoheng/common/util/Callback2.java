@@ -46,7 +46,7 @@ public interface Callback2<T> {
 
         }
 
-        @Override public void onSuccess(T o) {
+        @Override public void onSuccess(T t) {
 
         }
 

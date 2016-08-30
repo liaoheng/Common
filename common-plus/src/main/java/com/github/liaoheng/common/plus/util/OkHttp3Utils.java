@@ -2,14 +2,13 @@ package com.github.liaoheng.common.plus.util;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.TextUtils;
 import com.github.liaoheng.common.plus.CommonPlus;
 import com.github.liaoheng.common.util.BitmapUtils;
 import com.github.liaoheng.common.util.Callback;
 import com.github.liaoheng.common.util.FileUtils;
 import com.github.liaoheng.common.util.L;
+import com.github.liaoheng.common.util.MimeTypeMap;
 import com.github.liaoheng.common.util.NetException;
 import com.github.liaoheng.common.util.NetLocalException;
 import com.github.liaoheng.common.util.NetServerException;
@@ -18,6 +17,7 @@ import com.github.liaoheng.common.util.SystemRuntimeException;
 import com.github.liaoheng.common.util.Utils;
 import com.trello.rxlifecycle.ActivityEvent;
 import com.trello.rxlifecycle.RxLifecycle;
+import java.io.EOFException;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -39,8 +39,10 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 import okhttp3.internal.Util;
 import okio.Buffer;
+import okio.BufferedSource;
 import org.apache.commons.io.FilenameUtils;
 import rx.Observable;
 import rx.Subscription;
@@ -56,8 +58,6 @@ import rx.schedulers.Schedulers;
 public class OkHttp3Utils {
     private final String    TAG          = OkHttp3Utils.class.getSimpleName();
     public final  MediaType JSON         = MediaType.parse("application/json; charset=utf-8");
-    private final Handler   mMainHandler = new Handler(Looper.getMainLooper());
-
     private final OkHttpClient             mClient;
     private       ErrorHandleListener      mErrorHandleListener;
     private final Map<String, String>      mHeaders;
@@ -79,16 +79,17 @@ public class OkHttp3Utils {
         /**
          *
          * @param response {@link Response}
-         * @return Response body
-         * @throws NetServerException
+         * @return Response
+         * @throws NetException
          */
-        String checkError(Response response) throws NetServerException;
+        Response checkError(Response response) throws NetException;
     }
 
     private OkHttp3Utils(OkHttpClient.Builder builder, ErrorHandleListener errorHandleListener,
                          List<HeaderPlusListener> headerPluses, Map<String, String> headers) {
-        builder.networkInterceptors().add(new HeaderPlusInterceptor());
-        builder.networkInterceptors().add(new LogInterceptor(TAG));
+        builder.interceptors().add(new HeaderPlusInterceptor());
+        builder.interceptors().add(new ErrorInterceptor());
+        builder.interceptors().add(new LogInterceptor(TAG));
 
         this.mClient = builder.build();
         this.mErrorHandleListener = errorHandleListener;
@@ -163,30 +164,27 @@ public class OkHttp3Utils {
             OkHttp3Utils.setInit(build());
         }
 
+        public ErrorHandleListener getDefaultErrorHandleListener() {
+            return new ErrorHandleListener() {
+                @Override public Response checkError(Response response) throws NetServerException {
+                    if (!response.isSuccessful()) {
+                        String string = "code : " + response.code();
+                        if (response.body().contentLength() > 0) {
+                            try {
+                                string = response.body().string();
+                            } catch (IOException ignored) {
+                            }
+                        }
+                        throw new NetServerException(response.message(), string);
+                    }
+                    return response;
+                }
+            };
+        }
+
         public OkHttp3Utils build() {
             if (builder == null) {
                 builder = new OkHttpClient.Builder();
-            }
-            if (errorHandleListener == null) {
-                errorHandleListener = new ErrorHandleListener() {
-                    @Override public String checkError(Response response)
-                            throws NetServerException {
-                        String string = "";
-                        try {
-                            string = response.body().string();
-                        } catch (IOException ignored) {
-                        }
-                        if (!response.isSuccessful()) {
-                            if (TextUtils.isEmpty(string)) {
-                                throw new NetServerException(response.message(),
-                                        "code : " + response.code());
-                            } else {
-                                throw new NetServerException(response.message(), string);
-                            }
-                        }
-                        return string;
-                    }
-                };
             }
             if (headerPlus == null) {
                 headerPlus = new LinkedList<>();
@@ -399,6 +397,22 @@ public class OkHttp3Utils {
         }
     }
 
+    private class ErrorInterceptor implements Interceptor {
+
+        @Override public Response intercept(Chain chain) throws IOException {
+            Response response = chain.proceed(chain.request());
+            if (mErrorHandleListener != null) {
+                try {
+                    return mErrorHandleListener.checkError(response);
+                } catch (NetException e) {
+                    throw new SystemRuntimeException(e);
+                }
+            } else {
+                return response;
+            }
+        }
+    }
+
     public static class LogInterceptor implements Interceptor {
 
         private String tag;
@@ -410,19 +424,67 @@ public class OkHttp3Utils {
         public LogInterceptor(String tag) {
             this.tag = tag;
         }
-
+        /**
+         * Returns true if the body in question probably contains human readable text. Uses a small sample
+         * of code points to detect unicode control characters commonly used in binary file signatures.
+         */
+        private static boolean isPlaintext(Buffer buffer) throws EOFException {
+            try {
+                Buffer prefix = new Buffer();
+                long byteCount = buffer.size() < 64 ? buffer.size() : 64;
+                buffer.copyTo(prefix, 0, byteCount);
+                for (int i = 0; i < 16; i++) {
+                    if (prefix.exhausted()) {
+                        break;
+                    }
+                    int codePoint = prefix.readUtf8CodePoint();
+                    if (Character.isISOControl(codePoint) && !Character.isWhitespace(codePoint)) {
+                        return false;
+                    }
+                }
+                return true;
+            } catch (EOFException e) {
+                return false; // Truncated UTF-8 sequence.
+            }
+        }
         @Override public Response intercept(Chain chain) throws IOException {
 
-            Response response = chain.proceed(chain.request());
-            Request request = chain.request().newBuilder().build();
-            String url = request.url().toString();
-            String method = request.method();
+            Request request = chain.request();
+            long t1 = System.nanoTime();
+            L.Log.d(tag, "Sending request %s on %s%n%s", request.url(), request.method(),
+                    request.headers());
 
-            L.Log.d(tag, "Url:%s    Method:%s", url, method);
-            if (request.body() != null) {
-                final Buffer buffer = new Buffer();
-                request.body().writeTo(buffer);
-                L.json(tag, buffer.readUtf8());
+            try {
+                if (request.body() != null) {
+                    if (!request.body().contentType()
+                            .equals(MediaType.parse("multipart/form-data"))) {
+                        final Buffer buffer = new Buffer();
+                        request.body().writeTo(buffer);
+                        if (isPlaintext(buffer)) {
+                            L.Log.d(tag, buffer.clone().readUtf8());
+                        }
+                    }
+                }
+            } catch (Exception ignored) {
+            }
+
+            Response response = chain.proceed(request);
+
+            long t2 = System.nanoTime();
+            L.Log.d(tag, "Received response(%s) for %s in %.1fms%n%s", response.code(),
+                    response.request().url(), (t2 - t1) / 1e6d, response.headers());
+
+            try {
+                if (response.body() != null) {
+                    ResponseBody responseBody = response.body();
+                    BufferedSource source = responseBody.source();
+                    source.request(Long.MAX_VALUE); // Buffer the entire body.
+                    Buffer buffer = source.buffer();
+                    if (isPlaintext(buffer)) {
+                        L.Log.d(tag, buffer.clone().readUtf8());
+                    }
+                }
+            } catch (Exception ignored) {
             }
             return response;
         }
@@ -431,10 +493,6 @@ public class OkHttp3Utils {
     @Deprecated
     public <T> Subscription addSubscribe(Observable<T> observable, final Callback<T> listener) {
         return Utils.addSubscribe(observable, listener);
-    }
-
-    public String error(Response response) throws NetServerException {
-        return mErrorHandleListener.checkError(response);
     }
 
     public String getSync(String url) throws NetException {
@@ -457,7 +515,7 @@ public class OkHttp3Utils {
     public String getSync(OkHttpClient client, Request request) throws NetException {
         try {
             Response response = client.newCall(request).execute();
-            String json = error(response);
+            String json = response.body().toString();
             L.json(TAG, json);
             return json;
         } catch (IOException e) {
@@ -492,7 +550,7 @@ public class OkHttp3Utils {
     public String postSync(OkHttpClient client, Request request) throws NetException {
         try {
             Response response = client.newCall(request).execute();
-            String json = error(response);
+            String json = response.body().toString();
             L.json(TAG, json);
             return json;
         } catch (IOException e) {
@@ -516,7 +574,6 @@ public class OkHttp3Utils {
     public Response headSync(OkHttpClient client, Request request) throws NetException {
         try {
             Response response = client.newCall(request).execute();
-            error(response);
             Map<String, List<String>> stringListMap = response.headers().toMultimap();
             for (Map.Entry<String, List<String>> entry : stringListMap.entrySet()) {
                 L.Log.d(TAG, "header > key:%s   value:%s ", entry.getKey(), entry.getValue());
@@ -702,7 +759,7 @@ public class OkHttp3Utils {
                                         return Observable
                                                 .just(new FileDownload(FilenameUtils.getName(url),
                                                         url));
-                                    }
+                                }
                                     Response response = OkHttp3Utils.get().headSync(url);
                                     String header = response.header("Content-Disposition");
                                     String fileName = Utils.getContentDispositionFileName(header,
@@ -710,7 +767,7 @@ public class OkHttp3Utils {
                                     return Observable.just(new FileDownload(fileName, url));
                                 } catch (NetException e) {
                                     throw new SystemRuntimeException(e);
-                                }
+                            }
                             }
                         });
             }
@@ -731,13 +788,12 @@ public class OkHttp3Utils {
                                     Request request = new Request.Builder()
                                             .url(fileDownload.getUrl()).build();
                                     Response response = builder.build().newCall(request).execute();
-                                    error(response);
                                     return Observable
                                             .just(new FileDownload(fileDownload.getFileName(),
                                                     response.body().bytes()));
-                                } catch (IOException | NetServerException e) {
+                                } catch (IOException e) {
                                     throw new SystemRuntimeException(e);
-                                }
+                            }
                             }
                         });
             }
@@ -779,7 +835,7 @@ public class OkHttp3Utils {
                             return new FileDownload(file);
                         } catch (SystemException e) {
                             throw new SystemRuntimeException(e);
-                        }
+                    }
                     }
                 });
         return addSubscribe(observable, callback);
