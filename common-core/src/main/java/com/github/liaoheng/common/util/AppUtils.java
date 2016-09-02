@@ -1,14 +1,12 @@
 package com.github.liaoheng.common.util;
 
 import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Parcelable;
 import android.telephony.TelephonyManager;
-
 import java.util.UUID;
 
 /**
@@ -20,17 +18,17 @@ public class AppUtils {
 
     /**
      * 获取应用程序名称
-     * @param mContext
+     * @param context
      * @return
      * @throws SystemException
      * @author <a href="http://www.trinea.cn" target="_blank">Trinea</a> 2014-5-07
      */
-    public static String getAppName(Context mContext) throws SystemException {
+    public static String getAppName(Context context) throws SystemException {
         try {
-            PackageManager packageManager = mContext.getPackageManager();
-            PackageInfo packageInfo = packageManager.getPackageInfo(mContext.getPackageName(), 0);
+            PackageManager packageManager = context.getPackageManager();
+            PackageInfo packageInfo = packageManager.getPackageInfo(context.getPackageName(), 0);
             int labelRes = packageInfo.applicationInfo.labelRes;
-            return mContext.getResources().getString(labelRes);
+            return context.getResources().getString(labelRes);
         } catch (PackageManager.NameNotFoundException e) {
             throw new SystemException("应用程序名称获取失败!", e);
         }
@@ -39,10 +37,10 @@ public class AppUtils {
     /**
      * 获得系统版本信息
      *
-     * @param application {@link Application}
+     * @param application {@link Context}
      * @return {@link PackageInfo}
      */
-    public static PackageInfo getVersionInfo(Application application) throws SystemException {
+    public static PackageInfo getVersionInfo(Context application) throws SystemException {
         PackageManager mg = application.getPackageManager();
         try {
             return mg.getPackageInfo(application.getPackageName(), 0);
@@ -56,18 +54,17 @@ public class AppUtils {
     }
 
     /**
-     * 重启应用
+     * 重启应用:需要启动界面与后面界面在一个task中，如果使用单例需用singleTask。
+     *
      * @param activity
      */
     public static void restartApplication(Activity activity) {
-        Intent i = activity.getBaseContext().getPackageManager()
+        Intent intent = activity.getBaseContext().getPackageManager()
             .getLaunchIntentForPackage(activity.getBaseContext().getPackageName());
-        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        activity.startActivity(i);
-
-        System.exit(0);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        activity.startActivity(intent);
     }
 
     /**

@@ -8,7 +8,6 @@ import com.github.liaoheng.common.util.BitmapUtils;
 import com.github.liaoheng.common.util.Callback;
 import com.github.liaoheng.common.util.FileUtils;
 import com.github.liaoheng.common.util.L;
-import com.github.liaoheng.common.util.MimeTypeMap;
 import com.github.liaoheng.common.util.NetException;
 import com.github.liaoheng.common.util.NetLocalException;
 import com.github.liaoheng.common.util.NetServerException;
@@ -413,6 +412,10 @@ public class OkHttp3Utils {
         }
     }
 
+    /**
+     * http log
+     * @see <a href="https://github.com/square/okhttp/blob/master/okhttp-logging-interceptor/src/main/java/okhttp3/logging/HttpLoggingInterceptor.java">HttpLoggingInterceptor</a>
+     */
     public static class LogInterceptor implements Interceptor {
 
         private String tag;
@@ -424,11 +427,12 @@ public class OkHttp3Utils {
         public LogInterceptor(String tag) {
             this.tag = tag;
         }
+
         /**
          * Returns true if the body in question probably contains human readable text. Uses a small sample
          * of code points to detect unicode control characters commonly used in binary file signatures.
          */
-        private static boolean isPlaintext(Buffer buffer) throws EOFException {
+        private static boolean isPlaintext(Buffer buffer){
             try {
                 Buffer prefix = new Buffer();
                 long byteCount = buffer.size() < 64 ? buffer.size() : 64;
@@ -447,6 +451,7 @@ public class OkHttp3Utils {
                 return false; // Truncated UTF-8 sequence.
             }
         }
+
         @Override public Response intercept(Chain chain) throws IOException {
 
             Request request = chain.request();

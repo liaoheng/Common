@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:orientation="vertical">
+
+    <LinearLayout
+            android:paddingTop="25dp"
+            android:paddingRight="5dp"
+            android:paddingLeft="5dp"
+            android:paddingBottom="5dp"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <TextView
+                android:layout_marginLeft="5dp"
+                tools:text="message"
+                android:id="@id/lcp_text_dialog_message"
+                android:textColor="@android:color/black"
+                android:textSize="20sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        <EditText
+                android:layout_marginTop="10dp"
+                android:focusable="true"
+                android:id="@id/lcp_text_dialog_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        <LinearLayout
+                android:gravity="end"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <Button
+                    android:id="@id/lcp_text_dialog_cancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:background="?selectableItemBackground"
+                    android:text="@string/lcm_no"/>
+
+            <Button
+                    android:id="@id/lcp_text_dialog_ok"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:background="?selectableItemBackground"
+                    android:text="@string/lcm_ok"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <FrameLayout
+                 android:clickable="true"
+                 android:visibility="gone"
+                 android:background="@android:color/white"
+                 android:layout_width="match_parent"
+                 android:layout_height="match_parent">
+
+        <ProgressBar
+                android:layout_gravity="center"
+                android:id="@id/lcp_progress"
+                android:layout_width="40dp"
+                android:layout_height="40dp"/>
+
+    </FrameLayout>
+</FrameLayout>

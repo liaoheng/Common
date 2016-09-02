@@ -1,0 +1,8 @@
+<resources>
+
+    <style name="LCP.Dialog" parent="Theme.AppCompat.Light.Dialog.Alert" >
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+     </style>
+
+</resources>

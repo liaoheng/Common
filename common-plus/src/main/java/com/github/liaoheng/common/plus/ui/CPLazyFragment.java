@@ -1,6 +1,7 @@
 package com.github.liaoheng.common.plus.ui;
 
 import android.os.Bundle;
+import android.support.annotation.CallSuper;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.FrameLayout;
@@ -71,9 +72,12 @@ public class CPLazyFragment extends CPBaseFragment {
 		}
 	}
 
-	@Deprecated
+	/**
+	 * 得到activity的onStart()
+	 */
+	@CallSuper
 	@Override
-	public final void onStart() {
+	public void onStart() {
 		super.onStart();
 		if (isInit && !isStart && getUserVisibleHint()) {
 			isStart = true;
@@ -81,9 +85,12 @@ public class CPLazyFragment extends CPBaseFragment {
 		}
 	}
 
-	@Deprecated
+	/**
+	 * 得到activity的onStop()
+	 */
+	@CallSuper
 	@Override
-	public final void onStop() {
+	public void onStop() {
 		super.onStop();
 		if (isInit && isStart && getUserVisibleHint()) {
 			isStart = false;

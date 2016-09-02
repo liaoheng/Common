@@ -12,4 +12,10 @@
     <item name="lcp_tab_pager_view_pager" type="id"/>
 
     <item name="lcp_web_view" type="id"/>
+
+
+    <item name="lcp_text_dialog_message" type="id"/>
+    <item name="lcp_text_dialog_edit_text" type="id"/>
+    <item name="lcp_text_dialog_cancel" type="id"/>
+    <item name="lcp_text_dialog_ok" type="id"/>
 </resources>

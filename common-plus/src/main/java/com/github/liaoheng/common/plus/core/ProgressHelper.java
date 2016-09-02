@@ -26,9 +26,6 @@ public class ProgressHelper {
     }
 
     public ProgressHelper(ProgressBar progressBar) {
-        if (progressBar == null) {
-            throw new IllegalArgumentException("ProgressBar is null");
-        }
         mProgressBar = progressBar;
     }
 
@@ -40,11 +37,22 @@ public class ProgressHelper {
         UIUtils.viewVisible(mProgressBar);
     }
 
+    public void visibleParent() {
+        UIUtils.viewVisible((View) mProgressBar.getParent());
+    }
+
     public void inVisible() {
         UIUtils.viewInVisible(mProgressBar);
     }
 
+    public void inVisibleParent() {
+        UIUtils.viewInVisible((View) mProgressBar.getParent());
+    }
+
     public void gone() {
         UIUtils.viewGone(mProgressBar);
+    }
+    public void goneParent() {
+        UIUtils.viewGone((View) mProgressBar.getParent());
     }
 }
