@@ -19,14 +19,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 文字输入对话框，带进度条，样式使用：<br>
- *      {@code
- *          <style name="AppTheme.Dialog" parent="@style/CP.Dialog">
- *                  <item name="colorPrimary">@color/colorPrimary</item>
-*                   <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
- *                  <item name="colorAccent">@color/colorAccent</item>
- *         </style>
- *        }
+ * 文字输入对话框，带进度条，<br/>
+ * 自定义样式可继承:LCP_Dialog || Theme.AppCompat.Light.Dialog.Alert || Theme.AppCompat.Dialog.Alert,
+ * 不需要标题栏添加:
+ * <pre>
+ *     &lt;item name="windowActionBar"&gt;false&lt;/item&gt;
+ *     &lt;item name="windowNoTitle"&gt;true&lt;/item&gt;
+ * </pre>
+ *
  * @author liaoheng
  * @version 2016-08-30 14:10
  */
@@ -165,12 +165,22 @@ public class CPTextDialog extends AppCompatDialog {
         return this;
     }
 
-    public CPTextDialog setMessage(String message) {
+    public CPTextDialog setMessage(CharSequence message) {
         mMessage.setText(message);
         return this;
     }
 
-    public CPTextDialog setText(String text) {
+    /**
+     * 默认对话框标题
+     * @param title
+     * @return
+     */
+    public CPTextDialog setMTitle(CharSequence title) {
+        super.setTitle(title);
+        return this;
+    }
+
+    public CPTextDialog setEditText(CharSequence text) {
         mEditText.setText(text);
         if (!TextUtils.isEmpty(text)) {
             mEditText.setSelection(text.length());
@@ -179,12 +189,12 @@ public class CPTextDialog extends AppCompatDialog {
         return this;
     }
 
-    public CPTextDialog setCancelText(String text) {
+    public CPTextDialog setCancelText(CharSequence text) {
         mCancel.setText(text);
         return this;
     }
 
-    public CPTextDialog setOKText(String text) {
+    public CPTextDialog setOKText(CharSequence text) {
         mOK.setText(text);
         return this;
     }
@@ -222,8 +232,12 @@ public class CPTextDialog extends AppCompatDialog {
         return new CPTextDialog(context).enableSingleText();
     }
 
-    public static CPTextDialog multi(Context context) {
-        return new CPTextDialog(context).enableMultiText();
+    public static CPTextDialog single(Context context, int theme) {
+        return new CPTextDialog(context, theme).enableSingleText();
+    }
+
+    public static CPTextDialog multi(Context context, int theme) {
+        return new CPTextDialog(context, theme).enableMultiText();
     }
 
     public static CPTextDialog with(Context context) {
