@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -9,9 +9,28 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent"/>
 
-  <Button
-      android:id="@+id/load_image"
-      android:text="load image"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"/>
-</FrameLayout>
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <Button
+                android:id="@+id/load_image"
+                android:text="load image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        <Button
+                android:id="@+id/open_single_input_dialog"
+                android:text="open single input dialog"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        <Button
+                android:id="@+id/open_multi_input_dialog"
+                android:text="open multi input dialog"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+</android.support.design.widget.CoordinatorLayout>

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.widget.Toast;
+import com.github.liaoheng.common.R;
 import java.io.File;
 import java.lang.reflect.Array;
 import java.util.Collection;
@@ -36,24 +37,6 @@ public class Utils {
     }
 
     /**
-     * 是否为网络地址
-     * @param url
-     * @return
-     */
-    public static boolean isHtmlUrl(String url) {
-        return isHtmlUrl(Uri.parse(url));
-    }
-
-    /**
-     * 是否为网络地址
-     * @param uri
-     * @return
-     */
-    public static boolean isHtmlUrl(Uri uri) {
-        return !TextUtils.isEmpty(uri.getScheme());
-    }
-
-    /**
      * URL是否为指定网站
      * @param baseAuthority
      * @param url
@@ -61,7 +44,7 @@ public class Utils {
      */
     public static boolean isCurAuthority(String baseAuthority, String url) {
         Uri uri = Uri.parse(url);
-        if (!isHtmlUrl(uri)) {
+        if (!ValidateUtils.isWebUrl(uri)) {
             return false;
         }
         String authority = uri.getAuthority();
@@ -82,7 +65,7 @@ public class Utils {
      * @return
      */
     public static String appendUrlParameter(String url, String key, String value) {
-        if (!isHtmlUrl(url)) {
+        if (!ValidateUtils.isWebUrl(url)) {
             return url;
         }
         Uri uri = Uri.parse(url);
@@ -102,7 +85,8 @@ public class Utils {
      * @param activity
      */
     public static void doubleExitActivity(final Activity activity) {
-        doubleOperation(activity, 2000, "再按一次退出程序！", new Callback.EmptyCallback<Void>() {
+        doubleOperation(activity, 2000, activity.getString(R.string.lcm_press_again_to_exit),
+                new Callback.EmptyCallback<Void>() {
             @Override public void onSuccess(Void o) {
                 activity.finish();
             }
@@ -126,6 +110,10 @@ public class Utils {
         }
     }
 
+    /**
+     *  退订RxJava
+     * @param subscription {@link Subscription#unsubscribe()}
+     */
     public static void unsubscribe(Subscription subscription) {
         if (subscription == null) {
             return;
@@ -218,6 +206,12 @@ public class Utils {
                 .subscribe(getSubscribe2(listener));
     }
 
+    /**
+     * 从HTTP Response contentDisposition 中得到文件名
+     * @param contentDisposition <a href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec19.html">rfc2616</a>
+     * @param def 默认值
+     * @return
+     */
     public static String getContentDispositionFileName(String contentDisposition, String def) {
         if (TextUtils.isEmpty(contentDisposition)) {
             return def;

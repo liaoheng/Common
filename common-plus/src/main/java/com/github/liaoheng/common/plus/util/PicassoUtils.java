@@ -13,6 +13,7 @@ import com.github.liaoheng.common.util.Callback4;
 import com.github.liaoheng.common.util.FileUtils;
 import com.github.liaoheng.common.util.SystemException;
 import com.github.liaoheng.common.util.Utils;
+import com.github.liaoheng.common.util.ValidateUtils;
 import com.jakewharton.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Downloader;
 import com.squareup.picasso.MemoryPolicy;
@@ -347,7 +348,7 @@ public class PicassoUtils {
             imageView.setImageResource(mDefaultError);
             return true;
         }
-        if (Utils.isHtmlUrl(uri)) {
+        if (ValidateUtils.isWebUrl(uri)) {
             if (TextUtils.isEmpty(uri.getPath())) {
                 imageView.setImageResource(mDefaultError);
                 return true;
@@ -362,7 +363,7 @@ public class PicassoUtils {
     }
 
     public Uri StringToUri(String url) {
-        if (Utils.isHtmlUrl(url)) {
+        if (ValidateUtils.isWebUrl(url)) {
             return Uri.parse(url);
         } else {
             return Uri.fromFile(new File(url));

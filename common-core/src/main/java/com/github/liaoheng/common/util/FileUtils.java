@@ -1,6 +1,8 @@
 package com.github.liaoheng.common.util;
 
+import android.os.Environment;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.UUID;
 
@@ -9,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.github.liaoheng.common.Common;
+import org.apache.commons.io.IOUtils;
 
 /**
  * 文件工具
@@ -17,6 +20,35 @@ import com.github.liaoheng.common.Common;
  */
 public class FileUtils extends org.apache.commons.io.FileUtils {
     private static final String TAG = FileUtils.class.getSimpleName();
+
+    /**
+     * 写入字符串到SD卡根目录下文件
+     * @param fileName 文件名
+     * @param data 写入字符
+     * @throws SystemException
+     */
+    public static void writeFileSDRoot(String fileName, CharSequence data) throws SystemException {
+        File file = FileUtils.createFile(Environment.getExternalStorageDirectory(), fileName);
+        writeFile(file, data);
+    }
+
+    /**
+     * 写入字符串到文件
+     * @param file 需要写入的文件
+     * @param data 写入字符
+     * @throws SystemException
+     */
+    public static void writeFile(File file, CharSequence data) throws SystemException {
+        FileOutputStream fileOutputStream = null;
+        try {
+            fileOutputStream = FileUtils.openOutputStream(file);
+            IOUtils.write(data, fileOutputStream);
+        } catch (IOException e) {
+            throw new SystemException(e);
+        } finally {
+            IOUtils.closeQuietly(fileOutputStream);
+        }
+    }
 
     /**
      * 创建临时文件

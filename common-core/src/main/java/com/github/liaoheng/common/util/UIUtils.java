@@ -35,10 +35,8 @@ import com.github.liaoheng.common.R;
  * @version 2015-07-21 20:05:13
  */
 public class UIUtils {
-    public static int LENGTH_LONG        = Toast.LENGTH_LONG;
-    public static int LENGTH_SHORT       = Toast.LENGTH_SHORT;
-    public static int SNACK_LENGTH_SHORT = Snackbar.LENGTH_SHORT;
-    public static int SNACK_LENGTH_LONG  = Snackbar.LENGTH_LONG;
+    public static int TOAST_DEFAULT_TIME     = Toast.LENGTH_LONG;
+    public static int SNACK_BAR_DEFAULT_TIME = Snackbar.LENGTH_LONG;
 
     private static Toast mToast;
 
@@ -49,7 +47,7 @@ public class UIUtils {
      * @param hint
      */
     public static void showToast(@NonNull Context context, String hint) {
-        showToast(context, hint, LENGTH_LONG);
+        showToast(context, hint, TOAST_DEFAULT_TIME);
     }
 
     /**
@@ -104,7 +102,7 @@ public class UIUtils {
      ********/
 
     public static void showSnack(@NonNull Activity activity, String hint) {
-        showSnack(activity, hint, SNACK_LENGTH_LONG);
+        showSnack(activity, hint, SNACK_BAR_DEFAULT_TIME);
     }
 
     public static void showSnack(@NonNull Activity activity, @StringRes int hint) {
@@ -118,7 +116,7 @@ public class UIUtils {
 
     public static void showSnack(@NonNull Activity activity, final String hint, final String action,
                                  final Callback2<View> callback2) {
-        showSnack(activity, hint, SNACK_LENGTH_LONG, action, callback2);
+        showSnack(activity, hint, SNACK_BAR_DEFAULT_TIME, action, callback2);
     }
 
     public static void showSnack(@NonNull Activity activity, final String hint, final int duration,
@@ -138,7 +136,7 @@ public class UIUtils {
     }
 
     public static void showSnack(@NonNull View view, String hint) {
-        showSnack(view, hint, SNACK_LENGTH_LONG);
+        showSnack(view, hint, SNACK_BAR_DEFAULT_TIME);
     }
 
     public static void showSnack(@NonNull View view, final String hint, final int duration) {
@@ -148,7 +146,7 @@ public class UIUtils {
 
     public static void showSnack(@NonNull View view, final String hint, final String action,
                                  final Callback2<View> callback2) {
-        showSnack(view, hint, SNACK_LENGTH_LONG, action, callback2);
+        showSnack(view, hint, SNACK_BAR_DEFAULT_TIME, action, callback2);
     }
 
     public static void showSnack(@NonNull View view, final String hint, final int duration,

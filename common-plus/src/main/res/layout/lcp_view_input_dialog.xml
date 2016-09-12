@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--https://material.google.com/components/dialogs.html#dialogs-specs-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content">
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <LinearLayout
+                android:orientation="vertical"
+                android:paddingTop="24dp"
+                android:paddingLeft="24dp"
+                android:paddingRight="24dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            <TextView
+                    android:textStyle="bold"
+                    tools:text="message"
+                    android:id="@id/lcp_input_dialog_message"
+                    android:textColor="@android:color/black"
+                    android:textSize="24sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                <android.support.design.widget.TextInputEditText
+                        android:textSize="16sp"
+                        android:focusable="true"
+                        android:id="@id/lcp_input_dialog_edit_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:gravity="end"
+                android:layout_width="match_parent"
+                android:layout_height="52dp">
+
+            <Button
+                    style="?buttonBarNegativeButtonStyle"
+                    android:layout_marginRight="8dp"
+                    android:textColor="?colorAccent"
+                    android:id="@id/lcp_input_dialog_cancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:background="?selectableItemBackground"
+                    android:text="@string/lcm_no"/>
+
+            <Button
+                    style="?buttonBarPositiveButtonStyle"
+                    android:layout_marginRight="8dp"
+                    android:textColor="?colorAccent"
+                    android:id="@id/lcp_input_dialog_ok"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:background="?selectableItemBackground"
+                    android:text="@string/lcm_ok"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <FrameLayout
+            android:clickable="true"
+            android:visibility="gone"
+            android:background="@android:color/white"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <ProgressBar
+                android:layout_gravity="center"
+                android:id="@id/lcp_progress"
+                android:layout_width="40dp"
+                android:layout_height="40dp"/>
+
+    </FrameLayout>
+</FrameLayout>

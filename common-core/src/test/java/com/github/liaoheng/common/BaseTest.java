@@ -14,4 +14,8 @@ public class BaseTest {
     @Before public void setUp() throws Exception {
         ShadowLog.stream = System.out;
     }
+
+    public void log(String msg, Object... o) {
+        ShadowLog.d(TAG, String.format(msg, o));
+    }
 }

@@ -1,7 +1,9 @@
 package com.github.liaoheng.common.util;
 
+import android.net.Uri;
 import android.text.TextUtils;
 
+import android.util.Patterns;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -12,6 +14,25 @@ import java.util.regex.Pattern;
  * @author https://github.com/artjimlop/chernobyl
  */
 public class ValidateUtils {
+
+    /**
+     * 是否为网络地址
+     * @param url
+     * @return
+     */
+    public static boolean isWebUrl(String url) {
+        return isWebUrl(Uri.parse(url));
+    }
+
+    /**
+     * 是否为网络地址
+     * @param uri
+     * @return
+     */
+    public static boolean isWebUrl(Uri uri) {
+        return Patterns.WEB_URL.matcher(uri.toString()).matches();
+    }
+
     /**
      * 数据为空
      *

@@ -3,13 +3,17 @@ package com.github.liaoheng.common.sample;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import com.bumptech.glide.Glide;
+import com.github.liaoheng.common.plus.core.CPInputDialogClickListener;
 import com.github.liaoheng.common.plus.ui.CPBaseActivity;
-import com.github.liaoheng.common.plus.ui.WebViewActivity;
 import com.github.liaoheng.common.plus.util.GlideCompressTransformation;
 import com.github.liaoheng.common.plus.util.OkHttp3Utils;
+import com.github.liaoheng.common.plus.view.CPInputDialog;
 import com.github.liaoheng.common.util.Callback;
 import com.github.liaoheng.common.util.L;
 import com.github.liaoheng.common.util.SystemException;
@@ -24,29 +28,48 @@ import rx.Subscription;
 
 public class MainActivity extends CPBaseActivity {
 
+    @BindView(R.id.image)
     ImageView image;
+
+    private Subscription   douban;
+    private ProgressDialog progressDialog;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
         progressDialog = UIUtils.createProgressDialog(this, "加载图片信息中...");
         progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override public void onCancel(DialogInterface dialog) {
                 Utils.unsubscribe(douban);
             }
         });
-
-        image = UIUtils.findViewById(this, R.id.image);
-        UIUtils.findViewById(this, R.id.load_image).setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                photo();
-                //WebViewActivity.start(getActivity(), "http://www.baidu.com", true);
-            }
-        });
     }
 
-    private Subscription   douban;
-    private ProgressDialog progressDialog;
+    @OnClick(R.id.open_single_input_dialog) void openSingleInputDialog() {
+        CPInputDialog.single(getActivity(), R.style.AppTheme_Dialog).setMessage("Single Input")
+                .setClickListener(new CPInputDialogClickListener.EmptyCPInputDialogClickListener() {
+                    @Override public void onYes(CPInputDialog dialog, EditText editText,
+                                                String text) {
+                        UIUtils.showToast(getApplicationContext(),text);
+                    }
+                }).show();
+    }
+
+    @OnClick(R.id.open_multi_input_dialog) void openMultiInputDialog() {
+        CPInputDialog.multi(getActivity(), R.style.AppTheme_Dialog).setMessage("Multi Input")
+                .setClickListener(new CPInputDialogClickListener.EmptyCPInputDialogClickListener() {
+                    @Override public void onYes(CPInputDialog dialog, EditText editText,
+                                                String text) {
+                        UIUtils.showToast(getApplicationContext(),text);
+                    }
+                }).show();
+    }
+
+
+    @OnClick(R.id.load_image) void loadImage() {
+        photo();
+    }
 
     private void photo() {
 

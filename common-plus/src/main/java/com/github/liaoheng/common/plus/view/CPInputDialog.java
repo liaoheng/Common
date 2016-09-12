@@ -12,7 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import com.github.liaoheng.common.plus.R;
-import com.github.liaoheng.common.plus.core.CPTextDialogClickListener;
+import com.github.liaoheng.common.plus.core.CPInputDialogClickListener;
 import com.github.liaoheng.common.plus.core.ProgressHelper;
 import com.github.liaoheng.common.util.InputMethodUtils;
 import java.util.ArrayList;
@@ -20,7 +20,7 @@ import java.util.List;
 
 /**
  * 文字输入对话框，带进度条，<br/>
- * 自定义样式可继承:LCP_Dialog || Theme.AppCompat.Light.Dialog.Alert || Theme.AppCompat.Dialog.Alert,
+ * 自定义样式可继承:LCP.Input.Dialog || Theme.AppCompat.Light.Dialog.Alert || Theme.AppCompat.Dialog.Alert,
  * 不需要标题栏添加:
  * <pre>
  *     &lt;item name="windowActionBar"&gt;false&lt;/item&gt;
@@ -30,19 +30,19 @@ import java.util.List;
  * @author liaoheng
  * @version 2016-08-30 14:10
  */
-public class CPTextDialog extends AppCompatDialog {
+public class CPInputDialog extends AppCompatDialog {
 
-    public CPTextDialog(Context context) {
-        super(context, R.style.LCP_Dialog);
+    public CPInputDialog(Context context) {
+        super(context, R.style.LCP_Input_Dialog);
         init(0);
     }
 
-    public CPTextDialog(Context context, int theme) {
+    public CPInputDialog(Context context, int theme) {
         super(context, theme);
         init(0);
     }
 
-    public CPTextDialog(Context context, int theme, @LayoutRes int layout) {
+    public CPInputDialog(Context context, int theme, @LayoutRes int layout) {
         super(context, theme);
         init(layout);
     }
@@ -52,8 +52,8 @@ public class CPTextDialog extends AppCompatDialog {
     Button   mCancel;
     Button   mOK;
 
-    CPTextDialogClickListener mClickListener;
-    ProgressHelper            mProgressHelper;
+    CPInputDialogClickListener mClickListener;
+    ProgressHelper             mProgressHelper;
 
     List<OnShowListener>    mOnShowListeners    = new ArrayList<>();
     List<OnDismissListener> mOnDismissListeners = new ArrayList<>();
@@ -61,20 +61,20 @@ public class CPTextDialog extends AppCompatDialog {
     private void init(@LayoutRes int layout) {
         //supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         if (layout <= 0) {
-            setContentView(R.layout.lcp_view_text_dialog);
+            setContentView(R.layout.lcp_view_input_dialog);
         } else {
             setContentView(layout);
         }
         initAction();
     }
 
-    public CPTextDialog initAction() {
+    public CPInputDialog initAction() {
         mProgressHelper = ProgressHelper.with(getWindow().getDecorView());
 
-        mMessage = (TextView) findViewById(R.id.lcp_text_dialog_message);
-        mEditText = (EditText) findViewById(R.id.lcp_text_dialog_edit_text);
-        mOK = (Button) findViewById(R.id.lcp_text_dialog_ok);
-        mCancel = (Button) findViewById(R.id.lcp_text_dialog_cancel);
+        mMessage = (TextView) findViewById(R.id.lcp_input_dialog_message);
+        mEditText = (EditText) findViewById(R.id.lcp_input_dialog_edit_text);
+        mOK = (Button) findViewById(R.id.lcp_input_dialog_ok);
+        mCancel = (Button) findViewById(R.id.lcp_input_dialog_cancel);
         View.OnClickListener oKClickListener = new View.OnClickListener() {
             @Override public void onClick(View v) {
                 if (mClickListener == null) {
@@ -139,24 +139,24 @@ public class CPTextDialog extends AppCompatDialog {
         throw new IllegalStateException("You cannot use");
     }
 
-    public CPTextDialog addOnDismissListener(OnDismissListener listener) {
+    public CPInputDialog addOnDismissListener(OnDismissListener listener) {
         mOnDismissListeners.add(listener);
         return this;
     }
 
-    public CPTextDialog addOnShowListener(OnShowListener listener) {
+    public CPInputDialog addOnShowListener(OnShowListener listener) {
         mOnShowListeners.add(listener);
         return this;
     }
 
-    public CPTextDialog enableSingleText() {
+    public CPInputDialog enableSingleText() {
         mEditText.setSingleLine();
         mEditText.setMaxLines(1);
         mEditText.setHorizontalScrollBarEnabled(true);
         return this;
     }
 
-    public CPTextDialog enableMultiText() {
+    public CPInputDialog enableMultiText() {
         mEditText.setMaxLines(4);
         mEditText.setMinLines(2);
         mEditText.setGravity(Gravity.TOP | Gravity.START);
@@ -165,7 +165,7 @@ public class CPTextDialog extends AppCompatDialog {
         return this;
     }
 
-    public CPTextDialog setMessage(CharSequence message) {
+    public CPInputDialog setMessage(CharSequence message) {
         mMessage.setText(message);
         return this;
     }
@@ -175,12 +175,12 @@ public class CPTextDialog extends AppCompatDialog {
      * @param title
      * @return
      */
-    public CPTextDialog setMTitle(CharSequence title) {
+    public CPInputDialog setMTitle(CharSequence title) {
         super.setTitle(title);
         return this;
     }
 
-    public CPTextDialog setEditText(CharSequence text) {
+    public CPInputDialog setEditText(CharSequence text) {
         mEditText.setText(text);
         if (!TextUtils.isEmpty(text)) {
             mEditText.setSelection(text.length());
@@ -189,18 +189,24 @@ public class CPTextDialog extends AppCompatDialog {
         return this;
     }
 
-    public CPTextDialog setCancelText(CharSequence text) {
+    public CPInputDialog setCancelText(CharSequence text) {
         mCancel.setText(text);
         return this;
     }
 
-    public CPTextDialog setOKText(CharSequence text) {
+    public CPInputDialog setOKText(CharSequence text) {
         mOK.setText(text);
         return this;
     }
 
-    public CPTextDialog setClickListener(CPTextDialogClickListener clickListener) {
+    public CPInputDialog setClickListener(CPInputDialogClickListener clickListener) {
         mClickListener = clickListener;
+        return this;
+    }
+
+    public CPInputDialog enableCanNotClose() {
+        super.setCancelable(false);
+        super.setCanceledOnTouchOutside(false);
         return this;
     }
 
@@ -212,7 +218,7 @@ public class CPTextDialog extends AppCompatDialog {
         return mEditText;
     }
 
-    public CPTextDialog getDialog() {
+    public CPInputDialog getDialog() {
         return this;
     }
 
@@ -228,19 +234,23 @@ public class CPTextDialog extends AppCompatDialog {
         getProgressHelper().goneParent();
     }
 
-    public static CPTextDialog single(Context context) {
-        return new CPTextDialog(context).enableSingleText();
+    public static CPInputDialog single(Context context) {
+        return new CPInputDialog(context).enableSingleText();
     }
 
-    public static CPTextDialog single(Context context, int theme) {
-        return new CPTextDialog(context, theme).enableSingleText();
+    public static CPInputDialog single(Context context, int theme) {
+        return new CPInputDialog(context, theme).enableSingleText();
     }
 
-    public static CPTextDialog multi(Context context, int theme) {
-        return new CPTextDialog(context, theme).enableMultiText();
+    public static CPInputDialog multi(Context context) {
+        return new CPInputDialog(context).enableMultiText();
     }
 
-    public static CPTextDialog with(Context context) {
-        return new CPTextDialog(context);
+    public static CPInputDialog multi(Context context, int theme) {
+        return new CPInputDialog(context, theme).enableMultiText();
+    }
+
+    public static CPInputDialog with(Context context) {
+        return new CPInputDialog(context);
     }
 }
