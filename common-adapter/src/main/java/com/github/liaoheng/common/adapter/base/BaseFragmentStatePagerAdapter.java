@@ -1,4 +1,4 @@
-package com.github.liaoheng.common.adapter;
+package com.github.liaoheng.common.adapter.base;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;

@@ -4,7 +4,7 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
-import com.github.liaoheng.common.adapter.BaseFragmentStatePagerAdapter;
+import com.github.liaoheng.common.adapter.base.BaseFragmentStatePagerAdapter;
 import com.github.liaoheng.common.plus.core.TabPagerHelper;
 import com.github.liaoheng.common.plus.model.PagerTab;
 import com.github.liaoheng.common.util.L;

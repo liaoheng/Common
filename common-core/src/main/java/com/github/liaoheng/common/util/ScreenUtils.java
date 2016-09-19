@@ -1,24 +1,37 @@
 package com.github.liaoheng.common.util;
+
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
+import android.os.Build;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.WindowManager;
 
 /**
  * 获得屏幕相关的辅助类
- *
- *
- *
  */
 public class ScreenUtils
 {
-    private ScreenUtils()
+    private ScreenUtils() {
+    }
+
+    /**
+     * @see <a href="http://stackoverflow.com/questions/32226750/android-immersive-sticky-mode-creates-margins-on-left-and-right-of-screen">stackoverflow</a>
+     * @param context
+     * @return
+     */
+    public static DisplayMetrics getScreenInfo(Context context)
     {
-        /** cannot be instantiated **/
-        throw new UnsupportedOperationException("cannot be instantiated");
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics outMetrics = new DisplayMetrics();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            wm.getDefaultDisplay().getRealMetrics(outMetrics);
+        } else {
+            wm.getDefaultDisplay().getMetrics(outMetrics);
+        }
+        return outMetrics;
     }
 
     /**
@@ -29,11 +42,7 @@ public class ScreenUtils
      */
     public static int getScreenWidth(Context context)
     {
-        WindowManager wm = (WindowManager) context
-                .getSystemService(Context.WINDOW_SERVICE);
-        DisplayMetrics outMetrics = new DisplayMetrics();
-        wm.getDefaultDisplay().getMetrics(outMetrics);
-        return outMetrics.widthPixels;
+        return getScreenInfo(context).widthPixels;
     }
 
     /**
@@ -44,11 +53,7 @@ public class ScreenUtils
      */
     public static int getScreenHeight(Context context)
     {
-        WindowManager wm = (WindowManager) context
-                .getSystemService(Context.WINDOW_SERVICE);
-        DisplayMetrics outMetrics = new DisplayMetrics();
-        wm.getDefaultDisplay().getMetrics(outMetrics);
-        return outMetrics.heightPixels;
+        return getScreenInfo(context).heightPixels;
     }
 
     /**
@@ -56,23 +61,15 @@ public class ScreenUtils
      *
      * @param context
      * @return
+     * @see <a href="http://stackoverflow.com/questions/3407256/height-of-status-bar-in-android">stackoverflow</a>
      */
-    public static int getStatusHeight(Context context)
-    {
-
-        int statusHeight = -1;
-        try
-        {
-            Class<?> clazz = Class.forName("com.android.internal.R$dimen");
-            Object object = clazz.newInstance();
-            int height = Integer.parseInt(clazz.getField("status_bar_height")
-                    .get(object).toString());
-            statusHeight = context.getResources().getDimensionPixelSize(height);
-        } catch (Exception e)
-        {
-            e.printStackTrace();
+    public int getStatusBarHeight(Context context) {
+        int result = 0;
+        int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = context.getResources().getDimensionPixelSize(resourceId);
         }
-        return statusHeight;
+        return result;
     }
 
     /**
