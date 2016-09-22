@@ -2,8 +2,6 @@
 <resources>
     <string name="lcp_success">成功</string>
     <string name="lcp_fail">失败</string>
-    <string name="lcp_ok">@android:string/ok</string>
-    <string name="lcp_no">@android:string/no</string>
     <string name="lcp_share">分享</string>
     <string name="lcp_open_with_browser">打开浏览器</string>
     <string name="lcp_copy_url">@android:string/copyUrl</string>

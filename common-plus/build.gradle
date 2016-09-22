@@ -36,11 +36,11 @@ dependencies {
     compile deps.design
 
     //https://github.com/FasterXML/jackson-annotations
-    provided "com.fasterxml.jackson.core:jackson-annotations:$JacksonVersion"
+    compile "com.fasterxml.jackson.core:jackson-annotations:$JacksonVersion"
     //https://github.com/FasterXML/jackson-databind
-    provided "com.fasterxml.jackson.core:jackson-databind:$JacksonVersion"
+    compile "com.fasterxml.jackson.core:jackson-databind:$JacksonVersion"
     //https://github.com/FasterXML/jackson-core
-    provided "com.fasterxml.jackson.core:jackson-core:$JacksonVersion"
+    compile "com.fasterxml.jackson.core:jackson-core:$JacksonVersion"
 
     //日志:https://github.com/orhanobut/logger
     compile 'com.orhanobut:logger:1.8'
@@ -56,19 +56,13 @@ dependencies {
         exclude module: 'appcompat-v7'
         exclude module: 'design'
     }
-    //图片加载:https://github.com/bumptech/glide
-    provided 'com.github.bumptech.glide:glide:3.7.0'
-    //图片加载:https://github.com/square/picasso
-    provided 'com.squareup.picasso:picasso:2.5.2'
-    //https://github.com/JakeWharton/picasso2-okhttp3-downloader
-    provided 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.0.2'
-    //HTTP+SPDY 客户端//https://github.com/square/okhttp
-    provided 'com.squareup.okhttp:okhttp:2.4.0'
-    provided 'com.squareup.okhttp3:okhttp:3.3.1'
+
     compile project(':common-core')
 //    compile 'com.github.liaoheng:common-core:0.0.4-SNAPSHOT'
     compile project(':common-adapter')
 //    compile 'com.github.liaoheng:common-adapter:0.0.4-SNAPSHOT'
+    compile project(':common-net')
+    compile project(':common-ui')
 
     testCompile "org.robolectric:robolectric:3.1.1"
     testCompile "org.robolectric:robolectric-annotations:3.1.1"

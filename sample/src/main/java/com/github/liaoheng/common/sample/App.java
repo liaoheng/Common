@@ -1,10 +1,8 @@
 package com.github.liaoheng.common.sample;
 
 import android.app.Application;
-import com.github.liaoheng.common.Common;
 import com.github.liaoheng.common.plus.BuildConfig;
 import com.github.liaoheng.common.plus.CommonPlus;
-import com.github.liaoheng.common.plus.util.OkHttpUtils;
 
 /**
  * @author liaoheng

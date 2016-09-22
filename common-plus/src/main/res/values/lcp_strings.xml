@@ -2,8 +2,6 @@
 <resources>
     <string name="lcp_success">Success</string>
     <string name="lcp_fail">Fail</string>
-    <string name="lcp_ok">@string/lcm_ok</string>
-    <string name="lcp_no">@string/lcm_no</string>
     <string name="lcp_share">Share</string>
     <string name="lcp_open_with_browser">Open With Browser</string>
     <string name="lcp_copy_url">@android:string/copyUrl</string>

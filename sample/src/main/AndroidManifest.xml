@@ -19,10 +19,10 @@
         <category android:name="android.intent.category.LAUNCHER"/>
       </intent-filter>
     </activity>
-    <activity android:name="com.github.liaoheng.common.plus.ui.WebViewActivity"/>
+    <activity android:name="com.github.liaoheng.common.ui.WebViewActivity"/>
 
     <meta-data
-        android:name="com.github.liaoheng.common.plus.util.CPGlideModule"
+        android:name="com.github.liaoheng.common.network.CPGlideModule"
         android:value="GlideModule" />
   </application>
 
