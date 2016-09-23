@@ -10,7 +10,10 @@ import com.github.liaoheng.common.util.SystemException;
 import java.io.File;
 
 /**
- * Glide Config
+ * Glide Config eg:
+ * <pre>
+ *      &lt;meta-data android:name="com.github.liaoheng.common.network.CPGlideModule" android:value="GlideModule" /&gt;
+ * </pre>
  * @author liaoheng
  * @version 2016-06-24 14:19
  */

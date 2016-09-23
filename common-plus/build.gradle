@@ -32,7 +32,6 @@ dependencies {
     compile deps.supportv4
     compile deps.appcompatv7
     compile deps.recyclerviewv7
-    compile deps.cardviewv7
     compile deps.design
 
     //https://github.com/FasterXML/jackson-annotations
