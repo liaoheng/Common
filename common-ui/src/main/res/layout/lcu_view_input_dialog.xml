@@ -22,7 +22,7 @@
                     tools:text="message"
                     android:id="@id/lcp_input_dialog_message"
                     android:textColor="@android:color/black"
-                    android:textSize="24sp"
+                    android:textSize="22sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 

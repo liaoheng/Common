@@ -1,7 +1,5 @@
 package com.github.liaoheng.common.sample;
 
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -11,39 +9,32 @@ import butterknife.OnClick;
 import com.bumptech.glide.Glide;
 import com.github.liaoheng.common.network.GlideCompressTransformation;
 import com.github.liaoheng.common.network.OkHttp3Utils;
-import com.github.liaoheng.common.ui.base.CPBaseActivity;
+import com.github.liaoheng.common.ui.base.CPRxBaseActivity;
 import com.github.liaoheng.common.ui.core.CPInputDialogClickListener;
+import com.github.liaoheng.common.ui.core.ProgressHelper;
 import com.github.liaoheng.common.ui.view.CPInputDialog;
 import com.github.liaoheng.common.util.Callback;
 import com.github.liaoheng.common.util.L;
 import com.github.liaoheng.common.util.SystemException;
 import com.github.liaoheng.common.util.UIUtils;
-import com.github.liaoheng.common.util.Utils;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import rx.Subscription;
 
-public class MainActivity extends CPBaseActivity {
+public class MainActivity extends CPRxBaseActivity {
 
     @BindView(R.id.image)
     ImageView image;
 
-    private Subscription   douban;
-    private ProgressDialog progressDialog;
+    private ProgressHelper mProgressHelper;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        progressDialog = UIUtils.createProgressDialog(this, "加载图片信息中...");
-        progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override public void onCancel(DialogInterface dialog) {
-                Utils.unsubscribe(douban);
-            }
-        });
+        mProgressHelper = ProgressHelper.with(this);
     }
 
     @OnClick(R.id.open_single_input_dialog) void openSingleInputDialog() {
@@ -73,15 +64,15 @@ public class MainActivity extends CPBaseActivity {
 
     private void photo() {
 
-        douban = OkHttp3Utils.get()
-                .getAsyncToJsonString("https://api.douban.com/v2/album/103756651/photos",
+        OkHttp3Utils.get()
+                .getAsyncToJsonString(lifecycle(),"https://api.douban.com/v2/album/103756651/photos",
                         new Callback.EmptyCallback<String>() {
                             @Override public void onPreExecute() {
-                                progressDialog.show();
+                                mProgressHelper.visible();
                             }
 
                             @Override public void onError(SystemException e) {
-                                UIUtils.dismissDialog(progressDialog);
+                                mProgressHelper.gone();
                                 L.getToast().e(TAG, getActivity(), e);
                             }
 
@@ -101,13 +92,10 @@ public class MainActivity extends CPBaseActivity {
                                             .transform(
                                                     new GlideCompressTransformation(getActivity(),
                                                             800)).into(image);
+                                    mProgressHelper.gone();
                                 } catch (Exception e) {
                                     L.getToast().e(TAG, getActivity(), e);
                                 }
-                            }
-
-                            @Override public void onFinish() {
-                                progressDialog.dismiss();
                             }
                         });
     }
