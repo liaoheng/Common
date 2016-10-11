@@ -5,7 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.github.liaoheng.common.adapter.base.BaseListAdapter;
-import com.github.liaoheng.common.adapter.holder.BaseViewHolder;
+import com.github.liaoheng.common.adapter.holder.BaseListViewHolder;
 import com.github.liaoheng.common.ui.model.SpinnerItem;
 import java.util.List;
 
@@ -35,7 +35,7 @@ public class SpinnerAdapter extends BaseListAdapter<SpinnerItem> {
         return convertView;
     }
 
-    class ViewHolder extends BaseViewHolder<SpinnerItem> {
+    class ViewHolder extends BaseListViewHolder<SpinnerItem> {
         TextView textView;
 
         public ViewHolder(View itemView) {

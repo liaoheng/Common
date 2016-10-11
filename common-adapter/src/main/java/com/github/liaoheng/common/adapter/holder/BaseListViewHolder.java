@@ -5,15 +5,15 @@ import android.support.annotation.IdRes;
 import android.view.View;
 
 /**
- * Base ViewHolder for ListView
+ * Base ListViewHolder for ListView
  *
  * @author liaoheng
  * @version 2015年10月21日
  */
-public abstract class BaseViewHolder<K> implements IBaseViewHolder<K> {
+public abstract class BaseListViewHolder<K> implements IBaseViewHolder<K> {
     private final View itemView;
 
-    public BaseViewHolder(View itemView) {
+    public BaseListViewHolder(View itemView) {
         if (itemView == null) {
             throw new IllegalArgumentException("itemView is null");
         }
@@ -23,11 +23,11 @@ public abstract class BaseViewHolder<K> implements IBaseViewHolder<K> {
     @Override public void onHandle(K item, int position) {
     }
 
-    @Override public <T extends View> T findViewById(@IdRes int id) {
+    @SuppressWarnings("unchecked") @Override public <T extends View> T findViewById(@IdRes int id) {
         return (T) itemView.findViewById(id);
     }
 
-    @SuppressWarnings("unchecked") public <T extends BaseViewHolder> T setTag() {
+    @SuppressWarnings("unchecked") public <T extends BaseListViewHolder> T setTag() {
         itemView.setTag(this);
         return (T) this;
     }

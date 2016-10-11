@@ -166,10 +166,6 @@ public class RecyclerViewHelper {
             return this;
         }
 
-        public interface HandleView {
-            void handle(View view);
-        }
-
         public Builder addHeaderView(@LayoutRes int headerRes, HandleView handleView) {
             View header = LayoutInflater.from(context).inflate(headerRes, getRecyclerView(), false);
             handleView.handle(header);

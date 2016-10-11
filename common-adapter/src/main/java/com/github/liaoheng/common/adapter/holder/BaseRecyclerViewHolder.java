@@ -18,7 +18,7 @@ public abstract class BaseRecyclerViewHolder<K> extends RecyclerView.ViewHolder
         super(itemView);
     }
 
-    @Override public <T extends View> T findViewById(@IdRes int id) {
+    @SuppressWarnings("unchecked") @Override public <T extends View> T findViewById(@IdRes int id) {
         return (T) itemView.findViewById(id);
     }
 

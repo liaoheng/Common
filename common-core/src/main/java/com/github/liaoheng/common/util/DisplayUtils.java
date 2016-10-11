@@ -12,48 +12,73 @@ import android.view.WindowManager;
 /**
  * 获得屏幕相关的辅助类
  */
-public class ScreenUtils
-{
-    private ScreenUtils() {
+public class DisplayUtils {
+    private DisplayUtils() {
     }
 
     /**
      * @see <a href="http://stackoverflow.com/questions/32226750/android-immersive-sticky-mode-creates-margins-on-left-and-right-of-screen">stackoverflow</a>
      * @param context
+     * @param real 计算Navigation Bar的高度
      * @return
      */
-    public static DisplayMetrics getScreenInfo(Context context)
+    public static DisplayMetrics getScreenInfo(Context context,boolean real)
     {
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         DisplayMetrics outMetrics = new DisplayMetrics();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            wm.getDefaultDisplay().getRealMetrics(outMetrics);
-        } else {
+        if (real){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                wm.getDefaultDisplay().getRealMetrics(outMetrics);
+            }
+        }else{
             wm.getDefaultDisplay().getMetrics(outMetrics);
         }
         return outMetrics;
     }
 
+    public static DisplayMetrics getScreenInfo(Context context)
+    {
+        return getScreenInfo(context,false);
+    }
+
     /**
-     * 获得屏幕高度
+     * 获得屏幕高度 -Navigation Bar
      *
      * @param context
      * @return
      */
-    public static int getScreenWidth(Context context)
-    {
+    public static int getScreenWidth(Context context) {
         return getScreenInfo(context).widthPixels;
     }
 
     /**
-     * 获得屏幕宽度
+     * 获得屏幕宽度 -Navigation Bar
      *
      * @param context
      * @return
      */
-    public static int getScreenHeight(Context context)
-    {
+    public static int getScreenHeight(Context context) {
         return getScreenInfo(context).heightPixels;
+    }
+
+    /**
+     * 获得屏幕高度  +Navigation Bar
+     *
+     * @param context
+     * @return
+     */
+    public static int getScreenWidthRealMetrics(Context context) {
+        return getScreenInfo(context,true).widthPixels;
+    }
+
+    /**
+     * 获得屏幕宽度  +Navigation Bar
+     *
+     * @param context
+     * @return
+     */
+    public static int getScreenHeightRealMetrics(Context context) {
+        return getScreenInfo(context,true).heightPixels;
     }
 
     /**
@@ -63,9 +88,10 @@ public class ScreenUtils
      * @return
      * @see <a href="http://stackoverflow.com/questions/3407256/height-of-status-bar-in-android">stackoverflow</a>
      */
-    public int getStatusBarHeight(Context context) {
+    public static int getStatusBarHeight(Context context) {
         int result = 0;
-        int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
+        int resourceId = context.getResources()
+                .getIdentifier("status_bar_height", "dimen", "android");
         if (resourceId > 0) {
             result = context.getResources().getDimensionPixelSize(resourceId);
         }
@@ -78,19 +104,16 @@ public class ScreenUtils
      * @param activity
      * @return
      */
-    public static Bitmap snapShotWithStatusBar(Activity activity)
-    {
+    public static Bitmap snapShotWithStatusBar(Activity activity) {
         View view = activity.getWindow().getDecorView();
         view.setDrawingCacheEnabled(true);
         view.buildDrawingCache();
         Bitmap bmp = view.getDrawingCache();
         int width = getScreenWidth(activity);
         int height = getScreenHeight(activity);
-        Bitmap bp = null;
-        bp = Bitmap.createBitmap(bmp, 0, 0, width, height);
+        Bitmap bp = Bitmap.createBitmap(bmp, 0, 0, width, height);
         view.destroyDrawingCache();
         return bp;
-
     }
 
     /**
@@ -99,8 +122,7 @@ public class ScreenUtils
      * @param activity
      * @return
      */
-    public static Bitmap snapShotWithoutStatusBar(Activity activity)
-    {
+    public static Bitmap snapShotWithoutStatusBar(Activity activity) {
         View view = activity.getWindow().getDecorView();
         view.setDrawingCacheEnabled(true);
         view.buildDrawingCache();
@@ -111,12 +133,9 @@ public class ScreenUtils
 
         int width = getScreenWidth(activity);
         int height = getScreenHeight(activity);
-        Bitmap bp = null;
-        bp = Bitmap.createBitmap(bmp, 0, statusBarHeight, width, height
-                - statusBarHeight);
+        Bitmap bp = Bitmap.createBitmap(bmp, 0, statusBarHeight, width, height - statusBarHeight);
         view.destroyDrawingCache();
         return bp;
-
     }
 
 }

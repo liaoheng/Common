@@ -17,8 +17,8 @@ import org.joda.time.DateTime;
  * @author liaoheng
  * @version 2016-09-22 16:26
  */
-public class LogDebugFileUtils {
-    private static final String TAG = LogDebugFileUtils.class.getSimpleName();
+public class LogFileUtils {
+    private static final String TAG = LogFileUtils.class.getSimpleName();
 
     public final static String LEVEL_VERBOSE = " VERBOSE ";
     public final static String LEVEL_DEBUG   = " DEBUG ";
@@ -34,16 +34,16 @@ public class LogDebugFileUtils {
     private static final String DEFAULT_FILE_NAME = "debug_log.txt";
     private              File   mLogFile          = new File(
             Environment.getExternalStorageDirectory(), DEFAULT_FILE_NAME);
-    private static LogDebugFileUtils instance;
+    private static LogFileUtils instance;
 
-    private LogDebugFileUtils() {
+    private LogFileUtils() {
     }
 
-    public static synchronized LogDebugFileUtils get() {
+    public static synchronized LogFileUtils get() {
         if (instance == null) {
-            synchronized (LogDebugFileUtils.class) {
+            synchronized (LogFileUtils.class) {
                 if (instance == null) {
-                    instance = new LogDebugFileUtils();
+                    instance = new LogFileUtils();
                 }
             }
         }
@@ -85,6 +85,11 @@ public class LogDebugFileUtils {
 
     public synchronized void close() {
         IOUtils.closeQuietly(mFileOutputStream);
+    }
+
+    public void clearFile() {
+        close();
+        FileUtils.delete(mLogFile);
     }
 
     public synchronized void w(String tag, String logEntry, Object... o) {
