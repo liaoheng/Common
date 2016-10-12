@@ -14,6 +14,15 @@ public class SystemException extends Exception implements ISystemException {
 
     public SystemException(String errorMessage, Throwable e) {
         super(errorMessage);
+        if (e != null && e instanceof SystemException) {
+            SystemExceptionNoVessel annotation = e.getClass()
+                    .getAnnotation(SystemExceptionNoVessel.class);
+            if (annotation == null) {
+                if (e.getCause() == null) {
+                    throw new IllegalArgumentException("SystemException Cause Cannot Null");
+                }
+            }
+        }
         mExceptionHelper = SystemExceptionHelper.with(e);
     }
 
@@ -27,7 +36,19 @@ public class SystemException extends Exception implements ISystemException {
 
 
     @Override public Throwable getCause() {
+        return mExceptionHelper.getCause();
+    }
+
+    public Throwable getOwnCause() {
         return mExceptionHelper.getCause(this);
+    }
+
+    /**
+     * {@link Throwable#getCause()}
+     * @return
+     */
+    public Throwable getOriginalCause() {
+        return super.getCause();
     }
 
     @Override public String toString() {

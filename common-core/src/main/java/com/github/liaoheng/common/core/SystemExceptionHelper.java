@@ -27,6 +27,18 @@ public class SystemExceptionHelper {
         return new SystemExceptionHelper(throwable);
     }
 
+    public Throwable getCause() {
+        if (mThrowable != null && mThrowable instanceof ISystemException) {
+            SystemExceptionNoVessel annotation = mThrowable.getClass()
+                    .getAnnotation(SystemExceptionNoVessel.class);
+            if (annotation != null) {
+                return mThrowable;
+            }
+            return mThrowable.getCause();
+        }
+        return mThrowable;
+    }
+
     public Throwable getCause(Throwable me) {
         if (mThrowable != null && mThrowable instanceof ISystemException) {
             SystemExceptionNoVessel annotation = mThrowable.getClass()
@@ -42,7 +54,10 @@ public class SystemExceptionHelper {
 
     @SuppressWarnings("ThrowableResultOfMethodCallIgnored") public String throwableToString(
             Throwable me) {
-        Throwable cause = getCause(me);
+        Throwable cause = getCause();
+        if (cause == null) {
+            cause = me;
+        }
         String msg = cause.toString();
         String name = cause.getClass().getName();
         if (msg == null) {

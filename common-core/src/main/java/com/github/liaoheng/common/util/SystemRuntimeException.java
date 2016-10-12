@@ -25,7 +25,19 @@ public class SystemRuntimeException extends RuntimeException implements ISystemE
     }
 
     @Override public Throwable getCause() {
+        return mExceptionHelper.getCause();
+    }
+
+    public Throwable getOwnCause() {
         return mExceptionHelper.getCause(this);
+    }
+
+    /**
+     * {@link Throwable#getCause()}
+     * @return
+     */
+    public Throwable getOriginalCause() {
+        return super.getCause();
     }
 
     @Override public String toString() {

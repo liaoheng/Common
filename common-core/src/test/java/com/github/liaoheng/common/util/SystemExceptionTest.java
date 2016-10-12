@@ -38,12 +38,13 @@ public class SystemExceptionTest extends BaseTest {
 
     @Test public void addSystemException1Test() {
         try {
-            throw new SystemException("one error", new SystemException("two error"));
+            throw new SystemException("one error", new SystemContentException("two error"));
         } catch (SystemException e) {
             Throwable cause = e.getCause();
             assertNotNull("is null", cause);
             //ShadowLog.d(TAG, "", cause);
-            assertEquals("msg is error", e.getMessage(), "one error");
+            assertEquals("title is error", e.getMessage(), "one error");
+            assertEquals("cause msg is error", cause.getMessage(), "two error");
         }
     }
 
@@ -51,8 +52,7 @@ public class SystemExceptionTest extends BaseTest {
         try {
             throw new SystemException("one error");
         } catch (SystemException e) {
-            Throwable cause = e.getCause();
-            assertNotNull("is null", cause);
+            assertNotNull("is null", e);
             //ShadowLog.d(TAG, "", cause);
             assertEquals("msg is error", e.getMessage(), "one error");
         }
@@ -60,7 +60,7 @@ public class SystemExceptionTest extends BaseTest {
 
     @Test public void addSystemException3Test() {
         try {
-            throw new SystemException(new SystemException("two error"));
+            throw new SystemException(new SystemContentException("two error"));
         } catch (SystemException e) {
             Throwable cause = e.getCause();
             assertNotNull("is null", cause);
@@ -109,8 +109,6 @@ public class SystemExceptionTest extends BaseTest {
             assertNotNull("is null", cause);
             //ShadowLog.d(TAG, "", cause);
             assertTrue("is not SystemException", cause instanceof IllegalArgumentException);
-            assertEquals("msg is error", e.getMessage(),
-                    "com.github.liaoheng.common.util.SystemException: arg is null");
         }
     }
 
@@ -136,11 +134,19 @@ public class SystemExceptionTest extends BaseTest {
         } catch (IllegalArgumentException ex) {
             SystemException e = new SystemException(ex);
             Throwable cause = e.getCause();
-            assertNotNull("is null", cause);
+            assertNotNull("not null", cause);
             //ShadowLog.d(TAG, "", cause);
             assertTrue("is not SystemException", cause instanceof IllegalArgumentException);
             assertEquals("msg is error", e.getMessage(),
                     "java.io.FileNotFoundException: java.io.FileNotFoundException: not can file found");
+        }
+    }
+
+    @Test public void addSystemException9Test() {
+        try {
+            throw new SystemException(new SystemException("two error"));
+        } catch (SystemException | IllegalArgumentException e) {
+            assertTrue("not IllegalArgumentException", e instanceof IllegalArgumentException);
         }
     }
 }
