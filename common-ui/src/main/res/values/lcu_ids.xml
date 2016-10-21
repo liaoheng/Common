@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item name="lcp_toolbar" type="id"/>
-    <item name="lcp_toolbar_title" type="id"/>
-    <item name="lcp_toolbar_spinner" type="id"/>
-    <item name="lcp_toolbar_toggle" type="id"/>
-    <item name="lcp_toolbar_right" type="id"/>
-    <item name="lcp_toolbar_left" type="id"/>
+    <item name="lcu_toolbar" type="id"/>
+    <item name="lcu_toolbar_title" type="id"/>
+    <item name="lcu_toolbar_spinner" type="id"/>
+    <item name="lcu_toolbar_toggle" type="id"/>
+    <item name="lcu_toolbar_right" type="id"/>
+    <item name="lcu_toolbar_left" type="id"/>
 
-    <item name="lcp_progress" type="id"/>
-    <item name="lcp_tab_pager_view_tab" type="id"/>
-    <item name="lcp_tab_pager_view_pager" type="id"/>
+    <item name="lcu_progress" type="id"/>
+    <item name="lcu_tab_pager_view_tab" type="id"/>
+    <item name="lcu_tab_pager_view_pager" type="id"/>
 
-    <item name="lcp_web_view" type="id"/>
+    <item name="lcu_web_view" type="id"/>
 
 
-    <item name="lcp_input_dialog_message" type="id"/>
-    <item name="lcp_input_dialog_edit_text" type="id"/>
-    <item name="lcp_input_dialog_cancel" type="id"/>
-    <item name="lcp_input_dialog_ok" type="id"/>
+    <item name="lcu_input_dialog_message" type="id"/>
+    <item name="lcu_input_dialog_edit_text" type="id"/>
+    <item name="lcu_input_dialog_cancel" type="id"/>
+    <item name="lcu_input_dialog_ok" type="id"/>
 </resources>

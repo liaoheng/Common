@@ -22,7 +22,7 @@ public class WebHelper {
     }
 
     private WebHelper(@NonNull View view) {
-        mWebView = UIUtils.findViewById(view, R.id.lcp_web_view);
+        mWebView = UIUtils.findViewById(view, R.id.lcu_web_view);
         if (mWebView == null) {
             throw new IllegalArgumentException("WebView is null");
         }

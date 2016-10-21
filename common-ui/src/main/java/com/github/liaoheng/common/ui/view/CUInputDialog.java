@@ -12,7 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import com.github.liaoheng.common.ui.R;
-import com.github.liaoheng.common.ui.core.CPInputDialogClickListener;
+import com.github.liaoheng.common.ui.core.CUInputDialogClickListener;
 import com.github.liaoheng.common.ui.core.ProgressHelper;
 import com.github.liaoheng.common.util.InputMethodUtils;
 import java.util.ArrayList;
@@ -30,19 +30,19 @@ import java.util.List;
  * @author liaoheng
  * @version 2016-08-30 14:10
  */
-public class CPInputDialog extends AppCompatDialog {
+public class CUInputDialog extends AppCompatDialog {
 
-    public CPInputDialog(Context context) {
-        super(context, R.style.LCP_Input_Dialog);
+    public CUInputDialog(Context context) {
+        super(context, R.style.LCU_Input_Dialog);
         init(0);
     }
 
-    public CPInputDialog(Context context, int theme) {
+    public CUInputDialog(Context context, int theme) {
         super(context, theme);
         init(0);
     }
 
-    public CPInputDialog(Context context, int theme, @LayoutRes int layout) {
+    public CUInputDialog(Context context, int theme, @LayoutRes int layout) {
         super(context, theme);
         init(layout);
     }
@@ -52,7 +52,7 @@ public class CPInputDialog extends AppCompatDialog {
     Button   mCancel;
     Button   mOK;
 
-    CPInputDialogClickListener mClickListener;
+    CUInputDialogClickListener mClickListener;
     ProgressHelper             mProgressHelper;
 
     List<OnShowListener>    mOnShowListeners    = new ArrayList<>();
@@ -68,13 +68,13 @@ public class CPInputDialog extends AppCompatDialog {
         initAction();
     }
 
-    public CPInputDialog initAction() {
+    public CUInputDialog initAction() {
         mProgressHelper = ProgressHelper.with(getWindow().getDecorView());
 
-        mMessage = (TextView) findViewById(R.id.lcp_input_dialog_message);
-        mEditText = (EditText) findViewById(R.id.lcp_input_dialog_edit_text);
-        mOK = (Button) findViewById(R.id.lcp_input_dialog_ok);
-        mCancel = (Button) findViewById(R.id.lcp_input_dialog_cancel);
+        mMessage = (TextView) findViewById(R.id.lcu_input_dialog_message);
+        mEditText = (EditText) findViewById(R.id.lcu_input_dialog_edit_text);
+        mOK = (Button) findViewById(R.id.lcu_input_dialog_ok);
+        mCancel = (Button) findViewById(R.id.lcu_input_dialog_cancel);
         View.OnClickListener oKClickListener = new View.OnClickListener() {
             @Override public void onClick(View v) {
                 if (mClickListener == null) {
@@ -139,24 +139,24 @@ public class CPInputDialog extends AppCompatDialog {
         throw new IllegalStateException("You cannot use");
     }
 
-    public CPInputDialog addOnDismissListener(OnDismissListener listener) {
+    public CUInputDialog addOnDismissListener(OnDismissListener listener) {
         mOnDismissListeners.add(listener);
         return this;
     }
 
-    public CPInputDialog addOnShowListener(OnShowListener listener) {
+    public CUInputDialog addOnShowListener(OnShowListener listener) {
         mOnShowListeners.add(listener);
         return this;
     }
 
-    public CPInputDialog enableSingleText() {
+    public CUInputDialog enableSingleText() {
         mEditText.setSingleLine();
         mEditText.setMaxLines(1);
         mEditText.setHorizontalScrollBarEnabled(true);
         return this;
     }
 
-    public CPInputDialog enableMultiText() {
+    public CUInputDialog enableMultiText() {
         mEditText.setMaxLines(4);
         mEditText.setMinLines(2);
         mEditText.setGravity(Gravity.TOP | Gravity.START);
@@ -165,7 +165,7 @@ public class CPInputDialog extends AppCompatDialog {
         return this;
     }
 
-    public CPInputDialog setMessage(CharSequence message) {
+    public CUInputDialog setMessage(CharSequence message) {
         mMessage.setText(message);
         return this;
     }
@@ -175,12 +175,12 @@ public class CPInputDialog extends AppCompatDialog {
      * @param title
      * @return
      */
-    public CPInputDialog setMTitle(CharSequence title) {
+    public CUInputDialog setMTitle(CharSequence title) {
         super.setTitle(title);
         return this;
     }
 
-    public CPInputDialog setEditText(CharSequence text) {
+    public CUInputDialog setEditText(CharSequence text) {
         mEditText.setText(text);
         if (!TextUtils.isEmpty(text)) {
             mEditText.setSelection(text.length());
@@ -189,22 +189,22 @@ public class CPInputDialog extends AppCompatDialog {
         return this;
     }
 
-    public CPInputDialog setCancelText(CharSequence text) {
+    public CUInputDialog setCancelText(CharSequence text) {
         mCancel.setText(text);
         return this;
     }
 
-    public CPInputDialog setOKText(CharSequence text) {
+    public CUInputDialog setOKText(CharSequence text) {
         mOK.setText(text);
         return this;
     }
 
-    public CPInputDialog setClickListener(CPInputDialogClickListener clickListener) {
+    public CUInputDialog setClickListener(CUInputDialogClickListener clickListener) {
         mClickListener = clickListener;
         return this;
     }
 
-    public CPInputDialog enableCanNotClose() {
+    public CUInputDialog enableCanNotClose() {
         super.setCancelable(false);
         super.setCanceledOnTouchOutside(false);
         return this;
@@ -218,7 +218,7 @@ public class CPInputDialog extends AppCompatDialog {
         return mEditText;
     }
 
-    public CPInputDialog getDialog() {
+    public CUInputDialog getDialog() {
         return this;
     }
 
@@ -234,23 +234,23 @@ public class CPInputDialog extends AppCompatDialog {
         getProgressHelper().goneParent();
     }
 
-    public static CPInputDialog single(Context context) {
-        return new CPInputDialog(context).enableSingleText();
+    public static CUInputDialog single(Context context) {
+        return new CUInputDialog(context).enableSingleText();
     }
 
-    public static CPInputDialog single(Context context, int theme) {
-        return new CPInputDialog(context, theme).enableSingleText();
+    public static CUInputDialog single(Context context, int theme) {
+        return new CUInputDialog(context, theme).enableSingleText();
     }
 
-    public static CPInputDialog multi(Context context) {
-        return new CPInputDialog(context).enableMultiText();
+    public static CUInputDialog multi(Context context) {
+        return new CUInputDialog(context).enableMultiText();
     }
 
-    public static CPInputDialog multi(Context context, int theme) {
-        return new CPInputDialog(context, theme).enableMultiText();
+    public static CUInputDialog multi(Context context, int theme) {
+        return new CUInputDialog(context, theme).enableMultiText();
     }
 
-    public static CPInputDialog with(Context context) {
-        return new CPInputDialog(context);
+    public static CUInputDialog with(Context context) {
+        return new CUInputDialog(context);
     }
 }

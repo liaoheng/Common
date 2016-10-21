@@ -1,9 +1,7 @@
 package com.github.liaoheng.common.ui.base;
 
 import android.app.Activity;
-import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -12,18 +10,17 @@ import android.util.AndroidRuntimeException;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.github.liaoheng.common.plus.core.ToolBarHelper;
+import com.github.liaoheng.common.ui.core.ToolBarHelper;
 import com.github.liaoheng.common.util.UIUtils;
 
 /**
  * 基础通用Activity
  * @author liaoheng
  */
-public class CPBaseActivity extends AppCompatActivity {
+public class CUBaseActivity extends AppCompatActivity {
 
     protected final String TAG = getActivity().getClass().getSimpleName();
-    private ToolBarHelper  toolBarUtils;
+    private ToolBarHelper toolBarUtils;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -42,13 +39,13 @@ public class CPBaseActivity extends AppCompatActivity {
         return toolBarUtils.getToolbar();
     }
 
-    public void setMTitle(String title) {
+    public void setMTitle(CharSequence title) {
         if (toolBarUtils.getToolbarTitle() != null && title != null) {
             toolBarUtils.getToolbarTitle().setText(title);
         }
     }
 
-    public String getMTitle() {
+    public CharSequence getMTitle() {
         if (toolBarUtils.getToolbarTitle() == null) {
             return "";
         }
@@ -89,18 +86,8 @@ public class CPBaseActivity extends AppCompatActivity {
         return UIUtils.inflate(getActivity(), resource, root, attachToRoot);
     }
 
-    public View findViewById(@NonNull View view, @IdRes int resource) {
-        return UIUtils.findViewById(view, resource);
-    }
-
     public Activity getActivity() {
         return this;
-    }
-
-    protected void initView() {
-    }
-
-    protected void initData() {
     }
 
     public ActionBar getBaseActionBar() {

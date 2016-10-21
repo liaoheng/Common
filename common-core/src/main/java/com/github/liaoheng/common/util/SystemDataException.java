@@ -6,17 +6,17 @@ package com.github.liaoheng.common.util;
  * @author liaoheng
  * @version 2016-10-12 17:09
  */
-@SystemExceptionNoVessel public class SystemContentException extends SystemException {
+@SystemExceptionNoVessel public class SystemDataException extends SystemException {
 
-    public SystemContentException(String errorMessage, Throwable e) {
+    public SystemDataException(String errorMessage, Throwable e) {
         super(errorMessage, e);
     }
 
-    public SystemContentException(String errorMessage) {
+    public SystemDataException(String errorMessage) {
         this(errorMessage, null);
     }
 
-    public SystemContentException(Throwable e) {
+    public SystemDataException(Throwable e) {
         this(e.getMessage(), e);
     }
 }

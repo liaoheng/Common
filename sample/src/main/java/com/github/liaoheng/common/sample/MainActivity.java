@@ -9,10 +9,10 @@ import butterknife.OnClick;
 import com.bumptech.glide.Glide;
 import com.github.liaoheng.common.network.GlideCompressTransformation;
 import com.github.liaoheng.common.network.OkHttp3Utils;
-import com.github.liaoheng.common.ui.base.CPRxBaseActivity;
-import com.github.liaoheng.common.ui.core.CPInputDialogClickListener;
+import com.github.liaoheng.common.ui.base.CURxBaseActivity;
+import com.github.liaoheng.common.ui.core.CUInputDialogClickListener;
 import com.github.liaoheng.common.ui.core.ProgressHelper;
-import com.github.liaoheng.common.ui.view.CPInputDialog;
+import com.github.liaoheng.common.ui.view.CUInputDialog;
 import com.github.liaoheng.common.util.Callback;
 import com.github.liaoheng.common.util.L;
 import com.github.liaoheng.common.util.SystemException;
@@ -23,7 +23,7 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class MainActivity extends CPRxBaseActivity {
+public class MainActivity extends CURxBaseActivity {
 
     @BindView(R.id.image)
     ImageView image;
@@ -38,9 +38,9 @@ public class MainActivity extends CPRxBaseActivity {
     }
 
     @OnClick(R.id.open_single_input_dialog) void openSingleInputDialog() {
-        CPInputDialog.single(getActivity(), R.style.AppTheme_Dialog).setMessage("Single Input")
-                .setClickListener(new CPInputDialogClickListener.EmptyCPInputDialogClickListener() {
-                    @Override public void onYes(CPInputDialog dialog, EditText editText,
+        CUInputDialog.single(getActivity(), R.style.AppTheme_Dialog).setMessage("Single Input")
+                .setClickListener(new CUInputDialogClickListener.EmptyCUInputDialogClickListener() {
+                    @Override public void onYes(CUInputDialog dialog, EditText editText,
                                                 String text) {
                         UIUtils.showToast(getApplicationContext(),text);
                     }
@@ -48,9 +48,9 @@ public class MainActivity extends CPRxBaseActivity {
     }
 
     @OnClick(R.id.open_multi_input_dialog) void openMultiInputDialog() {
-        CPInputDialog.multi(getActivity(), R.style.AppTheme_Dialog).setMessage("Multi Input")
-                .setClickListener(new CPInputDialogClickListener.EmptyCPInputDialogClickListener() {
-                    @Override public void onYes(CPInputDialog dialog, EditText editText,
+        CUInputDialog.multi(getActivity(), R.style.AppTheme_Dialog).setMessage("Multi Input")
+                .setClickListener(new CUInputDialogClickListener.EmptyCUInputDialogClickListener() {
+                    @Override public void onYes(CUInputDialog dialog, EditText editText,
                                                 String text) {
                         UIUtils.showToast(getApplicationContext(),text);
                     }

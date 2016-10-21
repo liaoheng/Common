@@ -38,8 +38,8 @@ public class TabPagerHelper {
     }
 
     public static TabPagerHelper with(@NonNull View view) {
-        ViewPager viewPager = UIUtils.findViewById(view, R.id.lcp_tab_pager_view_pager);
-        TabLayout tabLayout = UIUtils.findViewById(view, R.id.lcp_tab_pager_view_tab);
+        ViewPager viewPager = UIUtils.findViewById(view, R.id.lcu_tab_pager_view_pager);
+        TabLayout tabLayout = UIUtils.findViewById(view, R.id.lcu_tab_pager_view_tab);
         return new TabPagerHelper(viewPager, tabLayout);
     }
 

@@ -22,7 +22,7 @@
     <activity android:name="com.github.liaoheng.common.ui.WebViewActivity"/>
 
     <meta-data
-        android:name="com.github.liaoheng.common.network.CPGlideModule"
+        android:name="com.github.liaoheng.common.network.CNGlideModule"
         android:value="GlideModule" />
   </application>
 

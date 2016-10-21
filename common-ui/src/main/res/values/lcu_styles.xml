@@ -1,8 +1,59 @@
 <resources>
 
-    <style name="LCP.Input.Dialog" parent="Theme.AppCompat.Light.Dialog.Alert" >
+    <!--input dialog-->
+    <style name="LCU.Input.Dialog" parent="LCU.Dialog.Alert">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
      </style>
+
+    <!--AlertDialog-->
+    <style name="LCU.Dialog.Alert" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorPrimary">@color/lcu_colorPrimary</item>
+        <item name="colorPrimaryDark">@color/lcu_colorPrimaryDark</item>
+        <item name="colorAccent">@color/lcu_colorAccent</item>
+    </style>
+
+    <!--ActionBar base-->
+    <style name="LCU.AppBaseTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/lcu_colorPrimary</item>
+        <item name="colorPrimaryDark">@color/lcu_colorPrimaryDark</item>
+        <item name="colorAccent">@color/lcu_colorAccent</item>
+    </style>
+
+    <!--ActionBar-->
+    <style name="LCU.AppTheme.ActionBar" parent="LCU.AppBaseTheme"/>
+
+    <!--Toolbar-->
+    <style name="LCU.AppTheme.ToolBar" parent="LCU.AppTheme.NoActionBar"/>
+
+    <!--NoActionBar-->
+    <style name="LCU.AppTheme.NoActionBar" parent="LCU.AppBaseTheme">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <!--Fullscreen-->
+    <style name="LCU.AppTheme.Fullscreen" parent="LCU.AppTheme.NoActionBar">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <!--ActionBar 滑动返回-->
+    <style name="LCU.AppTheme.ActionBar.SwipeBack" parent="LCU.AppTheme.ActionBar">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
+    <!--NoActionBar 滑动返回-->
+    <style name="LCU.AppTheme.NoActionBar.SwipeBack" parent="LCU.AppTheme.NoActionBar">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
+    <!--ToolBar 滑动返回-->
+    <style name="LCU.AppTheme.ToolBar.SwipeBack" parent="LCU.AppTheme.ToolBar">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
 
 </resources>

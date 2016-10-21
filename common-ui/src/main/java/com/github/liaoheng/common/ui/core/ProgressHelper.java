@@ -18,11 +18,11 @@ public class ProgressHelper {
     private ProgressBar mProgressBar;
 
     public static ProgressHelper with(@NonNull View view) {
-        return new ProgressHelper((ProgressBar) UIUtils.findViewById(view, R.id.lcp_progress));
+        return new ProgressHelper((ProgressBar) UIUtils.findViewById(view, R.id.lcu_progress));
     }
 
     public static ProgressHelper with(@NonNull Activity activity) {
-        return new ProgressHelper((ProgressBar) UIUtils.findViewById(activity, R.id.lcp_progress));
+        return new ProgressHelper((ProgressBar) UIUtils.findViewById(activity, R.id.lcu_progress));
     }
 
     public ProgressHelper(ProgressBar progressBar) {

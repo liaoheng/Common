@@ -22,10 +22,10 @@ import android.widget.FrameLayout;
  * @author LuckyJayce
  * https://github.com/LuckyJayce/ViewPagerIndicator
  */
-public class CPLazyFragment extends CPBaseFragment {
+public class CULazyFragment extends CUBaseFragment {
 	private boolean isInit = false;
 	private Bundle savedInstanceState;
-	public static final String INTENT_BOOLEAN_LAZYLOAD = "intent_boolean_lazyLoad";
+	public static final String INTENT_BOOLEAN_LAZY_LOAD = "intent_boolean_lazyLoad";
 	private boolean isLazyLoad = true;
 	private FrameLayout layout;
 
@@ -34,7 +34,7 @@ public class CPLazyFragment extends CPBaseFragment {
 		super.onCreateView(savedInstanceState);
 		Bundle bundle = getArguments();
 		if (bundle != null) {
-			isLazyLoad = bundle.getBoolean(INTENT_BOOLEAN_LAZYLOAD, isLazyLoad);
+			isLazyLoad = bundle.getBoolean(INTENT_BOOLEAN_LAZY_LOAD, isLazyLoad);
 		}
 		if (isLazyLoad) {
 			if (getUserVisibleHint() && !isInit) {

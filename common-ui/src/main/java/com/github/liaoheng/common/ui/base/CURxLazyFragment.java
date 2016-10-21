@@ -16,7 +16,7 @@ import rx.subjects.BehaviorSubject;
  * @author liaoheng
  * @version 2016-7-29 14:19
  */
-public class CPRxBaseFragment extends CPBaseFragment implements FragmentLifecycleProvider {
+public class CURxLazyFragment extends CULazyFragment implements FragmentLifecycleProvider {
     private final BehaviorSubject<FragmentEvent> lifecycleSubject = BehaviorSubject.create();
 
     @Override @NonNull @CheckResult public final Observable<FragmentEvent> lifecycle() {
@@ -42,34 +42,34 @@ public class CPRxBaseFragment extends CPBaseFragment implements FragmentLifecycl
         lifecycleSubject.onNext(FragmentEvent.CREATE);
     }
 
-    @Override protected void onCreateView(Bundle savedInstanceState) {
-        super.onCreateView(savedInstanceState);
+    @Override protected void onCreateViewLazy(Bundle savedInstanceState) {
+        super.onCreateViewLazy(savedInstanceState);
         lifecycleSubject.onNext(FragmentEvent.CREATE_VIEW);
     }
 
-    @Override public void onStart() {
-        super.onStart();
+    @Override protected void onFragmentStartLazy() {
+        super.onFragmentStartLazy();
         lifecycleSubject.onNext(FragmentEvent.START);
     }
 
-    @Override public void onResume() {
-        super.onResume();
+    @Override protected void onResumeLazy() {
+        super.onResumeLazy();
         lifecycleSubject.onNext(FragmentEvent.RESUME);
     }
 
-    @Override public void onPause() {
+    @Override protected void onPauseLazy() {
         lifecycleSubject.onNext(FragmentEvent.PAUSE);
-        super.onPause();
+        super.onPauseLazy();
     }
 
-    @Override public void onStop() {
+    @Override protected void onFragmentStopLazy() {
         lifecycleSubject.onNext(FragmentEvent.STOP);
-        super.onStop();
+        super.onFragmentStopLazy();
     }
 
-    @Override public void onDestroyView() {
+    @Override protected void onDestroyViewLazy() {
         lifecycleSubject.onNext(FragmentEvent.DESTROY_VIEW);
-        super.onDestroyView();
+        super.onDestroyViewLazy();
     }
 
     @Override public void onDestroy() {
@@ -81,5 +81,4 @@ public class CPRxBaseFragment extends CPBaseFragment implements FragmentLifecycl
         lifecycleSubject.onNext(FragmentEvent.DETACH);
         super.onDetach();
     }
-
 }

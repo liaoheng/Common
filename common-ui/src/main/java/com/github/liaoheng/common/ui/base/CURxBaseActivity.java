@@ -16,7 +16,7 @@ import rx.subjects.BehaviorSubject;
  * 基础通用 RxJava Lifecycle Activity
  * @author liaoheng
  */
-public class CPRxBaseActivity extends CPBaseActivity implements ActivityLifecycleProvider {
+public class CURxBaseActivity extends CUBaseActivity implements ActivityLifecycleProvider {
 
     private final BehaviorSubject<ActivityEvent> lifecycleSubject = BehaviorSubject.create();
 

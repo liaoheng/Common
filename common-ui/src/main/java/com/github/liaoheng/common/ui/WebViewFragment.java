@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.webkit.WebView;
 import com.github.liaoheng.common.core.BackPressedListener;
-import com.github.liaoheng.common.ui.base.CPLazyFragment;
+import com.github.liaoheng.common.ui.base.CULazyFragment;
 import com.github.liaoheng.common.ui.core.WebHelper;
 import com.github.liaoheng.common.ui.view.WebViewLayout;
 
@@ -14,7 +14,7 @@ import com.github.liaoheng.common.ui.view.WebViewLayout;
  * @author liaoheng
  * @version 2016-03-30 11:26
  */
-public class WebViewFragment extends CPLazyFragment implements BackPressedListener {
+public class WebViewFragment extends CULazyFragment implements BackPressedListener {
 
     public static Fragment newInstance(String url) {
         return newInstance(url, false);
@@ -24,7 +24,7 @@ public class WebViewFragment extends CPLazyFragment implements BackPressedListen
         Bundle args = new Bundle();
         args.putString("url", url);
         args.putBoolean("htmlTitle", htmlTitle);
-        return newInstance(new WebViewFragment(), args);
+        return setBundle(new WebViewFragment(), args);
     }
 
     private WebHelper mWebHelper;

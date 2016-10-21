@@ -8,7 +8,7 @@ import com.github.liaoheng.common.util.BitmapUtils;
  * 圆形
  * @author http://www.28im.com/android/a951799.html
  */
-public class RoundedTransformation implements com.squareup.picasso.Transformation {
+public class CNRoundedTransformation implements com.squareup.picasso.Transformation {
 
     @Override
     public Bitmap transform(final Bitmap source) {
@@ -23,6 +23,6 @@ public class RoundedTransformation implements com.squareup.picasso.Transformatio
 
     @Override
     public String key() {
-        return "RoundedTransformation";
+        return "CNRoundedTransformation";
     }
 }

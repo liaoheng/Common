@@ -58,6 +58,6 @@ public class GlideCompressTransformation
     }
 
     @Override public String getId() {
-        return "CompressTransformation";
+        return "CNCompressTransformation";
     }
 }

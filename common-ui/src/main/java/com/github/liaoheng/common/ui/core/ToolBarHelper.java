@@ -1,4 +1,4 @@
-package com.github.liaoheng.common.plus.core;
+package com.github.liaoheng.common.ui.core;
 
 import com.github.liaoheng.common.ui.R;
 import com.github.liaoheng.common.ui.adapter.SpinnerAdapter;
@@ -35,7 +35,7 @@ public class ToolBarHelper {
     private View     toolbarLeft;
 
     public static ToolBarHelper with(@NonNull AppCompatActivity activity) {
-        Toolbar toolbar = UIUtils.findViewById(activity, R.id.lcp_toolbar);
+        Toolbar toolbar = UIUtils.findViewById(activity, R.id.lcu_toolbar);
         activity.setSupportActionBar(toolbar);
         ActionBar actionBar = activity.getSupportActionBar();
         if (actionBar == null) {
@@ -47,7 +47,7 @@ public class ToolBarHelper {
     }
 
     public static ToolBarHelper with(@NonNull View view) {
-        return new ToolBarHelper((Toolbar) UIUtils.findViewById(view, R.id.lcp_toolbar));
+        return new ToolBarHelper((Toolbar) UIUtils.findViewById(view, R.id.lcu_toolbar));
     }
 
     public ToolBarHelper(Toolbar toolbar) {
@@ -55,11 +55,11 @@ public class ToolBarHelper {
             throw new IllegalArgumentException("Toolbar is null");
         }
         this.toolbar = toolbar;
-        toolbarTitle = (TextView) toolbar.findViewById(R.id.lcp_toolbar_title);
-        toolbarSpinner = (Spinner) toolbar.findViewById(R.id.lcp_toolbar_spinner);
-        toolbarToggle = toolbar.findViewById(R.id.lcp_toolbar_toggle);
-        toolbarRight = toolbar.findViewById(R.id.lcp_toolbar_right);
-        toolbarLeft = toolbar.findViewById(R.id.lcp_toolbar_left);
+        toolbarTitle = (TextView) toolbar.findViewById(R.id.lcu_toolbar_title);
+        toolbarSpinner = (Spinner) toolbar.findViewById(R.id.lcu_toolbar_spinner);
+        toolbarToggle = toolbar.findViewById(R.id.lcu_toolbar_toggle);
+        toolbarRight = toolbar.findViewById(R.id.lcu_toolbar_right);
+        toolbarLeft = toolbar.findViewById(R.id.lcu_toolbar_left);
     }
 
     public void setToggle(final Callback<ToggleImageButton> callback) {

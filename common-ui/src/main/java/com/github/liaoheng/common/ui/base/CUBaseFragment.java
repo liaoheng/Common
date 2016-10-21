@@ -1,33 +1,32 @@
 package com.github.liaoheng.common.ui.base;
 
-import java.lang.reflect.Field;
-
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import java.lang.reflect.Field;
 
 /**
  * 
  * @author https://github.com/LuckyJayce/ViewPagerIndicator
  */
-public class CPBaseFragment extends Fragment {
+public class CUBaseFragment extends Fragment {
     protected final String TAG = getFragment().getClass().getSimpleName();
     protected LayoutInflater inflater;
     private View contentView;
     private ViewGroup container;
 
-    public Fragment getFragment() {
-        return this;
-    }
-
-    public static Fragment newInstance(Fragment fragment, Bundle bundle) {
-        if (bundle != null) {
-            fragment.setArguments(bundle);
+    public static Fragment setBundle(Fragment fragment, Bundle args) {
+        if (args != null) {
+            fragment.setArguments(args);
         }
         return fragment;
+    }
+
+    public Fragment getFragment() {
+        return this;
     }
 
     public Context getApplicationContext() {

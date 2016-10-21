@@ -38,7 +38,7 @@ public class SystemExceptionTest extends BaseTest {
 
     @Test public void addSystemException1Test() {
         try {
-            throw new SystemException("one error", new SystemContentException("two error"));
+            throw new SystemException("one error", new SystemDataException("two error"));
         } catch (SystemException e) {
             Throwable cause = e.getCause();
             assertNotNull("is null", cause);
@@ -60,7 +60,7 @@ public class SystemExceptionTest extends BaseTest {
 
     @Test public void addSystemException3Test() {
         try {
-            throw new SystemException(new SystemContentException("two error"));
+            throw new SystemException(new SystemDataException("two error"));
         } catch (SystemException e) {
             Throwable cause = e.getCause();
             assertNotNull("is null", cause);

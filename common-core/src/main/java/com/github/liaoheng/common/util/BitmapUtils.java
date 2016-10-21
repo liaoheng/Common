@@ -1,5 +1,6 @@
 package com.github.liaoheng.common.util;
 
+import android.support.annotation.NonNull;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -94,8 +95,19 @@ public class BitmapUtils {
     /**
      * convert Drawable to Bitmap
      */
-    public static Bitmap drawableToBitmap(Drawable drawable) {
-        return drawable == null ? null : ((BitmapDrawable) drawable).getBitmap();
+    public static Bitmap drawableToBitmap(@NonNull Drawable drawable) {
+        if (drawable instanceof BitmapDrawable) {
+            return ((BitmapDrawable) drawable).getBitmap();
+        }
+
+        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
+                drawable.getIntrinsicHeight(),
+                Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+
+        return bitmap;
     }
 
     /**
@@ -152,8 +164,6 @@ public class BitmapUtils {
         canvas.drawBitmap(bitmap, rect, rect, paint);
         return output;
     }
-
-    /********** up   litesuits  ********/
 
     public static Bitmap.CompressFormat getImageExtension(File file) {
         return getImageExtension(file.getAbsolutePath());

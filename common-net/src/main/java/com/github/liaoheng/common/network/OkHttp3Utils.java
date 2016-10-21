@@ -110,11 +110,18 @@ public class OkHttp3Utils {
 
     /**
      * 单线程
-     *
      * @return {@link OkHttpClient}
      */
     public static OkHttpClient getSingleOkHttpClient() {
         OkHttpClient.Builder builder = OkHttp3Utils.get().cloneClient();
+        return getSingleOkHttpClient(builder);
+    }
+
+    /**
+     * 单线程
+     * @return {@link OkHttpClient}
+     */
+    public static OkHttpClient getSingleOkHttpClient(OkHttpClient.Builder builder) {
         ExecutorService threadPoolExecutor = Executors
                 .newSingleThreadExecutor(Util.threadFactory("OkHttp Dispatcher", false));
         Dispatcher dispatcher = new Dispatcher(threadPoolExecutor);
@@ -494,11 +501,6 @@ public class OkHttp3Utils {
         }
     }
 
-    @Deprecated
-    public <T> Subscription addSubscribe(Observable<T> observable, final Callback<T> listener) {
-        return Utils.addSubscribe(observable, listener);
-    }
-
     public String getSync(String url) throws NetException {
         return getSync(url, newRequestBuilder());
     }
@@ -592,7 +594,7 @@ public class OkHttp3Utils {
                                              Callback<String> listener) {
         Observable.Transformer<String, String> lifecycle = RxLifecycle
                 .bindActivity(eventObservable);
-        return addSubscribe(getAsyncToJsonString(url).compose(lifecycle), listener);
+        return Utils.addSubscribe(getAsyncToJsonString(url).compose(lifecycle), listener);
     }
 
     public Subscription getAsyncToJsonString(String url, Callback<String> listener) {
@@ -601,7 +603,7 @@ public class OkHttp3Utils {
 
     public Subscription getAsyncToJsonString(OkHttpClient client, String url,
                                              Callback<String> listener) {
-        return addSubscribe(getAsyncToJsonString(client, url), listener);
+        return Utils.addSubscribe(getAsyncToJsonString(client, url), listener);
     }
 
     public Observable<String> getAsyncToJsonString(String url) {
@@ -640,7 +642,8 @@ public class OkHttp3Utils {
                                               String json, final Callback<String> listener) {
         Observable.Transformer<String, String> lifecycle = RxLifecycle
                 .bindActivity(eventObservable);
-        return addSubscribe(postAsyncToJsonString(url, Observable.just(json)).compose(lifecycle),
+        return Utils
+                .addSubscribe(postAsyncToJsonString(url, Observable.just(json)).compose(lifecycle),
                 listener);
     }
 
@@ -651,7 +654,7 @@ public class OkHttp3Utils {
 
     public Subscription postAsyncToJsonString(final String url, Observable<String> observable,
                                               final Callback<String> listener) {
-        return addSubscribe(postAsyncToJsonString(url, observable), listener);
+        return Utils.addSubscribe(postAsyncToJsonString(url, observable), listener);
     }
 
     public Observable<String> postAsyncToJsonString(String url, String json) {
@@ -822,7 +825,7 @@ public class OkHttp3Utils {
 
     public Subscription downloadImage(final String url, Callback<FileDownload> callback) {
         Observable<FileDownload> compose = Observable.just(url).compose(applyDownloadImage());
-        return addSubscribe(compose, callback);
+        return Utils.addSubscribe(compose, callback);
     }
 
     public Subscription downloadImageToFile(final String url, final Context context, final File dir,
@@ -842,7 +845,7 @@ public class OkHttp3Utils {
                     }
                     }
                 });
-        return addSubscribe(observable, callback);
+        return Utils.addSubscribe(observable, callback);
     }
 
 }

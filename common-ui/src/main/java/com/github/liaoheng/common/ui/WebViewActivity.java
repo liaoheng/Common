@@ -4,13 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import com.github.liaoheng.common.core.BackPressedListener;
-import com.github.liaoheng.common.ui.base.CPBaseActivity;
+import com.github.liaoheng.common.ui.base.CUBaseActivity;
 
 /**
  * @author liaoheng
  * @version 2016-03-30 11:26
  */
-public class WebViewActivity extends CPBaseActivity {
+public class WebViewActivity extends CUBaseActivity {
 
     public static void start(Context context, String url) {
         start(context, url, false);
@@ -32,12 +32,12 @@ public class WebViewActivity extends CPBaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.lcu_layout_fragment);
+        setContentView(R.layout.lcu_layout_web_activity);
         String url = getIntent().getStringExtra("url");
         boolean htmlTitle = getIntent().getBooleanExtra("htmlTitle", false);
 
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.lcp_fragment_view, WebViewFragment.newInstance(url, htmlTitle))
+                .replace(R.id.lcu_layout_web_activity_layout, WebViewFragment.newInstance(url, htmlTitle))
                 .commit();
     }
 

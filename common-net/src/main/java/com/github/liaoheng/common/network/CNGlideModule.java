@@ -12,12 +12,12 @@ import java.io.File;
 /**
  * Glide Config eg:
  * <pre>
- *      &lt;meta-data android:name="com.github.liaoheng.common.network.CPGlideModule" android:value="GlideModule" /&gt;
+ *      &lt;meta-data android:name="com.github.liaoheng.common.network.CNGlideModule" android:value="GlideModule" /&gt;
  * </pre>
  * @author liaoheng
  * @version 2016-06-24 14:19
  */
-public class CPGlideModule implements GlideModule {
+public class CNGlideModule implements GlideModule {
 
     @Override public void applyOptions(Context context, GlideBuilder builder) {
         try {

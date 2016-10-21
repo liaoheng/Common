@@ -27,7 +27,11 @@ public class SystemException extends Exception implements ISystemException {
     }
 
     public SystemException(String errorMessage) {
-        this(errorMessage, null);
+        super(errorMessage);
+    }
+
+    public SystemException(String errorMessage, String myErrorMessage) {
+        this(errorMessage, new SystemDataException(myErrorMessage));
     }
 
     public SystemException(Throwable e) {
@@ -36,6 +40,9 @@ public class SystemException extends Exception implements ISystemException {
 
 
     @Override public Throwable getCause() {
+        if (mExceptionHelper == null) {
+            return super.getCause();
+        }
         return mExceptionHelper.getCause();
     }
 

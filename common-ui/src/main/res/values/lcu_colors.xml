@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="lcu_colorPrimary">#1976d2</color>
+    <color name="lcu_colorPrimaryDark">#1976d2</color>
+    <color name="lcu_colorAccent">@color/lcu_colorPrimaryDark</color>
+</resources>
