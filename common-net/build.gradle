@@ -31,6 +31,7 @@ dependencies {
   testCompile "org.robolectric:robolectric:3.1.1"
   testCompile "org.robolectric:robolectric-annotations:3.1.1"
 
+//  compile 'com.github.liaoheng:common-core:0.0.4-SNAPSHOT'
   compile project(':common-core')
   provided 'com.trello:rxlifecycle:0.6.1'
 
@@ -45,3 +46,4 @@ dependencies {
   provided 'com.squareup.okhttp3:okhttp:3.3.1'
 
 }
+//apply from: rootProject.file('gradle-mvn-push.gradle')

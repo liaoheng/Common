@@ -56,11 +56,13 @@ dependencies {
         exclude module: 'design'
     }
 
-    compile project(':common-core')
 //    compile 'com.github.liaoheng:common-core:0.0.4-SNAPSHOT'
-    compile project(':common-adapter')
+    compile project(':common-core')
 //    compile 'com.github.liaoheng:common-adapter:0.0.4-SNAPSHOT'
+    compile project(':common-adapter')
+//    compile 'com.github.liaoheng:common-net:0.0.4-SNAPSHOT'
     compile project(':common-net')
+//    compile 'com.github.liaoheng:common-ui:0.0.4-SNAPSHOT'
     compile project(':common-ui')
 
     testCompile "org.robolectric:robolectric:3.1.1"
