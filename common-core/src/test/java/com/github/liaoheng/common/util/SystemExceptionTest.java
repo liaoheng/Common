@@ -141,12 +141,4 @@ public class SystemExceptionTest extends BaseTest {
                     "java.io.FileNotFoundException: java.io.FileNotFoundException: not can file found");
         }
     }
-
-    @Test public void addSystemException9Test() {
-        try {
-            throw new SystemException(new SystemException("two error"));
-        } catch (SystemException | IllegalArgumentException e) {
-            assertTrue("not IllegalArgumentException", e instanceof IllegalArgumentException);
-        }
-    }
 }

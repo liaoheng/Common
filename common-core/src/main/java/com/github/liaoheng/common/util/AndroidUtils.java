@@ -1,5 +1,7 @@
 package com.github.liaoheng.common.util;
 
+import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -10,26 +12,41 @@ import android.os.Build;
 import android.os.SystemClock;
 
 /**
- * 手机信息 & MAC地址 & 开机时间
- *
  * @author MaTianyu
- * @date 2014-09-25
+ * @author liaoheng
+ * @version 2016-10-25 17:10
  */
+@SuppressWarnings("MissingPermission")
 public class AndroidUtils {
     private static final String TAG = AndroidUtils.class.getSimpleName();
 
+    public static String getWifiSsid(String wifiInfo) {
+        if (TextUtils.isEmpty(wifiInfo)) {
+            return "No Wifi Name";
+        }
+        int len = wifiInfo.length();
+        if (wifiInfo.startsWith("\"") && wifiInfo.endsWith("\"")) {
+            wifiInfo = wifiInfo.substring(1, len - 1);
+        }
+        return wifiInfo;
+    }
+
     /**
-     * 获取 MAC 地址
      * <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
      */
-    public static String getMacAddress(Context context) {
-        //wifi mac地址
+    public static WifiInfo getConnectionWifi(@NonNull Context context) {
         WifiManager wifi = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-        WifiInfo info = wifi.getConnectionInfo();
+        return wifi.getConnectionInfo();
+    }
+
+    /**
+     * 获取 MAC 地址 , 6.0 没有权限了
+     * <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+     */
+    public static String getMacAddress(@NonNull Context context) {
+        WifiInfo info = getConnectionWifi(context);
         String mac = info.getMacAddress();
-        if (L.isPrint()) {
-            L.Log.d(TAG, " MAC：" + mac);
-        }
+        L.Log.d(TAG, " MAC：" + mac);
         return mac;
     }
 

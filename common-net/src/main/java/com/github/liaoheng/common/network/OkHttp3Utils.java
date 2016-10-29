@@ -95,6 +95,13 @@ public class OkHttp3Utils {
         this.mHeaders = headers;
     }
 
+    private OkHttp3Utils(OkHttpClient.Builder builder) {
+        this.mClient = builder.build();
+        this.mErrorHandleListener = OkHttp3Utils.get().getErrorHandleListener();
+        this.mHeaderPlus = OkHttp3Utils.get().getHeaderPlus();
+        this.mHeaders = OkHttp3Utils.get().getHeaders();
+    }
+
     private static OkHttp3Utils INSTANCE;
 
     public static OkHttp3Utils get() {
@@ -110,23 +117,33 @@ public class OkHttp3Utils {
 
     /**
      * 单线程
+     *
      * @return {@link OkHttpClient}
      */
     public static OkHttpClient getSingleOkHttpClient() {
-        OkHttpClient.Builder builder = OkHttp3Utils.get().cloneClient();
-        return getSingleOkHttpClient(builder);
+        return getSingleOkHttpClientBuilder().build();
     }
 
     /**
      * 单线程
+     *
      * @return {@link OkHttpClient}
      */
-    public static OkHttpClient getSingleOkHttpClient(OkHttpClient.Builder builder) {
+    public static OkHttpClient.Builder getSingleOkHttpClientBuilder() {
+        return getSingleOkHttpClientBuilder(OkHttp3Utils.get().cloneClient());
+    }
+
+    /**
+     * 单线程
+     *
+     * @return {@link OkHttpClient}
+     */
+    public static OkHttpClient.Builder getSingleOkHttpClientBuilder(OkHttpClient.Builder builder) {
         ExecutorService threadPoolExecutor = Executors
                 .newSingleThreadExecutor(Util.threadFactory("OkHttp Dispatcher", false));
         Dispatcher dispatcher = new Dispatcher(threadPoolExecutor);
         builder.dispatcher(dispatcher);
-        return builder.build();
+        return builder;
     }
 
     public static OkHttp3Utils setInit(OkHttp3Utils okHttpUtils) {
@@ -201,6 +218,15 @@ public class OkHttp3Utils {
                 builder.cache(cache);
             }
             return new OkHttp3Utils(builder, errorHandleListener, headerPlus, headers);
+        }
+
+        /**
+         * errorHandleListener, headerPlus, headers 使用初始化对象引用
+         * @param builder
+         * @return
+         */
+        public OkHttp3Utils build(OkHttpClient.Builder builder) {
+            return new OkHttp3Utils(builder);
         }
 
         public OkHttpClient.Builder getBuilder() {
@@ -292,6 +318,10 @@ public class OkHttp3Utils {
             throw new IllegalStateException("Not Initialize");
         }
         return mHeaders;
+    }
+
+    public ErrorHandleListener getErrorHandleListener() {
+        return mErrorHandleListener;
     }
 
     public void addHeader(Map<String, String> headers) {

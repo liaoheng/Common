@@ -31,7 +31,7 @@ public class NetLocalExceptionTest extends BaseTest {
             Throwable cause = e.getCause();
             assertNotNull("is null", cause);
             //ShadowLog.d(TAG, "", cause);
-            assertTrue("is not TimeoutException", cause instanceof TimeoutException);
+            assertTrue("is not NetLocalException", cause instanceof NetLocalException);
             assertEquals("msg is error", e.getMessage(), NetLocalException.NET_ERROR);
         }
     }
@@ -41,13 +41,13 @@ public class NetLocalExceptionTest extends BaseTest {
             try {
                 throw new TimeoutException("timeout");
             } catch (TimeoutException e) {
-                throw new NetLocalException(NetLocalException.NET_ERROR, new NetLocalException(e));
+                throw new NetException(NetLocalException.NET_ERROR, new NetLocalException(e));
             }
-        } catch (NetLocalException e) {
+        } catch (NetException e) {
             Throwable cause = e.getCause();
             assertNotNull("is null", cause);
             //ShadowLog.d(TAG, "", cause);
-            assertTrue("is not TimeoutException", cause instanceof TimeoutException);
+            assertTrue("is not NetLocalException", cause instanceof NetLocalException);
             assertEquals("msg is error", e.getMessage(), NetLocalException.NET_ERROR);
         }
     }

@@ -16,20 +16,15 @@ public class SystemRuntimeException extends RuntimeException implements ISystemE
         mExceptionHelper = SystemExceptionHelper.with(e);
     }
 
-    public SystemRuntimeException(String errorMessage) {
-        this(errorMessage, null);
-    }
-
     public SystemRuntimeException(Throwable e) {
         this(e.getMessage(), e);
     }
 
     @Override public Throwable getCause() {
+        if (mExceptionHelper == null) {
+            return super.getCause();
+        }
         return mExceptionHelper.getCause();
-    }
-
-    public Throwable getOwnCause() {
-        return mExceptionHelper.getCause(this);
     }
 
     /**

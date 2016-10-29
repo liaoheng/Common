@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import com.github.liaoheng.common.util.FileUtils;
 import com.github.liaoheng.common.util.L;
-import com.github.liaoheng.common.util.SystemRuntimeException;
 import java.io.File;
 import net.danlew.android.joda.JodaTimeAndroid;
 
@@ -36,7 +35,7 @@ public class Common {
 
     public static String getProjectName() {
         if (TextUtils.isEmpty(PROJECT_NAME)) {
-            throw new SystemRuntimeException("not init Common");
+            throw new IllegalStateException("not init Common");
         }
         return PROJECT_NAME;
     }
