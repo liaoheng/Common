@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <attr name="async" format="boolean"/>
+    <attr name="checked" format="boolean"/>
+
+    <declare-styleable name="ToggleImageButton">
+        <attr name="async"/>
+        <attr name="checked"/>
+        <attr name="normalDrawableRes" format="reference"/>
+        <attr name="selectedDrawableRes" format="reference"/>
+    </declare-styleable>
+
+    <declare-styleable name="ToggleTextButton">
+        <attr name="async"/>
+        <attr name="checked"/>
+        <attr name="normalText" format="string"/>
+        <attr name="selectedText" format="string"/>
+    </declare-styleable>
+
+</resources>

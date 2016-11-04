@@ -47,6 +47,8 @@ dependencies {
   compile 'com.jakewharton:butterknife:8.0.1'
   apt 'com.jakewharton:butterknife-compiler:8.0.1'
 
+  compile 'com.trello:rxlifecycle:0.6.1'
+
   //https://github.com/square/okhttp
 //  compile 'com.squareup.okhttp:okhttp:2.4.0'
 

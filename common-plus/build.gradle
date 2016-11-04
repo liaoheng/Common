@@ -48,7 +48,7 @@ dependencies {
     //函数响应式编程:https://github.com/ReactiveX/RxAndroid
     compile 'io.reactivex:rxandroid:1.2.1'
     compile 'io.reactivex:rxjava:1.1.6'
-    compile 'com.trello:rxlifecycle:0.6.1'
+    provided 'com.trello:rxlifecycle:0.6.1'
     //TabLayout:https://github.com/h6ah4i/android-tablayouthelper
     provided('com.h6ah4i.android.tablayouthelper:tablayouthelper:0.7.0'){
         exclude module: 'support-v4'

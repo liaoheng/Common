@@ -17,11 +17,13 @@ import com.github.liaoheng.common.util.Callback;
 import com.github.liaoheng.common.util.L;
 import com.github.liaoheng.common.util.SystemException;
 import com.github.liaoheng.common.util.UIUtils;
+import com.github.liaoheng.common.util.Utils;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import rx.Observable;
 
 public class MainActivity extends CURxBaseActivity {
 
@@ -63,10 +65,10 @@ public class MainActivity extends CURxBaseActivity {
     }
 
     private void photo() {
-
-        OkHttp3Utils.get()
-                .getAsyncToJsonString(lifecycle(),"https://api.douban.com/v2/album/103756651/photos",
-                        new Callback.EmptyCallback<String>() {
+        Observable<String> photo = OkHttp3Utils.get()
+                .getAsyncToJsonString("https://api.douban.com/v2/album/103756651/photos");
+        Utils.addSubscribe(photo.compose(this.<String>bindToLifecycle()),
+                new Callback.EmptyCallback<String>() {
                             @Override public void onPreExecute() {
                                 mProgressHelper.visible();
                             }

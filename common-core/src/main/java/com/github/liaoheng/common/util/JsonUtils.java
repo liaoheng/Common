@@ -19,6 +19,38 @@ import java.util.List;
  */
 public class JsonUtils {
 
+    public static int getInt(String name,JSONObject jsonObject) {
+        try {
+            return jsonObject.getInt(name);
+        } catch (JSONException ignored) {
+        }
+        return 0;
+    }
+
+    public static String getString(String name,JSONObject jsonObject) {
+        try {
+            return jsonObject.getString(name);
+        } catch (JSONException ignored) {
+        }
+        return "";
+    }
+
+    public static long getLong(String name,JSONObject jsonObject) {
+        try {
+            return jsonObject.getLong(name);
+        } catch (JSONException ignored) {
+        }
+        return 0;
+    }
+
+    public static double getDouble(String name,JSONObject jsonObject) {
+        try {
+            return jsonObject.getDouble(name);
+        } catch (JSONException ignored) {
+        }
+        return 0;
+    }
+
     public static <T> String toJson(T t) throws SystemException {
         try {
             return new ObjectMapper().writeValueAsString(t);
@@ -49,10 +81,10 @@ public class JsonUtils {
     public static String parseString(String json, String parameter){
         try {
             JSONObject jsonObject=new JSONObject(json);
-            return jsonObject.getString(parameter);
+            return getString(parameter,jsonObject);
         } catch (JSONException ignored) {
         }
-        return null;
+        return "";
     }
 
     /**

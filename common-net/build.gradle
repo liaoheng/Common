@@ -33,7 +33,6 @@ dependencies {
 
 //  compile 'com.github.liaoheng:common-core:0.0.4-SNAPSHOT'
   compile project(':common-core')
-  provided 'com.trello:rxlifecycle:0.6.1'
 
   //图片加载:https://github.com/bumptech/glide
   provided 'com.github.bumptech.glide:glide:3.7.0'

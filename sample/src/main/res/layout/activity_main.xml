@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
   <ImageView
       android:id="@+id/image"
@@ -31,6 +32,20 @@
                 android:text="open multi input dialog"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
+
+        <com.github.liaoheng.common.ui.view.ToggleImageButton
+                app:normalDrawableRes="@drawable/ic_wallpaper_black_24dp"
+                app:selectedDrawableRes="@drawable/ic_wallpaper_white_24dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        <com.github.liaoheng.common.ui.view.ToggleTextButton
+                android:textColor="@android:color/background_dark"
+                app:normalText="ok"
+                app:selectedText="off"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
     </LinearLayout>
 <include
         android:visibility="gone"

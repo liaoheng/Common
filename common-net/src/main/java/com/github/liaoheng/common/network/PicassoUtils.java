@@ -29,8 +29,8 @@ public class PicassoUtils {
     private final String TAG = PicassoUtils.class.getSimpleName();
     private             Picasso mPicasso;
     private             File    mCache;
-    @DrawableRes public int     mDefaultError;
-    @DrawableRes public int     mDefaultLoading;
+    @DrawableRes private int     mDefaultError;
+    @DrawableRes private int     mDefaultLoading;
 
     private PicassoUtils(int defaultLoading, int defaultError, Picasso mPicasso, File cache) {
         this.mDefaultLoading = defaultLoading;

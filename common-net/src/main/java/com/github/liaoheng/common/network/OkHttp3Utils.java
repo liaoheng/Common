@@ -13,8 +13,6 @@ import com.github.liaoheng.common.util.NetServerException;
 import com.github.liaoheng.common.util.SystemException;
 import com.github.liaoheng.common.util.SystemRuntimeException;
 import com.github.liaoheng.common.util.Utils;
-import com.trello.rxlifecycle.ActivityEvent;
-import com.trello.rxlifecycle.RxLifecycle;
 import java.io.EOFException;
 import java.io.File;
 import java.io.IOException;
@@ -42,6 +40,8 @@ import okhttp3.internal.Util;
 import okio.Buffer;
 import okio.BufferedSource;
 import org.apache.commons.io.FilenameUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 import rx.Observable;
 import rx.Subscription;
 import rx.functions.Func1;
@@ -535,22 +535,14 @@ public class OkHttp3Utils {
         return getSync(url, newRequestBuilder());
     }
 
-    public String getSync(String url, Request.Builder builder) throws NetException {
-        return getSync(getClient(), url, builder);
-    }
-
-    public String getSync(OkHttpClient client, String url) throws NetException {
-        return getSync(client, url, newRequestBuilder());
-    }
-
-    public String getSync(OkHttpClient client, String url, Request.Builder builder)
+    public String getSync(String url, Request.Builder builder)
             throws NetException {
-        return getSync(client, builder.url(url).build());
+        return getSync(builder.url(url).build());
     }
 
-    public String getSync(OkHttpClient client, Request request) throws NetException {
+    public String getSync(Request request) throws NetException {
         try {
-            Response response = client.newCall(request).execute();
+            Response response = getClient().newCall(request).execute();
             String json = response.body().string();
             L.json(TAG, json);
             return json;
@@ -563,29 +555,15 @@ public class OkHttp3Utils {
         return postSync(url, jsonBody, newRequestBuilder());
     }
 
-    public String postSync(String url, String jsonBody, Request.Builder builder)
-            throws NetException {
-        return postSync(getClient(), url, jsonBody, builder);
-    }
-
-    public String postSync(OkHttpClient client, String url, String jsonBody) throws NetException {
-        return postSync(client, url, jsonBody, newRequestBuilder());
-    }
-
-    public String postSync(OkHttpClient client, String url, String jsonBody,
+    public String postSync(String url, String jsonBody,
                            Request.Builder builder) throws NetException {
         RequestBody body = RequestBody.create(JSON, jsonBody);
-        return postSync(client, builder, body, url);
+        return postSync(builder.post(body).url(url).build());
     }
 
-    public String postSync(OkHttpClient client, Request.Builder builder, RequestBody body,
-                           String url) throws NetException {
-        return postSync(client, builder.url(url).post(body).build());
-    }
-
-    public String postSync(OkHttpClient client, Request request) throws NetException {
+    public String postSync(Request request) throws NetException {
         try {
-            Response response = client.newCall(request).execute();
+            Response response = getClient().newCall(request).execute();
             String json = response.body().string();
             L.json(TAG, json);
             return json;
@@ -598,83 +576,54 @@ public class OkHttp3Utils {
         return headSync(url, newRequestBuilder());
     }
 
-    public Response headSync(String url, Request.Builder builder) throws NetException {
-        return headSync(getClient(), url, builder);
-    }
-
-    public Response headSync(OkHttpClient client, String url, Request.Builder builder)
+    public Response headSync(String url, Request.Builder builder)
             throws NetException {
-        return headSync(client, builder.url(url).head().build());
+        return headSync(builder.url(url).head().build());
     }
 
-    public Response headSync(OkHttpClient client, Request request) throws NetException {
+    public Response headSync(Request request) throws NetException {
         try {
-            Response response = client.newCall(request).execute();
-            Map<String, List<String>> stringListMap = response.headers().toMultimap();
-            for (Map.Entry<String, List<String>> entry : stringListMap.entrySet()) {
-                L.Log.d(TAG, "header > key:%s   value:%s ", entry.getKey(), entry.getValue());
-            }
+            Response response = getClient().newCall(request).execute();
+            //Map<String, List<String>> stringListMap = response.headers().toMultimap();
+            //for (Map.Entry<String, List<String>> entry : stringListMap.entrySet()) {
+            //    L.Log.d(TAG, "header > key:%s   value:%s ", entry.getKey(), entry.getValue());
+            //}
             return response;
         } catch (IOException e) {
             throw new NetLocalException(NetException.NET_ERROR, e);
         }
     }
 
-    public Subscription getAsyncToJsonString(Observable<ActivityEvent> eventObservable, String url,
+    public Subscription getAsyncToJsonString(String url,
                                              Callback<String> listener) {
-        Observable.Transformer<String, String> lifecycle = RxLifecycle
-                .bindActivity(eventObservable);
-        return Utils.addSubscribe(getAsyncToJsonString(url).compose(lifecycle), listener);
+        return Utils.addSubscribe(getAsyncToJsonString(url), listener);
     }
 
-    public Subscription getAsyncToJsonString(String url, Callback<String> listener) {
-        return getAsyncToJsonString(getClient(), url, listener);
-    }
-
-    public Subscription getAsyncToJsonString(OkHttpClient client, String url,
+    public Subscription getAsyncToJsonString(String url, Request.Builder builder,
                                              Callback<String> listener) {
-        return Utils.addSubscribe(getAsyncToJsonString(client, url), listener);
+        return Utils.addSubscribe(getAsyncToJsonString(url, builder), listener);
     }
 
     public Observable<String> getAsyncToJsonString(String url) {
-        return getAsyncToJsonString(getClient(), url);
+        return getAsyncToJsonString(url, newRequestBuilder());
     }
 
-    public Observable<String> getAsyncToJsonString(OkHttpClient client, String url) {
-        return getAsyncToJsonString(client, Observable.just(url));
+    public Observable<String> getAsyncToJsonString(String url, Request.Builder builder) {
+        return getAsyncToJsonString(builder, Observable.just(url));
     }
 
-    public Observable<String> getAsyncToJsonString(final OkHttpClient client,
-                                                   Observable<String> observable) {
-        return getAsyncToJsonString(client, newRequestBuilder(), observable);
-    }
-
-    public Observable<String> getAsyncToJsonString(final Request.Builder builder,
-                                                   Observable<String> observable) {
-        return getAsyncToJsonString(getClient(), builder, observable);
-    }
-
-    public Observable<String> getAsyncToJsonString(final OkHttpClient client,
+    public Observable<String> getAsyncToJsonString(
                                                    final Request.Builder builder,
                                                    Observable<String> observable) {
         return observable.observeOn(Schedulers.io()).map(new Func1<String, String>() {
             @Override public String call(String s) {
                 try {
-                    return getSync(client, s, builder);
+                    return getSync(s, builder);
                 } catch (SystemException e) {
                     throw new SystemRuntimeException(e);
                 }
             }
         });
-    }
-
-    public Subscription postAsyncToJsonString(Observable<ActivityEvent> eventObservable, String url,
-                                              String json, final Callback<String> listener) {
-        Observable.Transformer<String, String> lifecycle = RxLifecycle
-                .bindActivity(eventObservable);
-        return Utils
-                .addSubscribe(postAsyncToJsonString(url, Observable.just(json)).compose(lifecycle),
-                listener);
     }
 
     public Subscription postAsyncToJsonString(String url, String json,
@@ -691,22 +640,12 @@ public class OkHttp3Utils {
         return postAsyncToJsonString(url, Observable.just(json));
     }
 
-    /**
-     *
-     * @param url
-     * @param observable is jsonBody
-     * @return
-     */
-    public Observable<String> postAsyncToJsonString(String url, Observable<String> observable) {
-        return postAsyncToJsonString(getClient(), url, observable);
-    }
-
-    public Observable<String> postAsyncToJsonString(final OkHttpClient client, final String url,
+    public Observable<String> postAsyncToJsonString(final String url,
                                                     Observable<String> observable) {
         return observable.observeOn(Schedulers.io()).map(new Func1<String, String>() {
             @Override public String call(String jsonBody) {
                 try {
-                    return postSync(client, url, jsonBody);
+                    return postSync(url, jsonBody);
                 } catch (SystemException e) {
                     throw new SystemRuntimeException(e);
                 }
@@ -876,6 +815,15 @@ public class OkHttp3Utils {
                     }
                 });
         return Utils.addSubscribe(observable, callback);
+    }
+
+    public static JSONObject getResponseBodyString(ResponseBody body) {
+        try {
+            String json = body.string();
+            return new JSONObject(json);
+        } catch (IOException | JSONException ignored) {
+        }
+        return new JSONObject();
     }
 
 }
