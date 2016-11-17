@@ -584,10 +584,10 @@ public class OkHttp3Utils {
     public Response headSync(Request request) throws NetException {
         try {
             Response response = getClient().newCall(request).execute();
-            //Map<String, List<String>> stringListMap = response.headers().toMultimap();
-            //for (Map.Entry<String, List<String>> entry : stringListMap.entrySet()) {
-            //    L.Log.d(TAG, "header > key:%s   value:%s ", entry.getKey(), entry.getValue());
-            //}
+            Map<String, List<String>> stringListMap = response.headers().toMultimap();
+            for (Map.Entry<String, List<String>> entry : stringListMap.entrySet()) {
+                L.Log.d(TAG, "header > key:%s   value:%s ", entry.getKey(), entry.getValue());
+            }
             return response;
         } catch (IOException e) {
             throw new NetLocalException(NetException.NET_ERROR, e);

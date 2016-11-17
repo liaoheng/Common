@@ -29,6 +29,11 @@ dependencies {
 
     //下拉加载:https://github.com/vinaysshenoy/mugen
     compile 'com.vinaysshenoy:mugen:1.0.3'
+    //adapter delegate framework:https://github.com/sockeqwe/AdapterDelegates/tree/2.0.1
+    provided ('com.hannesdorfmann:adapterdelegates2:2.0.1'){
+            exclude module: 'support-v4'
+            exclude module: 'recyclerview-v7'
+    }
 
     testCompile "org.robolectric:robolectric:3.1.1"
     testCompile "org.robolectric:robolectric-annotations:3.1.1"

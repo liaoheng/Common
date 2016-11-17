@@ -24,8 +24,6 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 import com.squareup.okhttp.internal.Util;
-import com.trello.rxlifecycle.ActivityEvent;
-import com.trello.rxlifecycle.RxLifecycle;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -561,13 +559,6 @@ public class OkHttpUtils {
         }
     }
 
-    public Subscription getAsyncToJsonString(Observable<ActivityEvent> eventObservable, String url,
-                                             Callback<String> listener) {
-        Observable.Transformer<String, String> lifecycle = RxLifecycle
-            .bindActivity(eventObservable);
-        return addSubscribe(getAsyncToJsonString(url).compose(lifecycle), listener);
-    }
-
     public Subscription getAsyncToJsonString(String url, Callback<String> listener) {
         return getAsyncToJsonString(getClient(), url, listener);
     }
@@ -607,14 +598,6 @@ public class OkHttpUtils {
                 }
             }
         });
-    }
-
-    public Subscription postAsyncToJsonString(Observable<ActivityEvent> eventObservable, String url,
-                                              String json, final Callback<String> listener) {
-        Observable.Transformer<String, String> lifecycle = RxLifecycle
-            .bindActivity(eventObservable);
-        return addSubscribe(postAsyncToJsonString(url, Observable.just(json)).compose(lifecycle),
-            listener);
     }
 
     public Subscription postAsyncToJsonString(String url, String json,
