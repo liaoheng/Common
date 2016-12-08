@@ -2,9 +2,9 @@ package com.github.liaoheng.common.ui.core;
 
 import android.app.Activity;
 import android.support.annotation.NonNull;
+import android.support.v4.widget.ContentLoadingProgressBar;
 import android.view.View;
 import android.widget.ProgressBar;
-
 import com.github.liaoheng.common.ui.R;
 import com.github.liaoheng.common.util.UIUtils;
 
@@ -15,17 +15,27 @@ import com.github.liaoheng.common.util.UIUtils;
  */
 public class ProgressHelper {
 
-    private ProgressBar mProgressBar;
+    private ContentLoadingProgressBar mProgressBar;
+    private View                      mBgView;
 
     public static ProgressHelper with(@NonNull View view) {
-        return new ProgressHelper((ProgressBar) UIUtils.findViewById(view, R.id.lcu_progress));
+        View bgView = UIUtils.findViewById(view, R.id.lcu_progress_layout);
+        return new ProgressHelper(bgView,
+                (ContentLoadingProgressBar) UIUtils.findViewById(view, R.id.lcu_progress));
     }
 
     public static ProgressHelper with(@NonNull Activity activity) {
-        return new ProgressHelper((ProgressBar) UIUtils.findViewById(activity, R.id.lcu_progress));
+        View bgView = UIUtils.findViewById(activity, R.id.lcu_progress_layout);
+        return new ProgressHelper(bgView,
+                (ContentLoadingProgressBar) UIUtils.findViewById(activity, R.id.lcu_progress));
     }
 
-    public ProgressHelper(ProgressBar progressBar) {
+    public ProgressHelper(ContentLoadingProgressBar progressBar) {
+        mProgressBar = progressBar;
+    }
+
+    private ProgressHelper(View bgView, ContentLoadingProgressBar progressBar) {
+        mBgView = bgView;
         mProgressBar = progressBar;
     }
 
@@ -33,26 +43,17 @@ public class ProgressHelper {
         return mProgressBar;
     }
 
-    public void visible() {
-        UIUtils.viewVisible(mProgressBar);
+    public void show() {
+        if (mBgView != null) {
+            UIUtils.viewVisible(mBgView);
+        }
+        mProgressBar.show();
     }
 
-    public void visibleParent() {
-        UIUtils.viewVisible((View) mProgressBar.getParent());
-    }
-
-    public void inVisible() {
-        UIUtils.viewInVisible(mProgressBar);
-    }
-
-    public void inVisibleParent() {
-        UIUtils.viewInVisible((View) mProgressBar.getParent());
-    }
-
-    public void gone() {
-        UIUtils.viewGone(mProgressBar);
-    }
-    public void goneParent() {
-        UIUtils.viewGone((View) mProgressBar.getParent());
+    public void hide() {
+        mProgressBar.hide();
+        if (mBgView != null) {
+            UIUtils.viewGone(mBgView);
+        }
     }
 }

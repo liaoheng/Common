@@ -47,16 +47,16 @@ public class CUInputDialog extends AppCompatDialog {
         init(layout);
     }
 
-    EditText mEditText;
-    TextView mMessage;
-    Button   mCancel;
-    Button   mOK;
+    private EditText mEditText;
+    private TextView mMessage;
+    private Button   mCancel;
+    private Button   mOK;
 
-    CUInputDialogClickListener mClickListener;
-    ProgressHelper             mProgressHelper;
+    private CUInputDialogClickListener mClickListener;
+    private ProgressHelper             mProgressHelper;
 
-    List<OnShowListener>    mOnShowListeners    = new ArrayList<>();
-    List<OnDismissListener> mOnDismissListeners = new ArrayList<>();
+    private List<OnShowListener>    mOnShowListeners    = new ArrayList<>();
+    private List<OnDismissListener> mOnDismissListeners = new ArrayList<>();
 
     private void init(@LayoutRes int layout) {
         //supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -68,7 +68,7 @@ public class CUInputDialog extends AppCompatDialog {
         initAction();
     }
 
-    public CUInputDialog initAction() {
+    private CUInputDialog initAction() {
         mProgressHelper = ProgressHelper.with(getWindow().getDecorView());
 
         mMessage = (TextView) findViewById(R.id.lcu_input_dialog_message);
@@ -112,7 +112,7 @@ public class CUInputDialog extends AppCompatDialog {
 
         mOnDismissListeners.add(new OnDismissListener() {
             @Override public void onDismiss(DialogInterface dialog) {
-                getProgressHelper().gone();
+                getProgressHelper().hide();
                 getEditText().setText("");
             }
         });
@@ -131,21 +131,27 @@ public class CUInputDialog extends AppCompatDialog {
         super.dismiss();
     }
 
-    @Override public void setOnShowListener(OnShowListener listener) {
+    /**
+     * see {@link CUInputDialog#addOnShowListener(OnShowListener)}
+     */
+    @Deprecated @Override public void setOnShowListener(OnShowListener listener) {
         throw new IllegalStateException("You cannot use");
     }
 
+    /**
+     * see {@link CUInputDialog#addOnDismissListener(OnDismissListener)}
+     */
     @Deprecated @Override public void setOnDismissListener(OnDismissListener listener) {
         throw new IllegalStateException("You cannot use");
     }
 
-    public CUInputDialog addOnDismissListener(OnDismissListener listener) {
-        mOnDismissListeners.add(listener);
+    public CUInputDialog addOnShowListener(OnShowListener listener) {
+        mOnShowListeners.add(listener);
         return this;
     }
 
-    public CUInputDialog addOnShowListener(OnShowListener listener) {
-        mOnShowListeners.add(listener);
+    public CUInputDialog addOnDismissListener(OnDismissListener listener) {
+        mOnDismissListeners.add(listener);
         return this;
     }
 
@@ -227,11 +233,11 @@ public class CUInputDialog extends AppCompatDialog {
     }
 
     public void showProgress() {
-        getProgressHelper().visibleParent();
+        getProgressHelper().show();
     }
 
     public void dismissProgress() {
-        getProgressHelper().goneParent();
+        getProgressHelper().hide();
     }
 
     public static CUInputDialog single(Context context) {

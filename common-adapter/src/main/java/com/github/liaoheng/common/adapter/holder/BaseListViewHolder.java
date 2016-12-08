@@ -23,6 +23,9 @@ public abstract class BaseListViewHolder<K> implements IBaseViewHolder<K> {
     @Override public void onHandle(K item, int position) {
     }
 
+    @Override public void onHandle(K item, int position, Object other) {
+    }
+
     @SuppressWarnings("unchecked") @Override public <T extends View> T findViewById(@IdRes int id) {
         return (T) itemView.findViewById(id);
     }

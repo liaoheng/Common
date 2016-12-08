@@ -11,6 +11,8 @@ import android.view.View;
 public interface IBaseViewHolder<K> {
     void onHandle(K item, int position);
 
+    void onHandle(K item, int position,Object other);
+
     <T extends View> T findViewById(@IdRes int id);
 
     Context getContext();

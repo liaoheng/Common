@@ -1,9 +1,13 @@
 package com.github.liaoheng.common.util;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
+import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import java.lang.reflect.Method;
 
 /**
@@ -16,22 +20,22 @@ import java.lang.reflect.Method;
  * 以下方法是我研究得出的结论和方法，如有误也感谢指出。
  *
  * @author MaTianyu
- * 2014-1-8上午 00:33:11
- */
+ * @author liaoheng
+ * @version 2016-11-30
+ * */
+@SuppressLint("HardwareIds") @SuppressWarnings("MissingPermission")
 public class NetworkUtils {
     private static final String TAG = NetworkUtils.class.getSimpleName();
 
-    public enum NetType {
-        None(1), Mobile(2), Wifi(4), Other(8);
-        NetType(int value) {
-            this.value = value;
-        }
-
-        public int value;
+    public interface NetType {
+        int None   = 1;
+        int Mobile = 2;
+        int Wifi   = 3;
+        int Other  = 4;
     }
 
     /**
-     * 获取ConnectivityManager
+     * <a href="https://developer.android.com/training/basics/network-ops/managing.html">Managing Network Usage</a>
      */
     public static ConnectivityManager getConnManager(Context context) {
         return (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -64,7 +68,11 @@ public class NetworkUtils {
         return false;
     }
 
-    public static NetType getConnectedType(Context context) {
+    /**
+     * 获得当前网络连接类型
+     * @return {@link NetType}
+     */
+    public static int getConnectedType(Context context) {
         NetworkInfo net = getConnManager(context).getActiveNetworkInfo();
         if (net != null) {
             switch (net.getType()) {
@@ -166,6 +174,37 @@ public class NetworkUtils {
         // 反射失败，默认开启
         return true;
     }
+
+    public static String getWifiSsid(String wifiInfo) {
+        if (TextUtils.isEmpty(wifiInfo)) {
+            return "No Wifi Name";
+        }
+        int len = wifiInfo.length();
+        if (wifiInfo.startsWith("\"") && wifiInfo.endsWith("\"")) {
+            wifiInfo = wifiInfo.substring(1, len - 1);
+        }
+        return wifiInfo;
+    }
+
+    /**
+     * <a href="https://developer.android.com/reference/android/net/wifi/WifiManager.html">WifiManager</a>
+     */
+    public static WifiInfo getConnectionWifi(@NonNull Context context) {
+        WifiManager wifi = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        return wifi.getConnectionInfo();
+    }
+
+    /**
+     * 获取 MAC 地址 , 6.0 没有权限了
+     * <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+     */
+    public static String getMacAddress(@NonNull Context context) {
+        WifiInfo info = getConnectionWifi(context);
+        String mac = info.getMacAddress();
+        L.Log.d(TAG, " MAC：" + mac);
+        return mac;
+    }
+
 
     /**
      * 打印当前各种网络状态

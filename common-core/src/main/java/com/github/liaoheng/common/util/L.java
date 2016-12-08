@@ -166,7 +166,7 @@ public class L {
         }
 
         /**
-         * IFNO
+         * INFO
          *
          * @param TAG       LOG TAG
          * @param message   提示模板 %s

@@ -42,8 +42,8 @@ import android.view.ViewGroup;
  * setAdapter may be called multiple times.
  * </p>
  * Created by darnmason on 07/11/2014.
- * @author https://gist.github.com/darnmason/7bbf8beae24fe7296c8a
- * @author liaoheng
+ * @author  darnmason  https://gist.github.com/darnmason/7bbf8beae24fe7296c8a
+ * @author liaoheng  https://gist.github.com/liaoheng/66cf590088feb4c48cd5e7d140977807
  * @version 2016-4-7
  */
 public class HeaderViewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {

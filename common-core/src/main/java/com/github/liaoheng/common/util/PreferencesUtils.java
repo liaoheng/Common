@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * SharedPreferences封装类
- * <a href="https://github.com/tushar-acharya/PrefCompat">部分代码</a>
+ * SharedPreferences
+ * <a href="https://github.com/tushar-acharya/PrefCompat">Modified from</a>
  */
 public class PreferencesUtils {
     private static Context mContext;
@@ -52,10 +52,14 @@ public class PreferencesUtils {
      */
     @SuppressLint("CommitPrefEdits")
     public PreferencesUtils put(String key, Object object) {
+        put(getSharedPreferencesEditor(), key, object);
+        return this;
+    }
+
+    @SuppressLint("CommitPrefEdits") private SharedPreferences.Editor getSharedPreferencesEditor() {
         if (mSharedPreferencesEditor == null)
             mSharedPreferencesEditor = mSharedPreferences.edit();
-        put(mSharedPreferencesEditor, key, object);
-        return this;
+        return mSharedPreferencesEditor;
     }
 
     /**
@@ -97,12 +101,9 @@ public class PreferencesUtils {
         apply();
     }
 
-    @SuppressLint("CommitPrefEdits")
     public PreferencesUtils putList(List<NameValue<String, Object>> list) {
-        if (mSharedPreferencesEditor == null)
-            mSharedPreferencesEditor = mSharedPreferences.edit();
         for (NameValue<String, Object> arg : list) {
-            put(mSharedPreferencesEditor, arg.getName(), arg.getValue());
+            put(getSharedPreferencesEditor(), arg.getName(), arg.getValue());
         }
         return this;
     }

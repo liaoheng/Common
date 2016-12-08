@@ -18,7 +18,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @version 2015-05-04 10:41
  */
 public abstract class BaseRecyclerAdapter<K, V extends RecyclerView.ViewHolder>
-        extends RecyclerView.Adapter<V> implements IBaseAdapter<K> {
+        extends RecyclerView.Adapter<V> implements IBaseRecyclerAdapter<K> {
 
     private Context mContext;
     private List<K> mList;
@@ -133,11 +133,12 @@ public abstract class BaseRecyclerAdapter<K, V extends RecyclerView.ViewHolder>
         return isEmpty() ? 0 : getList().size();
     }
 
+    @Override
     public void setOnItemClickListener(OnItemClickListener<K> onItemClickListener) {
         mOnItemClickListener = onItemClickListener;
     }
 
-    protected void setOnItemClick(final K item, View view, final int position) {
+    private void setOnItemClick(final K item, View view, final int position) {
         if (mOnItemClickListener == null) {
             return;
         }
@@ -148,11 +149,12 @@ public abstract class BaseRecyclerAdapter<K, V extends RecyclerView.ViewHolder>
         });
     }
 
+    @Override
     public void setOnItemLongClickListener(OnItemLongClickListener<K> onItemLongClickListener) {
         mOnItemLongClickListener = onItemLongClickListener;
     }
 
-    protected void setOnItemLongClick(final K item, final View view, final int position,
+    private void setOnItemLongClick(final K item, final View view, final int position,
                                       final long id) {
         if (mOnItemLongClickListener == null) {
             return;

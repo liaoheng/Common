@@ -8,6 +8,7 @@
     <item name="lcu_toolbar_left" type="id"/>
 
     <item name="lcu_progress" type="id"/>
+    <item name="lcu_progress_layout" type="id"/>
     <item name="lcu_tab_pager_view_tab" type="id"/>
     <item name="lcu_tab_pager_view_pager" type="id"/>
 

@@ -1,5 +1,6 @@
 package com.github.liaoheng.common.util;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -7,6 +8,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Parcelable;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import java.util.UUID;
 
 /**
@@ -14,8 +16,6 @@ import java.util.UUID;
  * @author liaoheng
  */
 public class AppUtils {
-    private static final String TAG = AppUtils.class.getSimpleName();
-
     /**
      * 获取应用程序名称
      * @param context
@@ -30,7 +30,7 @@ public class AppUtils {
             int labelRes = packageInfo.applicationInfo.labelRes;
             return context.getResources().getString(labelRes);
         } catch (PackageManager.NameNotFoundException e) {
-            throw new SystemException("应用程序名称获取失败!", e);
+            throw new SystemException("Application name fetching failed", e);
         }
     }
 
@@ -45,12 +45,19 @@ public class AppUtils {
         try {
             return mg.getPackageInfo(application.getPackageName(), 0);
         } catch (PackageManager.NameNotFoundException e) {
-            throw new SystemException("版本信息获取失败!", e);
+            throw new SystemException("Version information acquisition failed", e);
         }
     }
 
-    public static String phoneStringToNumberString(String PhoneString) {
-        return PhoneString.replaceAll("-", "").replaceAll(" ", "");
+    /**
+     * 去除电话号码中的 "-"
+     * @return
+     */
+    public static String phoneStringToNumberString(String phoneString) {
+        if (TextUtils.isEmpty(phoneString)) {
+            return phoneString;
+        }
+        return phoneString.replaceAll("-", "").replaceAll(" ", "");
     }
 
     /**
@@ -60,7 +67,7 @@ public class AppUtils {
      */
     public static void restartApplication(Activity activity) {
         Intent intent = activity.getBaseContext().getPackageManager()
-            .getLaunchIntentForPackage(activity.getBaseContext().getPackageName());
+                .getLaunchIntentForPackage(activity.getBaseContext().getPackageName());
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -97,15 +104,18 @@ public class AppUtils {
      * @param context
      * @return
      */
-    public static String getDeviceId(Context context) {
-        final TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+    @SuppressLint("HardwareIds") public static String getDeviceId(Context context) {
+        final TelephonyManager tm = (TelephonyManager) context
+                .getSystemService(Context.TELEPHONY_SERVICE);
 
         final String tmDevice, tmSerial, androidId;
         tmDevice = "" + tm.getDeviceId();
         tmSerial = "" + tm.getSimSerialNumber();
-        androidId = "" + android.provider.Settings.Secure.getString(context.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+        androidId = "" + android.provider.Settings.Secure.getString(context.getContentResolver(),
+                android.provider.Settings.Secure.ANDROID_ID);
 
-        UUID deviceUuid = new UUID(androidId.hashCode(), ((long) tmDevice.hashCode() << 32) | tmSerial.hashCode());
+        UUID deviceUuid = new UUID(androidId.hashCode(),
+                ((long) tmDevice.hashCode() << 32) | tmSerial.hashCode());
         return deviceUuid.toString();
     }
 }

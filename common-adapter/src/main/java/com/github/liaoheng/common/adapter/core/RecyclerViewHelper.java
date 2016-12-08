@@ -4,46 +4,71 @@ import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
 import android.view.View;
-import com.github.liaoheng.common.adapter.internal.HeaderViewRecyclerAdapter;
+import android.view.ViewGroup;
 import com.github.liaoheng.common.adapter.R;
+import com.github.liaoheng.common.adapter.base.IBaseRecyclerAdapter;
+import com.github.liaoheng.common.adapter.internal.HeaderViewRecyclerAdapter;
 import com.mugen.Mugen;
 import com.mugen.MugenCallbacks;
+import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
+import com.yqritc.recyclerviewflexibledivider.VerticalDividerItemDecoration;
 
 /**
- * RecyclerView帮助{@link R.layout#lca_view_list}
- *
+ * 使用layout: {@link R.layout#lca_view_list} 或使用相同id控件,基本实现：
+ * <pre>
+ *  <lo>基于<a href="https://github.com/vinaysshenoy/mugen">Mugen</a>实现上拉加载</lo>
+ *  <lo>基于<a href="https://developer.android.com/training/swipe/add-swipe-interface.html">SwipeRefreshLayout</a>实现下拉刷新</lo>
+ *  <lo>基于{@link HeaderViewRecyclerAdapter}实现RecyclerView中添加在头view与尾view</lo>
+ *  </pre>
  * @author liaoheng
- * @version 2015年10月19日
+ * @version 2016-12-8 16:10
  */
+@SuppressWarnings("WeakerAccess")
 public class RecyclerViewHelper {
 
-    boolean                   loading;
-    boolean                   hasLoadedAllItems;
-    RecyclerView              mRecyclerView;
-    SwipeRefreshLayout        mSwipeRefreshLayout;
-    HeaderViewRecyclerAdapter mHeaderViewRecyclerAdapter;
-    View                      none, load;
-    LoadMoreListener mLoadMoreListener;
-    RefreshListener  mRefreshListener;
+    /**
+     * 当前数据是否在加载中
+     */
+    private boolean                   mLoadMoreLoading;
+    /**
+     * 全部数据加载是否以加载完成  ，true 完成 ，false 相反
+     */
+    private boolean                   mHasLoadedAllItems;
+    private RecyclerView              mRecyclerView;
+    private SwipeRefreshLayout        mSwipeRefreshLayout;
+    private HeaderViewRecyclerAdapter mHeaderViewRecyclerAdapter;
+    /**
+     * 数据全部加载完成显示view
+     */
+    private View                      mNoneView;
+    /**
+     * 当前数据加载中显示view
+     */
+    private View                      mLoadingView;
+    private LoadMoreListener          mLoadMoreListener;
+    private RefreshListener           mRefreshListener;
 
-    public static class KSpanSizeLookup extends GridLayoutManager.SpanSizeLookup {
+    /**
+     * 在GridLayoutManager布局下，对头或尾的view设置为占用一行
+     */
+    public static class MergedIntoLineSpanSizeLookup extends GridLayoutManager.SpanSizeLookup {
 
-        GridLayoutManager         mLayoutManager;
-        HeaderViewRecyclerAdapter mViewRecyclerAdapter;
+        private GridLayoutManager         mLayoutManager;
+        private HeaderViewRecyclerAdapter mViewRecyclerAdapter;
 
-        public KSpanSizeLookup(GridLayoutManager mLayoutManager,
-                               HeaderViewRecyclerAdapter mViewRecyclerAdapter) {
-            this.mLayoutManager = mLayoutManager;
-            this.mViewRecyclerAdapter = mViewRecyclerAdapter;
+        public MergedIntoLineSpanSizeLookup(GridLayoutManager layoutManager,
+                                            HeaderViewRecyclerAdapter viewRecyclerAdapter) {
+            mLayoutManager = layoutManager;
+            mViewRecyclerAdapter = viewRecyclerAdapter;
         }
 
         @Override public int getSpanSize(int position) {
@@ -51,7 +76,7 @@ public class RecyclerViewHelper {
                 if ((mViewRecyclerAdapter.hasHeader() && mViewRecyclerAdapter.isHeader(position))
                     || mViewRecyclerAdapter.hasFooter() && mViewRecyclerAdapter
                         .isFooter(position)) {
-                    return mLayoutManager.getSpanCount();
+                    return mLayoutManager.getSpanCount();//当前item为头或者尾view时，当前view占用一行
                 }
             }
             return 1;
@@ -59,60 +84,197 @@ public class RecyclerViewHelper {
     }
 
     public static class Builder {
-        Context                    context;
-        RecyclerView               recyclerView;
-        SwipeRefreshLayout         swipeRefreshLayout;
-        RecyclerView.LayoutManager layoutManager;
-        HeaderViewRecyclerAdapter  headerViewRecyclerAdapter;
-        View                       none, load;
-        LoadMoreListener loadMoreListener;
-        RefreshListener  refreshListener;
+        private Context                   context;
+        private RecyclerView              recyclerView;
+        private SwipeRefreshLayout        swipeRefreshLayout;
+        private HeaderViewRecyclerAdapter headerViewRecyclerAdapter;
+        private View                      none, load;
+        private LoadMoreListener loadMoreListener;
+        private RefreshListener  refreshListener;
 
+        /**
+         * 不初始化布局Layout ，需要在之后第一顺序调用{@link Builder#initView}或自己传入相应控件
+         * @param context {@link Context}
+         */
         public Builder(@NonNull Context context) {
             this.context = context;
         }
 
+        /**
+         * 初始化布局Layout
+         * @param context {@link Context}
+         * @param contentView 使用layout: {@link R.layout#lca_view_list} 或使用相同id控件
+         */
         public Builder(@NonNull Context context, @NonNull View contentView) {
+            this(context, contentView, null);
+        }
+
+        /**
+         * 初始化布局Layout
+         * @param context {@link Context}
+         * @param contentView 使用layout: {@link R.layout#lca_view_list} 或使用相同id控件
+         * @param layoutManager {@link RecyclerView.LayoutManager} 为空时使用LinearLayoutManager
+         */
+        public Builder(@NonNull Context context, @NonNull View contentView,
+                       RecyclerView.LayoutManager layoutManager) {
             this.context = context;
-            initView(contentView);
+            initView(contentView, layoutManager);
         }
 
+        /**
+         * 初始化布局Layout
+         * @param activity {@link Activity}
+         */
         public Builder(@NonNull Activity activity) {
-            this.context = activity;
-            initView(activity);
+            this(activity, activity.getWindow().getDecorView());
         }
 
-        public Builder setSwipeRefreshLayout(SwipeRefreshLayout swipeRefreshLayout) {
+        /**
+         * 初始化布局Layout
+         * @param activity {@link Activity}
+         * @param layoutManager {@link RecyclerView.LayoutManager} 为空时使用LinearLayoutManager
+         */
+        public Builder(@NonNull Activity activity,
+                       @NonNull RecyclerView.LayoutManager layoutManager) {
+            this(activity, activity.getWindow().getDecorView(), layoutManager);
+        }
+
+        /**
+         * 初始化布局Layout
+         * @param contentView 使用layout: {@link R.layout#lca_view_list} 或使用相同id控件
+         * @param layoutManager {@link RecyclerView.LayoutManager} 为空时使用LinearLayoutManager
+         */
+        public void initView(@NonNull View contentView, RecyclerView.LayoutManager layoutManager) {
+            recyclerView = (RecyclerView) contentView.findViewById(R.id.lca_list_recycler_view);
+            getRecyclerView();
+            if (swipeRefreshLayout == null) {
+                swipeRefreshLayout = (SwipeRefreshLayout) contentView
+                        .findViewById(R.id.lca_list_swipe_container);
+                if (swipeRefreshLayout != null) {
+                    swipeRefreshLayout.setEnabled(false);
+                }
+            }
+            setLayoutManager(layoutManager);
+        }
+
+        /**
+         * 初始化布局Layout
+         * @param activity {@link Activity}
+         * @param layoutManager {@link RecyclerView.LayoutManager}
+         */
+        public void initView(@NonNull Activity activity, RecyclerView.LayoutManager layoutManager) {
+            initView(activity.getWindow().getDecorView(), layoutManager);
+        }
+
+        public Builder setSwipeRefreshLayout(@NonNull SwipeRefreshLayout swipeRefreshLayout) {
             this.swipeRefreshLayout = swipeRefreshLayout;
             return this;
         }
 
-        public Builder setRecyclerView(RecyclerView recyclerView) {
+        public Builder setRecyclerView(@NonNull RecyclerView recyclerView) {
             this.recyclerView = recyclerView;
             return this;
         }
 
-        public Builder setLayoutManager() {
-            return setLayoutManager(null);
-        }
-
-        public Builder setLayoutManager(RecyclerView.LayoutManager layoutManager) {
-            this.layoutManager = layoutManager;
+        /**
+         * sse {@link RecyclerView#setLayoutManager(RecyclerView.LayoutManager)}
+         */
+        private Builder setLayoutManager(RecyclerView.LayoutManager layoutManager) {
             if (layoutManager == null) {
                 layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL,
                         false);
                 getRecyclerView().setLayoutManager(layoutManager);
-                getRecyclerView().setItemAnimator(new DefaultItemAnimator());
             } else {
                 getRecyclerView().setLayoutManager(layoutManager);
             }
             return this;
         }
 
+        @Deprecated public Builder setLayoutManager() {
+            return this;
+        }
+
         /**
-         * 添加底部加载{@link R.layout#lca_view_list_footer}
-         *
+         * 开启水平下滑线
+         */
+        public Builder enableHorizontalDividerLine() {
+            return addItemDecoration(new HorizontalDividerItemDecoration.Builder(context)
+                    .color(ContextCompat.getColor(context, R.color.lca_divider_line)).build());
+        }
+
+        /**
+         * 开启垂直下滑线
+         */
+        public Builder enableVerticalDividerLine() {
+            return addItemDecoration(new VerticalDividerItemDecoration.Builder(context)
+                    .color(ContextCompat.getColor(context, R.color.lca_divider_line)).build());
+        }
+
+        /**
+         *  see {@link RecyclerView#addItemDecoration(RecyclerView.ItemDecoration)}
+         * @param decor {@link RecyclerView.ItemDecoration}
+         */
+        public Builder addItemDecoration(RecyclerView.ItemDecoration decor) {
+            getRecyclerView().addItemDecoration(decor);
+            return this;
+        }
+
+        /**
+         * 每一个item宽或者高不会变，当使用头或尾view时，最好不要使用
+         */
+        public Builder setHasFixedSize() {
+            return setHasFixedSize(true);
+        }
+
+        /**
+         * 在计算每个tem宽或者高时是否为固定值,see {@link RecyclerView#setHasFixedSize(boolean)}
+         * @param hasFixedSize true 固定 false 相反
+         */
+        public Builder setHasFixedSize(boolean hasFixedSize) {
+            getRecyclerView().setHasFixedSize(hasFixedSize);
+            return this;
+        }
+
+        /**
+         * see {@link RecyclerView#setItemAnimator(RecyclerView.ItemAnimator)}
+         * @param itemAnimator {@link RecyclerView.ItemAnimator }
+         */
+        public Builder setItemAnimator(RecyclerView.ItemAnimator itemAnimator) {
+            getRecyclerView().setItemAnimator(itemAnimator);
+            return this;
+        }
+
+        /**
+         * 在GridLayoutManager布局下，对使用了头或尾的view情况下，设置view占用一行
+         */
+        public Builder setMergedIntoLineSpanSizeLookup() {
+            if (headerViewRecyclerAdapter != null && getRecyclerView().getLayoutManager() != null
+                && getRecyclerView().getLayoutManager() instanceof GridLayoutManager) {
+                GridLayoutManager gridLayoutManager = (GridLayoutManager) getRecyclerView()
+                        .getLayoutManager();
+                setSpanSizeLookup(new MergedIntoLineSpanSizeLookup(gridLayoutManager,
+                        headerViewRecyclerAdapter));
+            }
+            return this;
+        }
+
+        /**
+         * see {@link GridLayoutManager#setSpanSizeLookup(GridLayoutManager.SpanSizeLookup)}
+         * @param spanSizeLookup {@link GridLayoutManager.SpanSizeLookup}
          * @return
+         */
+        public Builder setSpanSizeLookup(GridLayoutManager.SpanSizeLookup spanSizeLookup) {
+            if (getRecyclerView().getLayoutManager() != null && getRecyclerView()
+                    .getLayoutManager() instanceof GridLayoutManager) {
+                GridLayoutManager gridLayoutManager = (GridLayoutManager) getRecyclerView()
+                        .getLayoutManager();
+                gridLayoutManager.setSpanSizeLookup(spanSizeLookup);
+            }
+            return this;
+        }
+
+        /**
+         * 添加底部上拉加载过程view ,默认使用{@link R.layout#lca_view_list_footer}
          */
         public Builder addLoadMoreFooterView() {
             addLoadMoreFooterView(LayoutInflater.from(context)
@@ -121,9 +283,8 @@ public class RecyclerViewHelper {
         }
 
         /**
-         * 添加底部加载{@link R.layout#lca_view_list_footer}
-         *
-         * @return
+         * 添加底部上拉加载过程view
+         *@param footer 使用与{@link R.layout#lca_view_list_footer}中对应控件ID
          */
         public Builder addLoadMoreFooterView(@NonNull View footer) {
             none = footer.findViewById(R.id.lca_list_footer_none_btn);
@@ -133,32 +294,73 @@ public class RecyclerViewHelper {
         }
 
         /**
-         * 添加底部加载{@link R.layout#lca_view_list_footer}
-         *
-         * @return
+         * 添加底部上拉加载过程view
+         *@param footerRes 使用与{@link R.layout#lca_view_list_footer}中对应控件ID
+         * @param handleView 处理
          */
-        public Builder addLoadMoreFooterView(@LayoutRes int footerRes, HandleView handleView) {
+        public Builder addLoadMoreFooterView(@LayoutRes int footerRes,
+                                             @NonNull HandleView handleView) {
             View footer = LayoutInflater.from(context).inflate(footerRes, getRecyclerView(), false);
+            addLoadMoreFooterView(footer, handleView);
+            return this;
+        }
+
+        /**
+         * 添加底部上拉加载过程view
+         *@param handleView   {@link HandleView#layout(Context, ViewGroup)} 返回{@link R.layout#lca_view_list_footer}中对应控件ID
+         */
+        public Builder addLoadMoreFooterView(@NonNull HandleView handleView) {
+            return addLoadMoreFooterView(handleView.layout(context, getRecyclerView()), handleView);
+        }
+
+        /**
+         * 添加底部上拉加载过程view
+         *@param footer 使用与{@link R.layout#lca_view_list_footer}中对应控件ID
+         * @param handleView {@link HandleView}
+         */
+        public Builder addLoadMoreFooterView(@NonNull View footer, @NonNull HandleView handleView) {
             handleView.handle(footer);
             addLoadMoreFooterView(footer);
             return this;
         }
 
-        public GridLayoutManager.SpanSizeLookup getLoadMoreSpanSizeLookup(
-                GridLayoutManager gridLayoutManager,
-                HeaderViewRecyclerAdapter headerViewRecyclerAdapter) {
-            return new KSpanSizeLookup(gridLayoutManager, headerViewRecyclerAdapter);
+        /**
+         * 在RecyclerView中添加尾view
+         * @param headerRes 使用与{@link R.layout#lca_view_list_footer}中对应控件ID
+         * @param handleView {@link HandleView}
+         */
+        public Builder addFooterView(@LayoutRes int headerRes, @NonNull HandleView handleView) {
+            View footer = LayoutInflater.from(context).inflate(headerRes, getRecyclerView(), false);
+            return addFooterView(footer, handleView);
         }
 
-        public Builder setSpanSizeLookup(GridLayoutManager.SpanSizeLookup spanSizeLookup) {
-            if (layoutManager != null && layoutManager instanceof GridLayoutManager) {
-                GridLayoutManager gridLayoutManager = (GridLayoutManager) layoutManager;
-                gridLayoutManager.setSpanSizeLookup(spanSizeLookup);
-            }
+        /**
+         * 在RecyclerView中添加尾view
+         * @param handleView {@link HandleView}
+         */
+        public Builder addFooterView(@NonNull HandleView handleView) {
+            return addFooterView(handleView.layout(context, getRecyclerView()), handleView);
+        }
+
+        /**
+         * 在RecyclerView中添加尾view
+         * @param footer 使用与{@link R.layout#lca_view_list_footer}中对应控件ID
+         * @param handleView {@link HandleView}
+         */
+        public Builder addFooterView(View footer, @NonNull HandleView handleView) {
+            handleView.handle(footer);
+            addFooterView(footer);
             return this;
         }
 
+        /**
+         * 在RecyclerView中添加尾view
+         * @param view {@link View}
+         */
         public Builder addFooterView(View view) {
+            if (view == null) {
+                return this;
+            }
             if (headerViewRecyclerAdapter == null) {
                 headerViewRecyclerAdapter = new HeaderViewRecyclerAdapter();
             }
@@ -166,14 +368,43 @@ public class RecyclerViewHelper {
             return this;
         }
 
-        public Builder addHeaderView(@LayoutRes int headerRes, HandleView handleView) {
+        /**
+         * 在RecyclerView中添加头view
+         * @param headerRes LayoutRes
+         * @param handleView {@link HandleView}
+         */
+        public Builder addHeaderView(@LayoutRes int headerRes, @NonNull HandleView handleView) {
             View header = LayoutInflater.from(context).inflate(headerRes, getRecyclerView(), false);
+            return addHeaderView(header, handleView);
+        }
+
+        /**
+         * 在RecyclerView中添加头view
+         * @param handleView {@link HandleView}
+         */
+        public Builder addHeaderView(@NonNull HandleView handleView) {
+            return addHeaderView(handleView.layout(context, getRecyclerView()), handleView);
+        }
+
+        /**
+         * 在RecyclerView中添加头view
+         * @param header {@link View}
+         * @param handleView {@link HandleView}
+         */
+        public Builder addHeaderView(View header, @NonNull HandleView handleView) {
             handleView.handle(header);
             addHeaderView(header);
             return this;
         }
 
+        /**
+         * 在RecyclerView中添加头view
+         * @param view {@link View}
+         */
         public Builder addHeaderView(View view) {
+            if (view == null) {
+                return this;
+            }
             if (headerViewRecyclerAdapter == null) {
                 headerViewRecyclerAdapter = new HeaderViewRecyclerAdapter();
             }
@@ -181,6 +412,11 @@ public class RecyclerViewHelper {
             return this;
         }
 
+        /**
+         * 设置回调并打开 <a href="https://developer.android.com/training/swipe/add-swipe-interface.html">下拉刷新</a> 和<a href="https://github.com/vinaysshenoy/mugen">上拉加载</a>
+         * @param refreshListener {@link RefreshListener}
+         * @param loadMoreListener {@link LoadMoreListener}
+         */
         public Builder setLoadMoreAndRefreshListener(RefreshListener refreshListener,
                                                      LoadMoreListener loadMoreListener) {
             setRefreshListener(refreshListener);
@@ -188,16 +424,28 @@ public class RecyclerViewHelper {
             return this;
         }
 
-        public Builder setLoadMoreListener(LoadMoreListener loadMoreListener) {
-            this.loadMoreListener = loadMoreListener;
-            return this;
-        }
-
+        /**
+         * 设置回调并打开 <a href="https://developer.android.com/training/swipe/add-swipe-interface.html">下拉刷新</a>
+         * @param refreshListener {@link RefreshListener}
+         */
         public Builder setRefreshListener(RefreshListener refreshListener) {
             this.refreshListener = refreshListener;
             return this;
         }
 
+        /**
+         * 设置回调并打开 <a href="https://github.com/vinaysshenoy/mugen">上拉加载</a>
+         * @param loadMoreListener {@link LoadMoreListener}
+         */
+        public Builder setLoadMoreListener(LoadMoreListener loadMoreListener) {
+            this.loadMoreListener = loadMoreListener;
+            return this;
+        }
+
+        /**
+         * 当上拉加载数据全部完成时，在显示的view上添加点击事件回调
+         * @param loadMoreListener  {@link LoadMoreListener}
+         */
         public Builder setFooterLoadMoreListener(final LoadMoreListener loadMoreListener) {
             if (none != null) {
                 none.setOnClickListener(new View.OnClickListener() {
@@ -211,6 +459,9 @@ public class RecyclerViewHelper {
             return this;
         }
 
+        /**
+         * 当上拉加载数据全部完成时，在显示的view上添加点击事件使用与下拉加载回调一致
+         */
         public Builder setFooterLoadMoreListener() {
             if (none != null) {
                 none.setOnClickListener(new View.OnClickListener() {
@@ -224,33 +475,11 @@ public class RecyclerViewHelper {
             return this;
         }
 
-        public Builder addRecyclerViewOnScrollListener(RecyclerView.OnScrollListener listener) {
-            getRecyclerView().addOnScrollListener(listener);
-            return this;
-        }
-
-        public RecyclerView getRecyclerView() {
+        private RecyclerView getRecyclerView() {
             if (recyclerView == null) {
                 throw new IllegalArgumentException("RecyclerView is null");
             }
             return recyclerView;
-        }
-
-        private void initView(@NonNull View contentView) {
-            if (recyclerView == null) {
-                recyclerView = (RecyclerView) contentView.findViewById(R.id.lca_list_recycler_view);
-            }
-            if (swipeRefreshLayout == null) {
-                swipeRefreshLayout = (SwipeRefreshLayout) contentView
-                        .findViewById(R.id.lca_list_swipe_container);
-                if (swipeRefreshLayout != null) {
-                    swipeRefreshLayout.setEnabled(false);
-                }
-            }
-        }
-
-        private void initView(@NonNull Activity activity) {
-            initView(activity.getWindow().getDecorView());
         }
 
         public RecyclerViewHelper build() {
@@ -259,26 +488,40 @@ public class RecyclerViewHelper {
         }
     }
 
-    public RecyclerViewHelper(RecyclerView mRecyclerView, SwipeRefreshLayout mSwipeRefreshLayout,
-                              HeaderViewRecyclerAdapter mHeaderViewRecyclerAdapter, View none,
-                              View load, LoadMoreListener mLoadMoreListener,
+    private RecyclerViewHelper(RecyclerView mRecyclerView, SwipeRefreshLayout mSwipeRefreshLayout,
+                              HeaderViewRecyclerAdapter mHeaderViewRecyclerAdapter, View noneView,
+                              View loadingView, LoadMoreListener mLoadMoreListener,
                               RefreshListener mRefreshListener) {
         this.mRecyclerView = mRecyclerView;
         this.mSwipeRefreshLayout = mSwipeRefreshLayout;
         this.mHeaderViewRecyclerAdapter = mHeaderViewRecyclerAdapter;
-        this.none = none;
-        this.load = load;
+        this.mNoneView = noneView;
+        this.mLoadingView = loadingView;
         this.mLoadMoreListener = mLoadMoreListener;
         this.mRefreshListener = mRefreshListener;
         attachLoadMoreListener();
         attachRefreshListener();
     }
 
-    public void setLoading(boolean loading) {
-        this.loading = loading;
-    }
-
-    public void setRefreshCallback(final boolean refresh) {
+    /**
+     *etc:
+     *  <pre>
+     *     refresh action callback{
+     *          loading{
+     *              setSwipeRefreshing(true)
+     *          }
+     *          done{
+     *              setSwipeRefreshing(false)
+     *          }
+     *      }
+     *  </pre>
+     * 更新SwipeRefreshLayout下拉更新进度条状态
+     * @param refresh true 进行中 false 完成
+     */
+    public void setSwipeRefreshing(final boolean refresh) {
+        if (mSwipeRefreshLayout == null) {
+            return;
+        }
         mSwipeRefreshLayout.post(new Runnable() {
             @Override public void run() {
                 mSwipeRefreshLayout.setRefreshing(refresh);
@@ -286,42 +529,89 @@ public class RecyclerViewHelper {
         });
     }
 
-    public void setHasLoadedAllItems(boolean hasLoaded) {
-        this.hasLoadedAllItems = hasLoaded;
-        noneVisible();
-        loadVisible();
+    /**
+     * etc:
+     *  <pre>
+     *      loadMore action callback{
+     *          loading{
+     *              setLoadMoreLoading(true)
+     *          }
+     *          done{
+     *              setLoadMoreLoading(false)
+     *          }
+     *      }
+     *  </pre>
+     * 判断当前是否下拉加载数据中
+     * @param loading true 进行中，false 空闲
+     */
+    public void setLoadMoreLoading(boolean loading) {
+        mLoadMoreLoading = loading;
     }
 
-    public boolean getHasLoadedAllItems() {
-        return hasLoadedAllItems;
+    /**
+     * etc:
+     *  <pre>
+     *      callback{
+     *         done{
+     *              setLoadMoreHasLoadedAllItems(curPage >= pageTotal)
+     *         }
+     *      }
+     *  </pre>
+     * 判断当前下拉加载全部数据是否加载完成
+     * @param hasLoaded true 完，false 相反
+     */
+    public void setLoadMoreHasLoadedAllItems(boolean hasLoaded) {
+        mHasLoadedAllItems = hasLoaded;
+        setNoneViewDisplayState();
+        setLoadingViewDisplayState();
     }
 
-    public void loaded() {
-        setHasLoadedAllItems(true);
+    /**
+     * 得到当前上拉加载全部数据是否完成
+     * @return true 完，false 相反
+     */
+    public boolean getLoadMoreHasLoadedAllItems() {
+        return mHasLoadedAllItems;
     }
 
-    public void loading() {
-        setHasLoadedAllItems(false);
-        noneVisible();
-        loadVisible();
+    /**
+     * 改变为上拉加载数据全部完成状态
+     */
+    public void changeToLoadMoreComplete() {
+        setLoadMoreHasLoadedAllItems(true);
     }
 
-    private void noneVisible() {
-        if (none != null) {
-            if (getHasLoadedAllItems()) {
-                none.setVisibility(View.VISIBLE);
+    /**
+     * 改变为上拉加载数据进行中状态
+     */
+    public void changeToLoadMoreLoading() {
+        setLoadMoreHasLoadedAllItems(false);
+        setNoneViewDisplayState();
+        setLoadingViewDisplayState();
+    }
+
+    /**
+     * 当前上拉加载全部数据完成，显示NoneView
+     */
+    private void setNoneViewDisplayState() {
+        if (mNoneView != null) {
+            if (getLoadMoreHasLoadedAllItems()) {
+                mNoneView.setVisibility(View.VISIBLE);
             } else {
-                none.setVisibility(View.GONE);
+                mNoneView.setVisibility(View.GONE);
             }
         }
     }
 
-    private void loadVisible() {
-        if (load != null) {
-            if (getHasLoadedAllItems()) {
-                load.setVisibility(View.GONE);
+    /**
+     * 当前上拉加载全部数据未完成，显示LoadingView
+     */
+    private void setLoadingViewDisplayState() {
+        if (mLoadingView != null) {
+            if (getLoadMoreHasLoadedAllItems()) {
+                mLoadingView.setVisibility(View.GONE);
             } else {
-                load.setVisibility(View.VISIBLE);
+                mLoadingView.setVisibility(View.VISIBLE);
             }
         }
     }
@@ -337,11 +627,11 @@ public class RecyclerViewHelper {
             }
 
             @Override public boolean isLoading() {
-                return loading;
+                return mLoadMoreLoading;
             }
 
             @Override public boolean hasLoadedAllItems() {
-                return getHasLoadedAllItems();
+                return getLoadMoreHasLoadedAllItems();
             }
         }).start();
     }
@@ -361,10 +651,16 @@ public class RecyclerViewHelper {
         }
     }
 
+    /**
+     * 下拉加载监听
+     */
     public interface LoadMoreListener {
         void onLoadMore();
     }
 
+    /**
+     * 上拉刷新监听
+     */
     public interface RefreshListener {
         void onRefresh();
     }
@@ -378,15 +674,23 @@ public class RecyclerViewHelper {
         }
     }
 
+    @SuppressWarnings("unchecked") public void OnItemClickListener(
+            IBaseRecyclerAdapter.OnItemClickListener listener) {
+        RecyclerView.Adapter adapter = mRecyclerView.getAdapter();
+        if (adapter != null && adapter instanceof IBaseRecyclerAdapter) {
+            ((IBaseRecyclerAdapter) adapter).setOnItemClickListener(listener);
+        }
+    }
+
+    public void addRecyclerViewOnScrollListener(RecyclerView.OnScrollListener listener) {
+        getRecyclerView().addOnScrollListener(listener);
+    }
+
     public RecyclerView getRecyclerView() {
         return mRecyclerView;
     }
 
     public SwipeRefreshLayout getSwipeRefreshLayout() {
         return mSwipeRefreshLayout;
-    }
-
-    public HeaderViewRecyclerAdapter getHeaderViewRecyclerAdapter() {
-        return mHeaderViewRecyclerAdapter;
     }
 }

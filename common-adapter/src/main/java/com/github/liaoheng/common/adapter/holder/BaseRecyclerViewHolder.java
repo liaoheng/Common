@@ -28,4 +28,7 @@ public abstract class BaseRecyclerViewHolder<K> extends RecyclerView.ViewHolder
 
     @Override public void onHandle(K item, int position) {
     }
+
+    @Override public void onHandle(K item, int position, Object other) {
+    }
 }

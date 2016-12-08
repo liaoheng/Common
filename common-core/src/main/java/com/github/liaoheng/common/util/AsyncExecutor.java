@@ -18,7 +18,6 @@ import android.os.Looper;
 public class AsyncExecutor {
     private static final String    TAG     = AsyncExecutor.class.getSimpleName();
     private static ExecutorService threadPool;
-    public static Handler          handler = new Handler(Looper.getMainLooper());
 
     public AsyncExecutor() {
         this(null);
@@ -81,7 +80,7 @@ public class AsyncExecutor {
      * @return
      */
     private <T> T postResult(final Worker<T> worker, final T result) {
-        handler.post(new Runnable() {
+        HandlerUtils.post(new Runnable() {
             @Override
             public void run() {
                 worker.onPostExecute(result);
@@ -97,7 +96,7 @@ public class AsyncExecutor {
      * @return
      */
     private void postCancel(final Worker worker) {
-        handler.post(new Runnable() {
+        HandlerUtils.post(new Runnable() {
             @Override
             public void run() {
                 worker.onCanceled();
