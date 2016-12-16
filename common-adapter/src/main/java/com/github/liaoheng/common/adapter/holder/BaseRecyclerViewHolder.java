@@ -26,9 +26,15 @@ public abstract class BaseRecyclerViewHolder<K> extends RecyclerView.ViewHolder
         return itemView.getContext();
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Deprecated
     @Override public void onHandle(K item, int position) {
     }
-
-    @Override public void onHandle(K item, int position, Object other) {
+    /**
+     * {@inheritDoc}
+     */
+    @Override public void onHandle(K item, int position, Object args) {
     }
 }

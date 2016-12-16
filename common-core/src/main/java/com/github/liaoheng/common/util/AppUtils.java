@@ -2,6 +2,8 @@ package com.github.liaoheng.common.util;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -9,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.os.Parcelable;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -50,7 +53,7 @@ public class AppUtils {
     }
 
     /**
-     * 去除电话号码中的 "-"
+     * 去除电话号码中的 "-" 和" "
      * @return
      */
     public static String phoneStringToNumberString(String phoneString) {
@@ -117,5 +120,32 @@ public class AppUtils {
         UUID deviceUuid = new UUID(androidId.hashCode(),
                 ((long) tmDevice.hashCode() << 32) | tmSerial.hashCode());
         return deviceUuid.toString();
+    }
+
+    /**
+     * app是否有Activity运行
+     * @param context
+     * @return
+     */
+    public static boolean isForeground(Context context) {
+
+        String PackageName = context.getPackageName();
+        // Get the Activity Manager
+        ActivityManager manager = (ActivityManager) context
+                .getSystemService(Context.ACTIVITY_SERVICE);
+
+        // Get a list of running tasks, we are only interested in the last one,
+        // the top most so we give a 1 as parameter so we only get the topmost.
+        List<ActivityManager.RunningTaskInfo> task = manager.getRunningTasks(1);
+
+        // Get the info we need for comparison.
+        ComponentName componentInfo = task.get(0).topActivity;
+
+        // Check if it matches our package name.
+        if (componentInfo.getPackageName().equals(PackageName))
+            return true;
+
+        // If not then our app is not on the foreground.
+        return false;
     }
 }

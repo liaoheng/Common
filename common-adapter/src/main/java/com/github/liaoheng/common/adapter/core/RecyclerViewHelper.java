@@ -2,6 +2,8 @@ package com.github.liaoheng.common.adapter.core;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.annotation.ColorInt;
+import android.support.annotation.ColorRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
@@ -10,7 +12,6 @@ import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,8 +33,7 @@ import com.yqritc.recyclerviewflexibledivider.VerticalDividerItemDecoration;
  * @author liaoheng
  * @version 2016-12-8 16:10
  */
-@SuppressWarnings("WeakerAccess")
-public class RecyclerViewHelper {
+@SuppressWarnings("WeakerAccess") public class RecyclerViewHelper {
 
     /**
      * 当前数据是否在加载中
@@ -83,14 +83,31 @@ public class RecyclerViewHelper {
         }
     }
 
+    /**
+     * see {@link Builder#Builder(Activity)}
+     */
+    public static Builder newBuilder(@NonNull Activity activity) {
+        return new Builder(activity);
+    }
+
+    /**
+     * see {@link Builder#Builder(Context, View)}
+     */
+    public static Builder newBuilder(@NonNull Context context, @NonNull View contentView) {
+        return new Builder(context, contentView);
+    }
+
     public static class Builder {
         private Context                   context;
         private RecyclerView              recyclerView;
         private SwipeRefreshLayout        swipeRefreshLayout;
         private HeaderViewRecyclerAdapter headerViewRecyclerAdapter;
         private View                      none, load;
-        private LoadMoreListener loadMoreListener;
-        private RefreshListener  refreshListener;
+        private LoadMoreListener                                        loadMoreListener;
+        private RefreshListener                                         refreshListener;
+        private IBaseRecyclerAdapter.OnItemClickListener                onItemClickListener;
+        private IBaseRecyclerAdapter.OnItemLongClickListener            onItemLongClickListener;
+        private RecyclerView.Adapter<? extends RecyclerView.ViewHolder> adapter;
 
         /**
          * 不初始化布局Layout ，需要在之后第一顺序调用{@link Builder#initView}或自己传入相应控件
@@ -197,17 +214,31 @@ public class RecyclerViewHelper {
         /**
          * 开启水平下滑线
          */
-        public Builder enableHorizontalDividerLine() {
-            return addItemDecoration(new HorizontalDividerItemDecoration.Builder(context)
-                    .color(ContextCompat.getColor(context, R.color.lca_divider_line)).build());
+        public Builder enableHorizontalDividerLineResId(@ColorRes int color) {
+            return enableHorizontalDividerLine(ContextCompat.getColor(context, color));
         }
 
         /**
          * 开启垂直下滑线
          */
-        public Builder enableVerticalDividerLine() {
-            return addItemDecoration(new VerticalDividerItemDecoration.Builder(context)
-                    .color(ContextCompat.getColor(context, R.color.lca_divider_line)).build());
+        public Builder enableVerticalDividerLineResId(@ColorRes int color) {
+            return enableVerticalDividerLine(ContextCompat.getColor(context, color));
+        }
+
+        /**
+         * 开启水平下滑线
+         */
+        public Builder enableHorizontalDividerLine(@ColorInt int color) {
+            return addItemDecoration(
+                    new HorizontalDividerItemDecoration.Builder(context).color(color).build());
+        }
+
+        /**
+         * 开启垂直下滑线
+         */
+        public Builder enableVerticalDividerLine(@ColorRes int color) {
+            return addItemDecoration(
+                    new VerticalDividerItemDecoration.Builder(context).color(color).build());
         }
 
         /**
@@ -475,6 +506,29 @@ public class RecyclerViewHelper {
             return this;
         }
 
+        public Builder setOnItemClickListener(
+                @NonNull IBaseRecyclerAdapter.OnItemClickListener listener) {
+            this.onItemClickListener = listener;
+            return this;
+        }
+
+        public Builder setOnItemLongClickListener(
+                @NonNull IBaseRecyclerAdapter.OnItemLongClickListener listener) {
+            this.onItemLongClickListener = listener;
+            return this;
+        }
+
+        public Builder setAdapter(
+                @NonNull RecyclerView.Adapter<? extends RecyclerView.ViewHolder> adapter) {
+            this.adapter = adapter;
+            return this;
+        }
+
+        public Builder addRecyclerViewOnScrollListener(RecyclerView.OnScrollListener listener) {
+            getRecyclerView().addOnScrollListener(listener);
+            return this;
+        }
+
         private RecyclerView getRecyclerView() {
             if (recyclerView == null) {
                 throw new IllegalArgumentException("RecyclerView is null");
@@ -482,16 +536,28 @@ public class RecyclerViewHelper {
             return recyclerView;
         }
 
-        public RecyclerViewHelper build() {
+        @SuppressWarnings("unchecked") public RecyclerViewHelper build() {
+            if (adapter != null) {
+                if (adapter instanceof IBaseRecyclerAdapter) {
+                    IBaseRecyclerAdapter recyclerAdapter = ((IBaseRecyclerAdapter) adapter);
+                    if (onItemClickListener != null) {
+                        recyclerAdapter.setOnItemClickListener(onItemClickListener);
+                    }
+                    if (onItemLongClickListener != null) {
+                        recyclerAdapter.setOnItemLongClickListener(onItemLongClickListener);
+                    }
+                }
+                recyclerView.setAdapter(adapter);
+            }
             return new RecyclerViewHelper(recyclerView, swipeRefreshLayout,
                     headerViewRecyclerAdapter, none, load, loadMoreListener, refreshListener);
         }
     }
 
     private RecyclerViewHelper(RecyclerView mRecyclerView, SwipeRefreshLayout mSwipeRefreshLayout,
-                              HeaderViewRecyclerAdapter mHeaderViewRecyclerAdapter, View noneView,
-                              View loadingView, LoadMoreListener mLoadMoreListener,
-                              RefreshListener mRefreshListener) {
+                               HeaderViewRecyclerAdapter mHeaderViewRecyclerAdapter, View noneView,
+                               View loadingView, LoadMoreListener mLoadMoreListener,
+                               RefreshListener mRefreshListener) {
         this.mRecyclerView = mRecyclerView;
         this.mSwipeRefreshLayout = mSwipeRefreshLayout;
         this.mHeaderViewRecyclerAdapter = mHeaderViewRecyclerAdapter;
@@ -665,25 +731,45 @@ public class RecyclerViewHelper {
         void onRefresh();
     }
 
-    public void setAdapter(RecyclerView.Adapter<? extends ViewHolder> adapter) {
+    @SuppressWarnings("unchecked") public RecyclerViewHelper setAdapter(
+            @NonNull RecyclerView.Adapter<? extends RecyclerView.ViewHolder> adapter) {
         if (mHeaderViewRecyclerAdapter == null) {
             mRecyclerView.setAdapter(adapter);
         } else {
             mHeaderViewRecyclerAdapter.setAdapter(adapter);
             mRecyclerView.setAdapter(mHeaderViewRecyclerAdapter);
         }
+        return this;
     }
 
-    @SuppressWarnings("unchecked") public void OnItemClickListener(
+    @Deprecated @SuppressWarnings("unchecked") public RecyclerViewHelper setOnItemClickListener(
             IBaseRecyclerAdapter.OnItemClickListener listener) {
         RecyclerView.Adapter adapter = mRecyclerView.getAdapter();
-        if (adapter != null && adapter instanceof IBaseRecyclerAdapter) {
+        if (adapter == null) {
+            return this;
+        }
+        if (adapter instanceof HeaderViewRecyclerAdapter) {
+            adapter = ((HeaderViewRecyclerAdapter) adapter).getWrappedAdapter();
+        }
+        if (adapter instanceof IBaseRecyclerAdapter) {
             ((IBaseRecyclerAdapter) adapter).setOnItemClickListener(listener);
         }
+        return this;
     }
 
-    public void addRecyclerViewOnScrollListener(RecyclerView.OnScrollListener listener) {
-        getRecyclerView().addOnScrollListener(listener);
+    @Deprecated @SuppressWarnings("unchecked") public RecyclerViewHelper setOnItemLongClickListener(
+            IBaseRecyclerAdapter.OnItemLongClickListener listener) {
+        RecyclerView.Adapter adapter = mRecyclerView.getAdapter();
+        if (adapter == null) {
+            return this;
+        }
+        if (adapter instanceof HeaderViewRecyclerAdapter) {
+            adapter = ((HeaderViewRecyclerAdapter) adapter).getWrappedAdapter();
+        }
+        if (adapter instanceof IBaseRecyclerAdapter) {
+            ((IBaseRecyclerAdapter) adapter).setOnItemLongClickListener(listener);
+        }
+        return this;
     }
 
     public RecyclerView getRecyclerView() {

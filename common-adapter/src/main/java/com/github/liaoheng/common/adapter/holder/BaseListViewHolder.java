@@ -20,10 +20,16 @@ public abstract class BaseListViewHolder<K> implements IBaseViewHolder<K> {
         this.itemView = itemView;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Deprecated
     @Override public void onHandle(K item, int position) {
     }
-
-    @Override public void onHandle(K item, int position, Object other) {
+    /**
+     * {@inheritDoc}
+     */
+    @Override public void onHandle(K item, int position, Object args) {
     }
 
     @SuppressWarnings("unchecked") @Override public <T extends View> T findViewById(@IdRes int id) {

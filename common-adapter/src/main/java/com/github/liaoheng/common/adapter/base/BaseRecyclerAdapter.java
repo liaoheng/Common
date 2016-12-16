@@ -138,7 +138,7 @@ public abstract class BaseRecyclerAdapter<K, V extends RecyclerView.ViewHolder>
         mOnItemClickListener = onItemClickListener;
     }
 
-    private void setOnItemClick(final K item, View view, final int position) {
+    @SuppressWarnings("WeakerAccess")  protected void setOnItemClick(final K item, View view, final int position) {
         if (mOnItemClickListener == null) {
             return;
         }
@@ -154,7 +154,7 @@ public abstract class BaseRecyclerAdapter<K, V extends RecyclerView.ViewHolder>
         mOnItemLongClickListener = onItemLongClickListener;
     }
 
-    private void setOnItemLongClick(final K item, final View view, final int position,
+    @SuppressWarnings("WeakerAccess")  protected void setOnItemLongClick(final K item, final View view, final int position,
                                       final long id) {
         if (mOnItemLongClickListener == null) {
             return;

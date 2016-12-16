@@ -17,14 +17,13 @@ package com.github.liaoheng.common.adapter.internal;
  * limitations under the License.
  */
 
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.view.ViewGroup;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
-import android.view.ViewGroup;
 
 /**
  * <p>
@@ -42,8 +41,8 @@ import android.view.ViewGroup;
  * setAdapter may be called multiple times.
  * </p>
  * Created by darnmason on 07/11/2014.
- * @author  darnmason  https://gist.github.com/darnmason/7bbf8beae24fe7296c8a
- * @author liaoheng  https://gist.github.com/liaoheng/66cf590088feb4c48cd5e7d140977807
+ * @author https://gist.github.com/darnmason/7bbf8beae24fe7296c8a
+ * @author liaoheng
  * @version 2016-4-7
  */
 public class HeaderViewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -78,20 +77,22 @@ public class HeaderViewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
      * Construct a new header view recycler adapter
      * @param adapter The underlying adapter to wrap
      */
-    public HeaderViewRecyclerAdapter(RecyclerView.Adapter adapter) {
+    @SuppressWarnings("unchecked") public HeaderViewRecyclerAdapter(
+            RecyclerView.Adapter<? extends RecyclerView.ViewHolder> adapter) {
         this();
-        setWrappedAdapter(adapter);
+        setWrappedAdapter((RecyclerView.Adapter<RecyclerView.ViewHolder>) adapter);
     }
 
     /**
      * Replaces the underlying adapter, notifying RecyclerView of changes
      * @param adapter The new adapter to wrap
      */
-    public void setAdapter(RecyclerView.Adapter adapter) {
+    @SuppressWarnings("unchecked") public void setAdapter(
+            RecyclerView.Adapter<? extends RecyclerView.ViewHolder> adapter) {
         if (mWrappedAdapter != null && mWrappedAdapter.getItemCount() > 0) {
             notifyItemRangeRemoved(getHeaderCount(), mWrappedAdapter.getItemCount());
         }
-        setWrappedAdapter(adapter);
+        setWrappedAdapter((RecyclerView.Adapter<RecyclerView.ViewHolder>) adapter);
         notifyItemRangeInserted(getHeaderCount(), mWrappedAdapter.getItemCount());
     }
 
@@ -201,6 +202,10 @@ public class HeaderViewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
      */
     public int getFooterCount() {
         return mFooterViews.size();
+    }
+
+    public RecyclerView.Adapter<RecyclerView.ViewHolder> getWrappedAdapter() {
+        return mWrappedAdapter;
     }
 
     /**
