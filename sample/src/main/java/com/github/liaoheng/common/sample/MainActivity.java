@@ -1,6 +1,7 @@
 package com.github.liaoheng.common.sample;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import butterknife.BindView;
@@ -12,6 +13,7 @@ import com.github.liaoheng.common.network.OkHttp3Utils;
 import com.github.liaoheng.common.ui.base.CURxBaseActivity;
 import com.github.liaoheng.common.ui.core.CUInputDialogClickListener;
 import com.github.liaoheng.common.ui.core.ProgressHelper;
+import com.github.liaoheng.common.ui.view.CUBottomSheetDialog;
 import com.github.liaoheng.common.ui.view.CUInputDialog;
 import com.github.liaoheng.common.util.Callback;
 import com.github.liaoheng.common.util.L;
@@ -48,7 +50,6 @@ public class MainActivity extends CURxBaseActivity {
                     }
                 }).show();
     }
-
     @OnClick(R.id.open_multi_input_dialog) void openMultiInputDialog() {
         CUInputDialog.multi(getActivity(), R.style.AppTheme_Dialog).setMessage("Multi Input")
                 .setClickListener(new CUInputDialogClickListener.EmptyCUInputDialogClickListener() {
@@ -57,6 +58,24 @@ public class MainActivity extends CURxBaseActivity {
                         UIUtils.showToast(getApplicationContext(),text);
                     }
                 }).show();
+    }
+
+    CUBottomSheetDialog cuBottomSheetDialog;
+
+    @OnClick(R.id.open_bottom_sheet_dialog) void openBottomSheetDialog() {
+        if (cuBottomSheetDialog == null) {
+            cuBottomSheetDialog = new CUBottomSheetDialog(this);
+            cuBottomSheetDialog.setContentView(R.layout.view_dialog);
+           cuBottomSheetDialog.findViewById(R.id.dialog_close).setOnClickListener(new View.OnClickListener() {
+                  @Override public void onClick(View v) {
+                    cuBottomSheetDialog.dismiss();
+               }
+           });
+        }
+
+        cuBottomSheetDialog.setPeekHeight(300);
+        cuBottomSheetDialog.show();
+
     }
 
 
@@ -70,11 +89,11 @@ public class MainActivity extends CURxBaseActivity {
         Utils.addSubscribe(photo.compose(this.<String>bindToLifecycle()),
                 new Callback.EmptyCallback<String>() {
                             @Override public void onPreExecute() {
-                                mProgressHelper.visible();
+                                mProgressHelper.show();
                             }
 
                             @Override public void onError(SystemException e) {
-                                mProgressHelper.gone();
+                                mProgressHelper.hide();
                                 L.getToast().e(TAG, getActivity(), e);
                             }
 
@@ -94,7 +113,7 @@ public class MainActivity extends CURxBaseActivity {
                                             .transform(
                                                     new GlideCompressTransformation(getActivity(),
                                                             800)).into(image);
-                                    mProgressHelper.gone();
+                                    mProgressHelper.hide();
                                 } catch (Exception e) {
                                     L.getToast().e(TAG, getActivity(), e);
                                 }

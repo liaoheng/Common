@@ -110,7 +110,7 @@ public abstract class BaseListAdapter<T> extends BaseAdapter implements IBaseAda
     }
 
     @Override
-    public Object getItem(int position) {
+    public T getItem(int position) {
         return isEmpty() ? null : getList().get(position);
     }
 

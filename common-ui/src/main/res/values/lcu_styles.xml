@@ -1,13 +1,20 @@
 <resources>
 
     <!--input dialog-->
-    <style name="LCU.Input.Dialog" parent="LCU.Dialog.Alert">
+    <style name="LCU.Input.Dialog" parent="LCU.AlertDialog">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
      </style>
 
+    <!--BottomSheetDialog-->
+    <style name="LCU.BottomSheetDialog" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="colorPrimary">@color/lcu_colorPrimary</item>
+        <item name="colorPrimaryDark">@color/lcu_colorPrimaryDark</item>
+        <item name="colorAccent">@color/lcu_colorAccent</item>
+    </style>
+
     <!--AlertDialog-->
-    <style name="LCU.Dialog.Alert" parent="Theme.AppCompat.Light.Dialog.Alert">
+    <style name="LCU.AlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="colorPrimary">@color/lcu_colorPrimary</item>
         <item name="colorPrimaryDark">@color/lcu_colorPrimaryDark</item>
         <item name="colorAccent">@color/lcu_colorAccent</item>

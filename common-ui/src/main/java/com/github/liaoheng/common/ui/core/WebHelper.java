@@ -21,6 +21,10 @@ public class WebHelper {
         return new WebHelper(view);
     }
 
+    public static WebHelper with(@NonNull Activity activity) {
+        return new WebHelper(activity.getWindow().getDecorView());
+    }
+
     private WebHelper(@NonNull View view) {
         mWebView = UIUtils.findViewById(view, R.id.lcu_web_view);
         if (mWebView == null) {

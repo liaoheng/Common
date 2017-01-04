@@ -14,6 +14,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.util.AttributeSet;
 import android.view.Gravity;
+import android.view.View;
 import android.webkit.DownloadListener;
 import android.webkit.JsResult;
 import android.webkit.ValueCallback;
@@ -24,8 +25,8 @@ import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import com.github.liaoheng.common.ui.R;
-import com.github.liaoheng.common.ui.core.ProgressHelper;
 import com.github.liaoheng.common.util.L;
+import com.github.liaoheng.common.util.UIUtils;
 import com.github.liaoheng.common.util.Utils;
 import java.util.Map;
 
@@ -38,7 +39,6 @@ public class WebViewLayout extends FrameLayout {
 
     private final       String TAG                      = WebViewLayout.class.getSimpleName();
     public static final int    FILE_CHOOSER_RESULT_CODE = 9801;
-    private ProgressHelper     mProgressUtils;
     private WebView            mWebView;
     private CPDownloadListener mDownloadListener;
     private CPWebChromeClient  mWebChromeClient;
@@ -62,10 +62,6 @@ public class WebViewLayout extends FrameLayout {
                                                                   int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init();
-    }
-
-    public ProgressHelper getProgressUtils() {
-        return mProgressUtils;
     }
 
     public void loadUrl(String url) {
@@ -109,11 +105,12 @@ public class WebViewLayout extends FrameLayout {
                 FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
         addView(mWebView, wParams);
 
-        mProgressUtils = new ProgressHelper(new ProgressBar(getContext()));
+        ProgressBar progressBar = new ProgressBar(getContext());
         FrameLayout.LayoutParams bParams = new FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
         bParams.gravity = Gravity.CENTER;
-        addView(mProgressUtils.getProgressBar(), bParams);
+        progressBar.setVisibility(View.GONE);
+        addView(progressBar, bParams);
 
         if (isInEditMode()) {//编辑器查看时不初始化数据
             return;
@@ -129,7 +126,7 @@ public class WebViewLayout extends FrameLayout {
         mWebChromeClient = new CPWebChromeClient(getContext());
         mWebView.setWebChromeClient(mWebChromeClient);
 
-        mWebView.setWebViewClient(new CPWebViewClient(getProgressUtils()));
+        mWebView.setWebViewClient(new CPWebViewClient(progressBar));
 
         mDownloadListener = new CPDownloadListener();
         mWebView.setDownloadListener(mDownloadListener);
@@ -313,24 +310,20 @@ public class WebViewLayout extends FrameLayout {
     }
 
     public static class CPWebViewClient extends WebViewClient {
-        private ProgressHelper progressHelper;
+        private View progressBar;
 
-        public CPWebViewClient(ProgressHelper progressHelper) {
-            this.progressHelper = progressHelper;
+        public CPWebViewClient(View progressBar) {
+            this.progressBar = progressBar;
         }
 
         @Override public void onPageStarted(WebView view, String url, Bitmap favicon) {
-            if (progressHelper != null) {
-                progressHelper.visible();
-            }
             super.onPageStarted(view, url, favicon);
+            UIUtils.viewVisible(progressBar);
         }
 
         @Override public void onPageFinished(WebView view, String url) {
-            if (progressHelper != null) {
-                progressHelper.gone();
-            }
             super.onPageFinished(view, url);
+            UIUtils.viewGone(progressBar);
         }
     }
 
