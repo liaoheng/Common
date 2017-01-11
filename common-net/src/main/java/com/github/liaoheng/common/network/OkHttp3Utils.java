@@ -53,13 +53,13 @@ import rx.schedulers.Schedulers;
  * @author liaoheng
  * @version 2016-06-24 13:03:45
  */
-public class OkHttp3Utils {
+@SuppressWarnings("WeakerAccess") public class OkHttp3Utils {
     private final String    TAG          = OkHttp3Utils.class.getSimpleName();
     public final  MediaType JSON         = MediaType.parse("application/json; charset=utf-8");
     private final OkHttpClient             mClient;
     private       ErrorHandleListener      mErrorHandleListener;
-    private final Map<String, String>      mHeaders;
-    private final List<HeaderPlusListener> mHeaderPlus;
+    private       Map<String, String>      mHeaders;
+    private       List<HeaderPlusListener> mHeaderPlus;
 
     public interface HeaderPlusListener {
         /**
@@ -106,11 +106,7 @@ public class OkHttp3Utils {
 
     public static OkHttp3Utils get() {
         if (INSTANCE == null) {
-            synchronized (OkHttp3Utils.class) {
-                if (INSTANCE == null) {
-                    INSTANCE = init().build();
-                }
-            }
+            throw new IllegalStateException("No initialization");
         }
         return INSTANCE;
     }
@@ -186,7 +182,7 @@ public class OkHttp3Utils {
             OkHttp3Utils.setInit(build());
         }
 
-        public ErrorHandleListener getDefaultErrorHandleListener() {
+        private ErrorHandleListener getDefaultErrorHandleListener() {
             return new ErrorHandleListener() {
                 @Override public Response checkError(Response response) throws NetServerException {
                     if (!response.isSuccessful()) {
@@ -217,12 +213,15 @@ public class OkHttp3Utils {
             if (cache != null) {
                 builder.cache(cache);
             }
+            if (errorHandleListener == null) {
+                errorHandleListener = getDefaultErrorHandleListener();
+            }
             return new OkHttp3Utils(builder, errorHandleListener, headerPlus, headers);
         }
 
         /**
-         * errorHandleListener, headerPlus, headers 使用初始化对象引用
-         * @param builder
+         * errorHandleListener, headerPlus, headers 使用初始化逻辑
+         * @param builder clone OkHttpClient.Builder
          * @return
          */
         public OkHttp3Utils build(OkHttpClient.Builder builder) {
@@ -292,8 +291,19 @@ public class OkHttp3Utils {
         if (getClient() == null) {
             throw new IllegalStateException("Not Initialize");
         }
-
         return getClient().newBuilder();
+    }
+
+    /**
+     * clear interceptors
+     */
+    public OkHttpClient.Builder cloneNewClient() {
+        if (getClient() == null) {
+            throw new IllegalStateException("Not Initialize");
+        }
+        OkHttpClient.Builder builder = getClient().newBuilder();
+        builder.interceptors().clear();
+        return builder;
     }
 
     public OkHttpClient getClient() {
@@ -322,6 +332,10 @@ public class OkHttp3Utils {
 
     public ErrorHandleListener getErrorHandleListener() {
         return mErrorHandleListener;
+    }
+
+    public void setErrorHandleListener(ErrorHandleListener mErrorHandleListener) {
+        this.mErrorHandleListener = mErrorHandleListener;
     }
 
     public void addHeader(Map<String, String> headers) {
@@ -543,9 +557,7 @@ public class OkHttp3Utils {
     public String getSync(Request request) throws NetException {
         try {
             Response response = getClient().newCall(request).execute();
-            String json = response.body().string();
-            L.json(TAG, json);
-            return json;
+            return response.body().string();
         } catch (IOException e) {
             throw new NetLocalException(NetException.NET_ERROR, e);
         }
@@ -564,9 +576,7 @@ public class OkHttp3Utils {
     public String postSync(Request request) throws NetException {
         try {
             Response response = getClient().newCall(request).execute();
-            String json = response.body().string();
-            L.json(TAG, json);
-            return json;
+            return response.body().string();
         } catch (IOException e) {
             throw new NetLocalException(NetException.NET_ERROR, e);
         }

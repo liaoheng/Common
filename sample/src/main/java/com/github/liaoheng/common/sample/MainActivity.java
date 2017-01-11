@@ -23,6 +23,7 @@ import com.github.liaoheng.common.util.Utils;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import okhttp3.OkHttpClient;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import rx.Observable;
@@ -84,8 +85,12 @@ public class MainActivity extends CURxBaseActivity {
     }
 
     private void photo() {
+        OkHttpClient.Builder builder = OkHttp3Utils
+                .getSingleOkHttpClientBuilder();
+        OkHttp3Utils utils = OkHttp3Utils.init().build(builder);
+
         Observable<String> photo = OkHttp3Utils.get()
-                .getAsyncToJsonString("https://api.douban.com/v2/album/103756651/photos");
+                .getAsyncToJsonString("http://gank.io/api/data/%E7%A6%8F%E5%88%A9/10/1");
         Utils.addSubscribe(photo.compose(this.<String>bindToLifecycle()),
                 new Callback.EmptyCallback<String>() {
                             @Override public void onPreExecute() {
@@ -101,12 +106,10 @@ public class MainActivity extends CURxBaseActivity {
                                 Album album = new Album();
                                 try {
                                     JSONObject jsonObject = new JSONObject(json);
-                                    int count = jsonObject.getInt("count");
-                                    L.i(TAG, "count:" + count);
-                                    JSONArray JsonPhotos = jsonObject.getJSONArray("photos");
+                                    JSONArray JsonPhotos = jsonObject.getJSONArray("results");
                                     for (int i = 0; i < JsonPhotos.length(); i++) {
                                         JSONObject photo = JsonPhotos.getJSONObject(i);
-                                        String image = photo.getString("image");
+                                        String image = photo.getString("url");
                                         album.setItem("" + i, image);
                                     }
                                     Glide.with(getActivity()).load(album.getItems().get(0).getUrl())

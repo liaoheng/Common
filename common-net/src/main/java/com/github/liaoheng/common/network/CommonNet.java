@@ -2,7 +2,6 @@ package com.github.liaoheng.common.network;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import com.github.liaoheng.common.util.PreferencesUtils;
 
 /**
  * @author liaoheng
@@ -16,11 +15,9 @@ public class CommonNet {
     public static void init(@NonNull Context context, boolean isDebug) {
         OkHttpUtils.init().setDefaultCache().initialization();
         PicassoUtils.init().setDefaultDownloader().setDebug(isDebug).initialization(context);
-        PreferencesUtils.init(context);
     }
 
-    public static void init2(@NonNull Context context) {
+    public static void init2() {
         OkHttp3Utils.init().setDefaultCache().initialization();
-        PreferencesUtils.init(context);
     }
 }

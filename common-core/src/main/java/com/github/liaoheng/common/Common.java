@@ -5,13 +5,11 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import com.github.liaoheng.common.util.FileUtils;
 import com.github.liaoheng.common.util.L;
+import com.github.liaoheng.common.util.PreferencesUtils;
 import java.io.File;
 import net.danlew.android.joda.JodaTimeAndroid;
 
 /**
- *
- *  @author <a href="https://github.com/litesuits/android-common">litesuits</a>
- *  @author <a href="http://www.trinea.cn" target="_blank">Trinea</a>
  * @author liaoheng
  * @version 2015-07-22 01:03
  */
@@ -29,8 +27,10 @@ public class Common {
         }
         DEBUG = isDebug;
         mExternalCacheDir = FileUtils.getSDExternalPath(context);
-        JodaTimeAndroid.init(context);
         L.init(PROJECT_NAME, isDebug);
+
+        JodaTimeAndroid.init(context);
+        PreferencesUtils.init(context);
     }
 
     public static String getProjectName() {

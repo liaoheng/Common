@@ -17,6 +17,6 @@ public class CommonPlus {
 
     public static void init2(@NonNull Context context, String projectName, boolean isDebug) {
         Common.init(context, projectName, isDebug);
-        CommonNet.init2(context);
+        CommonNet.init2();
     }
 }

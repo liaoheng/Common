@@ -1,8 +1,12 @@
 package com.github.liaoheng.common.sample;
 
 import android.app.Application;
-import com.github.liaoheng.common.plus.BuildConfig;
+import com.github.liaoheng.common.Common;
+import com.github.liaoheng.common.network.OkHttp3Utils;
 import com.github.liaoheng.common.plus.CommonPlus;
+import com.github.liaoheng.common.util.L;
+import java.util.Map;
+import okhttp3.Request;
 
 /**
  * @author liaoheng
@@ -12,7 +16,14 @@ public class App extends Application {
     @Override public void onCreate() {
         super.onCreate();
         //Common.init(this, "CommonSample", BuildConfig.DEBUG);
-        //OkHttpUtils.init().setDefaultCache().initialization();
+        //OkHttp3Utils.init().setDefaultCache().addHeaderPlus(new OkHttp3Utils.HeaderPlusListener() {
+        //    @Override public Request.Builder headerInterceptor(Request originalRequest,
+        //                                                       Request.Builder builder,
+        //                                                       Map<String, Object> parameters) {
+        //        L.Log.d("zzzz","header");
+        //        return builder;
+        //    }
+        //}).initialization();
 
         CommonPlus.init2(this, "CommonSample", BuildConfig.DEBUG);
     }
