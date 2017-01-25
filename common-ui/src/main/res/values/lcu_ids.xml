@@ -2,8 +2,6 @@
 <resources>
     <item name="lcu_toolbar" type="id"/>
     <item name="lcu_toolbar_title" type="id"/>
-    <item name="lcu_toolbar_spinner" type="id"/>
-    <item name="lcu_toolbar_toggle" type="id"/>
     <item name="lcu_toolbar_right" type="id"/>
     <item name="lcu_toolbar_left" type="id"/>
 

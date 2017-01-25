@@ -39,6 +39,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
+        <Button
+                android:id="@+id/open_toolbar"
+                android:text="open toolbar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
         <com.github.liaoheng.common.ui.view.ToggleImageButton
                 app:normalDrawableRes="@drawable/ic_wallpaper_black_24dp"
                 app:selectedDrawableRes="@drawable/ic_wallpaper_white_24dp"

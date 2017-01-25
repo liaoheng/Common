@@ -547,7 +547,12 @@ import com.yqritc.recyclerviewflexibledivider.VerticalDividerItemDecoration;
                         recyclerAdapter.setOnItemLongClickListener(onItemLongClickListener);
                     }
                 }
-                recyclerView.setAdapter(adapter);
+                if (headerViewRecyclerAdapter != null) {
+                    headerViewRecyclerAdapter.setAdapter(adapter);
+                    recyclerView.setAdapter(headerViewRecyclerAdapter);
+                } else {
+                    recyclerView.setAdapter(adapter);
+                }
             }
             return new RecyclerViewHelper(recyclerView, swipeRefreshLayout,
                     headerViewRecyclerAdapter, none, load, loadMoreListener, refreshListener);
@@ -736,6 +741,11 @@ import com.yqritc.recyclerviewflexibledivider.VerticalDividerItemDecoration;
         if (mHeaderViewRecyclerAdapter == null) {
             mRecyclerView.setAdapter(adapter);
         } else {
+            //之前添加过刷新
+            if (mHeaderViewRecyclerAdapter.getWrappedAdapter() == adapter) {
+                mHeaderViewRecyclerAdapter.notifyDataSetChanged();
+                return this;
+            }
             mHeaderViewRecyclerAdapter.setAdapter(adapter);
             mRecyclerView.setAdapter(mHeaderViewRecyclerAdapter);
         }

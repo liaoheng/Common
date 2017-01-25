@@ -1,53 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@id/lcu_toolbar"
-    android:layout_width="match_parent"
-    android:layout_height="?attr/actionBarSize"
-    android:background="?attr/colorPrimary"
-    android:gravity="center"
-    app:layout_scrollFlags="scroll|enterAlways"
-    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                   android:id="@id/lcu_toolbar"
+                                   android:layout_width="match_parent"
+                                   android:layout_height="?attr/actionBarSize"
+                                   android:background="?attr/colorPrimary"
+                                   android:gravity="center"
+                                   app:contentInsetStart="0dp"
+                                   app:layout_scrollFlags="scroll|enterAlways"
+                                   app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                                   android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
     <ImageButton
-        android:id="@id/lcu_toolbar_left"
-        style="@style/Widget.AppCompat.ActionButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:visibility="gone" />
+            android:id="@id/lcu_toolbar_left"
+            style="@style/Widget.AppCompat.ActionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:visibility="gone"/>
 
     <TextView
-        android:id="@id/lcu_toolbar_title"
-        style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="gone" />
+            android:id="@id/lcu_toolbar_title"
+            style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:ellipsize="marquee"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"/>
 
     <ImageButton
-        android:id="@id/lcu_toolbar_right"
-        style="@style/Widget.AppCompat.ActionButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:visibility="gone" />
-
-
-    <com.github.liaoheng.common.plus.view.ToggleImageButton
-        android:id="@id/lcu_toolbar_toggle"
-        style="@style/Widget.AppCompat.ActionButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:visibility="gone" />
-
-    <Spinner
-        android:id="@id/lcu_toolbar_spinner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:visibility="gone" />
-
+            android:id="@id/lcu_toolbar_right"
+            style="@style/Widget.AppCompat.ActionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:visibility="gone"/>
 </android.support.v7.widget.Toolbar>

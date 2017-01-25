@@ -8,9 +8,9 @@ import java.util.List;
  * @version 2015-11-27 15:14
  */
 public class PagerTab {
-    private String name;
-    private Object object;
-    List<PagerTab> tabs;
+    private String         name;
+    private Object         object;
+    private List<PagerTab> tabs;
 
     public PagerTab() {
     }

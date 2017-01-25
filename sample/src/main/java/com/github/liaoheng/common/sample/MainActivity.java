@@ -79,6 +79,11 @@ public class MainActivity extends CURxBaseActivity {
 
     }
 
+    @OnClick(R.id.open_toolbar)
+    void opeToolBar(){
+        UIUtils.startActivity(this,ToolBarActivity.class);
+    }
+
 
     @OnClick(R.id.load_image) void loadImage() {
         photo();

@@ -24,6 +24,8 @@
 
     </activity>
 
+    <activity android:name=".ToolBarActivity" android:theme="@style/ToolBar" />
+
     <meta-data
         android:name="com.github.liaoheng.common.network.CNGlideModule"
         android:value="GlideModule" />

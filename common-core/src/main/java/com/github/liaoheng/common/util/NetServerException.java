@@ -10,12 +10,12 @@ public class NetServerException extends NetException {
     private Object mErrorBody;
 
     public NetServerException(String errorMessage, Object errorBody) {
-        super(errorMessage);
+        super(errorMessage, null);
         mErrorBody = errorBody;
     }
 
     public NetServerException(Object errorBody) {
-        super("");
+        super("Error", null);
         mErrorBody = errorBody;
     }
 
@@ -28,7 +28,6 @@ public class NetServerException extends NetException {
     }
 
     @Override public String toString() {
-        String s = super.toString();
-        return s + "  ErrorBody:{ " + mErrorBody + " }";
+        return "ErrorBody{ " + mErrorBody + " } ";
     }
 }

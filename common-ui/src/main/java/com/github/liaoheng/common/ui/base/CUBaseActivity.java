@@ -67,6 +67,17 @@ public class CUBaseActivity extends AppCompatActivity {
         return ToolBarHelper.with(activity);
     }
 
+    protected void initToolBarCustom() {
+        toolBarUtils = initToolBarCustom((AppCompatActivity) getActivity());
+    }
+
+    protected ToolBarHelper initToolBarCustom(AppCompatActivity activity) {
+        if (activity == null) {
+            return null;
+        }
+        return ToolBarHelper.custom(activity);
+    }
+
     protected void initActionBar() {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {

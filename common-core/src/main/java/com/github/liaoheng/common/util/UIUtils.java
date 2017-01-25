@@ -8,6 +8,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.ColorInt;
+import android.support.annotation.ColorRes;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
@@ -16,6 +18,7 @@ import android.support.annotation.StyleRes;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatDialog;
 import android.text.TextUtils;
@@ -23,6 +26,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -464,6 +468,16 @@ public class UIUtils {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 
+    public static void setStatusBarColorRes(Window window, @ColorRes int color) {
+        setStatusBarColor(window, ContextCompat.getColor(window.getContext(), color));
+    }
+
+    public static void setStatusBarColor(Window window, @ColorInt int color) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.setStatusBarColor(color);
+        }
+    }
+
     /**
      * 沉浸模式
      * 使用 <a href=' http://https://github.com/DreaminginCodeZH/SystemUiHelper'>SystemUiHelper</a>
@@ -597,11 +611,25 @@ public class UIUtils {
         view.setVisibility(View.VISIBLE);
     }
 
+    public static void viewParentVisible(ViewParent viewParent) {
+        if (viewParent == null) {
+            return;
+        }
+        ((View) viewParent).setVisibility(View.VISIBLE);
+    }
+
     public static void viewInVisible(View view) {
         if (view == null) {
             return;
         }
         view.setVisibility(View.INVISIBLE);
+    }
+
+    public static void viewParentInVisible(ViewParent viewParent) {
+        if (viewParent == null) {
+            return;
+        }
+        ((View) viewParent).setVisibility(View.INVISIBLE);
     }
 
     public static void viewGone(View view) {
@@ -611,9 +639,11 @@ public class UIUtils {
         view.setVisibility(View.GONE);
     }
 
-    public static void addView(@NonNull ViewGroup group, @NonNull View child) {
-        group.removeAllViews();
-        group.addView(child);
+    public static void viewParentGone(ViewParent viewParent) {
+        if (viewParent == null) {
+            return;
+        }
+        ((View) viewParent).setVisibility(View.GONE);
     }
 
     public static <T extends View> T inflate(Context context, @LayoutRes int resource) {

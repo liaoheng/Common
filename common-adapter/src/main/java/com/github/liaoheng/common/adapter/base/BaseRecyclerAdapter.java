@@ -118,6 +118,10 @@ public abstract class BaseRecyclerAdapter<K, V extends RecyclerView.ViewHolder>
 
     @Override public void onBindViewHolder(V holder, int position) {
         K item = getList().get(position);
+        if (item == null) {
+            onBindViewHolderItem(holder, null, position);
+            return;
+        }
         setOnItemClick(item, holder.itemView, position);
         setOnItemLongClick(item, holder.itemView, position, getItemId(position));
         onBindViewHolderItem(holder, item, position);
