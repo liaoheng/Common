@@ -56,9 +56,16 @@ public abstract class BaseListAdapter<T> extends BaseAdapter implements IBaseAda
         return getList() == null || getList().isEmpty();
     }
 
-    @Override
-    public void update(List<T> list) {
-        setList(list);
+    @SuppressWarnings("UnusedAssignment") @Override public void update(T item) {
+        if (isEmpty()) {
+            return;
+        }
+        for (T t : getList()) {
+            if (t.equals(item)) {
+                t = item;
+                break;
+            }
+        }
     }
 
     @Override

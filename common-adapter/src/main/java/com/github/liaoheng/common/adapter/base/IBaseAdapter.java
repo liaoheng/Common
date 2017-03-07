@@ -62,9 +62,9 @@ public interface IBaseAdapter<K> {
     boolean isEmpty();
 
     /**
-     * update list
+     * update item
      */
-    void update(List<K> list);
+    void update(K item);
 
     /**
      * @see List#clear()

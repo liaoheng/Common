@@ -28,6 +28,6 @@ public class NetServerException extends NetException {
     }
 
     @Override public String toString() {
-        return "ErrorBody{ " + mErrorBody + " } ";
+        return "msg: " + getMessage() + " { " + mErrorBody + " } ";
     }
 }

@@ -5,18 +5,17 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v4.content.SharedPreferencesCompat;
-
-import java.util.List;
 import java.util.Map;
 
 /**
- * SharedPreferences
- * <a href="https://github.com/tushar-acharya/PrefCompat">Modified from</a>
+ * SharedPreferences util
+ * @see <a href="https://github.com/tushar-acharya/PrefCompat">Modified from</a>
+ * @see <a href="http://stackoverflow.com/questions/16319237/cant-put-double-sharedpreferences">SharedPreferences double</a>
  */
 public class PreferencesUtils {
-    private static Context mContext;
-    private SharedPreferences mSharedPreferences;
-    private SharedPreferences.Editor mSharedPreferencesEditor;
+    private static Context                  mContext;
+    private        SharedPreferences        mSharedPreferences;
+    private        SharedPreferences.Editor mSharedPreferencesEditor;
 
     public static void init(Context context) {
         mContext = context.getApplicationContext();
@@ -44,228 +43,97 @@ public class PreferencesUtils {
         this.mSharedPreferences = sharedPreferences;
     }
 
-    /**
-     * 保存数据的方法，我们需要拿到保存数据的具体类型，然后根据类型调用不同的保存方法
-     *
-     * @param key
-     * @param object
-     */
-    @SuppressLint("CommitPrefEdits")
-    public PreferencesUtils put(String key, Object object) {
-        put(getSharedPreferencesEditor(), key, object);
-        return this;
-    }
-
     @SuppressLint("CommitPrefEdits") private SharedPreferences.Editor getSharedPreferencesEditor() {
-        if (mSharedPreferencesEditor == null)
+        if (mSharedPreferencesEditor == null) {
             mSharedPreferencesEditor = mSharedPreferences.edit();
+        }
         return mSharedPreferencesEditor;
     }
 
-    /**
-     * 保存数据的方法，我们需要拿到保存数据的具体类型，然后根据类型调用不同的保存方法
-     *
-     * @param key
-     * @param object
-     */
-    public void putApply(String key, Object object) {
-        put(key,object);
-        apply();
-    }
-
-    /**
-     * 保存数据的方法，我们需要拿到保存数据的具体类型，然后根据类型调用不同的保存方法
-     *
-     * @param key
-     * @param object
-     */
-    private void put(SharedPreferences.Editor editor, String key, Object object) {
-        if (object == null) return;
-        if (object instanceof String) {
-            editor.putString(key, (String) object);
-        } else if (object instanceof Integer) {
-            editor.putInt(key, (Integer) object);
-        } else if (object instanceof Boolean) {
-            editor.putBoolean(key, (Boolean) object);
-        } else if (object instanceof Float) {
-            editor.putFloat(key, (Float) object);
-        } else if (object instanceof Long) {
-            editor.putLong(key, (Long) object);
-        } else {
-            editor.putString(key, object.toString());
-        }
-    }
-
-    public void putListApply(List<NameValue<String, Object>> list) {
-        putList(list);
-        apply();
-    }
-
-    public PreferencesUtils putList(List<NameValue<String, Object>> list) {
-        for (NameValue<String, Object> arg : list) {
-            put(getSharedPreferencesEditor(), arg.getName(), arg.getValue());
-        }
+    public PreferencesUtils putString(String key, String value) {
+        getSharedPreferencesEditor().putString(key, value);
         return this;
     }
 
-    public void apply() {
-        if (mSharedPreferencesEditor == null) {
-            return;
-        }
-        getSharedPreferencesCompat().apply(mSharedPreferencesEditor);
-        mSharedPreferencesEditor = null;
+    public PreferencesUtils putInt(String key, int value) {
+        getSharedPreferencesEditor().putInt(key, value);
+        return this;
     }
 
-    /**
-     * 得到保存数据的方法，我们根据默认值得到保存的数据的具体类型，然后调用相对于的方法获取值
-     *
-     * @param key
-     * @param defaultObject
-     * @return
-     */
-    public Object get(String key, Object defaultObject) {
-        return get(mSharedPreferences, key, defaultObject);
+    public PreferencesUtils putLong(String key, long value) {
+        getSharedPreferencesEditor().putLong(key, value);
+        return this;
     }
 
-    /**
-     * 得到保存数据的方法，我们根据默认值得到保存的数据的具体类型，然后调用相对于的方法获取值
-     *
-     * @param sp
-     * @param key
-     * @param defaultObject
-     * @return
-     */
-    private Object get(SharedPreferences sp, String key, Object defaultObject) {
-        if (defaultObject instanceof String) {
-            return sp.getString(key, (String) defaultObject);
-        } else if (defaultObject instanceof Integer) {
-            return sp.getInt(key, (Integer) defaultObject);
-        } else if (defaultObject instanceof Boolean) {
-            return sp.getBoolean(key, (Boolean) defaultObject);
-        } else if (defaultObject instanceof Float) {
-            return sp.getFloat(key, (Float) defaultObject);
-        } else if (defaultObject instanceof Long) {
-            return sp.getLong(key, (Long) defaultObject);
-        }
-        return null;
+    public PreferencesUtils putFloat(String key, float value) {
+        getSharedPreferencesEditor().putFloat(key, value);
+        return this;
     }
 
-    /**
-     * 得到保存String数据
-     *
-     * @param key
-     * @return
-     */
+    public PreferencesUtils putDouble(String key, double value) {
+        getSharedPreferencesEditor().putLong(key, Double.doubleToRawLongBits(value));
+        return this;
+    }
+
+    public PreferencesUtils putBoolean(String key, boolean value) {
+        getSharedPreferencesEditor().putBoolean(key, value);
+        return this;
+    }
+
     public String getString(String key) {
         return getString(key, "");
     }
 
-    /**
-     * 得到保存String数据
-     *
-     * @param key
-     * @param def
-     * @return
-     */
     public String getString(String key, String def) {
-        return (String) get(mSharedPreferences, key, def);
+        return mSharedPreferences.getString(key, def);
     }
 
-    /**
-     * 得到保存int数据
-     *
-     * @param key
-     * @return
-     */
     public int getInt(String key) {
         return getInt(key, -1);
     }
 
-    /**
-     * 得到保存int数据
-     *
-     * @param key
-     * @param def
-     * @return
-     */
     public int getInt(String key, int def) {
-        return (int) get(mSharedPreferences, key, def);
+        return mSharedPreferences.getInt(key, def);
     }
 
-    /**
-     * 得到保存long数据
-     *
-     * @param key
-     * @return
-     */
     public long getLong(String key) {
         return getLong(key, -1);
     }
 
-    /**
-     * 得到保存long数据
-     *
-     * @param key
-     * @param def
-     * @return
-     */
     public long getLong(String key, long def) {
-        return (long) get(mSharedPreferences, key, def);
+        return mSharedPreferences.getLong(key, def);
     }
 
-    /**
-     * 得到保存float数据
-     *
-     * @param key
-     * @return
-     */
     public float getFloat(String key) {
         return getFloat(key, -1);
     }
 
-    /**
-     * 得到保存float数据
-     *
-     * @param key
-     * @param def
-     * @return
-     */
     public float getFloat(String key, float def) {
-        return (float) get(mSharedPreferences, key, def);
+        return mSharedPreferences.getFloat(key, def);
     }
 
-    /**
-     * 得到保存boolean数据
-     *
-     * @param key
-     * @return
-     */
     public boolean getBoolean(String key) {
         return getBoolean(key, false);
     }
 
-    /**
-     * 得到保存boolean数据
-     *
-     * @param key
-     * @param def
-     * @return
-     */
     public boolean getBoolean(String key, boolean def) {
-        return (boolean) get(mSharedPreferences, key, def);
+        return mSharedPreferences.getBoolean(key, def);
     }
 
-    /**
-     * 移除某个key值已经对应的值
-     *
-     * @param key
-     */
+    public double getDouble(String key) {
+        return getDouble(key, -1);
+    }
+
+    public double getDouble(String key, double def) {
+        return Double
+                .longBitsToDouble(mSharedPreferences.getLong(key, Double.doubleToLongBits(def)));
+    }
+
     public void remove(String key) {
         SharedPreferences.Editor editor = mSharedPreferences.edit();
         editor.remove(key);
         getSharedPreferencesCompat().apply(editor);
     }
-
 
     /**
      * 清除所有数据
@@ -297,5 +165,13 @@ public class PreferencesUtils {
 
     public SharedPreferencesCompat.EditorCompat getSharedPreferencesCompat() {
         return SharedPreferencesCompat.EditorCompat.getInstance();
+    }
+
+    public void apply() {
+        if (mSharedPreferencesEditor == null) {
+            return;
+        }
+        getSharedPreferencesCompat().apply(mSharedPreferencesEditor);
+        mSharedPreferencesEditor = null;
     }
 }

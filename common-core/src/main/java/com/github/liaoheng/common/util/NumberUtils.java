@@ -14,10 +14,12 @@ import java.text.DecimalFormat;
 public class NumberUtils {
 
     private static DecimalFormat formatDecimal2 = new DecimalFormat("0.00");
+    private static DecimalFormat formatDecimal1 = new DecimalFormat("0.0");
     private static DecimalFormat formatDecimal0 = new DecimalFormat("0");
 
     static {
         formatDecimal2.setRoundingMode(RoundingMode.DOWN);
+        formatDecimal1.setRoundingMode(RoundingMode.DOWN);
         formatDecimal0.setRoundingMode(RoundingMode.DOWN);
     }
 
@@ -110,12 +112,16 @@ public class NumberUtils {
         return formatDecimal2.format(getBigDecimal(bigDecimal));
     }
 
+    public static String formatNumber1ToString(double number) {
+        return formatDecimal1.format(number);
+    }
+
     public static String formatNumber0ToString(BigDecimal bigDecimal) {
         return formatDecimal0.format(getBigDecimal(bigDecimal));
     }
 
     /**
-     * 英磅(lb) to kg
+     * kg to 英磅(lb)
      * http://www.metric-conversions.org/zh-hans/weight/kilograms-to-pounds.htm
      */
     @NonNull public static BigDecimal kgToLb(BigDecimal bigDecimal) {
@@ -123,7 +129,15 @@ public class NumberUtils {
     }
 
     /**
-     * kg to 英石(ft)
+     * kg to 英磅(lb)
+     * http://www.metric-conversions.org/zh-hans/weight/kilograms-to-pounds.htm
+     */
+    public static double kgToLb(double kg) {
+        return kg * 2.2046;
+    }
+
+    /**
+     * kg to 英石(st)
      * http://www.metric-conversions.org/zh-hans/weight/kilograms-to-stones.htm
      */
     @NonNull public static BigDecimal kgToSt(BigDecimal bigDecimal) {
@@ -131,7 +145,15 @@ public class NumberUtils {
     }
 
     /**
-     * kg to 英磅(lb)
+     * kg to 英石(st)
+     * http://www.metric-conversions.org/zh-hans/weight/kilograms-to-stones.htm
+     */
+    public static double kgToSt(double kg) {
+        return kg * 0.15747;
+    }
+
+    /**
+     * 英磅(lb) to kg
      * http://www.metric-conversions.org/zh-hans/weight/pounds-to-kilograms.htm
      */
     @NonNull public static BigDecimal lbToKg(BigDecimal bigDecimal) {
@@ -139,11 +161,91 @@ public class NumberUtils {
     }
 
     /**
-     *  英石(ft) to kg
+     * 英磅(lb) to kg
+     * http://www.metric-conversions.org/zh-hans/weight/pounds-to-kilograms.htm
+     */
+    public static double lbToKg(double lb) {
+        return lb / 2.2046;
+    }
+
+    /**
+     * 英磅(lb) to 英石(st)
+     * http://www.metric-conversions.org/weight/pounds-to-stones.htm
+     */
+    public static double lbToFt(double lb) {
+        return lb * 0.071429;
+    }
+
+    /**
+     *  英石(st) to kg
      * http://www.metric-conversions.org/zh-hans/weight/stones-to-kilograms.htm
      */
     @NonNull public static BigDecimal stToKg(BigDecimal bigDecimal) {
         return bigDecimalDivide(getBigDecimal(bigDecimal), new BigDecimal(0.15747));
+    }
+
+    /**
+     *  英石(st) to kg
+     * http://www.metric-conversions.org/zh-hans/weight/stones-to-kilograms.htm
+     */
+    public static double stToKg(double st) {
+        return st / 0.15747;
+    }
+
+    /**
+     *  英石(st) to lb
+     * http://www.metric-conversions.org/zh-hans/weight/stones-to-pounds.htm
+     */
+    @NonNull public static BigDecimal stToLb(BigDecimal bigDecimal) {
+        return bigDecimalMultiply(getBigDecimal(bigDecimal), new BigDecimal(14.000));
+    }
+
+    /**
+     *  英石(st) to lb
+     * http://www.metric-conversions.org/zh-hans/weight/stones-to-pounds.htm
+     */
+    public static double stToLb(double st) {
+        return st * 14.000;
+    }
+
+    /**
+     * kg to st:lb
+     */
+    public static String kgToStLb(double kg) {
+        double st = NumberUtils.kgToSt(kg);
+        String s = String.valueOf(st);
+        String[] split = StringUtils.split(s, ".");
+        String t = split[0];
+        String l = split[1];
+        double v = Double.parseDouble("0." + l);
+        v = NumberUtils.stToLb(v);
+        return t + ":" + NumberUtils.formatNumber1ToString(v);
+    }
+
+    /**
+     * lb to st:lb
+     */
+    public static String lbToStLb(double lb) {
+        double st = NumberUtils.lbToFt(lb);
+        String s = String.valueOf(st);
+        String[] split = StringUtils.split(s, ".");
+        String t = split[0];
+        String l = split[1];
+        double v = Double.parseDouble("0." + l);
+        v = NumberUtils.stToLb(v);
+        return t + ":" + NumberUtils.formatNumber1ToString(v);
+    }
+
+    /**
+     * st:lb to kg
+     */
+    public static double stLbToKg(String stLb) {
+        String[] split = StringUtils.split(stLb, ":");
+        String t = split[0];
+        String l = split[1];
+        double st = stToKg(Double.parseDouble(t));
+        double lb = lbToKg(Double.parseDouble(l));
+        return st + lb;
     }
 
     /**

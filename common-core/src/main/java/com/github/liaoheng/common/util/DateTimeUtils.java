@@ -10,8 +10,8 @@ import org.joda.time.LocalTime;
  * @version 2016-11-21 10:55
  */
 public class DateTimeUtils {
-    public final static String DataFormatYYYYMMdd="YYYY-MM-dd";
-    public final static String DataFormatYYYYMMddHHss="YYYY-MM-dd HH:ss";
+    public final static String DATAFORMAT_YYYYMMDD="YYYY-MM-dd";
+    public final static String DATAFORMAT_YYYYMMDDHHSS="YYYY-MM-dd HH:ss";
 
     /**
      * 得到当前时间的utc标准时间
@@ -67,5 +67,14 @@ public class DateTimeUtils {
      */
     public static LocalTime getLocalTimeZoneLocal(LocalTime utcTime) {
         return getDateTimeZoneLocal(utcTime).toLocalTime();
+    }
+
+    /**
+     * 得到前一个月的最后一天 0 :0
+     */
+    public static DateTime getPreMonthLastDay() {
+        DateTime dateTime = DateTime.now().minusMonths(1);
+        int maximumValue = dateTime.dayOfMonth().getMaximumValue();
+        return new DateTime(dateTime.getYear(), dateTime.getMonthOfYear(), maximumValue, 0, 0);
     }
 }

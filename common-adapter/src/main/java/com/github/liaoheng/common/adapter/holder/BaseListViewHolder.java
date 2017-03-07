@@ -23,7 +23,6 @@ public abstract class BaseListViewHolder<K> implements IBaseViewHolder<K> {
     /**
      * {@inheritDoc}
      */
-    @Deprecated
     @Override public void onHandle(K item, int position) {
     }
     /**
