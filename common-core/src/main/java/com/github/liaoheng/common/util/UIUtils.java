@@ -30,6 +30,7 @@ import android.view.ViewParent;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
+
 import com.github.liaoheng.common.R;
 
 /**
@@ -270,7 +271,7 @@ public class UIUtils {
      * @return
      */
     public static ProgressDialog showProgressDialog(@NonNull Context context) {
-        return showProgressDialog(context, ResourceUtils.getText(context, R.string.lcm_loading));
+        return showProgressDialog(context, context.getString(R.string.lcm_loading));
     }
 
     /**
@@ -293,10 +294,8 @@ public class UIUtils {
      * @return
      */
     public static void dismissDialog(Dialog dialog) {
-        if (dialog != null) {
-            if (dialog.isShowing()) {
-                dialog.dismiss();
-            }
+        if (dialog != null && dialog.isShowing()) {
+            dialog.dismiss();
         }
     }
 
@@ -306,7 +305,7 @@ public class UIUtils {
      * @return
      */
     public static void showDialog(Dialog dialog) {
-        if (dialog != null) {
+        if (dialog != null && !dialog.isShowing()) {
             dialog.show();
         }
     }
@@ -371,7 +370,7 @@ public class UIUtils {
      */
     public static AlertDialog createInfoAlertDialog(Context context, String message,
                                                     final Callback4<DialogInterface> call) {
-        return createAlertDialog(context, message, ResourceUtils.getText(context, R.string.lcm_ok),
+        return createAlertDialog(context, message, context.getString(R.string.lcm_ok),
                 null, new Callback4.EmptyCallback<DialogInterface>() {
                     @Override public void onYes(DialogInterface result) {
                         call.onYes(result);
@@ -405,8 +404,8 @@ public class UIUtils {
      */
     public static AlertDialog createAlertDialog(Context context, String message,
                                                 final Callback4<DialogInterface> call) {
-        return createAlertDialog(context, message, ResourceUtils.getText(context, R.string.lcm_ok),
-                ResourceUtils.getText(context, R.string.lcm_no), call);
+        return createAlertDialog(context, message, context.getString(R.string.lcm_ok),
+                context.getString(R.string.lcm_no), call);
     }
 
     /**

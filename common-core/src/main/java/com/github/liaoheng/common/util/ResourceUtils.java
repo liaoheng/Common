@@ -2,13 +2,17 @@ package com.github.liaoheng.common.util;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.AttrRes;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
+import android.support.annotation.DimenRes;
 import android.support.annotation.NonNull;
-import android.support.annotation.StringRes;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+import android.util.TypedValue;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -23,15 +27,6 @@ import java.util.List;
  */
 public class ResourceUtils {
 
-    private ResourceUtils() {
-        throw new AssertionError();
-    }
-
-    public static String getText(@NonNull Context context, @StringRes int res) {
-        CharSequence text = context.getText(res);
-        return TextUtils.isEmpty(text) ? "" : text.toString();
-    }
-
     @ColorInt
     public static int getAttrColor(@NonNull Context context, @AttrRes int attrColor) {
         return getAttrColor(context, attrColor, android.R.color.holo_blue_dark);
@@ -39,12 +34,42 @@ public class ResourceUtils {
 
     @ColorInt
     public static int getAttrColor(@NonNull Context context, @AttrRes int attrColor,
-                                   @ColorRes int defaultColor) {
+            @ColorRes int defaultColor) {
         int[] custom_attrs = { attrColor };
         TypedArray typedArray = context.obtainStyledAttributes(custom_attrs);
         int color = typedArray.getColor(0, ContextCompat.getColor(context, defaultColor));
         typedArray.recycle();
         return color;
+    }
+
+    public static int getAttrDimension(@NonNull Context context, @AttrRes int attrDimen,
+            int defaultDimen) {
+        final TypedValue tv = new TypedValue();
+        if (!context.getTheme().resolveAttribute(attrDimen, tv, true)) {
+            return defaultDimen;
+        }
+        return TypedValue
+                .complexToDimensionPixelSize(tv.data, context.getResources().getDisplayMetrics());
+    }
+
+    @Nullable
+    public static String getStringResourceByName(Context context, String aString) {
+        String packageName = context.getPackageName();
+        int resId = context.getResources().getIdentifier(aString, "string", packageName);
+        if (resId <= 0) {
+            return null;
+        }
+        return context.getString(resId);
+    }
+
+    @Nullable
+    public static Drawable getDrawableResourceByName(Context context, String drawableIdString) {
+        String packageName = context.getPackageName();
+        int resId = context.getResources().getIdentifier(drawableIdString, "drawable", packageName);
+        if (resId <= 0) {
+            return null;
+        }
+        return ContextCompat.getDrawable(context, resId);
     }
 
     /**

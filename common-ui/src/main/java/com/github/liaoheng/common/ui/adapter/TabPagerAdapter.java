@@ -52,8 +52,13 @@ public class TabPagerAdapter extends BaseFragmentStatePagerAdapter<PagerTab> {
         if (mTabPagerOperation != null) {
             return mTabPagerOperation.getItem(item, position);
         } else {
-            L.Log.w(TAG, "TabPagerOperation is null");
-            return new Fragment();
+            Object object = item.getObject();
+            if (object instanceof Fragment){
+                return (Fragment) object;
+            }else{
+                L.Log.w(TAG, "TabPagerOperation is null");
+                return new Fragment();
+            }
         }
     }
 }

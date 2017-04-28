@@ -1,13 +1,13 @@
 package com.github.liaoheng.common.util;
 
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.text.TextUtils;
+
 import java.io.UnsupportedEncodingException;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import android.text.InputFilter;
-import android.text.Spanned;
 
 /**
  * 字符工具
@@ -41,7 +41,14 @@ public class StringUtils {
      * @return
      */
     public static int getObjectInt(Object object) {
-        return Integer.parseInt(String.valueOf(object));
+        if (object == null) {
+            return 0;
+        }
+        String s = String.valueOf(object);
+        if (TextUtils.isEmpty(s)) {
+            return 0;
+        }
+        return Integer.parseInt(s);
     }
 
     /**
@@ -51,6 +58,9 @@ public class StringUtils {
      * @return
      */
     public static String getObjectString(Object object) {
+        if (object == null) {
+            return "";
+        }
         return String.valueOf(object);
     }
 
@@ -61,7 +71,14 @@ public class StringUtils {
      * @return
      */
     public static float getObjectFloat(Object object) {
-        return Float.parseFloat(String.valueOf(object));
+        if (object == null) {
+            return 0;
+        }
+        String s = String.valueOf(object);
+        if (TextUtils.isEmpty(s)) {
+            return 0;
+        }
+        return Float.parseFloat(s);
     }
 
     /**

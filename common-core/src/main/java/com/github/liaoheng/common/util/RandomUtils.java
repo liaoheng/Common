@@ -50,7 +50,7 @@ public class RandomUtils {
      * 
      * @param length
      * @return
-     * @see cn.leng.starth.util.RandomUtils#getRandom(String source, int length)
+     * @see com.github.liaoheng.common.util.RandomUtils#getRandom(String source, int length)
      */
     public static String getRandomNumbersAndLetters(int length) {
         return getRandom(NUMBERS_AND_LETTERS, length);
@@ -61,7 +61,7 @@ public class RandomUtils {
      * 
      * @param length
      * @return
-     * @see cn.leng.starth.util.RandomUtils#getRandom(String source, int length)
+     * @see com.github.liaoheng.common.util.RandomUtils#getRandom(String source, int length)
      */
     public static String getRandomNumbers(int length) {
         return getRandom(NUMBERS, length);
@@ -72,7 +72,7 @@ public class RandomUtils {
      * 
      * @param length
      * @return
-     * @see cn.leng.starth.util.RandomUtils#getRandom(String source, int length)
+     * @see com.github.liaoheng.common.util.RandomUtils#getRandom(String source, int length)
      */
     public static String getRandomLetters(int length) {
         return getRandom(LETTERS, length);
@@ -83,7 +83,7 @@ public class RandomUtils {
      * 
      * @param length
      * @return
-     * @see cn.leng.starth.util.RandomUtils#getRandom(String source, int length)
+     * @see com.github.liaoheng.common.util.RandomUtils#getRandom(String source, int length)
      */
     public static String getRandomCapitalLetters(int length) {
         return getRandom(CAPITAL_LETTERS, length);
@@ -94,7 +94,7 @@ public class RandomUtils {
      * 
      * @param length
      * @return
-     * @see cn.leng.starth.util.RandomUtils#getRandom(String source, int length)
+     * @see com.github.liaoheng.common.util.RandomUtils#getRandom(String source, int length)
      */
     public static String getRandomLowerCaseLetters(int length) {
         return getRandom(LOWER_CASE_LETTERS, length);
@@ -107,7 +107,7 @@ public class RandomUtils {
      * @param length
      * @return <ul>
      *         <li>if source is null or empty, return null</li>
-     *         <li>else see {@link cn.leng.starth.util.RandomUtils#getRandom(char[] sourceChar, int length)}</li>
+     *         <li>else see {@link com.github.liaoheng.common.util.RandomUtils#getRandom(char[] sourceChar, int length)}</li>
      *         </ul>
      */
     public static String getRandom(String source, int length) {

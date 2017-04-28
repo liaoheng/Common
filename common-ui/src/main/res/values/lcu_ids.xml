@@ -9,9 +9,9 @@
     <item name="lcu_progress_layout" type="id"/>
     <item name="lcu_tab_pager_view_tab" type="id"/>
     <item name="lcu_tab_pager_view_pager" type="id"/>
+    <item name="lcu_fragment_view" type="id"/>
 
     <item name="lcu_web_view" type="id"/>
-
 
     <item name="lcu_input_dialog_message" type="id"/>
     <item name="lcu_input_dialog_edit_text" type="id"/>

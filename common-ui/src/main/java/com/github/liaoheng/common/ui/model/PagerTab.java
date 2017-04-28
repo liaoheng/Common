@@ -15,7 +15,7 @@ public class PagerTab {
     public PagerTab() {
     }
 
-    public PagerTab(String name, Object object) {
+    public <T> PagerTab(String name, T object) {
         this.name = name;
         this.object = object;
     }
@@ -35,11 +35,12 @@ public class PagerTab {
         this.name = name;
     }
 
-    public Object getObject() {
-        return object;
+    @SuppressWarnings("unchecked")
+    public <T> T getObject() {
+        return (T) object;
     }
 
-    public void setObject(Object object) {
+    public <T> void setObject(T object) {
         this.object = object;
     }
 
