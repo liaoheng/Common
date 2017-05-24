@@ -27,6 +27,11 @@ android {
 }
 
 dependencies {
+    testCompile deps.robolectric
+    testCompile deps.robolectric_annotations
+    testCompile deps.robolectric_shadows_core
+    testCompile deps.junit
+
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile deps.supportv4
     compile deps.appcompatv7
@@ -36,22 +41,16 @@ dependencies {
     compile 'commons-io:commons-io:2.4'
     //time:https://github.com/dlew/joda-time-android
     compile 'net.danlew:android.joda:2.9.4.1'
-
     //https://github.com/FasterXML/jackson-annotations
     provided 'com.fasterxml.jackson.core:jackson-annotations:2.5.1'
     //https://github.com/FasterXML/jackson-databind
     provided 'com.fasterxml.jackson.core:jackson-databind:2.5.1'
     //https://github.com/FasterXML/jackson-core
     provided 'com.fasterxml.jackson.core:jackson-core:2.5.1'
-    //日志:https://github.com/orhanobut/logger
-    provided 'com.orhanobut:logger:1.8'
-    //函数响应式编程:https://github.com/ReactiveX/RxAndroid
-    provided 'io.reactivex:rxandroid:1.2.1'
-    provided 'io.reactivex:rxjava:1.1.6'
 
-    testCompile "org.robolectric:robolectric:3.1.1"
-    testCompile "org.robolectric:robolectric-annotations:3.1.1"
-    testCompile "junit:junit:4.10"
+    provided deps.logger
+    provided deps.rxandroid
+    provided deps.rxjava
 }
 
 //apply from: rootProject.file('gradle-mvn-push.gradle')

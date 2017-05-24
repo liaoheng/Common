@@ -3,15 +3,17 @@ package com.github.liaoheng.common.ui.base;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import java.lang.reflect.Field;
 
 /**
- * 
  * @author https://github.com/LuckyJayce/ViewPagerIndicator
  */
+@SuppressWarnings("TryWithIdenticalCatches")
 public class CUBaseFragment extends Fragment {
     protected final String TAG = getFragment().getClass().getSimpleName();
     protected LayoutInflater inflater;
@@ -33,19 +35,22 @@ public class CUBaseFragment extends Fragment {
         return getActivity().getApplicationContext();
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void setActivityTitle(String title) {
+        FragmentActivity activity = getActivity();
+        if (activity instanceof CUBaseActivity) {
+            ((CUBaseActivity) activity).setMTitle(title);
+        }
     }
 
     @Override
     public final View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                   Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
         this.inflater = inflater;
         this.container = container;
         onCreateView(savedInstanceState);
-        if (contentView == null)
+        if (contentView == null) {
             return super.onCreateView(inflater, container, savedInstanceState);
+        }
         return contentView;
     }
 
@@ -74,8 +79,9 @@ public class CUBaseFragment extends Fragment {
     }
 
     public View findViewById(int id) {
-        if (contentView != null)
+        if (contentView != null) {
             return contentView.findViewById(id);
+        }
         return null;
     }
 

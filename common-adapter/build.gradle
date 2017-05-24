@@ -21,6 +21,11 @@ android {
 }
 
 dependencies {
+    testCompile deps.robolectric
+    testCompile deps.robolectric_annotations
+    testCompile deps.robolectric_shadows_core
+    testCompile deps.junit
+
     //android system
     compile deps.supportv4
     compile deps.appcompatv7
@@ -30,16 +35,9 @@ dependencies {
     //下拉加载:https://github.com/vinaysshenoy/mugen
     compile 'com.vinaysshenoy:mugen:1.0.3'
     //RecyclerView分割线:https://github.com/yqritc/RecyclerView-FlexibleDivider
-    provided 'com.yqritc:recyclerview-flexibledivider:1.2.4'
+    provided deps.recyclerview_flexibledivider
     //adapter delegate framework:https://github.com/sockeqwe/AdapterDelegates/tree/2.0.1
-    provided ('com.hannesdorfmann:adapterdelegates2:2.0.1'){
-            exclude module: 'support-v4'
-            exclude module: 'recyclerview-v7'
-    }
-
-    testCompile "org.robolectric:robolectric:3.1.1"
-    testCompile "org.robolectric:robolectric-annotations:3.1.1"
-    testCompile "junit:junit:4.10"
+    provided deps.adapterdelegates2
 }
 
 //apply from: rootProject.file('gradle-mvn-push.gradle')

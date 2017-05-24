@@ -27,26 +27,25 @@ android {
 }
 
 dependencies {
+  testCompile deps.robolectric
+  testCompile deps.robolectric_annotations
+  testCompile deps.robolectric_shadows_core
+  testCompile deps.junit
+
   compile deps.supportv4
   compile deps.appcompatv7
   compile deps.recyclerviewv7
   compile deps.design
 
+  provided deps.rxlifecycle
+  provided deps.rxlifecycle_android
+
+  //TabLayout:https://github.com/h6ah4i/android-tablayouthelper
+  provided 'com.h6ah4i.android.tablayouthelper:tablayouthelper:0.8.0'
+
 //  compile 'com.github.liaoheng:common-core:0.0.4-SNAPSHOT'
   compile project(':common-core')
 //  compile 'com.github.liaoheng:common-adapter:0.0.4-SNAPSHOT'
   compile project(':common-adapter')
-
-  provided 'com.trello:rxlifecycle:0.6.1'
-  //TabLayout:https://github.com/h6ah4i/android-tablayouthelper
-  provided('com.h6ah4i.android.tablayouthelper:tablayouthelper:0.7.0'){
-    exclude module: 'support-v4'
-    exclude module: 'appcompat-v7'
-    exclude module: 'design'
-  }
-
-  testCompile "org.robolectric:robolectric:3.1.1"
-  testCompile "org.robolectric:robolectric-annotations:3.1.1"
-  testCompile "junit:junit:4.10"
 }
 //apply from: rootProject.file('gradle-mvn-push.gradle')

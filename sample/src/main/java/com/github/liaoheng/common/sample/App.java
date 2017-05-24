@@ -25,6 +25,6 @@ public class App extends Application {
         //    }
         //}).initialization();
 
-        CommonPlus.init2(this, "CommonSample", BuildConfig.DEBUG);
+        CommonPlus.init(this, "CommonSample", BuildConfig.DEBUG);
     }
 }

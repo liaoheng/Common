@@ -10,11 +10,13 @@ import android.util.AndroidRuntimeException;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.github.liaoheng.common.ui.core.ToolBarHelper;
 import com.github.liaoheng.common.util.UIUtils;
 
 /**
  * 基础通用Activity
+ *
  * @author liaoheng
  */
 public class CUBaseActivity extends AppCompatActivity {
@@ -25,7 +27,7 @@ public class CUBaseActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            back();
+            onBackPressed();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -50,10 +52,6 @@ public class CUBaseActivity extends AppCompatActivity {
             return "";
         }
         return toolBarUtils.getToolbarTitle().getText().toString();
-    }
-
-    protected void back() {
-        getActivity().finish();
     }
 
     protected void initToolBar() {

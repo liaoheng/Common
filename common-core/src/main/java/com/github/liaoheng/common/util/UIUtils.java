@@ -565,26 +565,26 @@ public class UIUtils {
     }
 
     public static void startActionForResult(Object o, Class<?> clazz, Bundle bundle,
-                                            int resultCode) {
+                                            int requestCode) {
         Intent intent;
         if (o instanceof Activity) {
             intent = new Intent((Activity) o, clazz);
             if (bundle != null) {
                 intent.putExtras(bundle);
             }
-            ((Activity) o).startActivityForResult(intent, resultCode);
+            ((Activity) o).startActivityForResult(intent, requestCode);
         } else if (o instanceof Fragment) {
             intent = new Intent(((Fragment) o).getActivity(), clazz);
             if (bundle != null) {
                 intent.putExtras(bundle);
             }
-            ((Fragment) o).startActivityForResult(intent, resultCode);
+            ((Fragment) o).startActivityForResult(intent, requestCode);
         } else if (o instanceof android.app.Fragment) {
             intent = new Intent(((android.app.Fragment) o).getActivity(), clazz);
             if (bundle != null) {
                 intent.putExtras(bundle);
             }
-            ((android.app.Fragment) o).startActivityForResult(intent, resultCode);
+            ((android.app.Fragment) o).startActivityForResult(intent, requestCode);
         }
     }
 
