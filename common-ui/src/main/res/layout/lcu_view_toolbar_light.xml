@@ -6,10 +6,10 @@
                                    android:layout_height="?attr/actionBarSize"
                                    android:background="?attr/colorPrimary"
                                    android:gravity="center"
+                                   android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
                                    app:contentInsetStart="0dp"
                                    app:layout_scrollFlags="scroll|enterAlways"
-                                   app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                                   android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+                                   app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
     <ImageButton
             android:id="@id/lcu_toolbar_left"
@@ -17,18 +17,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
     <TextView
             android:id="@id/lcu_toolbar_title"
             style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
-            android:maxLines="1"
-            android:singleLine="true"
-            android:ellipsize="marquee"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:visibility="gone"/>
+            android:ellipsize="marquee"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:visibility="gone" />
 
     <ImageButton
             android:id="@id/lcu_toolbar_right"
@@ -36,5 +36,5 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 </android.support.v7.widget.Toolbar>
