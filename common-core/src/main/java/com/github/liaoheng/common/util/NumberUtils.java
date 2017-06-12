@@ -336,10 +336,10 @@ public class NumberUtils {
     }
 
     /**
-     * 除法  取3位小数使用BigDecimal.ROUND_DOWN取整
+     * 除法  取5位小数使用BigDecimal.ROUND_HALF_UP四舍五入
      */
     @NonNull
     public static BigDecimal bigDecimalDivide(BigDecimal b1, BigDecimal b2) {
-        return bigDecimalDivide(b1, b2, 3, BigDecimal.ROUND_DOWN);
+        return bigDecimalDivide(b1, b2, 5, BigDecimal.ROUND_HALF_UP);
     }
 }

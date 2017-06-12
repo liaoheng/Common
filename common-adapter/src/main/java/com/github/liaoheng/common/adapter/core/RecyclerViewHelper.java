@@ -105,8 +105,8 @@ import com.yqritc.recyclerviewflexibledivider.VerticalDividerItemDecoration;
         private View                      none, load;
         private LoadMoreListener                                        loadMoreListener;
         private RefreshListener                                         refreshListener;
-        private IBaseRecyclerAdapter.OnItemClickListener                onItemClickListener;
-        private IBaseRecyclerAdapter.OnItemLongClickListener            onItemLongClickListener;
+        private IBaseRecyclerAdapter.OnItemClickListener<?>                onItemClickListener;
+        private IBaseRecyclerAdapter.OnItemLongClickListener<?>            onItemLongClickListener;
         private RecyclerView.Adapter<? extends RecyclerView.ViewHolder> adapter;
 
         /**
@@ -236,7 +236,7 @@ import com.yqritc.recyclerviewflexibledivider.VerticalDividerItemDecoration;
         /**
          * 开启垂直下滑线
          */
-        public Builder enableVerticalDividerLine(@ColorRes int color) {
+        public Builder enableVerticalDividerLine(@ColorInt int color) {
             return addItemDecoration(
                     new VerticalDividerItemDecoration.Builder(context).color(color).build());
         }
@@ -507,13 +507,13 @@ import com.yqritc.recyclerviewflexibledivider.VerticalDividerItemDecoration;
         }
 
         public Builder setOnItemClickListener(
-                @NonNull IBaseRecyclerAdapter.OnItemClickListener listener) {
+                @NonNull IBaseRecyclerAdapter.OnItemClickListener<?> listener) {
             this.onItemClickListener = listener;
             return this;
         }
 
         public Builder setOnItemLongClickListener(
-                @NonNull IBaseRecyclerAdapter.OnItemLongClickListener listener) {
+                @NonNull IBaseRecyclerAdapter.OnItemLongClickListener<?> listener) {
             this.onItemLongClickListener = listener;
             return this;
         }
