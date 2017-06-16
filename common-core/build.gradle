@@ -11,12 +11,7 @@ android {
         versionName VERSION_NAME
     }
     lintOptions {
-        // set to true 关闭lint报告
-        quiet true
-        // lint错误停止构建
         abortOnError false
-        // if true, 只报告错误
-        ignoreWarnings true
     }
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
@@ -37,20 +32,17 @@ dependencies {
     compile deps.appcompatv7
     provided deps.design
 
-    //io utils:https://github.com/apache/commons-io
+    //https://github.com/apache/commons-io
     compile 'commons-io:commons-io:2.4'
-    //time:https://github.com/dlew/joda-time-android
-    compile 'net.danlew:android.joda:2.9.4.1'
-    //https://github.com/FasterXML/jackson-annotations
-    provided 'com.fasterxml.jackson.core:jackson-annotations:2.5.1'
-    //https://github.com/FasterXML/jackson-databind
-    provided 'com.fasterxml.jackson.core:jackson-databind:2.5.1'
-    //https://github.com/FasterXML/jackson-core
-    provided 'com.fasterxml.jackson.core:jackson-core:2.5.1'
+    //https://github.com/dlew/joda-time-android
+    compile 'net.danlew:android.joda:2.9.9'
+    provided deps.jackson_annotations
+    provided deps.jackson_databind
+    provided deps.jackson_core
 
     provided deps.logger
     provided deps.rxandroid
     provided deps.rxjava
 }
 
-//apply from: rootProject.file('gradle-mvn-push.gradle')
+apply from: rootProject.file('gradle-mvn-push.gradle')

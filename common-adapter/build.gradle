@@ -11,12 +11,7 @@ android {
         versionName VERSION_NAME
     }
     lintOptions {
-        // set to true 关闭lint报告
-        quiet true
-        // lint错误停止构建
         abortOnError false
-        // if true, 只报告错误
-        ignoreWarnings true
     }
 }
 
@@ -34,10 +29,8 @@ dependencies {
 
     //下拉加载:https://github.com/vinaysshenoy/mugen
     compile 'com.vinaysshenoy:mugen:1.0.3'
-    //RecyclerView分割线:https://github.com/yqritc/RecyclerView-FlexibleDivider
     provided deps.recyclerview_flexibledivider
-    //adapter delegate framework:https://github.com/sockeqwe/AdapterDelegates/tree/2.0.1
     provided deps.adapterdelegates2
 }
 
-//apply from: rootProject.file('gradle-mvn-push.gradle')
+apply from: rootProject.file('gradle-mvn-push.gradle')

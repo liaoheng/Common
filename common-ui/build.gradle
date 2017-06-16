@@ -11,12 +11,7 @@ android {
     versionName VERSION_NAME
   }
   lintOptions {
-    // set to true 关闭lint报告
-    quiet true
-    // lint错误停止构建
     abortOnError false
-    // if true, 只报告错误
-    ignoreWarnings true
   }
   packagingOptions {
     exclude 'META-INF/LICENSE.txt'
@@ -43,9 +38,14 @@ dependencies {
   //TabLayout:https://github.com/h6ah4i/android-tablayouthelper
   provided 'com.h6ah4i.android.tablayouthelper:tablayouthelper:0.8.0'
 
-//  compile 'com.github.liaoheng:common-core:0.0.4-SNAPSHOT'
+//  compile group: "com.github.liaoheng", name: "common-core", version: "0.0.5-SNAPSHOT", changing: true
   compile project(':common-core')
-//  compile 'com.github.liaoheng:common-adapter:0.0.4-SNAPSHOT'
+//  compile group: "com.github.liaoheng", name: "common-adapter", version: "0.0.5-SNAPSHOT", changing: true
   compile project(':common-adapter')
 }
-//apply from: rootProject.file('gradle-mvn-push.gradle')
+apply from: rootProject.file('gradle-mvn-push.gradle')
+
+//configurations.all {
+//  // check for updates every build
+//  resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+//}
