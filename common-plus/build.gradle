@@ -11,12 +11,7 @@ android {
         versionName VERSION_NAME
     }
     lintOptions {
-        // set to true 关闭lint报告
-        quiet true
-        // lint错误停止构建
         abortOnError false
-        // if true, 只报告错误
-        ignoreWarnings true
     }
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
@@ -49,14 +44,19 @@ dependencies {
     compile deps.rxlifecycle
     compile deps.rxlifecycle_android
 
-//    compile 'com.github.liaoheng:common-core:0.0.4-SNAPSHOT'
-    compile project(':common-core')
-//    compile 'com.github.liaoheng:common-adapter:0.0.4-SNAPSHOT'
+//    compile group: "com.github.liaoheng", name: "common-core", version: "0.0.5-SNAPSHOT", changing: true
+  compile project(':common-core')
+//    compile group: "com.github.liaoheng", name: "common-adapter", version: "0.0.5-SNAPSHOT", changing: true
     compile project(':common-adapter')
-//    compile 'com.github.liaoheng:common-net:0.0.4-SNAPSHOT'
+//    compile group: "com.github.liaoheng", name: "common-net", version: "0.0.5-SNAPSHOT", changing: true
     compile project(':common-net')
-//    compile 'com.github.liaoheng:common-ui:0.0.4-SNAPSHOT'
+//    compile group: "com.github.liaoheng", name: "common-ui", version: "0.0.5-SNAPSHOT", changing: true
     compile project(':common-ui')
 }
 
-//apply from: rootProject.file('gradle-mvn-push.gradle')
+apply from: rootProject.file('gradle-mvn-push.gradle')
+
+//configurations.all {
+//    // check for updates every build
+//    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+//}
