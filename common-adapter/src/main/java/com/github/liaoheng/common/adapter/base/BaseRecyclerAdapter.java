@@ -130,8 +130,8 @@ public abstract class BaseRecyclerAdapter<T, V extends RecyclerView.ViewHolder>
             onBindViewHolderItem(holder, null, position);
             return;
         }
-        setOnItemClick(item, holder.itemView, position);
-        setOnItemLongClick(item, holder.itemView, position, getItemId(position));
+        initOnItemClickListener(item, holder.itemView, position);
+        initOnItemLongClick(item, holder.itemView, position, getItemId(position));
         onBindViewHolderItem(holder, item, position);
     }
 
@@ -150,7 +150,7 @@ public abstract class BaseRecyclerAdapter<T, V extends RecyclerView.ViewHolder>
         mOnItemClickListener = onItemClickListener;
     }
 
-    @SuppressWarnings("WeakerAccess")  protected void setOnItemClick(final T item, View view, final int position) {
+    @SuppressWarnings("WeakerAccess")  protected void initOnItemClickListener(final T item, View view, final int position) {
         if (mOnItemClickListener == null) {
             return;
         }
@@ -166,7 +166,7 @@ public abstract class BaseRecyclerAdapter<T, V extends RecyclerView.ViewHolder>
         mOnItemLongClickListener = onItemLongClickListener;
     }
 
-    @SuppressWarnings("WeakerAccess")  protected void setOnItemLongClick(final T item, final View view, final int position,
+    @SuppressWarnings("WeakerAccess")  protected void initOnItemLongClick(final T item, final View view, final int position,
                                                                          final long id) {
         if (mOnItemLongClickListener == null) {
             return;
@@ -176,5 +176,13 @@ public abstract class BaseRecyclerAdapter<T, V extends RecyclerView.ViewHolder>
                 return mOnItemLongClickListener.onItemLongClick(item, view, position, id);
             }
         });
+    }
+
+    public OnItemClickListener<T> getOnItemClickListener() {
+        return mOnItemClickListener;
+    }
+
+    public OnItemLongClickListener<T> getOnItemLongClickListener() {
+        return mOnItemLongClickListener;
     }
 }

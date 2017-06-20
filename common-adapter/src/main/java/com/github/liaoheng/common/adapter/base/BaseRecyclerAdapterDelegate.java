@@ -7,7 +7,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.hannesdorfmann.adapterdelegates2.AdapterDelegate;
+
 import java.util.List;
 
 /**
@@ -74,35 +76,34 @@ public abstract class BaseRecyclerAdapterDelegate<I extends T, T, VH extends Rec
         return isForViewType(items.get(position), items, position);
     }
 
-    @SuppressWarnings("unchecked") @Override public final void onBindViewHolder(
+    @SuppressWarnings("unchecked") @Override public void onBindViewHolder(
             @NonNull List<T> items, final int position,
             @NonNull final RecyclerView.ViewHolder holder) {
-        final I item = (I) items.get(position);
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                if (mInternalOnItemClickListener != null) {
-                    if (mInternalOnItemClickListener.onItemClick(item, holder.itemView, position)) {
-                        return;
-                    }
-                }
-                if (mOnItemClickListener == null) {
-                    return;
-                }
-                mOnItemClickListener.onItemClick(item, holder.itemView, position);
-            }
-        });
+        I item = (I) items.get(position);
+        initOnItemClickListener(item, holder, position);
         onBindViewHolderItem((VH) holder, item, position);
     }
 
-    private   IBaseAdapter.OnItemClickListener<I> mOnItemClickListener;
-    protected OnItemClickListener<I>              mInternalOnItemClickListener;
+    protected void initOnItemClickListener(final I item, final RecyclerView.ViewHolder holder, final int position) {
+        if (mOnItemClickListener == null) {
+            return;
+        }
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mOnItemClickListener.onItemClick(item, holder.itemView, position);
+            }
+        });
+    }
+
+    private IBaseAdapter.OnItemClickListener<I> mOnItemClickListener;
 
     public void setOnItemClickListener(IBaseAdapter.OnItemClickListener<I> onItemClickListener) {
         mOnItemClickListener = onItemClickListener;
     }
 
-    public interface OnItemClickListener<K> {
-        boolean onItemClick(K item, View view, int position);
+    public IBaseAdapter.OnItemClickListener<I> getOnItemClickListener() {
+        return mOnItemClickListener;
     }
 
     /**
