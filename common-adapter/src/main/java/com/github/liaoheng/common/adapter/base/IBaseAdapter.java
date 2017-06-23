@@ -46,11 +46,10 @@ public interface IBaseAdapter<K> {
          * @param item Current list item
          * @param view The view within the AbsListView that was clicked
          * @param position The position of the view in the list
-         * @param id The row id of the item that was clicked
          *
          * @return true if the callback consumed the long click, false otherwise
          */
-        boolean onItemLongClick(K item, View view, int position, long id);
+        boolean onItemLongClick(K item, View view, int position);
     }
 
     Context getContext();

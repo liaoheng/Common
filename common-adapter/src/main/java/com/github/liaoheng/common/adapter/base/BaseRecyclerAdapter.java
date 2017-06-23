@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -23,7 +24,7 @@ public abstract class BaseRecyclerAdapter<T, V extends RecyclerView.ViewHolder>
     private Context mContext;
     private List<T> mList;
     private AtomicInteger mOldSize = new AtomicInteger(0);
-    private OnItemClickListener<T>     mOnItemClickListener;
+    private OnItemClickListener<T> mOnItemClickListener;
     private OnItemLongClickListener<T> mOnItemLongClickListener;
 
     public BaseRecyclerAdapter(Context context) {
@@ -40,7 +41,7 @@ public abstract class BaseRecyclerAdapter<T, V extends RecyclerView.ViewHolder>
     }
 
     public View inflate(@LayoutRes int resource, @NonNull ViewGroup root, boolean attachToRoot) {
-        return LayoutInflater.from(getContext()).inflate(resource,root,attachToRoot);
+        return LayoutInflater.from(getContext()).inflate(resource, root, attachToRoot);
     }
 
     public int getOldSize() {
@@ -55,23 +56,29 @@ public abstract class BaseRecyclerAdapter<T, V extends RecyclerView.ViewHolder>
         mOldSize.set(size);
     }
 
-    @Override public Context getContext() {
+    @Override
+    public Context getContext() {
         return mContext;
     }
 
-    @Override public List<T> getList() {
+    @Override
+    public List<T> getList() {
         return mList;
     }
 
-    @Override public void setList(List<T> list) {
+    @Override
+    public void setList(List<T> list) {
         mList = list;
     }
 
-    @Override public boolean isEmpty() {
+    @Override
+    public boolean isEmpty() {
         return getList() == null || getList().isEmpty();
     }
 
-    @SuppressWarnings("UnusedAssignment") @Override public void update(T item) {
+    @SuppressWarnings("UnusedAssignment")
+    @Override
+    public void update(T item) {
         if (isEmpty()) {
             return;
         }
@@ -83,14 +90,16 @@ public abstract class BaseRecyclerAdapter<T, V extends RecyclerView.ViewHolder>
         }
     }
 
-    @Override public void clear() {
+    @Override
+    public void clear() {
         if (isEmpty()) {
             return;
         }
         getList().clear();
     }
 
-    @Override public void addAll(List<T> list) {
+    @Override
+    public void addAll(List<T> list) {
         if (null == getList()) {
             setList(list);
         } else {
@@ -98,7 +107,8 @@ public abstract class BaseRecyclerAdapter<T, V extends RecyclerView.ViewHolder>
         }
     }
 
-    @Override public void addAll(int location, List<T> list) {
+    @Override
+    public void addAll(int location, List<T> list) {
         if (null == getList()) {
             setList(list);
         } else {
@@ -106,42 +116,49 @@ public abstract class BaseRecyclerAdapter<T, V extends RecyclerView.ViewHolder>
         }
     }
 
-    @Override public void add(int location, T o) {
+    @Override
+    public void add(int location, T o) {
         getList().add(location, o);
     }
 
-    @Override public void add(T o) {
+    @Override
+    public void add(T o) {
         getList().add(o);
     }
 
-    @Override public void remove(int location) {
+    @Override
+    public void remove(int location) {
         getList().remove(location);
     }
 
-    @Override public void remove(T item) {
+    @Override
+    public void remove(T item) {
         getList().remove(item);
     }
 
-    @Override public abstract V onCreateViewHolder(ViewGroup parent, int viewType);
+    @Override
+    public abstract V onCreateViewHolder(ViewGroup parent, int viewType);
 
-    @Override public void onBindViewHolder(V holder, int position) {
+    @Override
+    public void onBindViewHolder(V holder, int position) {
         T item = getList().get(position);
         if (item == null) {
             onBindViewHolderItem(holder, null, position);
             return;
         }
-        initOnItemClickListener(item, holder.itemView, position);
-        initOnItemLongClick(item, holder.itemView, position, getItemId(position));
+        initOnItemClick(item, holder.itemView, position);
+        initOnItemLongClick(item, holder.itemView, position);
         onBindViewHolderItem(holder, item, position);
     }
 
     /**
+     * @param item Current list item
      * @see RecyclerView.Adapter#onBindViewHolder(RecyclerView.ViewHolder, int)
-     * @param item  Current list item
      */
     public abstract void onBindViewHolderItem(V holder, T item, int position);
 
-    @Override public int getItemCount() {
+    @Override
+    public int getItemCount() {
         return isEmpty() ? 0 : getList().size();
     }
 
@@ -150,13 +167,15 @@ public abstract class BaseRecyclerAdapter<T, V extends RecyclerView.ViewHolder>
         mOnItemClickListener = onItemClickListener;
     }
 
-    @SuppressWarnings("WeakerAccess")  protected void initOnItemClickListener(final T item, View view, final int position) {
+    @SuppressWarnings("WeakerAccess")
+    protected void initOnItemClick(final T item, @NonNull View itemView, final int position) {
         if (mOnItemClickListener == null) {
             return;
         }
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                    mOnItemClickListener.onItemClick(item, v, position);
+        itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mOnItemClickListener.onItemClick(item, v, position);
             }
         });
     }
@@ -166,22 +185,25 @@ public abstract class BaseRecyclerAdapter<T, V extends RecyclerView.ViewHolder>
         mOnItemLongClickListener = onItemLongClickListener;
     }
 
-    @SuppressWarnings("WeakerAccess")  protected void initOnItemLongClick(final T item, final View view, final int position,
-                                                                         final long id) {
+    @SuppressWarnings("WeakerAccess")
+    protected void initOnItemLongClick(final T item,@NonNull View itemView, final int position) {
         if (mOnItemLongClickListener == null) {
             return;
         }
-        view.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override public boolean onLongClick(View v) {
-                return mOnItemLongClickListener.onItemLongClick(item, view, position, id);
+        itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                return mOnItemLongClickListener.onItemLongClick(item, v, position);
             }
         });
     }
 
+    @Override
     public OnItemClickListener<T> getOnItemClickListener() {
         return mOnItemClickListener;
     }
 
+    @Override
     public OnItemLongClickListener<T> getOnItemLongClickListener() {
         return mOnItemLongClickListener;
     }

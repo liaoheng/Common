@@ -1,10 +1,16 @@
 package com.github.liaoheng.common.adapter.base;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.support.v4.util.SparseArrayCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.ViewGroup;
+
 import com.hannesdorfmann.adapterdelegates2.AdapterDelegate;
 import com.hannesdorfmann.adapterdelegates2.AdapterDelegatesManager;
+
+import java.lang.reflect.Field;
 import java.util.List;
 
 /**
@@ -37,6 +43,7 @@ import java.util.List;
  * </pre>
  *
  * adapter委托,修改于<a href="https://github.com/sockeqwe/AdapterDelegates/blob/2.0.1/library/src/main/java/com/hannesdorfmann/adapterdelegates2/AbsDelegationAdapter.java">AbsDelegationAdapter</a>
+ *
  * @author Hannes Dorfmann
  * @author liaoheng
  * @version 2016-09-23 11:15
@@ -59,19 +66,47 @@ public class BaseRecyclerDelegationAdapter<T> extends BaseRecyclerAdapter<T, Rec
         mAdapterDelegatesManager = new AdapterDelegatesManager<>();
     }
 
-    @Override public int getItemViewType(int position) {
+    @Override
+    public int getItemViewType(int position) {
         return mAdapterDelegatesManager.getItemViewType(getList(), position);
     }
 
-    @Override public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    @SuppressLint("LongLogTag")
+    private SparseArrayCompat<AdapterDelegate<T>> getDelegates() {
+        try {
+            Field delegatesField = getAdapterDelegatesManager().getClass().getDeclaredField("delegates");
+            delegatesField.setAccessible(true);
+            return (SparseArrayCompat<AdapterDelegate<T>>) delegatesField.get(getAdapterDelegatesManager());
+        } catch (Exception e) {
+            Log.w("BaseRecyclerDelegationAdapter", e);
+        }
+        return null;
+    }
+
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (getDelegates() != null) {
+            //TODO 可以优化一下
+            for (int i = 0; i < getDelegates().size(); i++) {
+                IBaseRecyclerAdapter<T> adapter = (IBaseRecyclerAdapter<T>) getDelegates().get(i);
+                if (getOnItemClickListener() != null) {
+                    adapter.setOnItemClickListener(getOnItemClickListener());
+                }
+                if (getOnItemLongClickListener() != null) {
+                    adapter.setOnItemLongClickListener(getOnItemLongClickListener());
+                }
+            }
+        }
         return mAdapterDelegatesManager.onCreateViewHolder(parent, viewType);
     }
 
-    @Override public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         mAdapterDelegatesManager.onBindViewHolder(getList(), position, holder);
     }
 
-    @Override public void onBindViewHolderItem(RecyclerView.ViewHolder holder, T item,
-                                               int position) {
+    @Override
+    public void onBindViewHolderItem(RecyclerView.ViewHolder holder, T item,
+            int position) {
     }
 }
