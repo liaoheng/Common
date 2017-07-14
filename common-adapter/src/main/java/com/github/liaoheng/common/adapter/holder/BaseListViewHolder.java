@@ -11,6 +11,7 @@ import android.view.View;
  * @version 2015年10月21日
  */
 public abstract class BaseListViewHolder<K> implements IBaseViewHolder<K> {
+    protected final String TAG = this.getClass().getSimpleName();
     private final View itemView;
 
     public BaseListViewHolder(View itemView) {
