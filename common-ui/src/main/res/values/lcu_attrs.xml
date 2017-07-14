@@ -1,21 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <attr name="async" format="boolean"/>
+    <attr name="enableAsync" format="boolean"/>
     <attr name="checked" format="boolean"/>
+    <attr name="enableSelected" format="boolean"/>
 
     <declare-styleable name="ToggleImageButton">
-        <attr name="async"/>
+        <attr name="enableAsync"/>
         <attr name="checked"/>
+        <attr name="enableSelected"/>
         <attr name="normalDrawableRes" format="reference"/>
         <attr name="selectedDrawableRes" format="reference"/>
     </declare-styleable>
 
     <declare-styleable name="ToggleTextButton">
-        <attr name="async"/>
+        <attr name="enableAsync"/>
         <attr name="checked"/>
+        <attr name="enableSelected"/>
         <attr name="normalText" format="string"/>
         <attr name="selectedText" format="string"/>
+    </declare-styleable>
+
+    <declare-styleable name="CURightClickVisibleContentEditText">
+        <attr name="showImage" format="reference"/>
+        <attr name="hideImage" format="integer" />
     </declare-styleable>
 
 </resources>

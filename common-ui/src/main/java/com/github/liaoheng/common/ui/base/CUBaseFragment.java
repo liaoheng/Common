@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.github.liaoheng.common.util.UIUtils;
+
 import java.lang.reflect.Field;
 
 /**
@@ -78,11 +80,11 @@ public class CUBaseFragment extends Fragment {
         return contentView;
     }
 
-    public View findViewById(int id) {
-        if (contentView != null) {
-            return contentView.findViewById(id);
+    public <T extends View> T findViewById(int id) {
+        if (contentView == null) {
+            return null;
         }
-        return null;
+        return UIUtils.findViewById(contentView, id);
     }
 
     // http://stackoverflow.com/questions/15207305/getting-the-error-java-lang-illegalstateexception-activity-has-been-destroyed

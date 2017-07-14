@@ -22,6 +22,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatDialog;
 import android.text.TextUtils;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +31,7 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.github.liaoheng.common.R;
@@ -669,6 +672,22 @@ public class UIUtils {
     @SuppressWarnings("unchecked") public static <T extends View> T findViewById(
             @NonNull Activity activity, @IdRes int resource) {
         return (T) activity.findViewById(resource);
+    }
+
+    /**
+     * EditText 显示和隐藏密码
+     *
+     * @param show true 显示，false 隐藏
+     */
+    public static void showOrHintPassword(boolean show, @NonNull EditText editText) {
+        if (show) {
+            //设置EditText文本为可见的
+            editText.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+        } else {
+            //设置EditText文本为隐藏的
+            editText.setTransformationMethod(PasswordTransformationMethod.getInstance());
+        }
+        editText.postInvalidate();
     }
 
 }

@@ -1,27 +1,28 @@
 package com.github.liaoheng.common.ui.view;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
+import android.support.v7.widget.AppCompatImageButton;
 import android.util.AttributeSet;
 import android.widget.Checkable;
-import android.widget.ImageButton;
+
 import com.github.liaoheng.common.core.OnCheckedChangeListener;
 import com.github.liaoheng.common.ui.R;
 
 /**
- *  Toggle  imageButton
+ * Toggle  imageButton
+ *
  * @author liaoheng
  * @version 2016-11-4 13:53
  */
-public class ToggleImageButton extends ImageButton implements Checkable {
+public class ToggleImageButton extends AppCompatImageButton implements Checkable {
     private OnCheckedChangeListener<ToggleImageButton> mOnCheckedChangeListener;
-    private boolean                                    mAsync;
-    private boolean                                    mAsyncSelect;
-    private Drawable                                   mNormalDrawable;
-    private Drawable                                   mSelectedDrawable;
+    private boolean mEnableAsync;
+    private boolean mAsyncSelect;
+    private boolean mEnableSelected;
+    private Drawable mNormalDrawable;
+    private Drawable mSelectedDrawable;
 
     public ToggleImageButton(Context context) {
         super(context);
@@ -37,14 +38,6 @@ public class ToggleImageButton extends ImageButton implements Checkable {
         init(context, attrs);
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP) public ToggleImageButton(Context context,
-                                                                      AttributeSet attrs,
-                                                                      int defStyleAttr,
-                                                                      int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        init(context, attrs);
-    }
-
     private void init(Context context, AttributeSet attrs) {
         if (attrs == null) {
             return;
@@ -52,12 +45,15 @@ public class ToggleImageButton extends ImageButton implements Checkable {
         TypedArray a = null;
         try {
             a = context.obtainStyledAttributes(attrs, R.styleable.ToggleImageButton);
-            this.mAsync = a.getBoolean(R.styleable.ToggleImageButton_async, false);
-            mNormalDrawable = a.getDrawable(R.styleable.ToggleImageButton_normalDrawableRes);
-            if (mNormalDrawable != null) {
-                setImageDrawable(mNormalDrawable);
+            mEnableAsync = a.getBoolean(R.styleable.ToggleImageButton_enableAsync, false);
+            mEnableSelected = a.getBoolean(R.styleable.ToggleImageButton_enableSelected, false);
+            if (mEnableSelected) {
+                mNormalDrawable = a.getDrawable(R.styleable.ToggleImageButton_normalDrawableRes);
+                if (mNormalDrawable != null) {
+                    setImageDrawable(mNormalDrawable);
+                }
+                mSelectedDrawable = a.getDrawable(R.styleable.ToggleImageButton_selectedDrawableRes);
             }
-            mSelectedDrawable = a.getDrawable(R.styleable.ToggleImageButton_selectedDrawableRes);
             boolean checked = a.getBoolean(R.styleable.ToggleImageButton_checked, false);
             setSelected(checked);
         } finally {
@@ -68,34 +64,38 @@ public class ToggleImageButton extends ImageButton implements Checkable {
     }
 
     /**
-     *async时，得到上次操作的状态
+     * async时，得到上次操作的状态
      */
     public boolean isAsyncSelect() {
         return mAsyncSelect;
     }
 
-    @Override public void setSelected(boolean selected) {
-        if (mAsync) {
+    @Override
+    public void setSelected(boolean selected) {
+        if (mEnableAsync) {
             mAsyncSelect = selected;
         }
-        if (selected && mSelectedDrawable != null) {
-            setImageDrawable(mSelectedDrawable);
-        } else if (!selected && mNormalDrawable != null) {
-            setImageDrawable(mNormalDrawable);
+        if (mEnableSelected) {
+            if (selected && mSelectedDrawable != null) {
+                setImageDrawable(mSelectedDrawable);
+            } else if (!selected && mNormalDrawable != null) {
+                setImageDrawable(mNormalDrawable);
+            }
         }
         super.setSelected(selected);
     }
 
-    @Override public boolean isChecked() {
+    @Override
+    public boolean isChecked() {
         return isSelected();
     }
 
     /**
      * async时，操作状态会被记录但不会改变控件状态，需自行调用{@link #setSelected(boolean)}改变。
-     * @param checked
      */
-    @Override public void setChecked(boolean checked) {
-        if (mAsync) {
+    @Override
+    public void setChecked(boolean checked) {
+        if (mEnableAsync) {
             mAsyncSelect = checked;
         } else {
             setSelected(checked);
@@ -105,11 +105,13 @@ public class ToggleImageButton extends ImageButton implements Checkable {
         }
     }
 
-    @Override public void toggle() {
+    @Override
+    public void toggle() {
         setChecked(!isChecked());
     }
 
-    @Override public boolean performClick() {
+    @Override
+    public boolean performClick() {
         toggle();
         return super.performClick();
     }
@@ -118,14 +120,14 @@ public class ToggleImageButton extends ImageButton implements Checkable {
      * 打开async
      */
     public void enableAsync() {
-        this.mAsync = true;
+        this.mEnableAsync = true;
     }
 
     /**
      * 关闭async
      */
     public void unableAsync() {
-        this.mAsync = false;
+        this.mEnableAsync = false;
     }
 
     public void setOnCheckedChangeListener(

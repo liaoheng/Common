@@ -22,6 +22,10 @@ import rx.subjects.BehaviorSubject;
 public class CURxBaseFragment extends CUBaseFragment implements LifecycleProvider<FragmentEvent> {
     private final BehaviorSubject<FragmentEvent> lifecycleSubject = BehaviorSubject.create();
 
+    public CURxBaseFragment getFragment() {
+        return this;
+    }
+
     @Override
     @NonNull
     @CheckResult

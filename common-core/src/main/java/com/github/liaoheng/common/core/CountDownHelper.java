@@ -90,7 +90,6 @@ public class CountDownHelper {
 
             @Override
             public void onFinish() {
-                L.Log.d(TAG, "finish");
                 finish();
             }
         };
@@ -118,7 +117,6 @@ public class CountDownHelper {
 
     /**
      * 开始倒计时
-     *
      * @param futureTime 需要进行倒计时的最大值,单位是毫秒
      */
     public void start(long futureTime) {
@@ -139,7 +137,10 @@ public class CountDownHelper {
     public void stop() {
         L.Log.d(TAG, "stop");
         stopCountDownTimer();
-        finish();
+        pause = false;
+        if (mListener != null) {
+            mListener.stop();
+        }
     }
 
     public void stopCountDownTimer() {
@@ -149,10 +150,14 @@ public class CountDownHelper {
         }
     }
 
-    private void finish() {
+    /**
+     * 完成倒计时
+     */
+    public void finish() {
+        L.Log.d(TAG, "finish");
         pause = false;
         if (mListener != null) {
-            mListener.stop();
+            mListener.finish();
         }
     }
 
@@ -173,6 +178,8 @@ public class CountDownHelper {
         void onTick(long time);
 
         void stop();
+
+        void finish();
     }
 
 }

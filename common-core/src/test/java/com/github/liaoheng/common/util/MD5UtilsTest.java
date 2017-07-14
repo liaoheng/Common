@@ -14,7 +14,7 @@ import static org.junit.Assert.assertEquals;
  * @author liaoheng
  * @version 2016-09-08 11:43
  */
-@RunWith(RobolectricTestRunner.class) @Config(constants = BuildConfig.class, sdk = SdkConfig.FALLBACK_SDK_VERSION) public class MD5UtilsTest
+@RunWith(RobolectricTestRunner.class) @Config(constants = BuildConfig.class, sdk = SdkConfig.MAX_SDK_VERSION) public class MD5UtilsTest
         extends BaseTest {
 
     @Test public void testMd5ToString() throws Exception {

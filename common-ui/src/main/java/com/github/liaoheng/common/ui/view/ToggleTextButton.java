@@ -1,13 +1,12 @@
 package com.github.liaoheng.common.ui.view;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.os.Build;
+import android.support.v7.widget.AppCompatButton;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.widget.Button;
 import android.widget.Checkable;
+
 import com.github.liaoheng.common.core.OnCheckedChangeListener;
 import com.github.liaoheng.common.ui.R;
 
@@ -15,7 +14,7 @@ import com.github.liaoheng.common.ui.R;
  * @author liaoheng
  * @version 2015年9月22日
  */
-public class ToggleTextButton extends Button implements Checkable {
+public class ToggleTextButton extends AppCompatButton implements Checkable {
     private OnCheckedChangeListener<ToggleTextButton> mOnCheckedChangeListener;
     private boolean                                   mAsync;
     private boolean                                   mAsyncSelect;
@@ -33,14 +32,6 @@ public class ToggleTextButton extends Button implements Checkable {
 
     public ToggleTextButton(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        init(context, attrs);
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP) public ToggleTextButton(Context context,
-                                                                     AttributeSet attrs,
-                                                                     int defStyleAttr,
-                                                                     int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
         init(context, attrs);
     }
 

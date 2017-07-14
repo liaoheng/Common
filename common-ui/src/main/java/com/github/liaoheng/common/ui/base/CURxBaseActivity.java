@@ -24,6 +24,10 @@ public class CURxBaseActivity extends CUBaseActivity implements LifecycleProvide
 
     private final BehaviorSubject<ActivityEvent> lifecycleSubject = BehaviorSubject.create();
 
+    public CURxBaseActivity getActivity() {
+        return this;
+    }
+
     @Override
     @NonNull
     @CheckResult

@@ -16,7 +16,7 @@ import static org.junit.Assert.assertTrue;
  * @author liaoheng
  * @version 2016-10-25 10:09
  */
-@RunWith(RobolectricTestRunner.class) @Config(constants = BuildConfig.class, sdk = SdkConfig.FALLBACK_SDK_VERSION) public class SystemRuntimeExceptionTest
+@RunWith(RobolectricTestRunner.class) @Config(constants = BuildConfig.class, sdk = SdkConfig.MAX_SDK_VERSION) public class SystemRuntimeExceptionTest
         extends BaseTest {
 
     @Test public void SystemRuntimeException1Test() {

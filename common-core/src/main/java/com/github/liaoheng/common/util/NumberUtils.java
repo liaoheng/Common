@@ -18,6 +18,13 @@ public class NumberUtils {
     private static DecimalFormat formatDecimal1 = new DecimalFormat("0.0");
     private static DecimalFormat formatDecimal0 = new DecimalFormat("0");
 
+    /**
+     * 1位数前加0
+     */
+    public static String format2PlacesToString(int number) {
+        return number < 10 ? "0" + number : String.valueOf(number);
+    }
+
     /** number to string **/
     public static String getNumberToString(int number) {
         return String.valueOf(number);
@@ -282,6 +289,39 @@ public class NumberUtils {
         }
         return lbToKg(v);
     }
+
+    /**
+     * cm转成ft:in
+     *
+     * @param cmNumber cm *100
+     * @return ft'in''的字符串格式
+     */
+    public static String cmToFt(int cmNumber) {
+        if (cmNumber == 0) {
+            return String.valueOf(cmNumber);
+        }
+        double totalInNumber = cmNumber / 254;//cm整除254得到总共的英寸
+        int ftNumber = (int) (totalInNumber / 12);//in整除12得到英尺
+        double inNumber = totalInNumber - ftNumber * 12;
+        return String.valueOf(ftNumber) + "'" + (int) Math.floor(inNumber) + "''";
+    }
+
+    /**
+     * ft:in to cm
+     *
+     * @param ft 英尺
+     * @return cm *100 cm的100倍，为了避免小数带来的计算误差
+     */
+    public static int ftToCm(String ft) {
+        if (TextUtils.isEmpty(ft)) {
+            return 0;
+        }
+        String[] strings = ft.split("'");
+        int ftNumber = Integer.valueOf(strings[0]);//ft值
+        int inNumber = Integer.valueOf(strings[1]);//in值
+        return ftNumber * 12 * 254 + inNumber * 254;
+    }
+
 
     /** BigDecimal  计算 与工具 **/
 

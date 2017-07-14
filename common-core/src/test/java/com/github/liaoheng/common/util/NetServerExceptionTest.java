@@ -20,7 +20,7 @@ import static org.junit.Assert.assertTrue;
  * @author liaoheng
  * @version 2016-07-25 15:30
  */
-@RunWith(RobolectricTestRunner.class) @Config(constants = BuildConfig.class, sdk = SdkConfig.FALLBACK_SDK_VERSION)
+@RunWith(RobolectricTestRunner.class) @Config(constants = BuildConfig.class, sdk = SdkConfig.MAX_SDK_VERSION)
 public class NetServerExceptionTest extends BaseTest {
 
     @Test public void NetServerExceptionTest1() {

@@ -16,7 +16,7 @@ import static org.junit.Assert.assertEquals;
  * @author liaoheng
  * @version 2016-07-28 15:31
  */
-@RunWith(RobolectricTestRunner.class) @Config(constants = BuildConfig.class, sdk = SdkConfig.FALLBACK_SDK_VERSION) public class ListDuplicateHelperTest
+@RunWith(RobolectricTestRunner.class) @Config(constants = BuildConfig.class, sdk = SdkConfig.MAX_SDK_VERSION) public class ListDuplicateHelperTest
         extends BaseTest {
 
     class D {

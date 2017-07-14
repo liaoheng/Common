@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Parcelable;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
@@ -123,10 +124,12 @@ public class AppUtils {
     }
 
     /**
+     * 之后使用:https://github.com/jaredrummler/AndroidProcesses
      * app是否有Activity运行
      * @param context
      * @return
      */
+    @Deprecated
     public static boolean isForeground(Context context) {
 
         String PackageName = context.getPackageName();
@@ -137,7 +140,9 @@ public class AppUtils {
         // Get a list of running tasks, we are only interested in the last one,
         // the top most so we give a 1 as parameter so we only get the topmost.
         List<ActivityManager.RunningTaskInfo> task = manager.getRunningTasks(1);
-
+        if (task==null || task.isEmpty()){
+            return false;
+        }
         // Get the info we need for comparison.
         ComponentName componentInfo = task.get(0).topActivity;
 
@@ -147,5 +152,28 @@ public class AppUtils {
 
         // If not then our app is not on the foreground.
         return false;
+    }
+
+    /**
+     * 启动到应用商店app详情界面
+     */
+    public static void openPlayStore(Context context) {
+        openPlayStore(context, context.getPackageName());
+    }
+
+    /**
+     * 打开对应app应用商店
+     *
+     * @param appPkg 目标App的包名
+     */
+    public static void openPlayStore(Context context, String appPkg) {
+        if (TextUtils.isEmpty(appPkg)) {
+            return;
+        }
+
+        Uri uri = Uri.parse("https://play.google.com/store/apps/details?id=" + appPkg);
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
     }
 }
