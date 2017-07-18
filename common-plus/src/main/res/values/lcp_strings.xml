@@ -1,13 +1,3 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="lcp_success">Success</string>
-    <string name="lcp_fail">Fail</string>
-    <string name="lcp_share">Share</string>
-    <string name="lcp_open_with_browser">Open With Browser</string>
-    <string name="lcp_copy_url">@android:string/copyUrl</string>
-    <string name="lcp_about">About</string>
-    <string name="lcp_download">Download</string>
-    <string name="lcp_downloading">Downloading</string>
-    <string name="lcp_download_complete">Download Complete</string>
-    <string name="lcp_url_copied">URL copied to clipboard</string>
 </resources>

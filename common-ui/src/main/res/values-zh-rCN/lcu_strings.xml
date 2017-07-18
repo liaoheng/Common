@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="lcu_success">成功</string>
+    <string name="lcu_fail">失败</string>
+    <string name="lcu_share">分享</string>
+    <string name="lcu_open_with_browser">从浏览器打开</string>
+    <string name="lcu_copy_url">@android:string/copyUrl</string>
+    <string name="lcu_url_copied">网址已复制到剪贴板</string>
+</resources>

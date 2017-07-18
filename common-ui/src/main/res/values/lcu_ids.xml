@@ -17,4 +17,9 @@
     <item name="lcu_input_dialog_edit_text" type="id"/>
     <item name="lcu_input_dialog_cancel" type="id"/>
     <item name="lcu_input_dialog_ok" type="id"/>
+
+    <!--menu-->
+    <item name="lcu_menu_web_share" type="id"/>
+    <item name="lcu_menu_web_open_with_browser" type="id"/>
+    <item name="lcu_menu_web_copy_url" type="id"/>
 </resources>

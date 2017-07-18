@@ -22,6 +22,10 @@ import rx.subjects.BehaviorSubject;
 public class CURxLazyFragment extends CULazyFragment implements LifecycleProvider<FragmentEvent> {
     private final BehaviorSubject<FragmentEvent> lifecycleSubject = BehaviorSubject.create();
 
+    public CURxLazyFragment getFragment() {
+        return this;
+    }
+
     @Override
     @NonNull
     @CheckResult

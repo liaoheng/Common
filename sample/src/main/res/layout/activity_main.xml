@@ -45,9 +45,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
+        <Button
+                android:id="@+id/open_web_view"
+                android:text="open WebView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+
         <com.github.liaoheng.common.ui.view.ToggleImageButton
                 app:normalDrawableRes="@drawable/ic_wallpaper_black_24dp"
                 app:selectedDrawableRes="@drawable/ic_wallpaper_white_24dp"
+                app:enableSelected="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 

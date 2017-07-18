@@ -1,8 +1,13 @@
 package com.github.liaoheng.common.sample;
 
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.Menu;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.github.liaoheng.common.ui.base.CUBaseActivity;
 
@@ -17,6 +22,17 @@ public class ToolBarActivity extends CUBaseActivity {
         setContentView(R.layout.activity_toolbar);
         //initToolBar();
         initToolBarCustom();
+
+        //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+        //    Window window = getWindow();
+        //    window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        //    window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        //    window.setStatusBarColor(Color.TRANSPARENT);
+        //
+        //    int systemUiVisibility = window.getDecorView().getSystemUiVisibility();
+        //    systemUiVisibility |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+        //    window.getDecorView().setSystemUiVisibility(systemUiVisibility);
+        //}
 
         getToolBarUtils().toggleVisibilityToolbarTitle();
         getToolBarUtils().toggleVisibilityToolbarRight();

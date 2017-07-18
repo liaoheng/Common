@@ -3,6 +3,8 @@ package com.github.liaoheng.common.ui.view;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.StringRes;
+import android.support.annotation.StyleRes;
 import android.support.v7.app.AppCompatDialog;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -11,10 +13,12 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
 import com.github.liaoheng.common.ui.R;
 import com.github.liaoheng.common.ui.core.CUInputDialogClickListener;
 import com.github.liaoheng.common.ui.core.ProgressHelper;
 import com.github.liaoheng.common.util.InputMethodUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,25 +41,25 @@ public class CUInputDialog extends AppCompatDialog {
         init(0);
     }
 
-    public CUInputDialog(Context context, int theme) {
+    public CUInputDialog(Context context, @StyleRes int theme) {
         super(context, theme);
         init(0);
     }
 
-    public CUInputDialog(Context context, int theme, @LayoutRes int layout) {
+    public CUInputDialog(Context context, @StyleRes int theme, @LayoutRes int layout) {
         super(context, theme);
         init(layout);
     }
 
     private EditText mEditText;
     private TextView mMessage;
-    private Button   mCancel;
-    private Button   mOK;
+    private Button mCancel;
+    private Button mOK;
 
     private CUInputDialogClickListener mClickListener;
-    private ProgressHelper             mProgressHelper;
+    private ProgressHelper mProgressHelper;
 
-    private List<OnShowListener>    mOnShowListeners    = new ArrayList<>();
+    private List<OnShowListener> mOnShowListeners = new ArrayList<>();
     private List<OnDismissListener> mOnDismissListeners = new ArrayList<>();
 
     private void init(@LayoutRes int layout) {
@@ -76,7 +80,8 @@ public class CUInputDialog extends AppCompatDialog {
         mOK = (Button) findViewById(R.id.lcu_input_dialog_ok);
         mCancel = (Button) findViewById(R.id.lcu_input_dialog_cancel);
         View.OnClickListener oKClickListener = new View.OnClickListener() {
-            @Override public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
                 if (mClickListener == null) {
                     return;
                 }
@@ -85,7 +90,8 @@ public class CUInputDialog extends AppCompatDialog {
             }
         };
         View.OnClickListener cancelClickListener = new View.OnClickListener() {
-            @Override public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
                 if (mClickListener == null) {
                     return;
                 }
@@ -97,13 +103,15 @@ public class CUInputDialog extends AppCompatDialog {
         mCancel.setOnClickListener(cancelClickListener);
 
         mOnShowListeners.add(new OnShowListener() {
-            @Override public void onShow(DialogInterface dialog) {
+            @Override
+            public void onShow(DialogInterface dialog) {
                 InputMethodUtils.showSoftInput(getEditText());
             }
         });
 
         super.setOnShowListener(new OnShowListener() {
-            @Override public void onShow(DialogInterface dialog) {
+            @Override
+            public void onShow(DialogInterface dialog) {
                 for (OnShowListener mOnShowListener : mOnShowListeners) {
                     mOnShowListener.onShow(dialog);
                 }
@@ -111,13 +119,15 @@ public class CUInputDialog extends AppCompatDialog {
         });
 
         mOnDismissListeners.add(new OnDismissListener() {
-            @Override public void onDismiss(DialogInterface dialog) {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
                 getProgressHelper().hide();
                 getEditText().setText("");
             }
         });
         super.setOnDismissListener(new OnDismissListener() {
-            @Override public void onDismiss(DialogInterface dialog) {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
                 for (OnDismissListener onDismissListener : mOnDismissListeners) {
                     onDismissListener.onDismiss(dialog);
                 }
@@ -126,7 +136,8 @@ public class CUInputDialog extends AppCompatDialog {
         return this;
     }
 
-    @Override public void dismiss() {
+    @Override
+    public void dismiss() {
         InputMethodUtils.hideSoftInput(getEditText());
         super.dismiss();
     }
@@ -134,14 +145,18 @@ public class CUInputDialog extends AppCompatDialog {
     /**
      * see {@link CUInputDialog#addOnShowListener(OnShowListener)}
      */
-    @Deprecated @Override public void setOnShowListener(OnShowListener listener) {
+    @Deprecated
+    @Override
+    public void setOnShowListener(OnShowListener listener) {
         throw new IllegalStateException("You cannot use");
     }
 
     /**
      * see {@link CUInputDialog#addOnDismissListener(OnDismissListener)}
      */
-    @Deprecated @Override public void setOnDismissListener(OnDismissListener listener) {
+    @Deprecated
+    @Override
+    public void setOnDismissListener(OnDismissListener listener) {
         throw new IllegalStateException("You cannot use");
     }
 
@@ -171,18 +186,29 @@ public class CUInputDialog extends AppCompatDialog {
         return this;
     }
 
-    public CUInputDialog setMessage(CharSequence message) {
-        mMessage.setText(message);
+
+    /**
+     * 默认对话框标题
+     *
+     * @see {@link #setTitle(CharSequence)}
+     */
+    public CUInputDialog setMTitle(CharSequence title) {
+        super.setTitle(title);
         return this;
     }
 
     /**
      * 默认对话框标题
-     * @param title
-     * @return
+     *
+     * @see {@link #setTitle(int)}
      */
-    public CUInputDialog setMTitle(CharSequence title) {
-        super.setTitle(title);
+    public CUInputDialog setMTitle(@StringRes int titleId) {
+        super.setTitle(titleId);
+        return this;
+    }
+
+    public CUInputDialog setMessage(CharSequence message) {
+        mMessage.setText(message);
         return this;
     }
 
@@ -241,22 +267,26 @@ public class CUInputDialog extends AppCompatDialog {
     }
 
     public static CUInputDialog single(Context context) {
-        return new CUInputDialog(context).enableSingleText();
+        return with(context).enableSingleText();
     }
 
-    public static CUInputDialog single(Context context, int theme) {
-        return new CUInputDialog(context, theme).enableSingleText();
+    public static CUInputDialog single(Context context, @StyleRes int theme) {
+        return with(context, theme).enableSingleText();
     }
 
     public static CUInputDialog multi(Context context) {
-        return new CUInputDialog(context).enableMultiText();
+        return with(context).enableMultiText();
     }
 
-    public static CUInputDialog multi(Context context, int theme) {
-        return new CUInputDialog(context, theme).enableMultiText();
+    public static CUInputDialog multi(Context context, @StyleRes int theme) {
+        return with(context, theme).enableMultiText();
     }
 
     public static CUInputDialog with(Context context) {
         return new CUInputDialog(context);
+    }
+
+    public static CUInputDialog with(Context context, @StyleRes int theme) {
+        return new CUInputDialog(context, theme);
     }
 }

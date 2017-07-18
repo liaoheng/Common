@@ -4,12 +4,15 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
 import com.bumptech.glide.Glide;
 import com.github.liaoheng.common.network.GlideCompressTransformation;
 import com.github.liaoheng.common.network.OkHttp3Utils;
+import com.github.liaoheng.common.ui.WebViewActivity;
 import com.github.liaoheng.common.ui.base.CURxBaseActivity;
 import com.github.liaoheng.common.ui.core.CUInputDialogClickListener;
 import com.github.liaoheng.common.ui.core.ProgressHelper;
@@ -20,12 +23,16 @@ import com.github.liaoheng.common.util.L;
 import com.github.liaoheng.common.util.SystemException;
 import com.github.liaoheng.common.util.UIUtils;
 import com.github.liaoheng.common.util.Utils;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
 import okhttp3.OkHttpClient;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
+
 import rx.Observable;
 
 public class MainActivity extends CURxBaseActivity {
@@ -35,43 +42,51 @@ public class MainActivity extends CURxBaseActivity {
 
     private ProgressHelper mProgressHelper;
 
-    @Override protected void onCreate(Bundle savedInstanceState) {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         mProgressHelper = ProgressHelper.with(this);
     }
 
-    @OnClick(R.id.open_single_input_dialog) void openSingleInputDialog() {
+    @OnClick(R.id.open_single_input_dialog)
+    void openSingleInputDialog() {
         CUInputDialog.single(getActivity(), R.style.AppTheme_Dialog).setMessage("Single Input")
                 .setClickListener(new CUInputDialogClickListener.EmptyCUInputDialogClickListener() {
-                    @Override public void onYes(CUInputDialog dialog, EditText editText,
-                                                String text) {
-                        UIUtils.showToast(getApplicationContext(),text);
+                    @Override
+                    public void onYes(CUInputDialog dialog, EditText editText,
+                            String text) {
+                        UIUtils.showToast(getApplicationContext(), text);
                     }
                 }).show();
     }
-    @OnClick(R.id.open_multi_input_dialog) void openMultiInputDialog() {
+
+    @OnClick(R.id.open_multi_input_dialog)
+    void openMultiInputDialog() {
         CUInputDialog.multi(getActivity(), R.style.AppTheme_Dialog).setMessage("Multi Input")
                 .setClickListener(new CUInputDialogClickListener.EmptyCUInputDialogClickListener() {
-                    @Override public void onYes(CUInputDialog dialog, EditText editText,
-                                                String text) {
-                        UIUtils.showToast(getApplicationContext(),text);
+                    @Override
+                    public void onYes(CUInputDialog dialog, EditText editText,
+                            String text) {
+                        UIUtils.showToast(getApplicationContext(), text);
                     }
                 }).show();
     }
 
     CUBottomSheetDialog cuBottomSheetDialog;
 
-    @OnClick(R.id.open_bottom_sheet_dialog) void openBottomSheetDialog() {
+    @OnClick(R.id.open_bottom_sheet_dialog)
+    void openBottomSheetDialog() {
         if (cuBottomSheetDialog == null) {
             cuBottomSheetDialog = new CUBottomSheetDialog(this);
             cuBottomSheetDialog.setContentView(R.layout.view_dialog);
-           cuBottomSheetDialog.findViewById(R.id.dialog_close).setOnClickListener(new View.OnClickListener() {
-                  @Override public void onClick(View v) {
+            cuBottomSheetDialog.findViewById(R.id.dialog_close).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
                     cuBottomSheetDialog.dismiss();
-               }
-           });
+                }
+            });
         }
 
         cuBottomSheetDialog.setPeekHeight(300);
@@ -80,13 +95,18 @@ public class MainActivity extends CURxBaseActivity {
     }
 
     @OnClick(R.id.open_toolbar)
-    void opeToolBar(){
-        UIUtils.startActivity(this,ToolBarActivity.class);
+    void opeToolBar() {
+        UIUtils.startActivity(this, ToolBarActivity.class);
     }
 
-
-    @OnClick(R.id.load_image) void loadImage() {
+    @OnClick(R.id.load_image)
+    void loadImage() {
         photo();
+    }
+
+    @OnClick(R.id.open_web_view)
+    void openWebView() {
+        WebViewActivity.start(this, "https://www.google.com", true);
     }
 
     private void photo() {
@@ -98,35 +118,38 @@ public class MainActivity extends CURxBaseActivity {
                 .getAsyncToJsonString("http://gank.io/api/data/%E7%A6%8F%E5%88%A9/10/1");
         Utils.addSubscribe(photo.compose(this.<String>bindToLifecycle()),
                 new Callback.EmptyCallback<String>() {
-                            @Override public void onPreExecute() {
-                                mProgressHelper.show();
-                            }
+                    @Override
+                    public void onPreExecute() {
+                        mProgressHelper.show();
+                    }
 
-                            @Override public void onError(SystemException e) {
-                                mProgressHelper.hide();
-                                L.getToast().e(TAG, getActivity(), e);
-                            }
+                    @Override
+                    public void onError(SystemException e) {
+                        mProgressHelper.hide();
+                        L.getToast().e(TAG, getActivity(), e);
+                    }
 
-                            @Override public void onSuccess(String json) {
-                                Album album = new Album();
-                                try {
-                                    JSONObject jsonObject = new JSONObject(json);
-                                    JSONArray JsonPhotos = jsonObject.getJSONArray("results");
-                                    for (int i = 0; i < JsonPhotos.length(); i++) {
-                                        JSONObject photo = JsonPhotos.getJSONObject(i);
-                                        String image = photo.getString("url");
-                                        album.setItem("" + i, image);
-                                    }
-                                    Glide.with(getActivity()).load(album.getItems().get(0).getUrl())
-                                            .transform(
-                                                    new GlideCompressTransformation(getActivity(),
-                                                            800)).into(image);
-                                    mProgressHelper.hide();
-                                } catch (Exception e) {
-                                    L.getToast().e(TAG, getActivity(), e);
-                                }
+                    @Override
+                    public void onSuccess(String json) {
+                        Album album = new Album();
+                        try {
+                            JSONObject jsonObject = new JSONObject(json);
+                            JSONArray JsonPhotos = jsonObject.getJSONArray("results");
+                            for (int i = 0; i < JsonPhotos.length(); i++) {
+                                JSONObject photo = JsonPhotos.getJSONObject(i);
+                                String image = photo.getString("url");
+                                album.setItem("" + i, image);
                             }
-                        });
+                            Glide.with(getActivity()).load(album.getItems().get(0).getUrl())
+                                    .transform(
+                                            new GlideCompressTransformation(getActivity(),
+                                                    800)).into(image);
+                            mProgressHelper.hide();
+                        } catch (Exception e) {
+                            L.getToast().e(TAG, getActivity(), e);
+                        }
+                    }
+                });
     }
 
     public class Album implements Serializable {
@@ -138,8 +161,8 @@ public class MainActivity extends CURxBaseActivity {
             this.url = url;
         }
 
-        private String      name;
-        private String      url;
+        private String name;
+        private String url;
         private List<Album> items;
 
         public String getName() {

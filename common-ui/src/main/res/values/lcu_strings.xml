@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="lcu_success">Success</string>
+    <string name="lcu_fail">Fail</string>
+
+    <string name="lcu_share">Share</string>
+    <string name="lcu_open_with_browser">Open With Browser</string>
+    <string name="lcu_copy_url">@android:string/copyUrl</string>
+    <string name="lcu_url_copied">URL copied to clipboard</string>
+</resources>

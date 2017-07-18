@@ -42,7 +42,7 @@ public class ToggleTextButton extends AppCompatButton implements Checkable {
         TypedArray a = null;
         try {
             a = context.obtainStyledAttributes(attrs, R.styleable.ToggleTextButton);
-            this.mAsync = a.getBoolean(R.styleable.ToggleTextButton_async, false);
+            this.mAsync = a.getBoolean(R.styleable.ToggleTextButton_enableAsync, false);
             mNormalText = a.getString(R.styleable.ToggleTextButton_normalText);
             if (!TextUtils.isEmpty(mNormalText)) {
                 setText(mNormalText);

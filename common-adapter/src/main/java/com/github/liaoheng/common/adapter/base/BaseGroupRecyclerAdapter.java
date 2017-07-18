@@ -2,9 +2,10 @@ package com.github.liaoheng.common.adapter.base;
 
 import android.content.Context;
 import android.view.ViewGroup;
-import com.github.liaoheng.common.adapter.base.BaseRecyclerAdapter;
+
 import com.github.liaoheng.common.adapter.holder.BaseRecyclerViewHolder;
 import com.github.liaoheng.common.adapter.model.Group;
+
 import java.util.List;
 
 /**
@@ -43,8 +44,8 @@ public abstract class BaseGroupRecyclerAdapter<K>
             return;
         }
         if (Group.GroupType.CONTENT.equals(item.getType())){
-            setOnItemClick(item, holder.itemView, position);
-            setOnItemLongClick(item, holder.itemView, position, getItemId(position));
+            initOnItemClick(item, holder.itemView, position);
+            initOnItemLongClick(item, holder.itemView, position);
         }
         onBindViewHolderItem(holder, item, position);
     }

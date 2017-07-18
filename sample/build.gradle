@@ -44,10 +44,10 @@ dependencies {
   compile deps.rxlifecycle
   compile deps.rxlifecycle_android
 
-  compile group: "com.github.liaoheng", name: "common-plus", version: "0.0.5-SNAPSHOT", changing: true
-//  compile project(':common-plus')
+//  compile group: "com.github.liaoheng", name: "common-plus", version: "0.0.5-SNAPSHOT", changing: true
+  compile project(':common-plus')
 }
-configurations.all {
-  // check for updates every build
-  resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
-}
+//configurations.all {
+//  // check for updates every build
+//  resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+//}
