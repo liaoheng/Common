@@ -83,17 +83,33 @@ public class BaseRecyclerDelegationAdapter<T> extends BaseRecyclerAdapter<T, Rec
         return null;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (getDelegates() != null) {
             //TODO 可以优化一下
+            //为各代理Adapter设置点击与长按事件回调
             for (int i = 0; i < getDelegates().size(); i++) {
                 IBaseRecyclerAdapter<T> adapter = (IBaseRecyclerAdapter<T>) getDelegates().get(i);
+
+                IBaseRecyclerAdapter<T> fallbackDelegate = null;
+                AdapterDelegate<List<T>> fallback = mAdapterDelegatesManager.getFallbackDelegate();
+                if (fallback != null) {
+                    if (fallback instanceof IBaseRecyclerAdapter) {
+                        fallbackDelegate = (IBaseRecyclerAdapter<T>) fallback;
+                    }
+                }
                 if (getOnItemClickListener() != null) {
                     adapter.setOnItemClickListener(getOnItemClickListener());
+                    if (fallbackDelegate != null) {
+                        fallbackDelegate.setOnItemClickListener(getOnItemClickListener());
+                    }
                 }
                 if (getOnItemLongClickListener() != null) {
                     adapter.setOnItemLongClickListener(getOnItemLongClickListener());
+                    if (fallbackDelegate != null) {
+                        fallbackDelegate.setOnItemLongClickListener(getOnItemLongClickListener());
+                    }
                 }
             }
         }

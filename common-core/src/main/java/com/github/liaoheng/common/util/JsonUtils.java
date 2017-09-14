@@ -1,6 +1,7 @@
 package com.github.liaoheng.common.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
@@ -19,7 +20,7 @@ import java.util.List;
  */
 public class JsonUtils {
 
-    public static int getInt(String name,JSONObject jsonObject) {
+    public static int getInt(String name, JSONObject jsonObject) {
         try {
             return jsonObject.getInt(name);
         } catch (JSONException ignored) {
@@ -27,7 +28,7 @@ public class JsonUtils {
         return 0;
     }
 
-    public static String getString(String name,JSONObject jsonObject) {
+    public static String getString(String name, JSONObject jsonObject) {
         try {
             return jsonObject.getString(name);
         } catch (JSONException ignored) {
@@ -35,7 +36,7 @@ public class JsonUtils {
         return "";
     }
 
-    public static long getLong(String name,JSONObject jsonObject) {
+    public static long getLong(String name, JSONObject jsonObject) {
         try {
             return jsonObject.getLong(name);
         } catch (JSONException ignored) {
@@ -43,7 +44,7 @@ public class JsonUtils {
         return 0;
     }
 
-    public static double getDouble(String name,JSONObject jsonObject) {
+    public static double getDouble(String name, JSONObject jsonObject) {
         try {
             return jsonObject.getDouble(name);
         } catch (JSONException ignored) {
@@ -51,62 +52,63 @@ public class JsonUtils {
         return 0;
     }
 
+    public static String parseString(String json, String parameter) {
+        try {
+            JSONObject jsonObject = new JSONObject(json);
+            return getString(parameter, jsonObject);
+        } catch (JSONException ignored) {
+        }
+        return "";
+    }
+
+    //https://stackoverflow.com/questions/5455014/ignoring-new-fields-on-json-objects-using-jackson
+    public static ObjectMapper getObjectMapper() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        return objectMapper;
+    }
+
     public static <T> String toJson(T t) throws SystemException {
         try {
-            return new ObjectMapper().writeValueAsString(t);
+            return getObjectMapper().writeValueAsString(t);
         } catch (JsonProcessingException e) {
             throw new SystemException(e);
         }
     }
 
-
     public static <T> T parse(String json, Class<T> clazz) throws SystemException {
         try {
-            return new ObjectMapper().readValue(json, clazz);
+            return getObjectMapper().readValue(json, clazz);
         } catch (IOException e) {
             throw new SystemException(e);
         }
     }
 
     public static <T> T parse(String json, String parameter,
-                              Class<T> clazz) throws SystemException {
+            Class<T> clazz) throws SystemException {
         try {
             JSONObject jsonObject = new JSONObject(json);
-            return new ObjectMapper().readValue(jsonObject.getString(parameter), clazz);
+            return getObjectMapper().readValue(jsonObject.getString(parameter), clazz);
         } catch (Exception e) {
             throw new SystemException(e);
         }
-    }
-
-    public static String parseString(String json, String parameter){
-        try {
-            JSONObject jsonObject=new JSONObject(json);
-            return getString(parameter,jsonObject);
-        } catch (JSONException ignored) {
-        }
-        return "";
     }
 
     /**
-     * @param json
-     * @param parameter
      * @param valueType {@link TypeFactory}
-     * @param <T>
-     * @return
-     * @throws SystemException
      */
     public static <T> List<T> parseList(String json, String parameter,
-                                        JavaType valueType) throws SystemException {
+            JavaType valueType) throws SystemException {
         try {
             JSONObject jsonObject = new JSONObject(json);
-            return new ObjectMapper().readValue(jsonObject.getString(parameter), valueType);
+            return getObjectMapper().readValue(jsonObject.getString(parameter), valueType);
         } catch (Exception e) {
             throw new SystemException(e);
         }
     }
 
     public static <T> List<T> parseList(String json, String parameter,
-                                        Class<T> clazz) throws SystemException {
+            Class<T> clazz) throws SystemException {
         return parseList(json, parameter, TypeFactory.defaultInstance().constructCollectionType(List.class, clazz));
     }
 }

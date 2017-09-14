@@ -31,7 +31,7 @@ public class L {
      */
     public static void init(String tag, boolean isDebug) {
         Settings init = Logger.init(tag);
-        if (!L.isPrint()) {
+        if (!isDebug) {
             init.setLogLevel(LogLevel.NONE);
         }
         DEBUG = isDebug;
