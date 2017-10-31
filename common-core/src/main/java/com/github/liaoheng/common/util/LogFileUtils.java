@@ -3,17 +3,20 @@ package com.github.liaoheng.common.util;
 import android.os.Environment;
 import android.support.annotation.StringDef;
 import android.text.TextUtils;
+
+import org.apache.commons.io.IOUtils;
+import org.joda.time.DateTime;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import org.apache.commons.io.IOUtils;
-import org.joda.time.DateTime;
 
 /**
  * 不带system log
+ *
  * @author liaoheng
  * @version 2016-09-22 16:26
  */
@@ -21,18 +24,18 @@ public class LogFileUtils {
     private static final String TAG = LogFileUtils.class.getSimpleName();
 
     public final static String LEVEL_VERBOSE = " VERBOSE ";
-    public final static String LEVEL_DEBUG   = " DEBUG ";
-    public final static String LEVEL_INFO    = " INFO ";
-    public final static String LEVEL_WARN    = " WARN ";
-    public final static String LEVEL_ERROR   = " ERROR ";
+    public final static String LEVEL_DEBUG = " DEBUG ";
+    public final static String LEVEL_INFO = " INFO ";
+    public final static String LEVEL_WARN = " WARN ";
+    public final static String LEVEL_ERROR = " ERROR ";
 
     @StringDef({ LEVEL_VERBOSE, LEVEL_ERROR, LEVEL_WARN, LEVEL_DEBUG,
-                 LEVEL_INFO })
+            LEVEL_INFO })
     @Retention(RetentionPolicy.SOURCE)
     public @interface LevelFlags {}
 
     private static final String DEFAULT_FILE_NAME = "debug_log.txt";
-    private              File   mLogFile          = new File(
+    private File mLogFile = new File(
             Environment.getExternalStorageDirectory(), DEFAULT_FILE_NAME);
     private static LogFileUtils instance;
 
@@ -78,13 +81,14 @@ public class LogFileUtils {
 
     public synchronized void open() {
         try {
-            mFileOutputStream = FileUtils.openOutputStream(mLogFile,true);//不覆盖
+            mFileOutputStream = FileUtils.openOutputStream(mLogFile, true);//不覆盖
         } catch (IOException ignored) {
         }
     }
 
     public synchronized void close() {
         IOUtils.closeQuietly(mFileOutputStream);
+        mFileOutputStream = null;
     }
 
     public void clearFile() {
@@ -133,12 +137,15 @@ public class LogFileUtils {
     }
 
     public synchronized void log(@LevelFlags String level, String tag, Throwable throwable,
-                                 String logEntry) {
+            String logEntry) {
         writeLog(level, tag, throwable, logEntry);
     }
 
     private synchronized void writeLog(String severityLevel, String tag, Throwable throwable,
-                                       String logEntry) {
+            String logEntry) {
+        if (mFileOutputStream == null) {
+            return;
+        }
         String currentDateTime = DateTime.now().toString("yyyy-MM-dd HH:mm:ss.SSS");
         String stencil = currentDateTime + "   |" + severityLevel + "|   " + tag + " : " + logEntry;
         try {
