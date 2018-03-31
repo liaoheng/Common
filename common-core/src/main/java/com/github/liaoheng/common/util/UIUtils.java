@@ -1,5 +1,6 @@
 package com.github.liaoheng.common.util;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -63,8 +64,19 @@ public class UIUtils {
      *
      * @param context
      * @param hint
+     */
+    public static void showToast(@NonNull Context context,@StringRes int hint) {
+        showToast(context, context.getString(hint), TOAST_DEFAULT_TIME);
+    }
+
+    /**
+     * 吐丝提示
+     *
+     * @param context
+     * @param hint
      * @param duration
      */
+    @SuppressLint("ShowToast")
     public static void showToast(@NonNull Context context, String hint, int duration) {
         if (mToast == null) {
             mToast = Toast.makeText(context, hint, duration);
@@ -675,7 +687,7 @@ public class UIUtils {
     }
 
     /**
-     * EditText 显示和隐藏密码
+     * EditText 显示和隐藏文本
      *
      * @param show true 显示，false 隐藏
      */

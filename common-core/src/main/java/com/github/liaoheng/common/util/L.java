@@ -26,7 +26,7 @@ public class L {
     /**
      * LOG INIT
      *
-     * @param tag     {@link Logger#init(String)}
+     * @param tag {@link Logger#init(String)}
      * @param isDebug 是否开启日志
      */
     public static void init(String tag, boolean isDebug) {
@@ -74,7 +74,7 @@ public class L {
     /**
      * JSON
      *
-     * @param TAG     LOG TAG
+     * @param TAG LOG TAG
      * @param message json string
      */
     public static void json(String TAG, String message) {
@@ -84,8 +84,8 @@ public class L {
     /**
      * INFO
      *
-     * @param TAG       LOG TAG
-     * @param message   提示模板 %s
+     * @param TAG LOG TAG
+     * @param message 提示模板 %s
      * @param parameter 参数
      */
     public static void i(String TAG, String message, Object... parameter) {
@@ -95,8 +95,8 @@ public class L {
     /**
      * DEBUG
      *
-     * @param TAG       LOG TAG
-     * @param message   提示模板 %s
+     * @param TAG LOG TAG
+     * @param message 提示模板 %s
      * @param parameter 参数
      */
     public static void d(String TAG, String message, Object... parameter) {
@@ -106,8 +106,8 @@ public class L {
     /**
      * WARN
      *
-     * @param TAG       LOG TAG
-     * @param message   提示模板 %s
+     * @param TAG LOG TAG
+     * @param message 提示模板 %s
      * @param parameter 参数
      */
     public static void w(String TAG, String message, Object... parameter) {
@@ -117,9 +117,9 @@ public class L {
     /**
      * ERROR
      *
-     * @param TAG       LOG TAG
-     * @param e         {@link Exception}
-     * @param message   错误信息 %s站位
+     * @param TAG LOG TAG
+     * @param e {@link Exception}
+     * @param message 错误信息 %s站位
      * @param parameter 错误信息内容
      */
     public static void e(String TAG, @NonNull Throwable e, String message, Object... parameter) {
@@ -129,8 +129,8 @@ public class L {
     /**
      * ERROR
      *
-     * @param TAG       LOG TAG
-     * @param message   错误信息 %s站位
+     * @param TAG LOG TAG
+     * @param message 错误信息 %s站位
      * @param parameter 错误信息内容
      */
     public static void e(String TAG, String message, Object... parameter) {
@@ -141,7 +141,7 @@ public class L {
      * ERROR
      *
      * @param TAG LOG TAG
-     * @param e   {@link Throwable}
+     * @param e {@link Throwable}
      */
     public static void e(String TAG, @NonNull Throwable e) {
         Logger.t(TAG).e(e, e.getMessage());
@@ -152,50 +152,58 @@ public class L {
      */
     public static class Log {
 
+        public static String compoundString(String message, Object... parameter) {
+            try {
+                message = ValidateUtils.isNullObjectList(parameter) ? message : String.format(message, parameter);
+            } catch (Exception ignored) {
+            }
+            return message;
+        }
+
         /**
          * DEBUG
          *
-         * @param TAG       LOG TAG
-         * @param message   提示模板 %s
+         * @param TAG LOG TAG
+         * @param message 提示模板 %s
          * @param parameter 参数
          */
         public static void d(String TAG, String message, Object... parameter) {
             if (isPrint()) {
-                android.util.Log.d(TAG, String.format(message, parameter));
+                android.util.Log.d(TAG, compoundString(message, parameter));
             }
         }
 
         /**
          * INFO
          *
-         * @param TAG       LOG TAG
-         * @param message   提示模板 %s
+         * @param TAG LOG TAG
+         * @param message 提示模板 %s
          * @param parameter 参数
          */
         public static void i(String TAG, String message, Object... parameter) {
             if (isPrint()) {
-                android.util.Log.i(TAG, String.format(message, parameter));
+                android.util.Log.i(TAG, compoundString(message, parameter));
             }
         }
 
         /**
          * WARN
          *
-         * @param TAG       LOG TAG
-         * @param message   提示模板 %s
+         * @param TAG LOG TAG
+         * @param message 提示模板 %s
          * @param parameter 参数
          */
         public static void w(String TAG, String message, Object... parameter) {
             if (isPrint()) {
-                android.util.Log.w(TAG, String.format(message, parameter));
+                android.util.Log.w(TAG, compoundString(message, parameter));
             }
         }
 
         /**
          * WARN
          *
-         * @param TAG       LOG TAG
-         * @param e         {@link Exception}
+         * @param TAG LOG TAG
+         * @param e {@link Exception}
          */
         public static void w(String TAG, @NonNull Throwable e) {
             if (isPrint()) {
@@ -206,28 +214,15 @@ public class L {
         /**
          * ERROR
          *
-         * @param TAG       LOG TAG
-         * @param e         {@link Exception}
-         * @param message   错误信息 %s站位
+         * @param TAG LOG TAG
+         * @param e {@link Exception}
+         * @param message 错误信息 %s站位
          * @param parameter 错误信息内容
          */
         public static void e(String TAG, @NonNull Throwable e, String message,
-                             Object... parameter) {
+                Object... parameter) {
             if (isPrint()) {
-                android.util.Log.e(TAG, String.format(message, parameter), e);
-            }
-        }
-
-        /**
-         * ERROR
-         *
-         * @param TAG       LOG TAG
-         * @param message   错误信息 %s站位
-         * @param parameter 错误信息内容
-         */
-        public static void e(String TAG, String message, Object... parameter) {
-            if (isPrint()) {
-                android.util.Log.e(TAG, String.format(message, parameter));
+                android.util.Log.e(TAG, compoundString(message, parameter), e);
             }
         }
 
@@ -235,7 +230,20 @@ public class L {
          * ERROR
          *
          * @param TAG LOG TAG
-         * @param e   {@link Throwable}
+         * @param message 错误信息 %s站位
+         * @param parameter 错误信息内容
+         */
+        public static void e(String TAG, String message, Object... parameter) {
+            if (isPrint()) {
+                android.util.Log.e(TAG, compoundString(message, parameter));
+            }
+        }
+
+        /**
+         * ERROR
+         *
+         * @param TAG LOG TAG
+         * @param e {@link Throwable}
          */
         public static void e(String TAG, @NonNull Throwable e) {
             if (isPrint()) {
@@ -268,20 +276,20 @@ public class L {
         /**
          * 提示TOAST，并写入系统日志
          *
-         * @param context  {@link Context}
+         * @param context {@link Context}
          * @param userHint 给用户的提示内容
-         * @param sysHint  系统日志的内容
-         * @param e        {@link Throwable}
+         * @param sysHint 系统日志的内容
+         * @param e {@link Throwable}
          */
         void e(String TAG, @NonNull Context context, String userHint, String sysHint,
-               @NonNull Throwable e);
+                @NonNull Throwable e);
 
         /**
          * 提示TOAST，并写入系统日志
          *
-         * @param context  {@link Context}
+         * @param context {@link Context}
          * @param userHint 给用户的提示内容
-         * @param e        {@link Throwable}
+         * @param e {@link Throwable}
          */
         void e(String TAG, @NonNull Context context, String userHint, @NonNull Throwable e);
 
@@ -289,7 +297,7 @@ public class L {
          * 提示TOAST，并写入系统日志
          *
          * @param context {@link Context}
-         * @param e       {@link Throwable}
+         * @param e {@link Throwable}
          */
         void e(String TAG, @NonNull Context context, @NonNull Throwable e);
 
@@ -297,7 +305,7 @@ public class L {
          * 提示TOAST，并写入系统日志
          *
          * @param context {@link Context}
-         * @param userHint    给用户与系统的提示内容
+         * @param userHint 给用户与系统的提示内容
          */
         void e(String TAG, @NonNull Context context, String userHint);
 
@@ -305,7 +313,7 @@ public class L {
          * 提示TOAST，并写入系统日志
          *
          * @param context {@link Context}
-         * @param userHint    给用户与系统的提示内容
+         * @param userHint 给用户与系统的提示内容
          */
         void e(String TAG, @NonNull Context context, @StringRes int userHint);
     }
@@ -316,20 +324,20 @@ public class L {
         /**
          * 提示TOAST，并写入系统日志
          *
-         * @param view  {@link View}
+         * @param view {@link View}
          * @param userHint 给用户的提示内容
-         * @param sysHint  系统日志的内容
-         * @param e        {@link Throwable}
+         * @param sysHint 系统日志的内容
+         * @param e {@link Throwable}
          */
         void e(String TAG, @NonNull View view, String userHint, String sysHint,
-               @NonNull Throwable e);
+                @NonNull Throwable e);
 
         /**
          * 提示TOAST，并写入系统日志
          *
-         * @param view  {@link View}
+         * @param view {@link View}
          * @param userHint 给用户的提示内容
-         * @param e        {@link Throwable}
+         * @param e {@link Throwable}
          */
         void e(String TAG, @NonNull View view, String userHint, @NonNull Throwable e);
 
@@ -337,7 +345,7 @@ public class L {
          * 提示TOAST，并写入系统日志
          *
          * @param view {@link View}
-         * @param e       {@link Throwable}
+         * @param e {@link Throwable}
          */
         void e(String TAG, @NonNull View view, @NonNull Throwable e);
 
@@ -345,7 +353,7 @@ public class L {
          * 提示TOAST，并写入系统日志
          *
          * @param view {@link View}
-         * @param userHint    给用户与系统的提示内容
+         * @param userHint 给用户与系统的提示内容
          */
         void e(String TAG, @NonNull View view, String userHint);
 
@@ -353,7 +361,7 @@ public class L {
          * 提示TOAST，并写入系统日志
          *
          * @param view {@link View}
-         * @param userHint    给用户与系统的提示内容
+         * @param userHint 给用户与系统的提示内容
          */
         void e(String TAG, @NonNull View view, @StringRes int userHint);
 
@@ -362,20 +370,20 @@ public class L {
         /**
          * 提示TOAST，并写入系统日志
          *
-         * @param activity  {@link Activity}
+         * @param activity {@link Activity}
          * @param userHint 给用户的提示内容
-         * @param sysHint  系统日志的内容
-         * @param e        {@link Throwable}
+         * @param sysHint 系统日志的内容
+         * @param e {@link Throwable}
          */
         void e(String TAG, @NonNull Activity activity, String userHint, String sysHint,
-               @NonNull Throwable e);
+                @NonNull Throwable e);
 
         /**
          * 提示TOAST，并写入系统日志
          *
-         * @param activity  {@link Activity}
+         * @param activity {@link Activity}
          * @param userHint 给用户的提示内容
-         * @param e        {@link Throwable}
+         * @param e {@link Throwable}
          */
         void e(String TAG, @NonNull Activity activity, String userHint, @NonNull Throwable e);
 
@@ -383,7 +391,7 @@ public class L {
          * 提示TOAST，并写入系统日志
          *
          * @param activity {@link Activity}
-         * @param e       {@link Throwable}
+         * @param e {@link Throwable}
          */
         void e(String TAG, @NonNull Activity activity, @NonNull Throwable e);
 
@@ -391,7 +399,7 @@ public class L {
          * 提示TOAST，并写入系统日志
          *
          * @param activity {@link Activity}
-         * @param userHint    给用户与系统的提示内容
+         * @param userHint 给用户与系统的提示内容
          */
         void e(String TAG, @NonNull Activity activity, String userHint);
 
@@ -399,7 +407,7 @@ public class L {
          * 提示TOAST，并写入系统日志
          *
          * @param activity {@link Activity}
-         * @param userHint    给用户与系统的提示内容
+         * @param userHint 给用户与系统的提示内容
          */
         void e(String TAG, @NonNull Activity activity, @StringRes int userHint);
     }

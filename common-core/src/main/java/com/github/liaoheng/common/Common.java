@@ -3,11 +3,14 @@ package com.github.liaoheng.common;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+
 import com.github.liaoheng.common.util.FileUtils;
 import com.github.liaoheng.common.util.L;
 import com.github.liaoheng.common.util.PreferencesUtils;
-import java.io.File;
+
 import net.danlew.android.joda.JodaTimeAndroid;
+
+import java.io.File;
 
 /**
  * @author liaoheng
@@ -17,7 +20,7 @@ public class Common {
 
     private static String PROJECT_NAME = BuildConfig.APPLICATION_ID;
     private static boolean DEBUG;
-    private static File    mExternalCacheDir;
+    private static File mExternalCacheDir;
 
     public static void init(@NonNull Context context, String projectName, boolean isDebug) {
         if (TextUtils.isEmpty(projectName)) {

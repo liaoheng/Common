@@ -159,6 +159,18 @@ public class ValidateUtils {
     }
 
     /**
+     * Object...为空
+     *
+     * @param key
+     */
+    public static  boolean isNullObjectList(Object... key) {
+        if (isNull(key)) {
+            return true;
+        }
+        return key.length == 0;
+    }
+
+    /**
      * 列表数据为空
      *
      * @param list

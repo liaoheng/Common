@@ -112,7 +112,7 @@ public class MainActivity extends CURxBaseActivity {
     private void photo() {
         OkHttpClient.Builder builder = OkHttp3Utils
                 .getSingleOkHttpClientBuilder();
-        OkHttp3Utils utils = OkHttp3Utils.init().build(builder);
+        OkHttp3Utils utils = OkHttp3Utils.init().buildClone(builder);
 
         Observable<String> photo = OkHttp3Utils.get()
                 .getAsyncToJsonString("http://gank.io/api/data/%E7%A6%8F%E5%88%A9/10/1");

@@ -7,6 +7,8 @@ package com.github.liaoheng.common.util;
  */
 @SystemExceptionNoVessel
 public class NetServerException extends NetException {
+    private String serverErrorCode;
+    private String serverErrorMessage;
     private Object mErrorBody;
 
     public NetServerException(String errorMessage, Object errorBody) {
@@ -17,6 +19,22 @@ public class NetServerException extends NetException {
     public NetServerException(Object errorBody) {
         super("Error", null);
         mErrorBody = errorBody;
+    }
+
+    public String getServerErrorCode() {
+        return serverErrorCode;
+    }
+
+    public void setServerErrorCode(String serverErrorCode) {
+        this.serverErrorCode = serverErrorCode;
+    }
+
+    public String getServerErrorMessage() {
+        return serverErrorMessage;
+    }
+
+    public void setServerErrorMessage(String serverErrorMessage) {
+        this.serverErrorMessage = serverErrorMessage;
     }
 
     @SuppressWarnings("unchecked") public <T> T getErrorBody() {

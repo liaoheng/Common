@@ -1,9 +1,7 @@
 package com.github.liaoheng.common.network;
 
-import android.content.Context;
-import android.graphics.Bitmap;
 import android.text.TextUtils;
-import com.github.liaoheng.common.util.BitmapUtils;
+
 import com.github.liaoheng.common.util.Callback;
 import com.github.liaoheng.common.util.FileUtils;
 import com.github.liaoheng.common.util.L;
@@ -13,6 +11,11 @@ import com.github.liaoheng.common.util.NetServerException;
 import com.github.liaoheng.common.util.SystemException;
 import com.github.liaoheng.common.util.SystemRuntimeException;
 import com.github.liaoheng.common.util.Utils;
+
+import org.apache.commons.io.FilenameUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.EOFException;
 import java.io.File;
 import java.io.IOException;
@@ -27,6 +30,7 @@ import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+
 import okhttp3.Cache;
 import okhttp3.Dispatcher;
 import okhttp3.Interceptor;
@@ -39,9 +43,6 @@ import okhttp3.ResponseBody;
 import okhttp3.internal.Util;
 import okio.Buffer;
 import okio.BufferedSource;
-import org.apache.commons.io.FilenameUtils;
-import org.json.JSONException;
-import org.json.JSONObject;
 import rx.Observable;
 import rx.Subscription;
 import rx.functions.Func1;
@@ -53,53 +54,64 @@ import rx.schedulers.Schedulers;
  * @author liaoheng
  * @version 2016-06-24 13:03:45
  */
-@SuppressWarnings("WeakerAccess") public class OkHttp3Utils {
-    private final String    TAG          = OkHttp3Utils.class.getSimpleName();
-    public final  MediaType JSON         = MediaType.parse("application/json; charset=utf-8");
-    private final OkHttpClient             mClient;
-    private       ErrorHandleListener      mErrorHandleListener;
-    private       Map<String, String>      mHeaders;
-    private       List<HeaderPlusListener> mHeaderPlus;
+@SuppressWarnings("WeakerAccess")
+public class OkHttp3Utils {
+    private final String TAG = OkHttp3Utils.class.getSimpleName();
+    public final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+    private final OkHttpClient mClient;
+    private Map<String, String> mHeaders;
+    private List<HeaderPlusListener> mHeaderPlus;
 
     public interface HeaderPlusListener {
         /**
          * http请求拦截
+         *
          * @param originalRequest 原始Request
          * @param builder 前面处理后的builder
          * @param parameters 前面向后传递的参数
          * @return {@link Request.Builder}
          */
         Request.Builder headerInterceptor(Request originalRequest, Request.Builder builder,
-                                          Map<String, Object> parameters);
+                Map<String, Object> parameters);
     }
 
+    /**
+     * 会封装在{@link DefaultErrorInterceptor}中
+     */
     public interface ErrorHandleListener {
         /**
-         *
          * @param response {@link Response}
          * @return Response
-         * @throws NetException
+         * @throws NetException 最后会以{@link SystemRuntimeException}抛出
          */
         Response checkError(Response response) throws NetException;
     }
 
-    private OkHttp3Utils(OkHttpClient.Builder builder, ErrorHandleListener errorHandleListener,
-                         List<HeaderPlusListener> headerPluses, Map<String, String> headers) {
+    private OkHttp3Utils(OkHttpClient.Builder builder, Interceptor errorInterceptor,
+            List<HeaderPlusListener> headerPluses, Map<String, String> headers) {
         builder.interceptors().add(new HeaderPlusInterceptor());
-        builder.interceptors().add(new ErrorInterceptor());
+        if (errorInterceptor != null) {
+            builder.interceptors().add(errorInterceptor);
+        }
         builder.interceptors().add(new LogInterceptor(TAG));
 
         this.mClient = builder.build();
-        this.mErrorHandleListener = errorHandleListener;
         this.mHeaderPlus = headerPluses;
         this.mHeaders = headers;
     }
 
-    private OkHttp3Utils(OkHttpClient.Builder builder) {
+    /**
+     * clone为true时，共用{@link OkHttp3Utils#INSTANCE}中的参数，否则不处理
+     */
+    private OkHttp3Utils(OkHttpClient.Builder builder, boolean clone) {
         this.mClient = builder.build();
-        this.mErrorHandleListener = OkHttp3Utils.get().getErrorHandleListener();
-        this.mHeaderPlus = OkHttp3Utils.get().getHeaderPlus();
-        this.mHeaders = OkHttp3Utils.get().getHeaders();
+        if (clone) {
+            try {
+                this.mHeaderPlus = OkHttp3Utils.get().getHeaderPlus();
+                this.mHeaders = OkHttp3Utils.get().getHeaders();
+            } catch (IllegalStateException ignored) {
+            }
+        }
     }
 
     private static OkHttp3Utils INSTANCE;
@@ -152,11 +164,11 @@ import rx.schedulers.Schedulers;
 
     public static class Init {
         private final int DEFAULT_HTTP_DISK_CACHE_SIZE = 50 * 1024 * 1024; // 50MB;
-        private OkHttpClient.Builder     builder;
-        private ErrorHandleListener      errorHandleListener;
-        private Map<String, String>      headers;
+        private OkHttpClient.Builder builder;
+        private ErrorHandleListener errorHandleListener;
+        private Map<String, String> headers;
         private List<HeaderPlusListener> headerPlus;
-        private Cache                    cache;
+        private Cache cache;
 
         public Init setDefaultCache() {
             return setDefaultCache(DEFAULT_HTTP_DISK_CACHE_SIZE);
@@ -170,7 +182,7 @@ import rx.schedulers.Schedulers;
             return this;
         }
 
-        public Cache getDefaultCache(long httpDiskCacheSize) throws SystemException {
+        private Cache getDefaultCache(long httpDiskCacheSize) throws SystemException {
             File cacheFile = FileUtils.createCacheSDAndroidDirectory(CommonNet.HTTP_CACHE_DIR);
             if (httpDiskCacheSize == 0) {
                 httpDiskCacheSize = DEFAULT_HTTP_DISK_CACHE_SIZE;
@@ -178,13 +190,10 @@ import rx.schedulers.Schedulers;
             return new Cache(cacheFile, httpDiskCacheSize);
         }
 
-        public void initialization() {
-            OkHttp3Utils.setInit(build());
-        }
-
-        private ErrorHandleListener getDefaultErrorHandleListener() {
-            return new ErrorHandleListener() {
-                @Override public Response checkError(Response response) throws NetServerException {
+        public Init setDefaultErrorHandleListener() {
+            errorHandleListener = new ErrorHandleListener() {
+                @Override
+                public Response checkError(Response response) throws NetServerException {
                     if (!response.isSuccessful()) {
                         String string = "code : " + response.code();
                         if (response.body().contentLength() > 0) {
@@ -198,8 +207,16 @@ import rx.schedulers.Schedulers;
                     return response;
                 }
             };
+            return this;
         }
 
+        public void initialization() {
+            OkHttp3Utils.setInit(build());
+        }
+
+        /**
+         * 默认不处理http错误请求，需要时使用{@link ErrorHandleListener}。
+         */
         public OkHttp3Utils build() {
             if (builder == null) {
                 builder = new OkHttpClient.Builder();
@@ -213,32 +230,44 @@ import rx.schedulers.Schedulers;
             if (cache != null) {
                 builder.cache(cache);
             }
-            if (errorHandleListener == null) {
-                errorHandleListener = getDefaultErrorHandleListener();
+            DefaultErrorInterceptor errorInterceptor = null;
+            if (errorHandleListener != null) {
+                errorInterceptor = new DefaultErrorInterceptor(errorHandleListener);
             }
-            return new OkHttp3Utils(builder, errorHandleListener, headerPlus, headers);
+            return new OkHttp3Utils(builder, errorInterceptor, headerPlus, headers);
         }
 
         /**
-         * errorHandleListener, headerPlus, headers 使用初始化逻辑
-         * @param builder clone OkHttpClient.Builder
-         * @return
+         * 生成OkHttp3Utils，从OkHttp3Utils中clone并需要使用之前的interceptors方法时。<br/>
+         * Example:
+         * <pre>
+         *     OkHttpClient.Builder builder = OkHttp3Utils.getSingleOkHttpClientBuilder();
+         *     OkHttp3Utils httpUtils = OkHttp3Utils.init().buildClone(builder);
+         * </pre>
+         *
+         * @param cloneBuilder clone {@link OkHttp3Utils#INSTANCE} OkHttpClient.Builder
          */
-        public OkHttp3Utils build(OkHttpClient.Builder builder) {
-            return new OkHttp3Utils(builder);
+        public OkHttp3Utils buildClone(OkHttpClient.Builder cloneBuilder) {
+            return new OkHttp3Utils(cloneBuilder, true);
         }
 
-        public OkHttpClient.Builder getBuilder() {
-            return builder;
+        /**
+         * 生成OkHttp3Utils，从OkHttp3Utils中clone并不使用之前的interceptors方法或一个全新的OkHttpClient。<br/>
+         * Example:
+         * <pre>
+         *     OkHttpClient.Builder builder = new OkHttpClient.Builder();
+         *     OkHttp3Utils httpUtils = OkHttp3Utils.init().build(builder);
+         * </pre>
+         *
+         * @param builder OkHttpClient.Builder
+         */
+        public OkHttp3Utils build(OkHttpClient.Builder builder) {
+            return new OkHttp3Utils(builder, false);
         }
 
         public Init setBuilder(OkHttpClient.Builder builder) {
             this.builder = builder;
             return this;
-        }
-
-        public Map<String, String> getHeaders() {
-            return headers;
         }
 
         public Init setHeaders(Map<String, String> headers) {
@@ -254,10 +283,6 @@ import rx.schedulers.Schedulers;
             return this;
         }
 
-        public List<HeaderPlusListener> getHeaderPlus() {
-            return headerPlus;
-        }
-
         public Init setHeaderPlus(List<HeaderPlusListener> headerPlus) {
             this.headerPlus = new LinkedList<>(headerPlus);
             return this;
@@ -268,17 +293,9 @@ import rx.schedulers.Schedulers;
             return this;
         }
 
-        public Cache getCache() {
-            return cache;
-        }
-
         public Init setCache(Cache cache) {
             this.cache = cache;
             return this;
-        }
-
-        public ErrorHandleListener getErrorHandleListener() {
-            return errorHandleListener;
         }
 
         public Init setErrorHandleListener(ErrorHandleListener errorHandleListener) {
@@ -325,17 +342,9 @@ import rx.schedulers.Schedulers;
 
     public Map<String, String> getHeaders() {
         if (mHeaders == null) {
-            throw new IllegalStateException("Not Initialize");
+            mHeaders = new HashMap<>();
         }
         return mHeaders;
-    }
-
-    public ErrorHandleListener getErrorHandleListener() {
-        return mErrorHandleListener;
-    }
-
-    public void setErrorHandleListener(ErrorHandleListener mErrorHandleListener) {
-        this.mErrorHandleListener = mErrorHandleListener;
     }
 
     public void addHeader(Map<String, String> headers) {
@@ -358,7 +367,7 @@ import rx.schedulers.Schedulers;
 
     public List<HeaderPlusListener> getHeaderPlus() {
         if (mHeaderPlus == null) {
-            throw new IllegalStateException("Not Initialize");
+            mHeaderPlus = new LinkedList<>();
         }
         return mHeaderPlus;
     }
@@ -376,8 +385,9 @@ import rx.schedulers.Schedulers;
         addHeaderPlus(headerPlus);
     }
 
-    @SuppressWarnings("SuspiciousMethodCalls") public void updateHeaderPlus(Objects location,
-                                                                            HeaderPlusListener headerPlus) {
+    @SuppressWarnings("SuspiciousMethodCalls")
+    public void updateHeaderPlus(Objects location,
+            HeaderPlusListener headerPlus) {
         getHeaderPlus().remove(location);
         addHeaderPlus(headerPlus);
     }
@@ -426,7 +436,8 @@ import rx.schedulers.Schedulers;
 
     private class HeaderPlusInterceptor implements Interceptor {
 
-        @Override public Response intercept(Chain chain) throws IOException {
+        @Override
+        public Response intercept(Chain chain) throws IOException {
             Request.Builder builder = chain.request().newBuilder();
             Request request = chain.request();
             Map<String, Object> map = new HashMap<>();
@@ -446,9 +457,15 @@ import rx.schedulers.Schedulers;
         }
     }
 
-    private class ErrorInterceptor implements Interceptor {
+    public static class DefaultErrorInterceptor implements Interceptor {
+        private ErrorHandleListener mErrorHandleListener;
 
-        @Override public Response intercept(Chain chain) throws IOException {
+        public DefaultErrorInterceptor(ErrorHandleListener errorHandleListener) {
+            mErrorHandleListener = errorHandleListener;
+        }
+
+        @Override
+        public Response intercept(Chain chain) throws IOException {
             Response response = chain.proceed(chain.request());
             if (mErrorHandleListener != null) {
                 try {
@@ -464,6 +481,7 @@ import rx.schedulers.Schedulers;
 
     /**
      * http log
+     *
      * @see <a href="https://github.com/square/okhttp/blob/master/okhttp-logging-interceptor/src/main/java/okhttp3/logging/HttpLoggingInterceptor.java">HttpLoggingInterceptor</a>
      */
     public static class LogInterceptor implements Interceptor {
@@ -482,7 +500,7 @@ import rx.schedulers.Schedulers;
          * Returns true if the body in question probably contains human readable text. Uses a small sample
          * of code points to detect unicode control characters commonly used in binary file signatures.
          */
-        private static boolean isPlaintext(Buffer buffer){
+        private static boolean isPlaintext(Buffer buffer) {
             try {
                 Buffer prefix = new Buffer();
                 long byteCount = buffer.size() < 64 ? buffer.size() : 64;
@@ -502,7 +520,8 @@ import rx.schedulers.Schedulers;
             }
         }
 
-        @Override public Response intercept(Chain chain) throws IOException {
+        @Override
+        public Response intercept(Chain chain) throws IOException {
 
             Request request = chain.request();
             long t1 = System.nanoTime();
@@ -568,7 +587,7 @@ import rx.schedulers.Schedulers;
     }
 
     public String postSync(String url, String jsonBody,
-                           Request.Builder builder) throws NetException {
+            Request.Builder builder) throws NetException {
         RequestBody body = RequestBody.create(JSON, jsonBody);
         return postSync(builder.post(body).url(url).build());
     }
@@ -605,12 +624,12 @@ import rx.schedulers.Schedulers;
     }
 
     public Subscription getAsyncToJsonString(String url,
-                                             Callback<String> listener) {
+            Callback<String> listener) {
         return Utils.addSubscribe(getAsyncToJsonString(url), listener);
     }
 
     public Subscription getAsyncToJsonString(String url, Request.Builder builder,
-                                             Callback<String> listener) {
+            Callback<String> listener) {
         return Utils.addSubscribe(getAsyncToJsonString(url, builder), listener);
     }
 
@@ -623,10 +642,11 @@ import rx.schedulers.Schedulers;
     }
 
     public Observable<String> getAsyncToJsonString(
-                                                   final Request.Builder builder,
-                                                   Observable<String> observable) {
+            final Request.Builder builder,
+            Observable<String> observable) {
         return observable.observeOn(Schedulers.io()).map(new Func1<String, String>() {
-            @Override public String call(String s) {
+            @Override
+            public String call(String s) {
                 try {
                     return getSync(s, builder);
                 } catch (SystemException e) {
@@ -637,12 +657,12 @@ import rx.schedulers.Schedulers;
     }
 
     public Subscription postAsyncToJsonString(String url, String json,
-                                              final Callback<String> listener) {
+            final Callback<String> listener) {
         return postAsyncToJsonString(url, Observable.just(json), listener);
     }
 
     public Subscription postAsyncToJsonString(final String url, Observable<String> observable,
-                                              final Callback<String> listener) {
+            final Callback<String> listener) {
         return Utils.addSubscribe(postAsyncToJsonString(url, observable), listener);
     }
 
@@ -651,9 +671,10 @@ import rx.schedulers.Schedulers;
     }
 
     public Observable<String> postAsyncToJsonString(final String url,
-                                                    Observable<String> observable) {
+            Observable<String> observable) {
         return observable.observeOn(Schedulers.io()).map(new Func1<String, String>() {
-            @Override public String call(String jsonBody) {
+            @Override
+            public String call(String jsonBody) {
                 try {
                     return postSync(url, jsonBody);
                 } catch (SystemException e) {
@@ -667,8 +688,7 @@ import rx.schedulers.Schedulers;
         private String fileName;
         private String url;
         private byte[] bytes;
-        private Bitmap bitmap;
-        private File   file;
+        private File file;
 
         public FileDownload() {
         }
@@ -680,11 +700,6 @@ import rx.schedulers.Schedulers;
         public FileDownload(String fileName, String url) {
             this.fileName = fileName;
             this.url = url;
-        }
-
-        public FileDownload(String fileName, Bitmap bitmap) {
-            this.fileName = fileName;
-            this.bitmap = bitmap;
         }
 
         public FileDownload(String fileName, byte[] bytes) {
@@ -708,14 +723,6 @@ import rx.schedulers.Schedulers;
             this.url = url;
         }
 
-        public Bitmap getBitmap() {
-            return bitmap;
-        }
-
-        public void setBitmap(Bitmap bitmap) {
-            this.bitmap = bitmap;
-        }
-
         public byte[] getBytes() {
             return bytes;
         }
@@ -735,17 +742,19 @@ import rx.schedulers.Schedulers;
 
     public Observable.Transformer<String, FileDownload> applyGetFileName() {
         return new Observable.Transformer<String, FileDownload>() {
-            @Override public Observable<FileDownload> call(Observable<String> stringObservable) {
+            @Override
+            public Observable<FileDownload> call(Observable<String> stringObservable) {
                 return stringObservable.observeOn(Schedulers.io())
                         .flatMap(new Func1<String, Observable<FileDownload>>() {
-                            @Override public Observable<FileDownload> call(String url) {
+                            @Override
+                            public Observable<FileDownload> call(String url) {
                                 try {
                                     String extension = FilenameUtils.getExtension(url);
                                     if (!TextUtils.isEmpty(extension)) {
                                         return Observable
                                                 .just(new FileDownload(FilenameUtils.getName(url),
                                                         url));
-                                }
+                                    }
                                     Response response = OkHttp3Utils.get().headSync(url);
                                     String header = response.header("Content-Disposition");
                                     String fileName = Utils.getContentDispositionFileName(header,
@@ -753,7 +762,7 @@ import rx.schedulers.Schedulers;
                                     return Observable.just(new FileDownload(fileName, url));
                                 } catch (NetException e) {
                                     throw new SystemRuntimeException(e);
-                            }
+                                }
                             }
                         });
             }
@@ -762,11 +771,13 @@ import rx.schedulers.Schedulers;
 
     public Observable.Transformer<FileDownload, FileDownload> applyDownloadFile() {
         return new Observable.Transformer<FileDownload, FileDownload>() {
-            @Override public Observable<FileDownload> call(
+            @Override
+            public Observable<FileDownload> call(
                     Observable<FileDownload> downloadObservable) {
                 return downloadObservable
                         .flatMap(new Func1<FileDownload, Observable<FileDownload>>() {
-                            @Override public Observable<FileDownload> call(
+                            @Override
+                            public Observable<FileDownload> call(
                                     FileDownload fileDownload) {
                                 try {
                                     OkHttpClient.Builder builder = OkHttp3Utils.get().cloneClient();
@@ -779,49 +790,28 @@ import rx.schedulers.Schedulers;
                                                     response.body().bytes()));
                                 } catch (IOException e) {
                                     throw new SystemRuntimeException(e);
-                            }
-                            }
-                        });
-            }
-        };
-    }
-
-    public Observable.Transformer<String, FileDownload> applyDownloadImage() {
-        return new Observable.Transformer<String, FileDownload>() {
-            @Override public Observable<FileDownload> call(Observable<String> downloadObservable) {
-                return downloadObservable.compose(applyGetFileName()).compose(applyDownloadFile())
-                        .flatMap(new Func1<FileDownload, Observable<FileDownload>>() {
-                            @Override public Observable<FileDownload> call(
-                                    FileDownload fileDownload) {
-                                Bitmap bitmap = BitmapUtils.byteToBitmap(fileDownload.getBytes());
-                                return Observable
-                                        .just(new FileDownload(fileDownload.getFileName(), bitmap));
+                                }
                             }
                         });
             }
         };
     }
 
-    public Subscription downloadImage(final String url, Callback<FileDownload> callback) {
-        Observable<FileDownload> compose = Observable.just(url).compose(applyDownloadImage());
-        return Utils.addSubscribe(compose, callback);
-    }
-
-    public Subscription downloadImageToFile(final String url, final Context context, final File dir,
-                                            Callback<FileDownload> callback) {
-        Observable<FileDownload> observable = Observable.just(url).compose(applyDownloadImage())
+    public Subscription downloadFile(final String url, final File dir,
+            Callback<FileDownload> callback) {
+        Observable<FileDownload> observable = Observable.just(url)
+                .compose(applyGetFileName())
+                .compose(applyDownloadFile())
                 .map(new Func1<FileDownload, FileDownload>() {
-                    @Override public FileDownload call(FileDownload fileName) {
+                    @Override
+                    public FileDownload call(FileDownload fileName) {
                         try {
                             File file = FileUtils.createFile(dir, fileName.getFileName());
-                            Bitmap.CompressFormat format = BitmapUtils
-                                    .getImageExtension(fileName.getFileName());
-                            BitmapUtils.insertImage(fileName.getBitmap(), format, file);
-                            BitmapUtils.saveImageToSystemPhoto(context, file);
+                            FileUtils.writeByteArrayToFile(file, fileName.getBytes());
                             return new FileDownload(file);
-                        } catch (SystemException e) {
+                        } catch (SystemException | IOException e) {
                             throw new SystemRuntimeException(e);
-                    }
+                        }
                     }
                 });
         return Utils.addSubscribe(observable, callback);

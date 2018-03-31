@@ -100,6 +100,21 @@ public class DateTimeUtils {
         }
     }
 
+    /**
+     * 传入时间的在当前时间后，则改变转入时间到下一天。
+     * @param time Local
+     * @return Local
+     */
+    public static DateTime checkTime(LocalTime time) {
+        DateTime now = DateTime.now();
+        DateTime set = DateTime.now().withTime(time);
+        if (set.toLocalTime().isBefore(now.toLocalTime())) {
+            now = now.plusDays(1);
+        }
+        return new DateTime(now.getYear(), now.getMonthOfYear(), now.getDayOfMonth(),
+                time.getHourOfDay(), time.getMinuteOfHour());
+    }
+
 
 
     private static final long ONE_MINUTE = 60000L;

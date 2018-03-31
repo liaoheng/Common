@@ -1,7 +1,6 @@
 package com.github.liaoheng.common.util;
 
 import android.content.Context;
-import android.util.TypedValue;
 
 /**
  * 常用单位转换的辅助类
@@ -9,6 +8,7 @@ import android.util.TypedValue;
  *
  *
  */
+@Deprecated
 public class DensityUtils
 {
     private DensityUtils()
@@ -24,10 +24,10 @@ public class DensityUtils
      * @param dpVal
      * @return
      */
+    @Deprecated
     public static int dp2px(Context context, float dpVal)
     {
-        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                dpVal, context.getResources().getDisplayMetrics());
+        return DisplayUtils.dp2px(context,dpVal);
     }
 
     /**
@@ -37,10 +37,10 @@ public class DensityUtils
      * @param spVal
      * @return
      */
+    @Deprecated
     public static int sp2px(Context context, float spVal)
     {
-        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,
-                spVal, context.getResources().getDisplayMetrics());
+        return DisplayUtils.sp2px(context,spVal);
     }
 
     /**
@@ -50,10 +50,10 @@ public class DensityUtils
      * @param pxVal
      * @return
      */
+    @Deprecated
     public static float px2dp(Context context, float pxVal)
     {
-        final float scale = context.getResources().getDisplayMetrics().density;
-        return (pxVal / scale);
+        return DisplayUtils.px2dp(context,pxVal);
     }
     /**
      * px转sp
@@ -62,9 +62,10 @@ public class DensityUtils
      * @param pxVal
      * @return
      */
+    @Deprecated
     public static float px2sp(Context context, float pxVal)
     {
-        return (pxVal / context.getResources().getDisplayMetrics().scaledDensity);
+        return DisplayUtils.px2sp(context,pxVal);
     }
 
 }

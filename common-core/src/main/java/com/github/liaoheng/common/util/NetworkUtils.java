@@ -89,11 +89,13 @@ public class NetworkUtils {
      * @return boolean 不管wifi，还是mobile net，只有当前在连接状态（可有效传输数据）才返回true,反之false。
      */
     public static boolean isConnectedOrConnecting(Context context) {
-        NetworkInfo[] nets = getConnManager(context).getAllNetworkInfo();
-        if (nets != null) {
-            for (NetworkInfo net : nets) {
-                if (net.isConnectedOrConnecting()) {
-                    return true;
+        if (NetworkUtils.isConnected(context)) {
+            NetworkInfo[] nets = getConnManager(context).getAllNetworkInfo();
+            if (nets != null) {
+                for (NetworkInfo net : nets) {
+                    if (net.isConnectedOrConnecting()) {
+                        return true;
+                    }
                 }
             }
         }

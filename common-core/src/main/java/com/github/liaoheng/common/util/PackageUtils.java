@@ -91,25 +91,6 @@ public class PackageUtils {
         return null;
     }
 
-
-    public static int getAppVersionCode(Context context) {
-        if (context != null) {
-            PackageManager pm = context.getPackageManager();
-            if (pm != null) {
-                PackageInfo pi;
-                try {
-                    pi = pm.getPackageInfo(context.getPackageName(), 0);
-                    if (pi != null) {
-                        return pi.versionCode;
-                    }
-                } catch (NameNotFoundException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return -1;
-    }
-
     /**
      * 获取当前系统安装应用的默认位置
      *
