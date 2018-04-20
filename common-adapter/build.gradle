@@ -7,7 +7,7 @@ android {
     defaultConfig {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode Integer.parseInt(VERSION_CODE)
+        versionCode VERSION_CODE as int
         versionName VERSION_NAME
     }
     lintOptions {
@@ -16,21 +16,18 @@ android {
 }
 
 dependencies {
-    testCompile deps.robolectric
-    testCompile deps.robolectric_annotations
-    testCompile deps.robolectric_shadows_core
-    testCompile deps.junit
+    testImplementation deps.robolectric
+    testImplementation deps.junit
 
     //android system
-    compile deps.supportv4
-    compile deps.appcompatv7
-    compile deps.recyclerviewv7
-    compile deps.design
+    implementation deps.supportv4
+    compileOnly deps.appcompatv7
+    implementation deps.recyclerviewv7
 
-    //下拉加载:https://github.com/vinaysshenoy/mugen
-    compile 'com.vinaysshenoy:mugen:1.0.3'
-    provided deps.recyclerview_flexibledivider
-    provided deps.adapterdelegates2
+    //https://github.com/vinaysshenoy/mugen
+    implementation 'com.vinaysshenoy:mugen:1.0.3'
+    compileOnly deps.recyclerview_flexibledivider
+    compileOnly deps.adapterdelegates2
 }
 
 apply from: rootProject.file('gradle-mvn-push.gradle')

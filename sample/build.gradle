@@ -29,23 +29,30 @@ android {
 }
 
 dependencies {
-  compile fileTree(dir: 'libs', include: ['*.jar'])
-  testCompile 'junit:junit:4.12'
+  implementation fileTree(dir: 'libs', include: ['*.jar'])
+  testImplementation deps.junit
 
-  compile deps.supportv4
-  compile deps.appcompatv7
-  compile deps.glide
-  compile 'com.github.bumptech.glide:okhttp3-integration:1.5.0@aar'
-  compile deps.okhttp
+  //android system
+  implementation deps.supportv4
+  implementation deps.appcompatv7
+  implementation deps.recyclerviewv7
+  implementation deps.design
 
-  compile 'com.jakewharton:butterknife:8.6.0'
+  implementation deps.glide
+  annotationProcessor deps.glide_compiler
+  implementation deps.glide_okhttp3_integration
+  implementation deps.okhttp
+
+  implementation 'com.jakewharton:butterknife:8.6.0'
   annotationProcessor 'com.jakewharton:butterknife-compiler:8.6.0'
 
-  compile deps.rxlifecycle
-  compile deps.rxlifecycle_android
+  implementation deps.rxandroid
+  implementation deps.rxjava
+  implementation deps.rxlifecycle
+  implementation deps.rxlifecycle_android
 
-//  compile group: "com.github.liaoheng", name: "common-plus", version: "0.0.5-SNAPSHOT", changing: true
-  compile project(':common-plus')
+//  implementation group: "com.github.liaoheng", name: "common-plus", version: "0.0.5-SNAPSHOT", changing: true
+  api project(':common-plus')
 }
 //configurations.all {
 //  // check for updates every build

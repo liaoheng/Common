@@ -11,7 +11,8 @@ public class BaseTest {
 
     public final String TAG = this.getClass().getSimpleName();
 
-    @Before public void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         ShadowLog.stream = System.out;
     }
 

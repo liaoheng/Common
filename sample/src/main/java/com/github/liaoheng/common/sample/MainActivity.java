@@ -5,11 +5,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-
-import com.bumptech.glide.Glide;
+import com.github.liaoheng.common.adapter.core.HandleView;
 import com.github.liaoheng.common.network.GlideCompressTransformation;
 import com.github.liaoheng.common.network.OkHttp3Utils;
 import com.github.liaoheng.common.ui.WebViewActivity;
@@ -24,15 +20,17 @@ import com.github.liaoheng.common.util.SystemException;
 import com.github.liaoheng.common.util.UIUtils;
 import com.github.liaoheng.common.util.Utils;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import okhttp3.OkHttpClient;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import rx.Observable;
 
 public class MainActivity extends CURxBaseActivity {
@@ -80,18 +78,24 @@ public class MainActivity extends CURxBaseActivity {
     void openBottomSheetDialog() {
         if (cuBottomSheetDialog == null) {
             cuBottomSheetDialog = new CUBottomSheetDialog(this);
-            cuBottomSheetDialog.setContentView(R.layout.view_dialog);
-            cuBottomSheetDialog.findViewById(R.id.dialog_close).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    cuBottomSheetDialog.dismiss();
-                }
-            });
+            cuBottomSheetDialog.setContentView(R.layout.view_dialog, new BottomSheetDialogHandleView());
+            cuBottomSheetDialog.setPeekHeight(400);
         }
 
-        cuBottomSheetDialog.setPeekHeight(300);
         cuBottomSheetDialog.show();
 
+    }
+
+    class BottomSheetDialogHandleView extends HandleView.EmptyHandleView {
+        @Override
+        public void handle(View view) {
+            ButterKnife.bind(this, view);
+        }
+
+        @OnClick(R.id.dialog_close)
+        void close() {
+            cuBottomSheetDialog.dismiss();
+        }
     }
 
     @OnClick(R.id.open_toolbar)
@@ -106,7 +110,7 @@ public class MainActivity extends CURxBaseActivity {
 
     @OnClick(R.id.open_web_view)
     void openWebView() {
-        WebViewActivity.start(this, "https://www.google.com", true);
+        WebViewActivity.start(this, "https://www.github.com", true);
     }
 
     private void photo() {
@@ -140,10 +144,9 @@ public class MainActivity extends CURxBaseActivity {
                                 String image = photo.getString("url");
                                 album.setItem("" + i, image);
                             }
-                            Glide.with(getActivity()).load(album.getItems().get(0).getUrl())
-                                    .transform(
-                                            new GlideCompressTransformation(getActivity(),
-                                                    800)).into(image);
+                            GlideApp.with(getActivity()).load(album.getItems().get(0).getUrl()).transform(
+                                    new GlideCompressTransformation(
+                                            800)).into(image);
                             mProgressHelper.hide();
                         } catch (Exception e) {
                             L.getToast().e(TAG, getActivity(), e);

@@ -1,43 +1,42 @@
 apply plugin: 'com.android.library'
 
 android {
-  compileSdkVersion rootProject.ext.compileSdkVersion
-  buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
 
-  defaultConfig {
-    minSdkVersion rootProject.ext.minSdkVersion
-    targetSdkVersion rootProject.ext.targetSdkVersion
-    versionCode Integer.parseInt(VERSION_CODE)
-    versionName VERSION_NAME
-  }
-  lintOptions {
-    abortOnError false
-  }
-  packagingOptions {
-    exclude 'META-INF/LICENSE.txt'
-    exclude 'META-INF/NOTICE.txt'
-    exclude 'META-INF/LICENSE'
-    exclude 'META-INF/NOTICE'
-  }
+    defaultConfig {
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode VERSION_CODE as int
+        versionName VERSION_NAME
+    }
+    lintOptions {
+        abortOnError false
+    }
+    packagingOptions {
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
+    }
 }
 
 dependencies {
-  testCompile deps.robolectric
-  testCompile deps.robolectric_annotations
-  testCompile deps.robolectric_shadows_core
-  testCompile deps.junit
+    testImplementation deps.robolectric
+    testImplementation deps.junit
 
-  provided deps.glide
-  provided deps.okhttp
+    compileOnly deps.glide
+    compileOnly deps.okhttp
+    compileOnly deps.rxandroid
+    compileOnly deps.rxjava
+    compileOnly deps.retrofit
+    compileOnly deps.retrofit_converter_jackson
+    compileOnly deps.retrofit_adapter_rxjava
 
-  provided deps.rxandroid
-  provided deps.rxjava
-  provided deps.retrofit
-  provided deps.retrofit_converter_jackson
-  provided deps.retrofit_adapter_rxjava
+    compileOnly deps.commons_io
 
-//  compile group: "com.github.liaoheng", name: "common-core", version: "0.0.5-SNAPSHOT", changing: true
-  compile project(':common-core')
+    //  implementation group: "com.github.liaoheng", name: "common-core", version: "0.0.5-SNAPSHOT", changing: true
+    api project(':common-core')
 }
 apply from: rootProject.file('gradle-mvn-push.gradle')
 

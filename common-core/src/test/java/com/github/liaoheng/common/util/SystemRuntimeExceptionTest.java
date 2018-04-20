@@ -2,6 +2,7 @@ package com.github.liaoheng.common.util;
 
 import com.github.liaoheng.common.BaseTest;
 import com.github.liaoheng.common.BuildConfig;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
@@ -16,10 +17,12 @@ import static org.junit.Assert.assertTrue;
  * @author liaoheng
  * @version 2016-10-25 10:09
  */
-@RunWith(RobolectricTestRunner.class) @Config(constants = BuildConfig.class, sdk = SdkConfig.MAX_SDK_VERSION) public class SystemRuntimeExceptionTest
-        extends BaseTest {
+@RunWith(RobolectricTestRunner.class)
+@Config(constants = BuildConfig.class)
+public class SystemRuntimeExceptionTest extends BaseTest {
 
-    @Test public void SystemRuntimeException1Test() {
+    @Test
+    public void SystemRuntimeException1Test() {
         try {
             throw new SystemRuntimeException(new SystemException("timeout"));
         } catch (SystemRuntimeException e) {

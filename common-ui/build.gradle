@@ -1,47 +1,45 @@
 apply plugin: 'com.android.library'
 
 android {
-  compileSdkVersion rootProject.ext.compileSdkVersion
-  buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
 
-  defaultConfig {
-    minSdkVersion rootProject.ext.minSdkVersion
-    targetSdkVersion rootProject.ext.targetSdkVersion
-    versionCode Integer.parseInt(VERSION_CODE)
-    versionName VERSION_NAME
-  }
-  lintOptions {
-    abortOnError false
-  }
-  packagingOptions {
-    exclude 'META-INF/LICENSE.txt'
-    exclude 'META-INF/NOTICE.txt'
-    exclude 'META-INF/LICENSE'
-    exclude 'META-INF/NOTICE'
-  }
+    defaultConfig {
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode VERSION_CODE as int
+        versionName VERSION_NAME
+    }
+    lintOptions {
+        abortOnError false
+    }
+    packagingOptions {
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
+    }
 }
 
 dependencies {
-  testCompile deps.robolectric
-  testCompile deps.robolectric_annotations
-  testCompile deps.robolectric_shadows_core
-  testCompile deps.junit
+    testImplementation deps.robolectric
+    testImplementation deps.junit
 
-  compile deps.supportv4
-  compile deps.appcompatv7
-  compile deps.recyclerviewv7
-  compile deps.design
+    implementation deps.supportv4
+    implementation deps.appcompatv7
+    implementation deps.recyclerviewv7
+    implementation deps.design
 
-  provided deps.rxlifecycle
-  provided deps.rxlifecycle_android
+    compileOnly deps.rxlifecycle
+    compileOnly deps.rxlifecycle_android
 
-  //TabLayout:https://github.com/h6ah4i/android-tablayouthelper
-  provided 'com.h6ah4i.android.tablayouthelper:tablayouthelper:0.8.0'
+    //TabLayout:https://github.com/h6ah4i/android-tablayouthelper
+    compileOnly 'com.h6ah4i.android.tablayouthelper:tablayouthelper:0.8.0'
 
-//  compile group: "com.github.liaoheng", name: "common-core", version: "0.0.5-SNAPSHOT", changing: true
-  compile project(':common-core')
-//  compile group: "com.github.liaoheng", name: "common-adapter", version: "0.0.5-SNAPSHOT", changing: true
-  compile project(':common-adapter')
+    //  implementation group: "com.github.liaoheng", name: "common-core", version: "0.0.5-SNAPSHOT", changing: true
+    api project(':common-core')
+    //  implementation group: "com.github.liaoheng", name: "common-adapter", version: "0.0.5-SNAPSHOT", changing: true
+    api project(':common-adapter')
 }
 apply from: rootProject.file('gradle-mvn-push.gradle')
 

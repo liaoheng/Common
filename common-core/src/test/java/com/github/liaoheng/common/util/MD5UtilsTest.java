@@ -2,11 +2,11 @@ package com.github.liaoheng.common.util;
 
 import com.github.liaoheng.common.BaseTest;
 import com.github.liaoheng.common.BuildConfig;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
-import org.robolectric.internal.SdkConfig;
 
 import static org.junit.Assert.assertEquals;
 
@@ -14,8 +14,9 @@ import static org.junit.Assert.assertEquals;
  * @author liaoheng
  * @version 2016-09-08 11:43
  */
-@RunWith(RobolectricTestRunner.class) @Config(constants = BuildConfig.class, sdk = SdkConfig.MAX_SDK_VERSION) public class MD5UtilsTest
-        extends BaseTest {
+@RunWith(RobolectricTestRunner.class)
+@Config(constants = BuildConfig.class)
+public class MD5UtilsTest extends BaseTest {
 
     @Test public void testMd5ToString() throws Exception {
         String hex32 = MD5Utils.md5Hex("hello");

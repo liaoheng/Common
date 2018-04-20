@@ -1,5 +1,6 @@
 package com.github.liaoheng.common.util;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -12,16 +13,15 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Parcelable;
-import android.telephony.TelephonyManager;
+import android.support.annotation.RequiresPermission;
 import android.text.TextUtils;
 
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import java.util.UUID;
 
 /**
- * 其它工具
+ * app工具
  *
  * @author liaoheng
  */
@@ -56,16 +56,6 @@ public class AppUtils {
         } catch (PackageManager.NameNotFoundException e) {
             throw new SystemException("Version information acquisition failed", e);
         }
-    }
-
-    /**
-     * 去除电话号码中的 "-" 和" "
-     */
-    public static String phoneStringToNumberString(String phoneString) {
-        if (TextUtils.isEmpty(phoneString)) {
-            return phoneString;
-        }
-        return phoneString.replaceAll("-", "").replaceAll(" ", "");
     }
 
     /**
@@ -105,42 +95,43 @@ public class AppUtils {
     }
 
     /**
-     * 得到唯一设备ID,需要权限:uses-permission android:name="android.permission.READ_PHONE_STATE"
+     * 得到由设备生成的唯一ID
+     * <br/> Dependency : android.permission.READ_PHONE_STATE
      *
      * @see <a href='http://stackoverflow.com/questions/2785485/is-there-a-unique-android-device-id/2853253#2853253'>stackoverflow</a>
      */
-    @SuppressLint({ "MissingPermission", "HardwareIds" })
+    @SuppressLint({ "HardwareIds" })
+    @RequiresPermission(Manifest.permission.READ_PHONE_STATE)
+    @Deprecated
     public static String getDeviceId(Context context) {
-        final TelephonyManager tm = (TelephonyManager) context
-                .getSystemService(Context.TELEPHONY_SERVICE);
-        if (tm == null) {
-            return UUID.randomUUID().toString();
-        }
+        return Utils.getDeviceId(context);
+    }
 
-        final String tmDevice, tmSerial, androidId;
-        tmDevice = "" + tm.getDeviceId();
-        tmSerial = "" + tm.getSimSerialNumber();
-        androidId = "" + android.provider.Settings.Secure.getString(context.getContentResolver(),
-                android.provider.Settings.Secure.ANDROID_ID);
-
-        UUID deviceUuid = new UUID(androidId.hashCode(),
-                ((long) tmDevice.hashCode() << 32) | tmSerial.hashCode());
-        return deviceUuid.toString();
+    /**
+     * 得到唯一设备ID
+     *
+     * @see <a href='http://stackoverflow.com/questions/2785485/is-there-a-unique-android-device-id/2853253#2853253'>stackoverflow</a>
+     */
+    @SuppressLint("HardwareIds")
+    @Deprecated
+    public static String getDeviceSerialId() {
+        return Utils.getDeviceSerialId();
     }
 
     /**
      * //TODO 需要测试
      * app是否有Activity运行
-     * @see <a herf="https://stackoverflow.com/questions/30619349/android-5-1-1-and-above-getrunningappprocesses-returns-my-application-packag">stackoverflow</a>
+     *
+     * @see <a href='https://stackoverflow.com/questions/30619349/android-5-1-1-and-above-getrunningappprocesses-returns-my-application-packag'>stackoverflow</a>
      */
     @Deprecated
     public static boolean isForeground(Context context) {
         String packageName = context.getPackageName();
         String currentApp = "NULL";
-        if(android.os.Build.VERSION.SDK_INT > android.os.Build.VERSION_CODES.LOLLIPOP) {
-            UsageStatsManager usm = (UsageStatsManager)context.getSystemService(Context.USAGE_STATS_SERVICE);
+        if (android.os.Build.VERSION.SDK_INT > android.os.Build.VERSION_CODES.LOLLIPOP) {
+            UsageStatsManager usm = (UsageStatsManager) context.getSystemService(Context.USAGE_STATS_SERVICE);
             long time = System.currentTimeMillis();
-            List<UsageStats> appList = usm.queryUsageStats(UsageStatsManager.INTERVAL_DAILY,  time - 1000*1000, time);
+            List<UsageStats> appList = usm.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, time - 1000 * 1000, time);
             if (appList != null && appList.size() > 0) {
                 SortedMap<Long, UsageStats> mySortedMap = new TreeMap<>();
                 for (UsageStats usageStats : appList) {
@@ -151,7 +142,7 @@ public class AppUtils {
                 }
             }
         } else {
-            ActivityManager am = (ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);
+            ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
             List<ActivityManager.RunningAppProcessInfo> tasks = am.getRunningAppProcesses();
             currentApp = tasks.get(0).processName;
         }

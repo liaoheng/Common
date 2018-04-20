@@ -2,7 +2,9 @@ package com.github.liaoheng.common.util;
 
 import com.github.liaoheng.common.BaseTest;
 import com.github.liaoheng.common.BuildConfig;
+
 import java.util.concurrent.TimeoutException;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
@@ -17,10 +19,12 @@ import static org.junit.Assert.assertTrue;
  * @author liaoheng
  * @version 2016-07-25 13:26
  */
-@RunWith(RobolectricTestRunner.class) @Config(constants = BuildConfig.class, sdk = SdkConfig.MAX_SDK_VERSION)
+@RunWith(RobolectricTestRunner.class)
+@Config(constants = BuildConfig.class)
 public class NetLocalExceptionTest extends BaseTest {
 
-    @Test public void NetLocalExceptionTest1() {
+    @Test
+    public void NetLocalExceptionTest1() {
         try {
             try {
                 throw new TimeoutException("timeout");
@@ -36,7 +40,8 @@ public class NetLocalExceptionTest extends BaseTest {
         }
     }
 
-    @Test public void NetLocalExceptionTest2() {
+    @Test
+    public void NetLocalExceptionTest2() {
         try {
             try {
                 throw new TimeoutException("timeout");

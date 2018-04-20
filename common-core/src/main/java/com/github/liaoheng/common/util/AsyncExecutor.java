@@ -7,23 +7,28 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
 
-import android.os.Handler;
-import android.os.Looper;
-
 /**
  * 异步执行
  *
  * @author MaTianyu
+ * @author liaoheng
  */
 public class AsyncExecutor {
-    private static final String    TAG     = AsyncExecutor.class.getSimpleName();
     private static ExecutorService threadPool;
 
-    public AsyncExecutor() {
-        this(null);
+    private AsyncExecutor() {
     }
 
-    public AsyncExecutor(ExecutorService threadPool) {
+    private static AsyncExecutor mAsyncExecutor;
+
+    public static AsyncExecutor get() {
+        if (mAsyncExecutor == null) {
+            mAsyncExecutor = new AsyncExecutor();
+        }
+        return mAsyncExecutor;
+    }
+
+    public void init(ExecutorService threadPool) {
         if (AsyncExecutor.threadPool != null) {
             shutdownNow();
         }
@@ -34,17 +39,21 @@ public class AsyncExecutor {
         }
     }
 
-    public static synchronized void shutdownNow() {
-        if (threadPool != null && !threadPool.isShutdown())
+    public synchronized void shutdownNow() {
+        if (threadPool != null && !threadPool.isShutdown()) {
             threadPool.shutdownNow();
+        }
         threadPool = null;
+    }
+
+    public <T> FutureTask<T> execute(Callable<T> call) {
+        FutureTask<T> task = new FutureTask<T>(call);
+        threadPool.execute(task);
+        return task;
     }
 
     /**
      * 将任务投入线程池执行
-     *
-     * @param worker
-     * @return
      */
     public <T> FutureTask<T> execute(final Worker<T> worker) {
         Callable<T> call = new Callable<T>() {
@@ -58,13 +67,12 @@ public class AsyncExecutor {
             protected void done() {
                 try {
                     get();
-                } catch (InterruptedException | CancellationException e) {
-                    worker.abort();
+                } catch (InterruptedException ignored) {
+                } catch (CancellationException e) {
                     postCancel(worker);
-                    L.Log.w(TAG, e);
                 } catch (ExecutionException e) {
                     throw new RuntimeException("An error occured while executing doInBackground()",
-                        e.getCause());
+                            e.getCause());
                 }
             }
         };
@@ -74,10 +82,6 @@ public class AsyncExecutor {
 
     /**
      * 将子线程结果传递到UI线程
-     *
-     * @param worker
-     * @param result
-     * @return
      */
     private <T> T postResult(final Worker<T> worker, final T result) {
         HandlerUtils.post(new Runnable() {
@@ -91,9 +95,6 @@ public class AsyncExecutor {
 
     /**
      * 将子线程结果传递到UI线程
-     *
-     * @param worker
-     * @return
      */
     private void postCancel(final Worker worker) {
         HandlerUtils.post(new Runnable() {
@@ -104,12 +105,6 @@ public class AsyncExecutor {
         });
     }
 
-    public <T> FutureTask<T> execute(Callable<T> call) {
-        FutureTask<T> task = new FutureTask<T>(call);
-        threadPool.execute(task);
-        return task;
-    }
-
     public static abstract class Worker<T> {
         protected abstract T doInBackground();
 
@@ -117,9 +112,6 @@ public class AsyncExecutor {
         }
 
         protected void onCanceled() {
-        }
-
-        protected void abort() {
         }
     }
 }

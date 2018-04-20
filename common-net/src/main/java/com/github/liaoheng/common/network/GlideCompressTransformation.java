@@ -1,63 +1,76 @@
 package com.github.liaoheng.common.network;
 
-import android.content.Context;
 import android.graphics.Bitmap;
+import android.support.annotation.NonNull;
+
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
+import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 import com.github.liaoheng.common.util.BitmapUtils;
+
+import java.security.MessageDigest;
 
 /**
  * 压缩
- * @author http://www.28im.com/android/a951799.html
+ *
+ * @see <a href='http://bumptech.github.io/glide/doc/transformations.html'>transformations</a>
  */
-public class GlideCompressTransformation
-        extends com.bumptech.glide.load.resource.bitmap.BitmapTransformation {
+public class GlideCompressTransformation extends BitmapTransformation {
+    private final String ID = GlideCompressTransformation.class.getSimpleName();
+    private final byte[] ID_BYTES = ID.getBytes(CHARSET);
+
     private int scale;
     private int w;
     private int h;
 
     /**
      * 压缩
+     *
      * @param scale 压缩到多少KB
      */
-    public GlideCompressTransformation(Context context, int scale) {
-        super(context);
+    public GlideCompressTransformation(int scale) {
         this.scale = scale;
     }
 
     /**
      * 压缩
+     *
      * @param w 到多宽
-     * @param h  到多高
+     * @param h 到多高
      */
-    public GlideCompressTransformation(Context context, int w, int h) {
-        super(context);
+    public GlideCompressTransformation(int w, int h) {
         this.w = w;
         this.h = h;
     }
 
     /**
      * 压缩
+     *
      * @param scale 压缩到多少KB
      */
-    public GlideCompressTransformation(Context context, int scale, int w, int h) {
-        super(context);
+    public GlideCompressTransformation(int scale, int w, int h) {
         this.scale = scale;
         this.w = w;
         this.h = h;
     }
 
-    @Override protected Bitmap transform(BitmapPool pool, Bitmap toTransform, int outWidth,
-                                         int outHeight) {
-        Bitmap output = BitmapUtils.compressBitmapByQualityAll(toTransform, scale, w, h);
-
-        if (toTransform != output) {
-            toTransform.recycle();
-        }
-
-        return output;
+    @Override
+    protected Bitmap transform(@NonNull BitmapPool pool, @NonNull Bitmap toTransform, int outWidth, int outHeight) {
+        return BitmapUtils.compressBitmapByQualityAndScale(toTransform, scale, w, h, false);
     }
 
-    @Override public String getId() {
-        return "CNCompressTransformation";
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof GlideCompressTransformation;
     }
+
+    @Override
+    public int hashCode() {
+        return ID.hashCode();
+    }
+
+    @Override
+    public void updateDiskCacheKey(@NonNull MessageDigest messageDigest) {
+        messageDigest.update(ID_BYTES);
+    }
+
 }

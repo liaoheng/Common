@@ -14,7 +14,7 @@ import java.lang.reflect.Method;
 
 /**
  * assist us in sensing state of the networks.
- * need  android.permission.ACCESS_NETWORK_STATE
+ * <br/> Dependency : android.permission.ACCESS_NETWORK_STATE
  *
  * @author liaoheng
  * @version 2017-1-4
@@ -157,7 +157,7 @@ public class NetworkUtils {
     }
 
     /**
-     * 获取ssid名，编码为UTF-8
+     * 获取wifi ssid名，编码为UTF-8
      */
     public static String getWifiSsidNameCharset(WifiInfo wifiInfo) {
         try {
@@ -177,9 +177,8 @@ public class NetworkUtils {
     }
 
     /**
-     * <a href="https://stackoverflow.com/questions/11705906/programmatically-getting-the-mac-of-an-android-device">获取
-     * MAC 地址</a>
-     * <p>需要权限:android.permission.ACCESS_WIFI_STATE</p>
+     * <a href="https://stackoverflow.com/questions/11705906/programmatically-getting-the-mac-of-an-android-device">get
+     * mac address</a>
      */
     public static String getMacAddress(@NonNull Context context) {
         return getWifiInfo(context).getMacAddress();

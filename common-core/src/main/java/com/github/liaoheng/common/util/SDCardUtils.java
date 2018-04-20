@@ -1,5 +1,11 @@
 package com.github.liaoheng.common.util;
 
+import android.os.Build;
+import android.os.Environment;
+import android.os.StatFs;
+
+import org.apache.commons.io.IOUtils;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
@@ -8,30 +14,19 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-import org.apache.commons.io.IOUtils;
-
-import android.os.Build;
-import android.os.Environment;
-import android.os.StatFs;
-
 /**
  * SD卡相关的辅助类
+ * <br/> Dependency : android.permission.READ_EXTERNAL_STORAGE
+ * <br/> Dependency : android.permission.WRITE_EXTERNAL_STORAGE
  *
- *@author <a href="http://www.trinea.cn" target="_blank">Trinea</a> 2014-11-03
+ * @author <a href="http://www.trinea.cn" target="_blank">Trinea</a> 2014-11-03
  * @author <a href="http://www.cnblogs.com/smiler/p/3854761.html" target="_blank">幕三少</a>
  */
 public class SDCardUtils {
     private static final String TAG = SDCardUtils.class.getSimpleName();
 
-    private SDCardUtils() {
-        /** cannot be instantiated **/
-        throw new UnsupportedOperationException("cannot be instantiated");
-    }
-
     /**
      * 判断SDCard是否可用
-     *
-     * @return
      */
     public static boolean isSDCardEnable() {
         return Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState());
@@ -39,8 +34,6 @@ public class SDCardUtils {
 
     /**
      * 获取SD卡路径
-     *
-     * @return
      */
     public static File getSDCardPath() {
         return Environment.getExternalStorageDirectory();
@@ -57,7 +50,7 @@ public class SDCardUtils {
         try {
             Process p = run.exec(cmd);// 启动另一个进程来执行命令
             bufferedReader = new BufferedReader(new InputStreamReader(new BufferedInputStream(
-                p.getInputStream())));
+                    p.getInputStream())));
             String lineStr;
             while ((lineStr = bufferedReader.readLine()) != null) {
                 L.Log.d(TAG, "proc/mounts:   " + lineStr);
@@ -125,6 +118,7 @@ public class SDCardUtils {
 
     /**
      * 获得sd卡剩余容量，即可以大小
+     *
      * @return byte
      */
     public static long getSDAvailableSize() {
@@ -143,6 +137,7 @@ public class SDCardUtils {
 
     /**
      * 获得机身可用内存
+     *
      * @return byte
      */
     public static long getROMAvailableSize() {

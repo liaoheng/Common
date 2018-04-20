@@ -2,13 +2,14 @@ package com.github.liaoheng.common.util;
 
 import com.github.liaoheng.common.BaseTest;
 import com.github.liaoheng.common.BuildConfig;
-import java.io.FileNotFoundException;
-import java.util.concurrent.TimeoutException;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
-import org.robolectric.internal.SdkConfig;
+
+import java.io.FileNotFoundException;
+import java.util.concurrent.TimeoutException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -18,10 +19,12 @@ import static org.junit.Assert.assertTrue;
  * @author liaoheng
  * @version 2016-07-25 11:35
  */
-@RunWith(RobolectricTestRunner.class) @Config(constants = BuildConfig.class, sdk = SdkConfig.MAX_SDK_VERSION)
+@RunWith(RobolectricTestRunner.class)
+@Config(constants = BuildConfig.class)
 public class SystemExceptionTest extends BaseTest {
 
-    @Test public void addExceptionTest() {
+    @Test
+    public void addExceptionTest() {
         String[] s = new String[] { "123", "456" };
         try {
             String s1 = s[3];
@@ -36,7 +39,8 @@ public class SystemExceptionTest extends BaseTest {
         }
     }
 
-    @Test public void addSystemException1Test() {
+    @Test
+    public void addSystemException1Test() {
         try {
             throw new SystemException("one error", new SystemDataException("two error"));
         } catch (SystemException e) {
@@ -48,7 +52,8 @@ public class SystemExceptionTest extends BaseTest {
         }
     }
 
-    @Test public void addSystemException2Test() {
+    @Test
+    public void addSystemException2Test() {
         try {
             throw new SystemException("one error");
         } catch (SystemException e) {
@@ -58,7 +63,8 @@ public class SystemExceptionTest extends BaseTest {
         }
     }
 
-    @Test public void addSystemException3Test() {
+    @Test
+    public void addSystemException3Test() {
         try {
             throw new SystemException(new SystemDataException("two error"));
         } catch (SystemException e) {
@@ -69,7 +75,8 @@ public class SystemExceptionTest extends BaseTest {
         }
     }
 
-    @Test public void addSystemException4Test() {
+    @Test
+    public void addSystemException4Test() {
         String[] s = new String[] { "123", "456" };
         try {
             try {
@@ -87,7 +94,8 @@ public class SystemExceptionTest extends BaseTest {
         }
     }
 
-    @Test public void addSystemException5Test() {
+    @Test
+    public void addSystemException5Test() {
         try {
             throw new SystemRuntimeException(new SystemException(new TimeoutException("timeout")));
         } catch (SystemRuntimeException ex) {
@@ -100,7 +108,8 @@ public class SystemExceptionTest extends BaseTest {
         }
     }
 
-    @Test public void addSystemException6Test() {
+    @Test
+    public void addSystemException6Test() {
         try {
             throw new IllegalArgumentException(new SystemException("arg is null"));
         } catch (IllegalArgumentException ex) {
@@ -112,7 +121,8 @@ public class SystemExceptionTest extends BaseTest {
         }
     }
 
-    @Test public void addSystemException7Test() {
+    @Test
+    public void addSystemException7Test() {
         try {
             throw new IllegalArgumentException(
                     new SystemException(new FileNotFoundException("not can file found")));
@@ -127,7 +137,8 @@ public class SystemExceptionTest extends BaseTest {
         }
     }
 
-    @Test public void addSystemException8Test() {
+    @Test
+    public void addSystemException8Test() {
         try {
             throw new IllegalArgumentException(
                     new SystemException(new FileNotFoundException("not can file found")));

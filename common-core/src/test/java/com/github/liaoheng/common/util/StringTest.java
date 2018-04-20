@@ -1,6 +1,5 @@
 package com.github.liaoheng.common.util;
 
-
 import com.github.liaoheng.common.BaseTest;
 import com.github.liaoheng.common.BuildConfig;
 
@@ -8,7 +7,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
-import org.robolectric.internal.SdkConfig;
 
 import static org.junit.Assert.assertTrue;
 
@@ -17,7 +15,7 @@ import static org.junit.Assert.assertTrue;
  * @version 2017-06-28 18:30
  */
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = SdkConfig.MAX_SDK_VERSION)
+@Config(constants = BuildConfig.class)
 public class StringTest extends BaseTest {
 
     @Test

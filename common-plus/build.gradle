@@ -7,7 +7,7 @@ android {
     defaultConfig {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode Integer.parseInt(VERSION_CODE)
+        versionCode VERSION_CODE as int
         versionName VERSION_NAME
     }
     lintOptions {
@@ -22,36 +22,33 @@ android {
 }
 
 dependencies {
-    testCompile deps.robolectric
-    testCompile deps.robolectric_annotations
-    testCompile deps.robolectric_shadows_core
-    testCompile deps.junit
+    testImplementation deps.robolectric
+    testImplementation deps.junit
 
     //android system
-    compile deps.supportv4
-    compile deps.appcompatv7
-    compile deps.recyclerviewv7
-    compile deps.design
+    implementation deps.supportv4
+    implementation deps.appcompatv7
+    implementation deps.recyclerviewv7
+    implementation deps.design
 
-    compile deps.jackson_annotations
-    compile deps.jackson_databind
-    compile deps.jackson_core
+    implementation deps.jackson_annotations
+    implementation deps.jackson_databind
+    implementation deps.jackson_core
+    implementation deps.joda_time_android
 
-    compile deps.logger
-    compile deps.eventbus
-    compile deps.rxandroid
-    compile deps.rxjava
-    compile deps.rxlifecycle
-    compile deps.rxlifecycle_android
+    implementation deps.rxandroid
+    implementation deps.rxjava
+    implementation deps.rxlifecycle
+    implementation deps.rxlifecycle_android
 
-//    compile group: "com.github.liaoheng", name: "common-core", version: "0.0.5-SNAPSHOT", changing: true
-  compile project(':common-core')
-//    compile group: "com.github.liaoheng", name: "common-adapter", version: "0.0.5-SNAPSHOT", changing: true
-    compile project(':common-adapter')
-//    compile group: "com.github.liaoheng", name: "common-net", version: "0.0.5-SNAPSHOT", changing: true
-    compile project(':common-net')
-//    compile group: "com.github.liaoheng", name: "common-ui", version: "0.0.5-SNAPSHOT", changing: true
-    compile project(':common-ui')
+//    implementation group: "com.github.liaoheng", name: "common-core", version: "0.0.5-SNAPSHOT", changing: true
+  api project(':common-core')
+//    implementation group: "com.github.liaoheng", name: "common-adapter", version: "0.0.5-SNAPSHOT", changing: true
+    api project(':common-adapter')
+//    implementation group: "com.github.liaoheng", name: "common-net", version: "0.0.5-SNAPSHOT", changing: true
+    api project(':common-net')
+//    implementation group: "com.github.liaoheng", name: "common-ui", version: "0.0.5-SNAPSHOT", changing: true
+    api project(':common-ui')
 }
 
 apply from: rootProject.file('gradle-mvn-push.gradle')

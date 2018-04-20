@@ -4,18 +4,21 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.v4.content.SharedPreferencesCompat;
+
 import java.util.Map;
 
 /**
  * SharedPreferences util
+ *
  * @see <a href="https://github.com/tushar-acharya/PrefCompat">Modified from</a>
- * @see <a href="http://stackoverflow.com/questions/16319237/cant-put-double-sharedpreferences">SharedPreferences double</a>
+ * @see <a href="http://stackoverflow.com/questions/16319237/cant-put-double-sharedpreferences">SharedPreferences
+ * double</a>
  */
+@SuppressWarnings({ "SameParameterValue", "WeakerAccess" })
 public class PreferencesUtils {
-    private static Context                  mContext;
-    private        SharedPreferences        mSharedPreferences;
-    private        SharedPreferences.Editor mSharedPreferencesEditor;
+    private static Context mContext;
+    private SharedPreferences mSharedPreferences;
+    private SharedPreferences.Editor mSharedPreferencesEditor;
 
     public static void init(Context context) {
         mContext = context.getApplicationContext();
@@ -43,7 +46,8 @@ public class PreferencesUtils {
         this.mSharedPreferences = sharedPreferences;
     }
 
-    @SuppressLint("CommitPrefEdits") private SharedPreferences.Editor getSharedPreferencesEditor() {
+    @SuppressLint("CommitPrefEdits")
+    private SharedPreferences.Editor getSharedPreferencesEditor() {
         if (mSharedPreferencesEditor == null) {
             mSharedPreferencesEditor = mSharedPreferences.edit();
         }
@@ -132,7 +136,7 @@ public class PreferencesUtils {
     public void remove(String key) {
         SharedPreferences.Editor editor = mSharedPreferences.edit();
         editor.remove(key);
-        getSharedPreferencesCompat().apply(editor);
+        apply(editor);
     }
 
     /**
@@ -141,14 +145,11 @@ public class PreferencesUtils {
     public void clear() {
         SharedPreferences.Editor editor = mSharedPreferences.edit();
         editor.clear();
-        getSharedPreferencesCompat().apply(editor);
+        apply(editor);
     }
 
     /**
      * 查询某个key是否已经存在
-     *
-     * @param key
-     * @return
      */
     public boolean contains(String key) {
         return mSharedPreferences.contains(key);
@@ -156,22 +157,24 @@ public class PreferencesUtils {
 
     /**
      * 返回所有的键值对
-     *
-     * @return
      */
     public Map<String, ?> getAll() {
         return mSharedPreferences.getAll();
-    }
-
-    public SharedPreferencesCompat.EditorCompat getSharedPreferencesCompat() {
-        return SharedPreferencesCompat.EditorCompat.getInstance();
     }
 
     public void apply() {
         if (mSharedPreferencesEditor == null) {
             return;
         }
-        getSharedPreferencesCompat().apply(mSharedPreferencesEditor);
+        apply(mSharedPreferencesEditor);
         mSharedPreferencesEditor = null;
+    }
+
+    public static void apply(SharedPreferences.Editor editor) {
+        try {
+            editor.apply();
+        } catch (AbstractMethodError ignore) {
+            editor.commit();
+        }
     }
 }

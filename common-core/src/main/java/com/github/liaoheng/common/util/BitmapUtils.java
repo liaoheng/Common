@@ -1,19 +1,5 @@
 package com.github.liaoheng.common.util;
 
-import android.support.annotation.NonNull;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import org.apache.commons.io.FilenameUtils;
-
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -34,10 +20,24 @@ import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
+import org.apache.commons.io.FilenameUtils;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 /**
- * Bitmap工具类
+ * 图像相关工具类
  *
  * @author liaoheng
  * @author <a href="https://github.com/litesuits/android-common">litesuits</a>
@@ -46,7 +46,6 @@ public class BitmapUtils {
     private static final String TAG = BitmapUtils.class.getSimpleName();
 
     public final static MimeTypeMap.MimeType IMG_JPG = MimeTypeMap.MimeType.JPG;
-
     public final static MimeTypeMap.MimeType IMG_JPEG = MimeTypeMap.MimeType.JPEG;
     public final static MimeTypeMap.MimeType IMG_PNG = MimeTypeMap.MimeType.PNG;
     public final static MimeTypeMap.MimeType IMG_WEBP = MimeTypeMap.MimeType.WEBP;
@@ -169,6 +168,11 @@ public class BitmapUtils {
         return getImageExtension(file.getAbsolutePath());
     }
 
+    /**
+     * 获取图片文件格式对应Bitmap.CompressFormat
+     *
+     * @see Bitmap.CompressFormat
+     */
     public static Bitmap.CompressFormat getImageExtension(String file) {
         String extension = FilenameUtils.getExtension(file);
         Bitmap.CompressFormat format = Bitmap.CompressFormat.PNG;
@@ -262,10 +266,12 @@ public class BitmapUtils {
      * @param height 等比例压缩图片 长
      * @throws SystemException
      */
+    @Nullable
     public static Bitmap getBitmapByUri(String filePath, int width,
-            int height) throws SystemException {
-
-        FileUtils.exists(filePath, SystemException.PICTURE_ACQUIRE_ERROR);
+            int height) {
+        if (FileUtils.existsBoolean(filePath)) {
+            return null;
+        }
 
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
@@ -287,11 +293,12 @@ public class BitmapUtils {
         } catch (OutOfMemoryError e) {
             L.Log.w(TAG, e);
         }
-
-        ValidateUtils.isNull(bitmap, SystemException.PICTURE_ACQUIRE_ERROR);
+        if (null == bitmap) {
+            return null;
+        }
 
         int angle = getExifOrientation(filePath);
-        if (angle != 0) {
+        if (angle != 0) {//角度调整为正
             Matrix matrix = new Matrix();
             matrix.postRotate(angle);
             Bitmap result = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(),
@@ -303,7 +310,7 @@ public class BitmapUtils {
         }
     }
 
-    public static String getPathByUri(Uri uri, Context context) {
+    public static String getPathByUri(Context context, Uri uri) {
         String fileName = "";
         String[] proj = { MediaStore.Images.Media.DATA };
         Cursor cursor = context.getContentResolver().query(uri, proj, null, null, null);
@@ -410,15 +417,28 @@ public class BitmapUtils {
         return out;
     }
 
-    public static Bitmap compressBitmapByQualityAll(Bitmap bitmap, int scale, int w, int h) {
+    /**
+     * 按质量压缩和比例压缩
+     *
+     * @param bitmap 源bitmap
+     * @param scale KB
+     * @param w weight
+     * @param h height
+     * @param recycle 是否释放源bitmap
+     */
+    public static Bitmap compressBitmapByQualityAndScale(Bitmap bitmap, int scale, int w, int h, boolean recycle) {
         Bitmap.CompressFormat imageExtension = getImageExtension(bitmap);
         if (imageExtension.equals(Bitmap.CompressFormat.JPEG) && scale > 0) {
-            bitmap = compressBitmapByQuality(bitmap, scale, true);
+            bitmap = compressBitmapByQuality(bitmap, scale, recycle);
         }
         if (w == 0 || h == 0) {
             return bitmap;
         }
-        return compressBitmapByScale(bitmap, imageExtension, w, h, true);
+        return compressBitmapByScale(bitmap, imageExtension, w, h, recycle);
+    }
+
+    public static Bitmap compressBitmapByQualityAndScale(Bitmap bitmap, int scale, int w, int h) {
+        return compressBitmapByQualityAndScale(bitmap, scale, w, h, true);
     }
 
     public static void recycle(Bitmap bitmap) {
@@ -437,6 +457,13 @@ public class BitmapUtils {
         return bitmap.getRowBytes() * bitmap.getHeight(); //earlier version
     }
 
+    /**
+     * 生成缩略图的比
+     *
+     * @param reqWidth 缩略图宽
+     * @param reqHeight 缩略图长
+     * @see <a href='https://developer.android.com/topic/performance/graphics/load-bitmap.html'>load-bitmap</a>
+     */
     public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth,
             int reqHeight) {
         // Raw height and width of image

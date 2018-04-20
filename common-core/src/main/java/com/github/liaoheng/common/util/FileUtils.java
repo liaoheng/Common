@@ -3,7 +3,9 @@ package com.github.liaoheng.common.util;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+
 import com.github.liaoheng.common.Common;
+
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -11,6 +13,8 @@ import java.util.UUID;
 
 /**
  * 文件工具
+ * <br/> Dependency : android.permission.READ_EXTERNAL_STORAGE
+ * <br/> Dependency : android.permission.WRITE_EXTERNAL_STORAGE
  *
  * @author liaoheng
  */
@@ -20,9 +24,7 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
     /**
      * 创建临时文件
      *
-     * @param path
      * @param fileName 文件名
-     * @return 
      * @throws SystemException
      */
     public static File createFile(File path, String fileName) throws SystemException {
@@ -47,7 +49,6 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
     /**
      * 创建临时文件
      *
-     * @param path
      * @param nameEx 文件后缀
      * @return {@link UUID#randomUUID()}
      * @throws SystemException
@@ -74,9 +75,7 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
     /**
      * 创建临时文件
      *
-     * @param path
      * @param nameEx 文件后缀
-     * @return
      * @throws SystemException
      */
     public static File createTempFile(String path, String nameEx) throws SystemException {
@@ -86,7 +85,6 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
     /**
      * 得到临时目录
      *
-     * @return
      * @throws SystemException
      */
     public static File getProjectTempDirectory() throws SystemException {
@@ -96,7 +94,6 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
     /**
      * 得到保存图片目录
      *
-     * @return
      * @throws SystemException
      */
     public static File getProjectImageDirectory() throws SystemException {
@@ -105,6 +102,7 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
 
     /**
      * 在SD卡项目名下创建目录
+     *
      * @param ptah 路径
      * @return {@link File}
      * @throws SystemException
@@ -115,6 +113,7 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
 
     /**
      * 在SD  {@link Context#getExternalCacheDir()} 项目名下创建目录
+     *
      * @param ptah 路径
      * @return {@link File}
      * @throws SystemException
@@ -134,6 +133,7 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
 
     /**
      * 得到项目名下路径
+     *
      * @param ptah 路径
      * @return {@link File}
      * @throws SystemException
@@ -145,9 +145,10 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
 
     /**
      * 在SD卡上创建路径
+     *
      * @param rootPath 父路径
      * @param path 建立的路径
-     * @return  {@link File}
+     * @return {@link File}
      * @throws SystemException
      */
     public static File createSDPath(String rootPath, String path) throws SystemException {
@@ -157,8 +158,9 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
 
     /**
      * 在SD卡上创建路径
+     *
      * @param path 路径
-     * @return  {@link File}
+     * @return {@link File}
      * @throws SystemException
      */
     public static File createSDPath(String path) throws SystemException {
@@ -167,9 +169,10 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
 
     /**
      * 创建路径
+     *
      * @param rootPath 父路径
-     * @param path  建立的路径
-     * @return  {@link File}
+     * @param path 建立的路径
+     * @return {@link File}
      * @throws SystemException
      */
     public static File createPath(String rootPath, String path) throws SystemException {
@@ -178,8 +181,9 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
 
     /**
      * 创建路径
+     *
      * @param path 路径
-     * @return  {@link File}
+     * @return {@link File}
      * @throws SystemException
      */
     public static File createPath(File path) throws SystemException {
@@ -195,8 +199,9 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
 
     /**
      * 创建路径
+     *
      * @param path 路径
-     * @return  {@link File}
+     * @return {@link File}
      * @throws SystemException
      */
     public static File createPath(String path) throws SystemException {
@@ -205,6 +210,7 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
 
     /**
      * SD卡建立缓存文件夹
+     *
      * @param cacheDir 缓存目录名
      * @return {@link File} 以建立的缓存路径
      */
@@ -216,6 +222,7 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
 
     /**
      * SD {@link Context#getExternalCacheDir()} 建立缓存文件夹
+     *
      * @param cacheDir 缓存目录名
      * @return {@link File} 以建立的缓存路径
      */
@@ -228,6 +235,7 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
 
     /**
      * 建立隐藏所有媒体文件的文件夹
+     *
      * @param path 缓存目录
      * @return {@link File}
      */
@@ -253,7 +261,6 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
     /**
      * 得到SD卡的路径
      *
-     * @return
      * @throws SystemException
      */
     public static File getSDPath() throws SystemException {
@@ -276,8 +283,6 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
     /**
      * 判断文件是否存在
      *
-     * @param file
-     * @param errorMessage
      * @throws SystemException
      */
     public static void exists(File file, String errorMessage) throws SystemException {
@@ -292,15 +297,13 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
         }
         if (!file.isFile()) {
             throw new SystemException("不是文件",
-                new SystemException(file.getAbsolutePath() + "不是文件!"));
+                    new SystemException(file.getAbsolutePath() + "不是文件!"));
         }
     }
 
     /**
      * 判断文件是否存在
      *
-     * @param file
-     * @param errorMessage
      * @throws SystemException
      */
     public static void exists(String file, String errorMessage) throws SystemException {
@@ -310,7 +313,6 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
     /**
      * 判断文件是否存在
      *
-     * @param filePath
      * @throws SystemException
      */
     public static void exists(String filePath) throws SystemException {
@@ -320,7 +322,6 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
     /**
      * 判断文件是否存在
      *
-     * @param filePath
      * @throws SystemException
      */
     public static void exists(File filePath) throws SystemException {
@@ -329,8 +330,6 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
 
     /**
      * 判断文件是否存在
-     *
-     * @param filePath
      */
     public static boolean existsBoolean(File filePath) {
         try {
@@ -342,9 +341,19 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
     }
 
     /**
+     * 判断文件是否存在
+     */
+    public static boolean existsBoolean(String filePath) {
+        try {
+            exists(filePath, "");
+            return true;
+        } catch (SystemException e) {
+            return false;
+        }
+    }
+
+    /**
      * 删除文件或目录
-     *
-     * @param file
      */
     public static void delete(File file) {
         try {

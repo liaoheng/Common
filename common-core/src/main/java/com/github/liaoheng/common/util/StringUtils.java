@@ -13,7 +13,6 @@ import java.util.regex.Pattern;
  * 字符工具
  *
  * @author liaoheng
- * @author <a href="http://www.trinea.cn" target="_blank">Trinea</a> 2011-7-22
  * @author <a href="http://jodd.org" target="_blank">jodd</a>
  * @version $Id: StringUtils.java, v 0.1 2014年5月14日 上午9:31:58 Administrator Exp $
  */
@@ -57,6 +56,9 @@ public class StringUtils {
         return inputFilters;
     }
 
+    /**
+     * 判断字符是否为ASCII格式
+     */
     public static boolean isAllASCII(String input) {
         boolean isASCII = true;
         for (int i = 0; i < input.length(); i++) {
@@ -69,6 +71,9 @@ public class StringUtils {
         return isASCII;
     }
 
+    /**
+     * 判断字符是否为中文
+     */
     // GENERAL_PUNCTUATION 判断中文的“号
     // CJK_SYMBOLS_AND_PUNCTUATION 判断中文的。号
     // HALFWIDTH_AND_FULLWIDTH_FORMS 判断中文的，号

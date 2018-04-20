@@ -1,24 +1,36 @@
 package com.github.liaoheng.common.util;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.net.Uri;
+import android.os.Build;
+import android.support.annotation.RequiresPermission;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.widget.Toast;
+
 import com.github.liaoheng.common.R;
+
 import java.io.File;
 import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.UUID;
+
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
+ * 未分类工具
+ * * <br/> Dependency : rxjava ,rxandroid
+ *
  * @author liaoheng
  * @author <a href="http://jodd.org" target="_blank">jodd</a>
  * @version 2015-11-25 23:33
@@ -27,9 +39,8 @@ public class Utils {
     public static final String ANDROID_RESOURCE = "android.resource://";
 
     /**
-     *  Resource to Uri
-     * @param context
-     * @param resourceId
+     * Resource to Uri
+     *
      * @return {@link Uri}
      */
     public static String resourceIdToUri(Context context, int resourceId) {
@@ -38,9 +49,6 @@ public class Utils {
 
     /**
      * URL是否为指定网站
-     * @param baseAuthority
-     * @param url
-     * @return
      */
     public static boolean isCurAuthority(String baseAuthority, String url) {
         Uri uri = Uri.parse(url);
@@ -59,15 +67,11 @@ public class Utils {
 
     /**
      * URL链接添加参数
-     * @param url
-     * @param key
-     * @param value
-     * @return
      */
     public static String appendUrlParameter(String url, String key, String value) {
-        if (!ValidateUtils.isWebUrl(url)) {
-            return url;
-        }
+        //if (!ValidateUtils.isWebUrl(url)) {
+        //    return url;
+        //}
         Uri uri = Uri.parse(url);
         if (uri.getBooleanQueryParameter(key, false)) {//有KEY值不修改
             return url;
@@ -81,27 +85,28 @@ public class Utils {
     private static long exitTime;
 
     /**
-     *双击退出activity
-     * @param activity
+     * 双击退出activity
      */
     public static void doubleExitActivity(final Activity activity) {
         doubleOperation(activity, 2000, activity.getString(R.string.lcm_press_again_to_exit),
                 new Callback.EmptyCallback<Void>() {
-            @Override public void onSuccess(Void o) {
-                activity.finish();
-            }
-        });
+                    @Override
+                    public void onSuccess(Void o) {
+                        activity.finish();
+                    }
+                });
     }
 
     /**
      * 双击事件触发
+     *
      * @param context {@link Context}
      * @param interval 间隔时间 ms
      * @param msg 提示
      * @param callback 回调{@link Callback#onSuccess(Object)}
      */
     public static void doubleOperation(Context context, int interval, String msg,
-                                       Callback<Void> callback) {
+            Callback<Void> callback) {
         if ((System.currentTimeMillis() - exitTime) > interval) {
             exitTime = System.currentTimeMillis();
             UIUtils.showToast(context, msg, Toast.LENGTH_SHORT);
@@ -111,7 +116,8 @@ public class Utils {
     }
 
     /**
-     *  退订RxJava
+     * 退订RxJava
+     *
      * @param subscription {@link Subscription#unsubscribe()}
      */
     public static void unsubscribe(Subscription subscription) {
@@ -126,31 +132,36 @@ public class Utils {
 
     public static <T> Subscriber<T> getSubscribe(final Callback<T> listener) {
         return new Subscriber<T>() {
-            @Override public void onStart() {
+            @Override
+            public void onStart() {
                 super.onStart();
                 if (listener != null) {
                     HandlerUtils.runOnUiThread(new Runnable() {
-                        @Override public void run() {
+                        @Override
+                        public void run() {
                             listener.onPreExecute();
                         }
                     });
                 }
             }
 
-            @Override public void onCompleted() {
+            @Override
+            public void onCompleted() {
                 if (listener != null) {
                     listener.onFinish();
                 }
             }
 
-            @Override public void onError(Throwable e) {
+            @Override
+            public void onError(Throwable e) {
                 if (listener != null) {
                     listener.onPostExecute();
                     listener.onError(new SystemException(e));
                 }
             }
 
-            @Override public void onNext(T t) {
+            @Override
+            public void onNext(T t) {
                 if (listener != null) {
                     listener.onPostExecute();
                     listener.onSuccess(t);
@@ -161,31 +172,36 @@ public class Utils {
 
     public static <T> Subscriber<T> getSubscribe2(final Callback2<T> listener) {
         return new Subscriber<T>() {
-            @Override public void onStart() {
+            @Override
+            public void onStart() {
                 super.onStart();
                 if (listener != null) {
                     HandlerUtils.runOnUiThread(new Runnable() {
-                        @Override public void run() {
+                        @Override
+                        public void run() {
                             listener.onPreExecute();
                         }
                     });
                 }
             }
 
-            @Override public void onCompleted() {
+            @Override
+            public void onCompleted() {
                 if (listener != null) {
                     listener.onFinish();
                 }
             }
 
-            @Override public void onError(Throwable e) {
+            @Override
+            public void onError(Throwable e) {
                 if (listener != null) {
                     listener.onPostExecute();
                     listener.onError(e);
                 }
             }
 
-            @Override public void onNext(T t) {
+            @Override
+            public void onNext(T t) {
                 if (listener != null) {
                     listener.onPostExecute();
                     listener.onSuccess(t);
@@ -195,22 +211,68 @@ public class Utils {
     }
 
     public static <T> Subscription addSubscribe(Observable<T> observable,
-                                                final Callback<T> listener) {
+            final Callback<T> listener) {
         return observable.observeOn(AndroidSchedulers.mainThread())
                 .subscribe(getSubscribe(listener));
     }
 
     public static <T> Subscription addSubscribe2(Observable<T> observable,
-                                                final Callback2<T> listener) {
+            final Callback2<T> listener) {
         return observable.observeOn(AndroidSchedulers.mainThread())
                 .subscribe(getSubscribe2(listener));
     }
 
     /**
+     * 去除电话号码中的 "-" 和" "
+     */
+    public static String phoneStringToNumberString(String phoneString) {
+        if (TextUtils.isEmpty(phoneString)) {
+            return phoneString;
+        }
+        return phoneString.replaceAll("-", "").replaceAll(" ", "");
+    }
+
+    /**
+     * 得到由设备生成的唯一ID
+     * <br/> Dependency : android.permission.READ_PHONE_STATE
+     *
+     * @see <a href='http://stackoverflow.com/questions/2785485/is-there-a-unique-android-device-id/2853253#2853253'>stackoverflow</a>
+     */
+    @SuppressLint({ "HardwareIds" })
+    @RequiresPermission(Manifest.permission.READ_PHONE_STATE)
+    public static String getDeviceId(Context context) {
+        final TelephonyManager tm = (TelephonyManager) context
+                .getSystemService(Context.TELEPHONY_SERVICE);
+        if (tm == null) {
+            return UUID.randomUUID().toString();
+        }
+
+        final String tmDevice, tmSerial, androidId;
+        tmDevice = "" + tm.getDeviceId();
+        tmSerial = "" + tm.getSimSerialNumber();
+        androidId = "" + android.provider.Settings.Secure.getString(context.getContentResolver(),
+                android.provider.Settings.Secure.ANDROID_ID);
+
+        UUID deviceUuid = new UUID(androidId.hashCode(),
+                ((long) tmDevice.hashCode() << 32) | tmSerial.hashCode());
+        return deviceUuid.toString();
+    }
+
+    /**
+     * 得到唯一设备ID
+     *
+     * @see <a href='http://stackoverflow.com/questions/2785485/is-there-a-unique-android-device-id/2853253#2853253'>stackoverflow</a>
+     */
+    @SuppressLint("HardwareIds")
+    public static String getDeviceSerialId() {
+        return Build.SERIAL;
+    }
+
+    /**
      * 从HTTP Response contentDisposition 中得到文件名
+     *
      * @param contentDisposition <a href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec19.html">rfc2616</a>
      * @param def 默认值
-     * @return
      */
     public static String getContentDispositionFileName(String contentDisposition, String def) {
         if (TextUtils.isEmpty(contentDisposition)) {
@@ -228,16 +290,11 @@ public class Utils {
 
     /**
      * download file to sd /
-     * setDestinationInExternalPublicDir
-     * @param context
-     * @param title
-     * @param url
-     * @param dir
-     * @param fileName
-     * @return
+     *
+     * @see {@link  DownloadManager.Request#setDestinationInExternalPublicDir}
      */
     public static long systemDownloadPublicDir(Context context, String title, String url,
-                                               String dir, String fileName) {
+            String dir, String fileName) {
         Uri downUrl = Uri.parse(url);
         DownloadManager downloadManager = (DownloadManager) context
                 .getSystemService(Context.DOWNLOAD_SERVICE);
@@ -249,16 +306,11 @@ public class Utils {
 
     /**
      * download file to sd /Android/data/:package/files/
-     * setDestinationInExternalFilesDir
-     * @param context
-     * @param title
-     * @param url
-     * @param dir
-     * @param fileName
-     * @return
+     *
+     * @see {@link  DownloadManager.Request#setDestinationInExternalFilesDir}
      */
     public static long systemDownloadFilesDir(Context context, String title, String url, String dir,
-                                              String fileName) {
+            String fileName) {
         Uri downUrl = Uri.parse(url);
         DownloadManager downloadManager = (DownloadManager) context
                 .getSystemService(Context.DOWNLOAD_SERVICE);
@@ -269,7 +321,7 @@ public class Utils {
     }
 
     public static DownloadManager.Request getSystemDownloadRequest(String title, Uri downloadUrl,
-                                                                   int notificationVisibility) {
+            int notificationVisibility) {
         DownloadManager.Request request = new DownloadManager.Request(downloadUrl);
         request.setAllowedNetworkTypes(
                 DownloadManager.Request.NETWORK_MOBILE | DownloadManager.Request.NETWORK_WIFI);
@@ -289,16 +341,6 @@ public class Utils {
      */
     public static boolean equals(Object obj1, Object obj2) {
         return (obj1 != null) ? (obj1.equals(obj2)) : (obj2 == null);
-    }
-
-    /**
-     * Returns string representation of an object, while checking for <code>null</code>.
-     */
-    public static String toString(Object value) {
-        if (value == null) {
-            return null;
-        }
-        return value.toString();
     }
 
     // ---------------------------------------------------------------- misc
@@ -349,7 +391,8 @@ public class Utils {
     /**
      * Returns <code>true</code> if first argument contains provided element.
      * It works for strings, collections, maps and arrays.
-     s	 */
+     * s
+     */
     public static boolean containsElement(Object obj, Object element) {
         if (obj == null) {
             return false;

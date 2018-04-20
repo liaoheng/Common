@@ -12,17 +12,18 @@ import java.util.TimeZone;
 
 /**
  * 日期时间处理
+ *
  * @author liaoheng
  * @version 2016-11-21 10:55
  */
 public class DateTimeUtils {
-    public final static String DATAFORMAT_YYYYMMDD="YYYY-MM-dd";
-    public final static String DATAFORMAT_YYYYMMDDHHSS="YYYY-MM-dd HH:ss";
+    public final static String DATAFORMAT_YYYYMMDD = "YYYY-MM-dd";
+    public final static String DATAFORMAT_YYYYMMDDHHSS = "YYYY-MM-dd HH:ss";
 
     /**
      * 得到当前时间的utc标准时间
+     *
      * @param time {@link LocalTime}
-     * @return
      */
     public static LocalTime getLocalTimeZoneUTC(LocalTime time) {
         DateTime dateTime = DateTime.now().withTime(time);//当前时区
@@ -31,8 +32,8 @@ public class DateTimeUtils {
 
     /**
      * 得到传入日期时间的utc标准时间
+     *
      * @param dateTime {@link DateTime}
-     * @return
      */
     public static LocalTime getLocalTimeZoneUTC(DateTime dateTime) {
         return getDateTimeZoneUTC(dateTime).toLocalTime();
@@ -40,8 +41,8 @@ public class DateTimeUtils {
 
     /**
      * 得到传入日期时间的utc标准日期时间
+     *
      * @param dateTime {@link DateTime}
-     * @return
      */
     public static DateTime getDateTimeZoneUTC(DateTime dateTime) {
         return dateTime.toDateTime(DateTimeZone.UTC);//utc
@@ -49,8 +50,8 @@ public class DateTimeUtils {
 
     /**
      * 得到传入utc日期时间对应本地日期时间
+     *
      * @param utcDateTime {@link DateTime}
-     * @return
      */
     public static DateTime getDateTimeZoneLocal(DateTime utcDateTime) {
         return DateTime.now().withDate(utcDateTime.getYear(), utcDateTime.getMonthOfYear(),
@@ -59,8 +60,8 @@ public class DateTimeUtils {
 
     /**
      * 得到传入utc标准时间对应本地日期时间
+     *
      * @param utcTime {@link LocalTime}
-     * @return
      */
     public static DateTime getDateTimeZoneLocal(LocalTime utcTime) {
         return DateTime.now().withTime(utcTime);
@@ -68,8 +69,8 @@ public class DateTimeUtils {
 
     /**
      * 得到传入utc标准时间对应本地时间
+     *
      * @param utcTime {@link LocalTime}
-     * @return
      */
     public static LocalTime getLocalTimeZoneLocal(LocalTime utcTime) {
         return getDateTimeZoneLocal(utcTime).toLocalTime();
@@ -86,6 +87,7 @@ public class DateTimeUtils {
 
     /**
      * 处理微博时间
+     *
      * @param date 时间字符串
      * @return 多久之前的中文字符
      */
@@ -101,11 +103,9 @@ public class DateTimeUtils {
     }
 
     /**
-     * 传入时间的在当前时间后，则改变转入时间到下一天。
-     * @param time Local
-     * @return Local
+     * 传入时间比当前时间小，则传入时间加24小时。
      */
-    public static DateTime checkTime(LocalTime time) {
+    public static DateTime checkTimeToNextDay(LocalTime time) {
         DateTime now = DateTime.now();
         DateTime set = DateTime.now().withTime(time);
         if (set.toLocalTime().isBefore(now.toLocalTime())) {
@@ -115,23 +115,22 @@ public class DateTimeUtils {
                 time.getHourOfDay(), time.getMinuteOfHour());
     }
 
-
-
     private static final long ONE_MINUTE = 60000L;
-    private static final long ONE_HOUR   = 3600000L;
-    private static final long ONE_DAY    = 86400000L;
-    private static final long ONE_WEEK   = 604800000L;
+    private static final long ONE_HOUR = 3600000L;
+    private static final long ONE_DAY = 86400000L;
+    private static final long ONE_WEEK = 604800000L;
 
     private static final String ONE_SECOND_AGO = "秒前";
     private static final String ONE_MINUTE_AGO = "分钟前";
-    private static final String ONE_HOUR_AGO   = "小时前";
-    private static final String ONE_DAY_AGO    = "天前";
-    private static final String ONE_MONTH_AGO  = "月前";
-    private static final String ONE_YEAR_AGO   = "年前";
-    private static final String YESTERDAY      = "昨天";
+    private static final String ONE_HOUR_AGO = "小时前";
+    private static final String ONE_DAY_AGO = "天前";
+    private static final String ONE_MONTH_AGO = "月前";
+    private static final String ONE_YEAR_AGO = "年前";
+    private static final String YESTERDAY = "昨天";
 
     /**
      * 计算时间在多久之前
+     *
      * @param date {@link Date}
      */
     public static String format(Date date) {

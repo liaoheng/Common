@@ -7,7 +7,7 @@ android {
     defaultConfig {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode Integer.parseInt(VERSION_CODE)
+        versionCode VERSION_CODE as int
         versionName VERSION_NAME
     }
     lintOptions {
@@ -22,27 +22,26 @@ android {
 }
 
 dependencies {
-    testCompile deps.robolectric
-    testCompile deps.robolectric_annotations
-    testCompile deps.robolectric_shadows_core
-    testCompile deps.junit
+    testImplementation deps.robolectric
+    testImplementation deps.junit
+    testImplementation 'joda-time:joda-time:2.9.9'
 
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile deps.supportv4
-    compile deps.appcompatv7
-    provided deps.design
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation deps.annotations
+    compileOnly deps.supportv4
+    compileOnly deps.appcompatv7
+    compileOnly deps.design
 
-    //https://github.com/apache/commons-io
-    compile 'commons-io:commons-io:2.4'
-    //https://github.com/dlew/joda-time-android
-    compile 'net.danlew:android.joda:2.9.9'
-    provided deps.jackson_annotations
-    provided deps.jackson_databind
-    provided deps.jackson_core
+    implementation deps.commons_io
+    //https://github.com/orhanobut/logger
+    implementation 'com.orhanobut:logger:1.8'
 
-    provided deps.logger
-    provided deps.rxandroid
-    provided deps.rxjava
+    compileOnly deps.joda_time_android
+    compileOnly deps.jackson_annotations
+    compileOnly deps.jackson_databind
+    compileOnly deps.jackson_core
+    compileOnly deps.rxandroid
+    compileOnly deps.rxjava
 }
 
 apply from: rootProject.file('gradle-mvn-push.gradle')

@@ -2,8 +2,8 @@ package com.github.liaoheng.common.util;
 
 import android.net.Uri;
 import android.text.TextUtils;
-
 import android.util.Patterns;
+
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -17,8 +17,6 @@ public class ValidateUtils {
 
     /**
      * 是否为网络地址
-     * @param url
-     * @return
      */
     public static boolean isWebUrl(String url) {
         return isWebUrl(Uri.parse(url));
@@ -26,8 +24,6 @@ public class ValidateUtils {
 
     /**
      * 是否为网络地址
-     * @param uri
-     * @return
      */
     public static boolean isWebUrl(Uri uri) {
         return Patterns.WEB_URL.matcher(uri.toString()).matches();
@@ -36,8 +32,6 @@ public class ValidateUtils {
     /**
      * 数据为空
      *
-     * @param key
-     * @param hint
      * @throws SystemException
      */
     public static String isEmpty(String key, String hint) throws SystemException {
@@ -48,8 +42,6 @@ public class ValidateUtils {
     /**
      * 数据为空
      *
-     * @param key
-     * @param hint
      * @throws SystemException
      */
     public static String isEmpty(String key, SystemException hint) throws SystemException {
@@ -65,7 +57,9 @@ public class ValidateUtils {
      * @see <a href='http://blog.csdn.net/gao_chun/article/details/39580363'>csdn</a>
      */
     public static boolean isEmail(String email) {
-        if (TextUtils.isEmpty(email)) return false;
+        if (TextUtils.isEmpty(email)) {
+            return false;
+        }
         Pattern p = Pattern.compile("\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*");//复杂匹配
         return p.matcher(email).matches();
     }
@@ -77,7 +71,9 @@ public class ValidateUtils {
     }
 
     public static boolean isNumber(String number) {
-        if (TextUtils.isEmpty(number)) return false;
+        if (TextUtils.isEmpty(number)) {
+            return false;
+        }
         Pattern pattern = Pattern.compile("([0-9]+[.][0-9]+)||([0-9]*)");
         return pattern.matcher(number).matches();
     }
@@ -121,9 +117,6 @@ public class ValidateUtils {
     /**
      * 对像为空
      *
-     * @param <T>
-     * @param key
-     * @param hint
      * @throws SystemException
      */
     public static <T> T isNull(T key, String hint) throws SystemException {
@@ -133,9 +126,6 @@ public class ValidateUtils {
     /**
      * 对像为空
      *
-     * @param <T>
-     * @param key
-     * @param hint
      * @throws SystemException
      */
     public static <T> T isNull(T key, SystemException hint) throws SystemException {
@@ -147,9 +137,6 @@ public class ValidateUtils {
 
     /**
      * 对像为空
-     *
-     * @param <T>
-     * @param key
      */
     public static <T> boolean isNull(T key) {
         if (null == key) {
@@ -160,10 +147,8 @@ public class ValidateUtils {
 
     /**
      * Object...为空
-     *
-     * @param key
      */
-    public static  boolean isNullObjectList(Object... key) {
+    public static boolean isNullObjectList(Object... key) {
         if (isNull(key)) {
             return true;
         }
@@ -172,8 +157,6 @@ public class ValidateUtils {
 
     /**
      * 列表数据为空
-     *
-     * @param list
      */
     public static Boolean isItemEmpty(List<?> list) {
         return list == null || list.isEmpty();
@@ -182,7 +165,6 @@ public class ValidateUtils {
     /**
      * 列表数据为空
      *
-     * @param list
      * @throws SystemException
      */
     public static void isItemEmpty(List<?> list, String hint) throws SystemException {
@@ -208,7 +190,7 @@ public class ValidateUtils {
      *
      * @param expression a boolean expression
      * @param errorMessage the exception message to use if the check fails; will be converted to a
-     *     string {@link String#valueOf(Object)}
+     * string {@link String#valueOf(Object)}
      * @throws IllegalArgumentException if {@code expression} is true
      */
     public static void checkArgument(boolean expression, Object errorMessage) {
@@ -222,16 +204,16 @@ public class ValidateUtils {
      *
      * @param expression a boolean expression
      * @param errorMessageTemplate a template for the exception message should the check fail. The
-     *     message is formed by replacing each {@code %s} placeholder in the template with an
-     *     argument. These are matched by position - the first {@code %s} gets {@code
-     *     errorMessageArgs[0]}, etc. Unmatched arguments will be appended to the formatted message in
-     *     square braces. Unmatched placeholders will be left as-is.
+     * message is formed by replacing each {@code %s} placeholder in the template with an
+     * argument. These are matched by position - the first {@code %s} gets {@code
+     * errorMessageArgs[0]}, etc. Unmatched arguments will be appended to the formatted message in
+     * square braces. Unmatched placeholders will be left as-is.
      * @param errorMessageArgs the arguments to be substituted into the message template. Arguments
-     *     are converted to Object.
+     * are converted to Object.
      * @throws IllegalArgumentException if {@code expression} is true
      */
     public static void checkArgument(boolean expression, String errorMessageTemplate,
-                                     Object... errorMessageArgs) {
+            Object... errorMessageArgs) {
         if (expression) {
             throw new IllegalArgumentException(StringUtils.format(errorMessageTemplate, errorMessageArgs));
         }
@@ -256,7 +238,7 @@ public class ValidateUtils {
      *
      * @param expression a boolean expression
      * @param errorMessage the exception message to use if the check fails; will be converted to a
-     *     string using {@link String#valueOf(Object)}
+     * string using {@link String#valueOf(Object)}
      * @throws IllegalStateException if {@code expression} is false
      */
     public static void checkState(boolean expression, Object errorMessage) {
@@ -271,18 +253,18 @@ public class ValidateUtils {
      *
      * @param expression a boolean expression
      * @param errorMessageTemplate a template for the exception message should the check fail. The
-     *     message is formed by replacing each {@code %s} placeholder in the template with an
-     *     argument. These are matched by position - the first {@code %s} gets {@code
-     *     errorMessageArgs[0]}, etc. Unmatched arguments will be appended to the formatted message in
-     *     square braces. Unmatched placeholders will be left as-is.
+     * message is formed by replacing each {@code %s} placeholder in the template with an
+     * argument. These are matched by position - the first {@code %s} gets {@code
+     * errorMessageArgs[0]}, etc. Unmatched arguments will be appended to the formatted message in
+     * square braces. Unmatched placeholders will be left as-is.
      * @param errorMessageArgs the arguments to be substituted into the message template. Arguments
-     *     are converted to strings using {@link String#valueOf(Object)}.
+     * are converted to strings using {@link String#valueOf(Object)}.
      * @throws IllegalStateException if {@code expression} is true
      * @throws NullPointerException if the check fails and either {@code errorMessageTemplate} or
-     *     {@code errorMessageArgs} is null (don't let this happen)
+     * {@code errorMessageArgs} is null (don't let this happen)
      */
     public static void checkState(boolean expression, String errorMessageTemplate,
-                                  Object... errorMessageArgs) {
+            Object... errorMessageArgs) {
         if (expression) {
             throw new IllegalStateException(StringUtils.format(errorMessageTemplate, errorMessageArgs));
         }
