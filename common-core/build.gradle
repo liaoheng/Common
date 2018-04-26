@@ -34,7 +34,7 @@ dependencies {
 
     implementation deps.commons_io
     //https://github.com/orhanobut/logger
-    implementation 'com.orhanobut:logger:1.8'
+    implementation 'com.orhanobut:logger:2.2.0'
 
     compileOnly deps.joda_time_android
     compileOnly deps.jackson_annotations

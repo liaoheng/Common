@@ -3,6 +3,7 @@ package com.github.liaoheng.common;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.github.liaoheng.common.util.FileUtils;
 import com.github.liaoheng.common.util.L;
@@ -18,7 +19,7 @@ import java.io.File;
  */
 public class Common {
 
-    private static String PROJECT_NAME = BuildConfig.APPLICATION_ID;
+    private static String PROJECT_NAME;
     private static boolean DEBUG;
     private static File mExternalCacheDir;
 
@@ -38,7 +39,7 @@ public class Common {
 
     public static String getProjectName() {
         if (TextUtils.isEmpty(PROJECT_NAME)) {
-            throw new IllegalStateException("not init Common");
+            throw new IllegalStateException("Not init");
         }
         return PROJECT_NAME;
     }
@@ -49,7 +50,7 @@ public class Common {
 
     public static File getSDExternalPath() {
         if (mExternalCacheDir == null) {
-            throw new IllegalStateException("not init Common");
+            throw new IllegalStateException("Not init");
         }
         return mExternalCacheDir;
     }

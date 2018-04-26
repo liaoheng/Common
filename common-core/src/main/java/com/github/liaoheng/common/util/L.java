@@ -1,55 +1,42 @@
 package com.github.liaoheng.common.util;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
-import android.support.annotation.StringRes;
-import android.view.View;
+import android.support.annotation.Nullable;
 
-import com.orhanobut.logger.LogLevel;
-import com.orhanobut.logger.Logger;
-import com.orhanobut.logger.Settings;
+import com.github.liaoheng.common.Common;
 
 /**
  * 日志处理
  *
  * @author liaoheng
  * @version 2015-07-21 20:05:42
+ * @see <a href='https://github.com/orhanobut/logger'>Logger</a>
  */
 public class L {
-    private static final String TAG = L.class.getSimpleName();
-
-    public static boolean DEBUG = true;
-
     /**
      * LOG INIT
      *
-     * @param tag {@link Logger#init(String)}
-     * @param isDebug 是否开启日志
+     * @param tag global
+     * @param isLoggable 是否开启日志
      */
-    public static void init(String tag, boolean isDebug) {
-        Settings init = Logger.init(tag);
-        if (!isDebug) {
-            init.setLogLevel(LogLevel.NONE);
-        }
-        DEBUG = isDebug;
+    public static void init(String tag, boolean isLoggable) {
+        Logcat.get().init(tag, isLoggable);
     }
 
     /**
      * LOG INIT 默认打开日志
      *
-     * @param tag {@link Logger#init(String)}
+     * @param tag global
      */
     public static void init(String tag) {
-        init(tag, true);
+        Logcat.get().init(tag, true);
     }
 
     /**
      * LOG INIT 默认使用项目名打开日志
-     *
-     * @param context {@link Context}
      */
     public static void init(Context context) {
         PackageManager packageManager = context.getPackageManager();
@@ -57,8 +44,8 @@ public class L {
             PackageInfo packageInfo = packageManager.getPackageInfo(context.getPackageName(), 0);
             int labelRes = packageInfo.applicationInfo.labelRes;
             init(context.getResources().getString(labelRes));
-        } catch (PackageManager.NameNotFoundException e) {
-            L.Log.e(TAG, e);
+        } catch (PackageManager.NameNotFoundException ignored) {
+            init(Common.getProjectName());
         }
     }
 
@@ -68,7 +55,17 @@ public class L {
      * @return true开，false关
      */
     public static boolean isPrint() {
-        return DEBUG;
+        return Logcat.isPrint();
+    }
+
+    /**
+     * JSON
+     *
+     * @param message json string
+     */
+    @Deprecated
+    public static void json(String message) {
+        L.log().json(message);
     }
 
     /**
@@ -77,19 +74,41 @@ public class L {
      * @param TAG LOG TAG
      * @param message json string
      */
+    @Deprecated
     public static void json(String TAG, String message) {
-        Logger.t(TAG).json(message);
+        L.log().json(TAG, message);
     }
 
     /**
-     * INFO
+     * XML
+     *
+     * @param message xml string
+     */
+    @Deprecated
+    public static void xml(String message) {
+        L.log().xml(message);
+    }
+
+    /**
+     * XML
      *
      * @param TAG LOG TAG
+     * @param message xml string
+     */
+    @Deprecated
+    public static void xml(String TAG, String message) {
+        L.log().xml(TAG, message);
+    }
+
+    /**
+     * DEBUG
+     *
      * @param message 提示模板 %s
      * @param parameter 参数
      */
-    public static void i(String TAG, String message, Object... parameter) {
-        Logger.t(TAG).i(message, parameter);
+    @Deprecated
+    public static void d(String message, Object... parameter) {
+        L.log().d(message, parameter);
     }
 
     /**
@@ -99,8 +118,43 @@ public class L {
      * @param message 提示模板 %s
      * @param parameter 参数
      */
+    @Deprecated
     public static void d(String TAG, String message, Object... parameter) {
-        Logger.t(TAG).d(message, parameter);
+        L.log().d(TAG, message, parameter);
+    }
+
+    /**
+     * INFO
+     *
+     * @param message 提示模板 %s
+     * @param parameter 参数
+     */
+    @Deprecated
+    public static void i(String message, Object... parameter) {
+        L.log().i(message, parameter);
+    }
+
+    /**
+     * INFO
+     *
+     * @param TAG LOG TAG
+     * @param message 提示模板 %s
+     * @param parameter 参数
+     */
+    @Deprecated
+    public static void i(String TAG, String message, Object... parameter) {
+        L.log().i(TAG, message, parameter);
+    }
+
+    /**
+     * WARN
+     *
+     * @param message 提示模板 %s
+     * @param parameter 参数
+     */
+    @Deprecated
+    public static void w(String message, Object... parameter) {
+        L.log().i(message, parameter);
     }
 
     /**
@@ -110,20 +164,45 @@ public class L {
      * @param message 提示模板 %s
      * @param parameter 参数
      */
+    @Deprecated
     public static void w(String TAG, String message, Object... parameter) {
-        Logger.t(TAG).w(message, parameter);
+        L.log().w(TAG, message, parameter);
+    }
+
+    /**
+     * ERROR
+     *
+     * @param e {@link Throwable}
+     * @param message 错误信息 %s站位
+     * @param parameter 错误信息内容
+     */
+    @Deprecated
+    public static void e(Throwable e, String message, Object... parameter) {
+        L.log().e(e, message, parameter);
     }
 
     /**
      * ERROR
      *
      * @param TAG LOG TAG
-     * @param e {@link Exception}
+     * @param e {@link Throwable}
      * @param message 错误信息 %s站位
      * @param parameter 错误信息内容
      */
-    public static void e(String TAG, @NonNull Throwable e, String message, Object... parameter) {
-        Logger.t(TAG).e(e, message, parameter);
+    @Deprecated
+    public static void e(String TAG, Throwable e, String message, Object... parameter) {
+        L.log().e(TAG, e, message, parameter);
+    }
+
+    /**
+     * ERROR
+     *
+     * @param message 错误信息 %s站位
+     * @param parameter 错误信息内容
+     */
+    @Deprecated
+    public static void e(String message, Object... parameter) {
+        L.log().e(message, parameter);
     }
 
     /**
@@ -133,8 +212,9 @@ public class L {
      * @param message 错误信息 %s站位
      * @param parameter 错误信息内容
      */
+    @Deprecated
     public static void e(String TAG, String message, Object... parameter) {
-        Logger.t(TAG).e(message, parameter);
+        L.log().e(TAG, message, parameter);
     }
 
     /**
@@ -143,21 +223,25 @@ public class L {
      * @param TAG LOG TAG
      * @param e {@link Throwable}
      */
+    @Deprecated
     public static void e(String TAG, @NonNull Throwable e) {
-        Logger.t(TAG).e(e, e.getMessage());
+        L.log().e(TAG, e);
     }
 
     /**
      * {@link android.util.Log}
      */
+    @Deprecated
     public static class Log {
 
-        public static String compoundString(String message, Object... parameter) {
-            try {
-                message = ValidateUtils.isNullObjectList(parameter) ? message : String.format(message, parameter);
-            } catch (Exception ignored) {
-            }
-            return message;
+        /**
+         * DEBUG
+         *
+         * @param message 提示模板 %s
+         * @param parameter 参数
+         */
+        public static void d(@NonNull String message, @Nullable Object... parameter) {
+            L.alog().d(message, parameter);
         }
 
         /**
@@ -167,10 +251,18 @@ public class L {
          * @param message 提示模板 %s
          * @param parameter 参数
          */
-        public static void d(String TAG, String message, Object... parameter) {
-            if (isPrint()) {
-                android.util.Log.d(TAG, compoundString(message, parameter));
-            }
+        public static void d(String TAG, @NonNull String message, @Nullable Object... parameter) {
+            L.alog().d(TAG, message, parameter);
+        }
+
+        /**
+         * INFO
+         *
+         * @param message 提示模板 %s
+         * @param parameter 参数
+         */
+        public static void i(@NonNull String message, @Nullable Object... parameter) {
+            L.alog().i(message, parameter);
         }
 
         /**
@@ -180,10 +272,18 @@ public class L {
          * @param message 提示模板 %s
          * @param parameter 参数
          */
-        public static void i(String TAG, String message, Object... parameter) {
-            if (isPrint()) {
-                android.util.Log.i(TAG, compoundString(message, parameter));
-            }
+        public static void i(String TAG, @NonNull String message, @Nullable Object... parameter) {
+            L.alog().i(TAG, message, parameter);
+        }
+
+        /**
+         * WARN
+         *
+         * @param message 提示模板 %s
+         * @param parameter 参数
+         */
+        public static void w(@NonNull String message, @Nullable Object... parameter) {
+            L.alog().w(message, parameter);
         }
 
         /**
@@ -193,37 +293,86 @@ public class L {
          * @param message 提示模板 %s
          * @param parameter 参数
          */
-        public static void w(String TAG, String message, Object... parameter) {
-            if (isPrint()) {
-                android.util.Log.w(TAG, compoundString(message, parameter));
-            }
+        public static void w(String TAG, @NonNull String message, @Nullable Object... parameter) {
+            L.alog().w(TAG, message, parameter);
+        }
+
+        /**
+         * WARN
+         *
+         * @param e {@link Throwable}
+         * @param message 提示模板 %s
+         * @param parameter 参数
+         */
+        public static void w(@Nullable Throwable e, @NonNull String message, @Nullable Object... parameter) {
+            L.alog().w(e, message, parameter);
         }
 
         /**
          * WARN
          *
          * @param TAG LOG TAG
-         * @param e {@link Exception}
+         * @param e {@link Throwable}
+         * @param message 提示模板 %s
+         * @param parameter 参数
          */
-        public static void w(String TAG, @NonNull Throwable e) {
-            if (isPrint()) {
-                android.util.Log.w(TAG, e);
-            }
+        public static void w(String TAG, @Nullable Throwable e, @NonNull String message,
+                @Nullable Object... parameter) {
+            L.alog().w(TAG, e, message, parameter);
+        }
+
+        /**
+         * WARN
+         *
+         * @param e {@link Throwable}
+         */
+        public static void w(@Nullable Throwable e) {
+            L.alog().w(e);
+        }
+
+        /**
+         * WARN
+         *
+         * @param TAG LOG TAG
+         * @param e {@link Throwable}
+         */
+        public static void w(String TAG, @Nullable Throwable e) {
+            L.alog().w(TAG, e);
+        }
+
+        /**
+         * ERROR
+         *
+         * @param e {@link Throwable}
+         * @param message 错误信息 %s站位
+         * @param parameter 错误信息内容
+         */
+        public static void e(Throwable e, @NonNull String message,
+                @Nullable Object... parameter) {
+            L.alog().e(e, message, parameter);
         }
 
         /**
          * ERROR
          *
          * @param TAG LOG TAG
-         * @param e {@link Exception}
+         * @param e {@link Throwable}
          * @param message 错误信息 %s站位
          * @param parameter 错误信息内容
          */
-        public static void e(String TAG, @NonNull Throwable e, String message,
-                Object... parameter) {
-            if (isPrint()) {
-                android.util.Log.e(TAG, compoundString(message, parameter), e);
-            }
+        public static void e(String TAG, @NonNull Throwable e, @NonNull String message,
+                @Nullable Object... parameter) {
+            L.alog().e(TAG, e, message, parameter);
+        }
+
+        /**
+         * ERROR
+         *
+         * @param message 错误信息 %s站位
+         * @param parameter 错误信息内容
+         */
+        public static void e(@NonNull String message, @Nullable Object... parameter) {
+            L.alog().e(message, parameter);
         }
 
         /**
@@ -233,10 +382,17 @@ public class L {
          * @param message 错误信息 %s站位
          * @param parameter 错误信息内容
          */
-        public static void e(String TAG, String message, Object... parameter) {
-            if (isPrint()) {
-                android.util.Log.e(TAG, compoundString(message, parameter));
-            }
+        public static void e(String TAG, @NonNull String message, @Nullable Object... parameter) {
+            L.alog().e(TAG, message, parameter);
+        }
+
+        /**
+         * ERROR
+         *
+         * @param e {@link Throwable}
+         */
+        public static void e(@NonNull Throwable e) {
+            L.alog().e(e);
         }
 
         /**
@@ -246,169 +402,23 @@ public class L {
          * @param e {@link Throwable}
          */
         public static void e(String TAG, @NonNull Throwable e) {
-            if (isPrint()) {
-                android.util.Log.e(TAG, e.getMessage(), e);
-            }
+            L.alog().e(TAG, e);
         }
     }
 
-    private static L.ILogToast toast;
-
-    public static L.ILogToast getToast() {
-        if (toast == null) {
-            toast = new LogToast();
-        }
-        return toast;
+    public static Logcat.ILogger log() {
+        return Logcat.get().logger();
     }
 
-    private static L.ILogSnack snack;
-
-    public static L.ILogSnack getSnack() {
-        if (snack == null) {
-            snack = new LogSnack();
-        }
-        return snack;
+    public static Logcat.ILogcat alog() {
+        return Logcat.get().log();
     }
 
-    public interface ILogToast {
-        void showLog(Context context, String hint);
-
-        /**
-         * 提示TOAST，并写入系统日志
-         *
-         * @param context {@link Context}
-         * @param userHint 给用户的提示内容
-         * @param sysHint 系统日志的内容
-         * @param e {@link Throwable}
-         */
-        void e(String TAG, @NonNull Context context, String userHint, String sysHint,
-                @NonNull Throwable e);
-
-        /**
-         * 提示TOAST，并写入系统日志
-         *
-         * @param context {@link Context}
-         * @param userHint 给用户的提示内容
-         * @param e {@link Throwable}
-         */
-        void e(String TAG, @NonNull Context context, String userHint, @NonNull Throwable e);
-
-        /**
-         * 提示TOAST，并写入系统日志
-         *
-         * @param context {@link Context}
-         * @param e {@link Throwable}
-         */
-        void e(String TAG, @NonNull Context context, @NonNull Throwable e);
-
-        /**
-         * 提示TOAST，并写入系统日志
-         *
-         * @param context {@link Context}
-         * @param userHint 给用户与系统的提示内容
-         */
-        void e(String TAG, @NonNull Context context, String userHint);
-
-        /**
-         * 提示TOAST，并写入系统日志
-         *
-         * @param context {@link Context}
-         * @param userHint 给用户与系统的提示内容
-         */
-        void e(String TAG, @NonNull Context context, @StringRes int userHint);
+    public static Logcat.ILogToast getToast() {
+        return Logcat.get().getToast();
     }
 
-    public interface ILogSnack {
-        void showLog(View view, String hint);
-
-        /**
-         * 提示TOAST，并写入系统日志
-         *
-         * @param view {@link View}
-         * @param userHint 给用户的提示内容
-         * @param sysHint 系统日志的内容
-         * @param e {@link Throwable}
-         */
-        void e(String TAG, @NonNull View view, String userHint, String sysHint,
-                @NonNull Throwable e);
-
-        /**
-         * 提示TOAST，并写入系统日志
-         *
-         * @param view {@link View}
-         * @param userHint 给用户的提示内容
-         * @param e {@link Throwable}
-         */
-        void e(String TAG, @NonNull View view, String userHint, @NonNull Throwable e);
-
-        /**
-         * 提示TOAST，并写入系统日志
-         *
-         * @param view {@link View}
-         * @param e {@link Throwable}
-         */
-        void e(String TAG, @NonNull View view, @NonNull Throwable e);
-
-        /**
-         * 提示TOAST，并写入系统日志
-         *
-         * @param view {@link View}
-         * @param userHint 给用户与系统的提示内容
-         */
-        void e(String TAG, @NonNull View view, String userHint);
-
-        /**
-         * 提示TOAST，并写入系统日志
-         *
-         * @param view {@link View}
-         * @param userHint 给用户与系统的提示内容
-         */
-        void e(String TAG, @NonNull View view, @StringRes int userHint);
-
-        /******************  activity **********************/
-
-        /**
-         * 提示TOAST，并写入系统日志
-         *
-         * @param activity {@link Activity}
-         * @param userHint 给用户的提示内容
-         * @param sysHint 系统日志的内容
-         * @param e {@link Throwable}
-         */
-        void e(String TAG, @NonNull Activity activity, String userHint, String sysHint,
-                @NonNull Throwable e);
-
-        /**
-         * 提示TOAST，并写入系统日志
-         *
-         * @param activity {@link Activity}
-         * @param userHint 给用户的提示内容
-         * @param e {@link Throwable}
-         */
-        void e(String TAG, @NonNull Activity activity, String userHint, @NonNull Throwable e);
-
-        /**
-         * 提示TOAST，并写入系统日志
-         *
-         * @param activity {@link Activity}
-         * @param e {@link Throwable}
-         */
-        void e(String TAG, @NonNull Activity activity, @NonNull Throwable e);
-
-        /**
-         * 提示TOAST，并写入系统日志
-         *
-         * @param activity {@link Activity}
-         * @param userHint 给用户与系统的提示内容
-         */
-        void e(String TAG, @NonNull Activity activity, String userHint);
-
-        /**
-         * 提示TOAST，并写入系统日志
-         *
-         * @param activity {@link Activity}
-         * @param userHint 给用户与系统的提示内容
-         */
-        void e(String TAG, @NonNull Activity activity, @StringRes int userHint);
+    public static Logcat.ILogSnack getSnack() {
+        return Logcat.get().getSnack();
     }
 }

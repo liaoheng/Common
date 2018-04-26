@@ -12,5 +12,5 @@
 
 
 - implementation deps.annotations
-- implementation 'commons-io:commons-io:2.4'
-- implementation 'com.orhanobut:logger:1.8'
+- implementation deps.commons_io
+- implementation 'com.orhanobut:logger:2.2.0'
