@@ -23,7 +23,7 @@ import java.util.Arrays;
  */
 public final class Logcat {
     private static boolean isPrint = true;
-    private String TAG;
+    private String mGlobalTag;
 
     /**
      * LOG INIT
@@ -32,7 +32,7 @@ public final class Logcat {
      * @param isLoggable 是否开启日志
      */
     public void init(String tag, boolean isLoggable) {
-        TAG = tag;
+        mGlobalTag = tag;
         isPrint = isLoggable;
         try {
             Class.forName("com.orhanobut.logger.Logger");
@@ -85,19 +85,36 @@ public final class Logcat {
         void prefix(String prefix);
 
         /**
-         * DEBUG,Collections are supported
+         * VERBOSE
          *
-         * @param object 参数
+         * @param message 提示模板 %s
+         * @param parameter 参数
          */
-        void da(@Nullable Object object);
+        void v(String message, @Nullable Object... parameter);
+
+        /**
+         * VERBOSE
+         *
+         * @param TAG LOG tag
+         * @param message 提示模板 %s
+         * @param parameter 参数
+         */
+        void v(@NonNull String TAG, String message, @Nullable Object... parameter);
 
         /**
          * DEBUG,Collections are supported
          *
-         * @param TAG LOG TAG
          * @param object 参数
          */
-        void da(@NonNull String TAG, @Nullable Object object);
+        void da(Object object);
+
+        /**
+         * DEBUG,Collections are supported
+         *
+         * @param TAG LOG tag
+         * @param object 参数
+         */
+        void da(@NonNull String TAG, Object object);
 
         /**
          * DEBUG
@@ -105,16 +122,16 @@ public final class Logcat {
          * @param message 提示模板 %s
          * @param parameter 参数
          */
-        void d(@NonNull String message, @Nullable Object... parameter);
+        void d(String message, @Nullable Object... parameter);
 
         /**
          * DEBUG
          *
-         * @param TAG LOG TAG
+         * @param TAG LOG tag
          * @param message 提示模板 %s
          * @param parameter 参数
          */
-        void d(@NonNull String TAG, @NonNull String message, @Nullable Object... parameter);
+        void d(@NonNull String TAG, String message, @Nullable Object... parameter);
 
         /**
          * INFO
@@ -122,16 +139,16 @@ public final class Logcat {
          * @param message 提示模板 %s
          * @param parameter 参数
          */
-        void i(@NonNull String message, @Nullable Object... parameter);
+        void i(String message, @Nullable Object... parameter);
 
         /**
          * INFO
          *
-         * @param TAG LOG TAG
+         * @param TAG LOG tag
          * @param message 提示模板 %s
          * @param parameter 参数
          */
-        void i(@NonNull String TAG, @NonNull String message, @Nullable Object... parameter);
+        void i(@NonNull String TAG, String message, @Nullable Object... parameter);
 
         /**
          * WARN
@@ -139,16 +156,16 @@ public final class Logcat {
          * @param message 提示模板 %s
          * @param parameter 参数
          */
-        void w(@NonNull String message, @Nullable Object... parameter);
+        void w(String message, @Nullable Object... parameter);
 
         /**
          * WARN
          *
-         * @param TAG LOG TAG
+         * @param TAG LOG tag
          * @param message 提示模板 %s
          * @param parameter 参数
          */
-        void w(@NonNull String TAG, @NonNull String message, @Nullable Object... parameter);
+        void w(@NonNull String TAG, String message, @Nullable Object... parameter);
 
         /**
          * WARN
@@ -157,17 +174,17 @@ public final class Logcat {
          * @param message 提示模板 %s
          * @param parameter 参数
          */
-        void w(@Nullable Throwable e, @NonNull String message, @Nullable Object... parameter);
+        void w(@Nullable Throwable e, String message, @Nullable Object... parameter);
 
         /**
          * WARN
          *
-         * @param TAG LOG TAG
+         * @param TAG LOG tag
          * @param e {@link Throwable}
          * @param message 提示模板 %s
          * @param parameter 参数
          */
-        void w(String TAG, @Nullable Throwable e, @NonNull String message,
+        void w(String TAG, @Nullable Throwable e, String message,
                 @Nullable Object... parameter);
 
         /**
@@ -180,7 +197,7 @@ public final class Logcat {
         /**
          * WARN
          *
-         * @param TAG LOG TAG
+         * @param TAG LOG tag
          * @param e {@link Throwable}
          */
         void w(String TAG, @Nullable Throwable e);
@@ -192,17 +209,17 @@ public final class Logcat {
          * @param message 错误信息 %s站位
          * @param parameter 错误信息内容
          */
-        void e(@NonNull Throwable e, @NonNull String message, @Nullable Object... parameter);
+        void e(@NonNull Throwable e, String message, @Nullable Object... parameter);
 
         /**
          * ERROR
          *
-         * @param TAG LOG TAG
+         * @param TAG LOG tag
          * @param e {@link Throwable}
          * @param message 错误信息 %s站位
          * @param parameter 错误信息内容
          */
-        void e(@NonNull String TAG, @NonNull Throwable e, @NonNull String message, @Nullable Object... parameter);
+        void e(@NonNull String TAG, @NonNull Throwable e, String message, @Nullable Object... parameter);
 
         /**
          * ERROR
@@ -210,16 +227,16 @@ public final class Logcat {
          * @param message 错误信息 %s站位
          * @param parameter 错误信息内容
          */
-        void e(@NonNull String message, @Nullable Object... parameter);
+        void e(String message, @Nullable Object... parameter);
 
         /**
          * ERROR
          *
-         * @param TAG LOG TAG
+         * @param TAG LOG tag
          * @param message 错误信息 %s站位
          * @param parameter 错误信息内容
          */
-        void e(@NonNull String TAG, @NonNull String message, @Nullable Object... parameter);
+        void e(@NonNull String TAG, String message, @Nullable Object... parameter);
 
         /**
          * ERROR
@@ -231,7 +248,7 @@ public final class Logcat {
         /**
          * ERROR
          *
-         * @param TAG LOG TAG
+         * @param TAG LOG tag
          * @param e {@link Throwable}
          */
         void e(@NonNull String TAG, @NonNull Throwable e);
@@ -244,113 +261,135 @@ public final class Logcat {
          *
          * @param message json string
          */
-        void json(@NonNull String message);
+        void json(String message);
 
         /**
          * JSON
          *
-         * @param TAG LOG TAG
+         * @param TAG LOG tag
          * @param message json string
          */
-        void json(@NonNull String TAG, @NonNull String message);
+        void json(@NonNull String TAG, String message);
 
         /**
          * XML
          *
          * @param message xml string
          */
-        void xml(@NonNull String message);
+        void xml(String message);
 
         /**
          * XML
          *
-         * @param TAG LOG TAG
+         * @param TAG LOG tag
          * @param message xml string
          */
-        void xml(@NonNull String TAG, @NonNull String message);
+        void xml(@NonNull String TAG, String message);
     }
 
     public class Logger implements ILogger {
         private String prefix;
-
-        @Override
-        public void prefix(String prefix) {
-            this.prefix = prefix;
-        }
 
         private String createTag(String tag) {
             return TextUtils.isEmpty(prefix) ? tag : prefix + (TextUtils.isEmpty(tag) ? "" : "-" + tag);
         }
 
         @Override
-        public void json(@NonNull String message) {
+        public void prefix(String prefix) {
+            this.prefix = prefix;
+        }
+
+        @Override
+        public void v(String message, @Nullable Object... parameter) {
+            com.orhanobut.logger.Logger.t(createTag(null)).v(createMessage(message, parameter));
+        }
+
+        @Override
+        public void v(@NonNull String TAG, String message, @Nullable Object... parameter) {
+            com.orhanobut.logger.Logger.t(createTag(TAG)).v(createMessage(message, parameter));
+        }
+
+        @Override
+        public void json(String message) {
+            if (isNull(message)) {
+                return;
+            }
             com.orhanobut.logger.Logger.t(createTag(null)).json(message);
         }
 
         @Override
-        public void json(@NonNull String TAG, @NonNull String message) {
+        public void json(@NonNull String TAG, String message) {
+            if (isNull(message)) {
+                return;
+            }
             com.orhanobut.logger.Logger.t(createTag(TAG)).json(message);
         }
 
         @Override
-        public void xml(@NonNull String message) {
+        public void xml(String message) {
+            if (isNull(message)) {
+                return;
+            }
             com.orhanobut.logger.Logger.t(createTag(null)).xml(message);
         }
 
         @Override
-        public void xml(@NonNull String TAG, @NonNull String message) {
+        public void xml(@NonNull String TAG, String message) {
+            if (isNull(message)) {
+                return;
+            }
             com.orhanobut.logger.Logger.t(createTag(TAG)).xml(message);
         }
 
         @Override
-        public void da(@Nullable Object object) {
+        public void da(Object object) {
             com.orhanobut.logger.Logger.t(createTag(null)).d(object);
         }
 
         @Override
-        public void da(@NonNull String TAG, @Nullable Object object) {
+        public void da(@NonNull String TAG, Object object) {
             com.orhanobut.logger.Logger.t(createTag(TAG)).d(object);
         }
 
         @Override
-        public void d(@NonNull String message, @Nullable Object... parameter) {
-            com.orhanobut.logger.Logger.t(createTag(null)).d(message, parameter);
+        public void d(String message, @Nullable Object... parameter) {
+            com.orhanobut.logger.Logger.t(createTag(null)).d(createMessage(message, parameter));
         }
 
         @Override
-        public void d(@NonNull String TAG, @NonNull String message, @Nullable Object... parameter) {
-            com.orhanobut.logger.Logger.t(createTag(TAG)).d(message, parameter);
+        public void d(@NonNull String TAG, String message, @Nullable Object... parameter) {
+            com.orhanobut.logger.Logger.t(createTag(TAG)).d(createMessage(message, parameter));
         }
 
         @Override
-        public void i(@NonNull String message, @Nullable Object... parameter) {
-            com.orhanobut.logger.Logger.t(createTag(null)).i(message, parameter);
+        public void i(String message, @Nullable Object... parameter) {
+            com.orhanobut.logger.Logger.t(createTag(null)).i(createMessage(message, parameter));
         }
 
         @Override
-        public void i(@NonNull String TAG, @NonNull String message, @Nullable Object... parameter) {
-            com.orhanobut.logger.Logger.t(createTag(TAG)).i(message, parameter);
+        public void i(@NonNull String TAG, String message, @Nullable Object... parameter) {
+            com.orhanobut.logger.Logger.t(createTag(TAG)).i(createMessage(message, parameter));
         }
 
         @Override
-        public void w(@NonNull String message, @Nullable Object... parameter) {
-            com.orhanobut.logger.Logger.t(createTag(null)).w(message, parameter);
+        public void w(String message, @Nullable Object... parameter) {
+            com.orhanobut.logger.Logger.t(createTag(null)).w(createMessage(message, parameter));
         }
 
         @Override
-        public void w(@NonNull String TAG, @NonNull String message, @Nullable Object... parameter) {
-            com.orhanobut.logger.Logger.t(createTag(TAG)).w(message, parameter);
+        public void w(@NonNull String TAG, String message, @Nullable Object... parameter) {
+            com.orhanobut.logger.Logger.t(createTag(TAG)).w(createMessage(message, parameter));
         }
 
         @Override
-        public void w(@Nullable Throwable e, @NonNull String message, @Nullable Object... parameter) {
+        public void w(@Nullable Throwable e, String message, @Nullable Object... parameter) {
             String stackTraceString = android.util.Log.getStackTraceString(e);
             com.orhanobut.logger.Logger.t(createTag(null))
                     .w(createMessage(message, parameter) + " : " + stackTraceString);
         }
 
         @Override
-        public void w(String TAG, @Nullable Throwable e, @NonNull String message, @Nullable Object... parameter) {
+        public void w(String TAG, @Nullable Throwable e, String message, @Nullable Object... parameter) {
             String stackTraceString = android.util.Log.getStackTraceString(e);
             com.orhanobut.logger.Logger.t(createTag(TAG))
                     .w(createMessage(message, parameter) + " : " + stackTraceString);
@@ -367,24 +406,24 @@ public final class Logcat {
         }
 
         @Override
-        public void e(@NonNull Throwable e, @NonNull String message, @Nullable Object... parameter) {
-            com.orhanobut.logger.Logger.t(createTag(null)).e(e, message, parameter);
+        public void e(@NonNull Throwable e, String message, @Nullable Object... parameter) {
+            com.orhanobut.logger.Logger.t(createTag(null)).e(e, createMessage(message, parameter));
         }
 
         @Override
-        public void e(@NonNull String TAG, @NonNull Throwable e, @NonNull String message,
+        public void e(@NonNull String TAG, @NonNull Throwable e, String message,
                 @Nullable Object... parameter) {
-            com.orhanobut.logger.Logger.t(createTag(TAG)).e(e, message, parameter);
+            com.orhanobut.logger.Logger.t(createTag(TAG)).e(e, createMessage(message, parameter));
         }
 
         @Override
-        public void e(@NonNull String message, @Nullable Object... parameter) {
-            com.orhanobut.logger.Logger.t(createTag(null)).e(message, parameter);
+        public void e(String message, @Nullable Object... parameter) {
+            com.orhanobut.logger.Logger.t(createTag(null)).e(createMessage(message, parameter));
         }
 
         @Override
-        public void e(@NonNull String TAG, @NonNull String message, @Nullable Object... parameter) {
-            com.orhanobut.logger.Logger.t(createTag(TAG)).e(message, parameter);
+        public void e(@NonNull String TAG, String message, @Nullable Object... parameter) {
+            com.orhanobut.logger.Logger.t(createTag(TAG)).e(createMessage(message, parameter));
         }
 
         @Override
@@ -409,12 +448,12 @@ public final class Logcat {
         return mLogger;
     }
 
-    private class Log implements ILogcat {
+    public class Log implements ILogcat {
+        private String tag;
         private String prefix;
 
-        @Override
-        public void prefix(String prefix) {
-            this.prefix = prefix;
+        public Log(String tag) {
+            this.tag = tag;
         }
 
         private String createTag(String tag) {
@@ -422,8 +461,26 @@ public final class Logcat {
         }
 
         @Override
+        public void prefix(String prefix) {
+            this.prefix = prefix;
+        }
+
+        @Override
+        public void v(String message, @Nullable Object... parameter) {
+            v(tag, message, parameter);
+        }
+
+        @Override
+        public void v(@NonNull String TAG, String message, @Nullable Object... parameter) {
+            if (!isPrint()) {
+                return;
+            }
+            android.util.Log.v(createTag(TAG), createMessage(message, parameter));
+        }
+
+        @Override
         public void da(@Nullable Object object) {
-            d(createTag(TAG), object);
+            d(createTag(tag), object);
         }
 
         @Override
@@ -435,12 +492,12 @@ public final class Logcat {
         }
 
         @Override
-        public void d(@NonNull String message, @Nullable Object... parameter) {
-            d(createTag(TAG), message, parameter);
+        public void d(String message, @Nullable Object... parameter) {
+            d(createTag(tag), message, parameter);
         }
 
         @Override
-        public void d(@NonNull String TAG, @NonNull String message, @Nullable Object... parameter) {
+        public void d(@NonNull String TAG, String message, @Nullable Object... parameter) {
             if (!isPrint()) {
                 return;
             }
@@ -448,12 +505,12 @@ public final class Logcat {
         }
 
         @Override
-        public void i(@NonNull String message, @Nullable Object... parameter) {
-            i(createTag(TAG), message, parameter);
+        public void i(String message, @Nullable Object... parameter) {
+            i(createTag(tag), message, parameter);
         }
 
         @Override
-        public void i(@NonNull String TAG, @NonNull String message, @Nullable Object... parameter) {
+        public void i(@NonNull String TAG, String message, @Nullable Object... parameter) {
             if (!isPrint()) {
                 return;
             }
@@ -461,12 +518,12 @@ public final class Logcat {
         }
 
         @Override
-        public void w(@NonNull String message, @Nullable Object... parameter) {
-            w(createTag(TAG), message, parameter);
+        public void w(String message, @Nullable Object... parameter) {
+            w(createTag(tag), message, parameter);
         }
 
         @Override
-        public void w(@NonNull String TAG, @NonNull String message, @Nullable Object... parameter) {
+        public void w(@NonNull String TAG, String message, @Nullable Object... parameter) {
             if (!isPrint()) {
                 return;
             }
@@ -474,12 +531,12 @@ public final class Logcat {
         }
 
         @Override
-        public void w(@Nullable Throwable e, @NonNull String message, @Nullable Object... parameter) {
-            w(createTag(TAG), e, message, parameter);
+        public void w(@Nullable Throwable e, String message, @Nullable Object... parameter) {
+            w(createTag(tag), e, message, parameter);
         }
 
         @Override
-        public void w(String TAG, @Nullable Throwable e, @NonNull String message, @Nullable Object... parameter) {
+        public void w(String TAG, @Nullable Throwable e, String message, @Nullable Object... parameter) {
             if (!isPrint()) {
                 return;
             }
@@ -488,7 +545,7 @@ public final class Logcat {
 
         @Override
         public void w(@Nullable Throwable e) {
-            w(createTag(TAG), e);
+            w(createTag(tag), e);
         }
 
         @Override
@@ -500,12 +557,12 @@ public final class Logcat {
         }
 
         @Override
-        public void e(@NonNull Throwable e, @NonNull String message, @Nullable Object... parameter) {
-            e(createTag(TAG), e, message, parameter);
+        public void e(@NonNull Throwable e, String message, @Nullable Object... parameter) {
+            e(createTag(tag), e, message, parameter);
         }
 
         @Override
-        public void e(@NonNull String TAG, @NonNull Throwable e, @NonNull String message,
+        public void e(@NonNull String TAG, @NonNull Throwable e, String message,
                 @Nullable Object... parameter) {
             if (!isPrint()) {
                 return;
@@ -515,11 +572,11 @@ public final class Logcat {
 
         @Override
         public void e(@NonNull String message, @Nullable Object... parameter) {
-            e(createTag(TAG), message, parameter);
+            e(createTag(tag), message, parameter);
         }
 
         @Override
-        public void e(@NonNull String TAG, @NonNull String message, @Nullable Object... parameter) {
+        public void e(@NonNull String TAG, String message, @Nullable Object... parameter) {
             if (!isPrint()) {
                 return;
             }
@@ -528,7 +585,7 @@ public final class Logcat {
 
         @Override
         public void e(@NonNull Throwable e) {
-            e(createTag(TAG), e);
+            e(createTag(tag), e);
         }
 
         @Override
@@ -545,17 +602,24 @@ public final class Logcat {
     public synchronized ILogcat log() {
         if (mLog == null) {
             synchronized (Log.class) {
-                mLog = new Log();
+                mLog = new Log(mGlobalTag);
             }
         }
         return mLog;
+    }
+
+    private boolean isNull(Object object) {
+        return object == null;
     }
 
     /**
      * com.orhanobut.logger.LoggerPrinter#createMessage
      */
     @NonNull
-    public static String createMessage(@NonNull String message, @Nullable Object... args) {
+    public static String createMessage(String message, @Nullable Object... args) {
+        if (null == message) {
+            return "";
+        }
         return args == null || args.length == 0 ? message : String.format(message, args);
     }
 
