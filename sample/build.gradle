@@ -51,7 +51,7 @@ dependencies {
   implementation deps.rxlifecycle
   implementation deps.rxlifecycle_android
 
-//  implementation group: "com.github.liaoheng", name: "common-plus", version: "0.0.5-SNAPSHOT", changing: true
+//  implementation group: "com.github.liaoheng", name: "common-plus", version: "0.0.6-SNAPSHOT", changing: true
   api project(':common-plus')
 }
 //configurations.all {

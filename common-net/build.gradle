@@ -35,7 +35,7 @@ dependencies {
 
     compileOnly deps.commons_io
 
-    //  implementation group: "com.github.liaoheng", name: "common-core", version: "0.0.5-SNAPSHOT", changing: true
+//    implementation group: "com.github.liaoheng", name: "common-core", version: "0.0.6-SNAPSHOT", changing: true
     api project(':common-core')
 }
 apply from: rootProject.file('gradle-mvn-push.gradle')
