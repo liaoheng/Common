@@ -85,13 +85,6 @@ public class BitmapUtils {
     }
 
     /**
-     * 把bitmap转换成Base64编码String
-     */
-    public static String bitmapToString(Bitmap bitmap) {
-        return Base64.encodeToString(bitmapToByte(bitmap));
-    }
-
-    /**
      * convert Drawable to Bitmap
      */
     public static Bitmap drawableToBitmap(@NonNull Drawable drawable) {

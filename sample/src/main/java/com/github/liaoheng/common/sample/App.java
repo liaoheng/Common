@@ -1,12 +1,8 @@
 package com.github.liaoheng.common.sample;
 
 import android.app.Application;
-import com.github.liaoheng.common.Common;
-import com.github.liaoheng.common.network.OkHttp3Utils;
+
 import com.github.liaoheng.common.plus.CommonPlus;
-import com.github.liaoheng.common.util.L;
-import java.util.Map;
-import okhttp3.Request;
 
 /**
  * @author liaoheng

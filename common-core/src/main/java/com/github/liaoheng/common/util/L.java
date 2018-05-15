@@ -1,10 +1,14 @@
 package com.github.liaoheng.common.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
+import android.text.TextUtils;
+import android.view.View;
 
 import com.github.liaoheng.common.Common;
 
@@ -406,7 +410,7 @@ public class L {
         }
     }
 
-    public static Logcat.ILogger log() {
+    public static Logcat.ILogcat log() {
         return Logcat.get().logger();
     }
 
@@ -414,11 +418,269 @@ public class L {
         return Logcat.get().log();
     }
 
-    public static Logcat.ILogToast getToast() {
-        return Logcat.get().getToast();
+    //------------------------------------------show----------------------------------------------------
+
+    public interface ILogToast {
+        void showLog(Context context, String hint);
+
+        /**
+         * 提示TOAST，并写入系统日志
+         *
+         * @param context {@link Context}
+         * @param userHint 给用户的提示内容
+         * @param sysHint 系统日志的内容
+         * @param e {@link Throwable}
+         */
+        void e(String TAG, @NonNull Context context, String userHint, String sysHint,
+                @NonNull Throwable e);
+
+        /**
+         * 提示TOAST，并写入系统日志
+         *
+         * @param context {@link Context}
+         * @param userHint 给用户的提示内容
+         * @param e {@link Throwable}
+         */
+        void e(String TAG, @NonNull Context context, String userHint, @NonNull Throwable e);
+
+        /**
+         * 提示TOAST，并写入系统日志
+         *
+         * @param context {@link Context}
+         * @param e {@link Throwable}
+         */
+        void e(String TAG, @NonNull Context context, @NonNull Throwable e);
+
+        /**
+         * 提示TOAST，并写入系统日志
+         *
+         * @param context {@link Context}
+         * @param userHint 给用户与系统的提示内容
+         */
+        void e(String TAG, @NonNull Context context, String userHint);
+
+        /**
+         * 提示TOAST，并写入系统日志
+         *
+         * @param context {@link Context}
+         * @param userHint 给用户与系统的提示内容
+         */
+        void e(String TAG, @NonNull Context context, @StringRes int userHint);
     }
 
-    public static Logcat.ILogSnack getSnack() {
-        return Logcat.get().getSnack();
+    public interface ILogSnack {
+        void showLog(View view, String hint);
+
+        /**
+         * 提示TOAST，并写入系统日志
+         *
+         * @param view {@link View}
+         * @param userHint 给用户的提示内容
+         * @param sysHint 系统日志的内容
+         * @param e {@link Throwable}
+         */
+        void e(String TAG, @NonNull View view, String userHint, String sysHint,
+                @NonNull Throwable e);
+
+        /**
+         * 提示TOAST，并写入系统日志
+         *
+         * @param view {@link View}
+         * @param userHint 给用户的提示内容
+         * @param e {@link Throwable}
+         */
+        void e(String TAG, @NonNull View view, String userHint, @NonNull Throwable e);
+
+        /**
+         * 提示TOAST，并写入系统日志
+         *
+         * @param view {@link View}
+         * @param e {@link Throwable}
+         */
+        void e(String TAG, @NonNull View view, @NonNull Throwable e);
+
+        /**
+         * 提示TOAST，并写入系统日志
+         *
+         * @param view {@link View}
+         * @param userHint 给用户与系统的提示内容
+         */
+        void e(String TAG, @NonNull View view, String userHint);
+
+        /**
+         * 提示TOAST，并写入系统日志
+         *
+         * @param view {@link View}
+         * @param userHint 给用户与系统的提示内容
+         */
+        void e(String TAG, @NonNull View view, @StringRes int userHint);
+
+        /******************  activity **********************/
+
+        /**
+         * 提示TOAST，并写入系统日志
+         *
+         * @param activity {@link Activity}
+         * @param userHint 给用户的提示内容
+         * @param sysHint 系统日志的内容
+         * @param e {@link Throwable}
+         */
+        void e(String TAG, @NonNull Activity activity, String userHint, String sysHint,
+                @NonNull Throwable e);
+
+        /**
+         * 提示TOAST，并写入系统日志
+         *
+         * @param activity {@link Activity}
+         * @param userHint 给用户的提示内容
+         * @param e {@link Throwable}
+         */
+        void e(String TAG, @NonNull Activity activity, String userHint, @NonNull Throwable e);
+
+        /**
+         * 提示TOAST，并写入系统日志
+         *
+         * @param activity {@link Activity}
+         * @param e {@link Throwable}
+         */
+        void e(String TAG, @NonNull Activity activity, @NonNull Throwable e);
+
+        /**
+         * 提示TOAST，并写入系统日志
+         *
+         * @param activity {@link Activity}
+         * @param userHint 给用户与系统的提示内容
+         */
+        void e(String TAG, @NonNull Activity activity, String userHint);
+
+        /**
+         * 提示TOAST，并写入系统日志
+         *
+         * @param activity {@link Activity}
+         * @param userHint 给用户与系统的提示内容
+         */
+        void e(String TAG, @NonNull Activity activity, @StringRes int userHint);
+    }
+
+    public class LogToast implements L.ILogToast {
+
+        @Override
+        public void showLog(Context context, String hint) {
+            UIUtils.showToast(context, hint);
+        }
+
+        @Override
+        public void e(String TAG, @NonNull Context context, String userHint, String sysHint,
+                @NonNull Throwable e) {
+            Logcat.get().logger().e(TAG, e, sysHint);
+            if (TextUtils.isEmpty(userHint)) {
+                userHint = e.getMessage();
+            }
+            showLog(context, userHint);
+        }
+
+        @Override
+        public void e(String TAG, @NonNull Context context, String userHint, @NonNull Throwable e) {
+            e(TAG, context, userHint, null, e);
+        }
+
+        @Override
+        public void e(String TAG, @NonNull Context context, @NonNull Throwable e) {
+            e(TAG, context, null, e);
+        }
+
+        @Override
+        public void e(String TAG, @NonNull Context context, String userHint) {
+            Logcat.get().logger().e(TAG, userHint);
+            showLog(context, userHint);
+        }
+
+        @Override
+        public void e(String TAG, @NonNull Context context, @StringRes int userHint) {
+            e(TAG, context, context.getResources().getString(userHint));
+        }
+    }
+
+    private ILogToast toast;
+
+    public ILogToast getToast() {
+        if (toast == null) {
+            toast = new LogToast();
+        }
+        return toast;
+    }
+
+    public class LogSnack implements L.ILogSnack {
+        @Override
+        public void showLog(View view, String hint) {
+            UIUtils.showSnack(view, hint);
+        }
+
+        @Override
+        public void e(String TAG, @NonNull View view, String userHint, String sysHint,
+                @NonNull Throwable e) {
+            Logcat.get().logger().e(TAG, e, sysHint);
+            if (TextUtils.isEmpty(userHint)) {
+                userHint = e.getMessage();
+            }
+            showLog(view, userHint);
+        }
+
+        @Override
+        public void e(String TAG, @NonNull View view, String userHint, @NonNull Throwable e) {
+            e(TAG, view, userHint, null, e);
+        }
+
+        @Override
+        public void e(String TAG, @NonNull View view, @NonNull Throwable e) {
+            e(TAG, view, null, e);
+        }
+
+        @Override
+        public void e(String TAG, @NonNull View view, String userHint) {
+            Logcat.get().logger().e(TAG, userHint);
+            showLog(view, userHint);
+        }
+
+        @Override
+        public void e(String TAG, @NonNull View view, @StringRes int userHint) {
+            e(TAG, view, view.getContext().getString(userHint));
+        }
+
+        @Override
+        public void e(String TAG, @NonNull Activity activity, String userHint, String sysHint,
+                @NonNull Throwable e) {
+            e(TAG, UIUtils.getActivityContentView(activity), userHint, sysHint, e);
+        }
+
+        @Override
+        public void e(String TAG, @NonNull Activity activity, String userHint,
+                @NonNull Throwable e) {
+            e(TAG, activity, userHint, null, e);
+        }
+
+        @Override
+        public void e(String TAG, @NonNull Activity activity, @NonNull Throwable e) {
+            e(TAG, activity, null, e);
+        }
+
+        @Override
+        public void e(String TAG, @NonNull Activity activity, String userHint) {
+            e(TAG, activity.getWindow().getDecorView(), userHint);
+        }
+
+        @Override
+        public void e(String TAG, @NonNull Activity activity, @StringRes int userHint) {
+            e(TAG, activity, activity.getString(userHint));
+        }
+    }
+
+    private ILogSnack snack;
+
+    public ILogSnack getSnack() {
+        if (snack == null) {
+            snack = new LogSnack();
+        }
+        return snack;
     }
 }

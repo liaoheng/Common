@@ -144,6 +144,9 @@ public class AppUtils {
         } else {
             ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
             List<ActivityManager.RunningAppProcessInfo> tasks = am.getRunningAppProcesses();
+            if (tasks==null || tasks.isEmpty()){
+                return false;
+            }
             currentApp = tasks.get(0).processName;
         }
 
