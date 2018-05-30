@@ -13,6 +13,8 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Parcelable;
+import android.os.PowerManager;
+import android.provider.Settings;
 import android.support.annotation.RequiresPermission;
 import android.text.TextUtils;
 
@@ -144,7 +146,7 @@ public class AppUtils {
         } else {
             ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
             List<ActivityManager.RunningAppProcessInfo> tasks = am.getRunningAppProcesses();
-            if (tasks==null || tasks.isEmpty()){
+            if (tasks == null || tasks.isEmpty()) {
                 return false;
             }
             currentApp = tasks.get(0).processName;
@@ -188,5 +190,42 @@ public class AppUtils {
         ComponentName componentName = new ComponentName(context, receiver);
         PackageManager pm = context.getPackageManager();
         pm.setComponentEnabledSetting(componentName, newState, PackageManager.DONT_KILL_APP);
+    }
+
+    /**
+     * 打开忽略电池优化对话框
+     *
+     * @see <a href="https://developer.android.com/reference/android/provider/Settings#ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS">android doc</a>
+     */
+    public static boolean showIgnoreBatteryOptimizationDialog(Context context) {
+        if (context == null) {
+            return false;
+        }
+        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.M) {
+            return false;
+        }
+        Intent intent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+        intent.setData(Uri.parse("package:" + context.getPackageName()));
+        if (intent.resolveActivity(context.getPackageManager()) != null) {
+            context.startActivity(intent);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 判断应用是否在忽略电池优化中
+     *
+     * @see <a href="https://developer.android.com/reference/android/provider/Settings#ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS">android doc</a>
+     */
+    public static boolean isIgnoreBatteryOptimization(Context context) {
+        if (context == null) {
+            return true;
+        }
+        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.M) {
+            return true;
+        }
+        PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+        return powerManager == null || powerManager.isIgnoringBatteryOptimizations(context.getPackageName());
     }
 }

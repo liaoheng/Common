@@ -22,6 +22,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
 
+import io.reactivex.Flowable;
+import io.reactivex.subscribers.ResourceSubscriber;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
@@ -115,6 +117,10 @@ public class Utils {
         }
     }
 
+
+    //==============================================================================================
+    //  rxjava1
+    //==============================================================================================
     /**
      * 退订RxJava
      *
@@ -220,6 +226,123 @@ public class Utils {
             final Callback2<T> listener) {
         return observable.observeOn(AndroidSchedulers.mainThread())
                 .subscribe(getSubscribe2(listener));
+    }
+
+    //==============================================================================================
+    //  rxjava2
+    //==============================================================================================
+
+    /**
+     * 弃置RxJava
+     *
+     * @param subscription {@link ResourceSubscriber#dispose()}
+     */
+    public static void dispose(ResourceSubscriber subscription) {
+        if (subscription == null) {
+            return;
+        }
+        if (subscription.isDisposed()) {
+            return;
+        }
+        subscription.dispose();
+    }
+
+    public static <T> ResourceSubscriber<T> getFlowableSubscriber(final Callback<T> listener) {
+        return new ResourceSubscriber<T>() {
+            @Override
+            protected void onStart() {
+                if (listener != null) {
+                    HandlerUtils.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            listener.onPreExecute();
+                        }
+                    });
+                }
+                super.onStart();
+            }
+
+            @Override
+            public void onComplete() {
+                if (listener != null) {
+                    listener.onFinish();
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if (listener != null) {
+                    listener.onPostExecute();
+                    listener.onError(new SystemException(e));
+                }
+            }
+
+            @Override
+            public void onNext(T t) {
+                if (listener != null) {
+                    listener.onPostExecute();
+                    listener.onSuccess(t);
+                }
+            }
+        };
+    }
+
+    public static <T> ResourceSubscriber<T> getFlowableSubscriber2(final Callback2<T> listener) {
+        return new ResourceSubscriber<T>() {
+            @Override
+            protected void onStart() {
+                if (listener != null) {
+                    HandlerUtils.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            listener.onPreExecute();
+                        }
+                    });
+                }
+                super.onStart();
+            }
+
+            @Override
+            public void onComplete() {
+                if (listener != null) {
+                    listener.onFinish();
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if (listener != null) {
+                    listener.onPostExecute();
+                    listener.onError(e);
+                }
+            }
+
+            @Override
+            public void onNext(T t) {
+                if (listener != null) {
+                    listener.onPostExecute();
+                    listener.onSuccess(t);
+                }
+            }
+        };
+    }
+
+    public static <T> ResourceSubscriber addFlowableSubscriber(Flowable<T> observable,
+            final Callback<T> listener) {
+        ResourceSubscriber<T> flowableSubscriber = getFlowableSubscriber(listener);
+
+        observable.observeOn(io.reactivex.android.schedulers.AndroidSchedulers.mainThread())
+                .subscribe(flowableSubscriber);
+        return flowableSubscriber;
+    }
+
+    public static <T> ResourceSubscriber addFlowableSubscriber2(Flowable<T> observable,
+            final Callback2<T> listener) {
+        ResourceSubscriber<T> flowableSubscriber = getFlowableSubscriber2(listener);
+
+        observable.observeOn(io.reactivex.android.schedulers.AndroidSchedulers.mainThread())
+                .subscribe(flowableSubscriber);
+        return flowableSubscriber;
     }
 
     /**

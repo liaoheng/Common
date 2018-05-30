@@ -44,16 +44,13 @@ import com.github.liaoheng.common.R;
  * @version 2015-07-21 20:05:13
  */
 public class UIUtils {
-    public static int TOAST_DEFAULT_TIME     = Toast.LENGTH_LONG;
+    public static int TOAST_DEFAULT_TIME = Toast.LENGTH_LONG;
     public static int SNACK_BAR_DEFAULT_TIME = Snackbar.LENGTH_LONG;
 
     private static Toast mToast;
 
     /**
      * 吐丝提示
-     *
-     * @param context
-     * @param hint
      */
     public static void showToast(@NonNull Context context, String hint) {
         showToast(context, hint, TOAST_DEFAULT_TIME);
@@ -61,20 +58,13 @@ public class UIUtils {
 
     /**
      * 吐丝提示
-     *
-     * @param context
-     * @param hint
      */
-    public static void showToast(@NonNull Context context,@StringRes int hint) {
+    public static void showToast(@NonNull Context context, @StringRes int hint) {
         showToast(context, context.getString(hint), TOAST_DEFAULT_TIME);
     }
 
     /**
      * 吐丝提示
-     *
-     * @param context
-     * @param hint
-     * @param duration
      */
     @SuppressLint("ShowToast")
     public static void showToast(@NonNull Context context, String hint, int duration) {
@@ -89,22 +79,15 @@ public class UIUtils {
 
     /**
      * 吐丝提示与log
-     *
-     * @param context
-     * @param hint
-     * @param duration
      */
     public static void showLogToast(String TAG, @NonNull Context context, String hint,
-                                    int duration) {
+            int duration) {
         showToast(context, hint, duration);
         L.i(TAG, hint);
     }
 
     /**
      * 吐丝提示与log
-     *
-     * @param context
-     * @param hint
      */
     public static void showLogToast(String TAG, @NonNull Context context, String hint) {
         showToast(context, hint);
@@ -130,21 +113,23 @@ public class UIUtils {
     }
 
     public static void showSnack(@NonNull final Activity activity, final String hint,
-                                 final int duration) {
+            final int duration) {
         showSnack(activity, hint, duration, activity.getText(R.string.lcm_ok).toString(), null);
     }
 
     public static void showSnack(@NonNull Activity activity, final String hint, final String action,
-                                 final Callback2<View> callback2) {
+            final Callback2<View> callback2) {
         showSnack(activity, hint, SNACK_BAR_DEFAULT_TIME, action, callback2);
     }
 
     public static void showSnack(@NonNull Activity activity, final String hint, final int duration,
-                                 final String action, final Callback2<View> callback2) {
+            final String action, final Callback2<View> callback2) {
         getCoordinatorLayout(activity, new Callback4.EmptyCallback<View>() {
-            @Override public void onYes(View view) {
+            @Override
+            public void onYes(View view) {
                 Snackbar.make(view, hint, duration).setAction(action, new View.OnClickListener() {
-                    @Override public void onClick(View v) {
+                    @Override
+                    public void onClick(View v) {
                         if (callback2 == null) {
                             return;
                         }
@@ -165,16 +150,18 @@ public class UIUtils {
     }
 
     public static void showSnack(@NonNull View view, final String hint, final String action,
-                                 final Callback2<View> callback2) {
+            final Callback2<View> callback2) {
         showSnack(view, hint, SNACK_BAR_DEFAULT_TIME, action, callback2);
     }
 
     public static void showSnack(@NonNull View view, final String hint, final int duration,
-                                 final String action, final Callback2<View> callback2) {
+            final String action, final Callback2<View> callback2) {
         getCoordinatorLayout(view, new Callback4.EmptyCallback<View>() {
-            @Override public void onYes(View view) {
+            @Override
+            public void onYes(View view) {
                 Snackbar.make(view, hint, duration).setAction(action, new View.OnClickListener() {
-                    @Override public void onClick(View v) {
+                    @Override
+                    public void onClick(View v) {
                         if (callback2 == null) {
                             return;
                         }
@@ -191,7 +178,7 @@ public class UIUtils {
     }
 
     public static void showLogSnack(String TAG, @NonNull final Activity activity, final String hint,
-                                    final int duration) {
+            final int duration) {
         showSnack(activity, hint, duration);
         L.i(TAG, hint);
     }
@@ -218,10 +205,6 @@ public class UIUtils {
 
     /**
      * 得到CoordinatorLayout
-     *
-     * @param activity
-     * @param call
-     * @return
      */
     public static void getCoordinatorLayout(Activity activity, final Callback4<View> call) {
         getCoordinatorLayout(getActivityContentView(activity), call);
@@ -229,10 +212,6 @@ public class UIUtils {
 
     /**
      * 得到CoordinatorLayout
-     *
-     * @param view
-     * @param call
-     * @return
      */
     public static void getCoordinatorLayout(View view, final Callback4<View> call) {
         try {
@@ -267,10 +246,6 @@ public class UIUtils {
 
     /**
      * 创建进度条
-     *
-     * @param context
-     * @param message
-     * @return
      */
     public static ProgressDialog createProgressDialog(Context context, String message) {
         ProgressDialog dialog = new ProgressDialog(context);
@@ -281,9 +256,6 @@ public class UIUtils {
 
     /**
      * 加载中进度条
-     *
-     * @param context
-     * @return
      */
     public static ProgressDialog showProgressDialog(@NonNull Context context) {
         return showProgressDialog(context, context.getString(R.string.lcm_loading));
@@ -291,13 +263,9 @@ public class UIUtils {
 
     /**
      * 显示进度条
-     *
-     * @param context
-     * @param message
-     * @return
      */
     public static ProgressDialog showProgressDialog(@NonNull Context context,
-                                                    @NonNull String message) {
+            @NonNull String message) {
         ProgressDialog progressDialog = createProgressDialog(context, message);
         progressDialog.show();
         return progressDialog;
@@ -305,8 +273,6 @@ public class UIUtils {
 
     /**
      * 关闭Dialog
-     *
-     * @return
      */
     public static void dismissDialog(Dialog dialog) {
         if (dialog != null && dialog.isShowing()) {
@@ -316,8 +282,6 @@ public class UIUtils {
 
     /**
      * 显示Dialog
-     *
-     * @return
      */
     public static void showDialog(Dialog dialog) {
         if (dialog != null && !dialog.isShowing()) {
@@ -327,10 +291,6 @@ public class UIUtils {
 
     /**
      * 创建对像框
-     *
-     * @param context
-     * @param style
-     * @return
      */
     public static Dialog createDialog(Context context, @StyleRes int style) {
         AppCompatDialog dialog = new AppCompatDialog(context, style);
@@ -341,9 +301,6 @@ public class UIUtils {
 
     /**
      * 创建对像框
-     *
-     * @param context
-     * @return
      */
     public static Dialog createDialog(Context context) {
         return createDialog(context, 0);
@@ -351,25 +308,17 @@ public class UIUtils {
 
     /**
      * 是否提示框
-     *
-     * @param context
-     * @param call
-     * @return
      */
     public static AlertDialog createYNAlertDialog(Context context, String message,
-                                                  final Callback4<DialogInterface> call) {
+            final Callback4<DialogInterface> call) {
         return createAlertDialog(context, message, call);
     }
 
     /**
      * 是否提示框
-     *
-     * @param context
-     * @param call
-     * @return
      */
     public static AlertDialog showYNAlertDialog(Context context, String message,
-                                                final Callback4<DialogInterface> call) {
+            final Callback4<DialogInterface> call) {
         AlertDialog dialog = createYNAlertDialog(context, message, call);
         dialog.show();
         return dialog;
@@ -377,17 +326,13 @@ public class UIUtils {
 
     /**
      * 信息提示框
-     *
-     * @param context
-     * @param message
-     * @param call
-     * @return
      */
     public static AlertDialog createInfoAlertDialog(Context context, String message,
-                                                    final Callback4<DialogInterface> call) {
+            final Callback4<DialogInterface> call) {
         return createAlertDialog(context, message, context.getString(R.string.lcm_ok),
                 null, new Callback4.EmptyCallback<DialogInterface>() {
-                    @Override public void onYes(DialogInterface result) {
+                    @Override
+                    public void onYes(DialogInterface result) {
                         call.onYes(result);
                         result.dismiss();
                     }
@@ -396,14 +341,9 @@ public class UIUtils {
 
     /**
      * 信息提示框
-     *
-     * @param context
-     * @param message
-     * @param call
-     * @return
      */
     public static AlertDialog showInfoAlertDialog(Context context, String message,
-                                                  final Callback4<DialogInterface> call) {
+            final Callback4<DialogInterface> call) {
         AlertDialog alb = createInfoAlertDialog(context, message, call);
         alb.show();
         return alb;
@@ -411,28 +351,18 @@ public class UIUtils {
 
     /**
      * 对话框
-     *
-     * @param context
-     * @param message
-     * @param call
-     * @return
      */
     public static AlertDialog createAlertDialog(Context context, String message,
-                                                final Callback4<DialogInterface> call) {
+            final Callback4<DialogInterface> call) {
         return createAlertDialog(context, message, context.getString(R.string.lcm_ok),
                 context.getString(R.string.lcm_no), call);
     }
 
     /**
      * 对话框
-     *
-     * @param context
-     * @param message
-     * @param call
-     * @return
      */
     public static AlertDialog showAlertDialog(Context context, String message,
-                                              final Callback4<DialogInterface> call) {
+            final Callback4<DialogInterface> call) {
         AlertDialog alb = createAlertDialog(context, message, call);
         alb.show();
         return alb;
@@ -440,22 +370,16 @@ public class UIUtils {
 
     /**
      * 提示框
-     *
-     * @param context
-     * @param message
-     * @param positiveButtonText
-     * @param negativeButtonText
-     * @param call
-     * @return
      */
     public static AlertDialog createAlertDialog(Context context, String message,
-                                                String positiveButtonText,
-                                                String negativeButtonText,
-                                                final Callback4<DialogInterface> call) {
+            String positiveButtonText,
+            String negativeButtonText,
+            final Callback4<DialogInterface> call) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context).setMessage(message);
         if (!TextUtils.isEmpty(positiveButtonText)) {
             builder.setPositiveButton(positiveButtonText, new DialogInterface.OnClickListener() {
-                @Override public void onClick(DialogInterface dialog, int which) {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
                     call.onYes(dialog);
                     call.onFinish(dialog);
                 }
@@ -463,7 +387,8 @@ public class UIUtils {
         }
         if (!TextUtils.isEmpty(negativeButtonText)) {
             builder.setNegativeButton(negativeButtonText, new DialogInterface.OnClickListener() {
-                @Override public void onClick(DialogInterface dialog, int which) {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
                     call.onNo(dialog);
                     call.onFinish(dialog);
                 }
@@ -474,8 +399,6 @@ public class UIUtils {
 
     /**
      * 全屏
-     *
-     * @param window
      */
     public static void fullscreen(Window window) {
         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -495,6 +418,7 @@ public class UIUtils {
     /**
      * 沉浸模式
      * 使用 <a href=' http://https://github.com/DreaminginCodeZH/SystemUiHelper'>SystemUiHelper</a>
+     *
      * @param window {@link Window}
      */
     public static void immersive(Window window) {
@@ -521,6 +445,7 @@ public class UIUtils {
     /**
      * 提示气泡 沉浸模式
      * 使用 <a href=' http://https://github.com/DreaminginCodeZH/SystemUiHelper'>SystemUiHelper</a>
+     *
      * @param window {@link Window}
      */
     public static void immersiveSticky(Window window) {
@@ -553,7 +478,7 @@ public class UIUtils {
     }
 
     public static void startActivity(Context context, Class<? extends Activity> clazz,
-                                     Bundle bundle) {
+            Bundle bundle) {
         Intent intent = new Intent(context, clazz);
         if (bundle != null) {
             intent.putExtras(bundle);
@@ -566,7 +491,7 @@ public class UIUtils {
     }
 
     public static void startActivityForResult(Activity activity, Class<?> clazz, Bundle bundle,
-                                              int resultCode) {
+            int resultCode) {
         startActionForResult(activity, clazz, bundle, resultCode);
     }
 
@@ -575,12 +500,12 @@ public class UIUtils {
     }
 
     public static void startActivityForResult(Fragment fragment, Class<?> clazz, Bundle bundle,
-                                              int resultCode) {
+            int resultCode) {
         startActionForResult(fragment, clazz, bundle, resultCode);
     }
 
     public static void startActionForResult(Object o, Class<?> clazz, Bundle bundle,
-                                            int requestCode) {
+            int requestCode) {
         Intent intent;
         if (o instanceof Activity) {
             intent = new Intent((Activity) o, clazz);
@@ -607,57 +532,62 @@ public class UIUtils {
         return view != null && view.getVisibility() == View.VISIBLE;
     }
 
-    public static void toggleVisibility(View view) {
-        if (view == null) {
+    public static void toggleVisibility(View... views) {
+        if (views == null || views.length == 0) {
             return;
         }
-        if (view.getVisibility() == View.GONE) {
-            viewVisible(view);
-        } else {
-            viewGone(view);
+        for (View view : views) {
+            if (view.getVisibility() == View.GONE) {
+                viewVisible(view);
+            } else {
+                viewGone(view);
+            }
         }
     }
 
-    public static void viewVisible(View view) {
-        if (view == null) {
+    public static void viewVisibility(int visibility, View... views) {
+        if (views == null || views.length == 0) {
             return;
         }
-        view.setVisibility(View.VISIBLE);
+        for (View view : views) {
+            view.setVisibility(visibility);
+        }
     }
 
-    public static void viewParentVisible(ViewParent viewParent) {
-        if (viewParent == null) {
+    public static void viewParentVisibility(int visibility, ViewParent... viewParents) {
+        if (viewParents == null || viewParents.length == 0) {
             return;
         }
-        ((View) viewParent).setVisibility(View.VISIBLE);
+        for (ViewParent viewParent : viewParents) {
+            if (viewParent == null) {
+                continue;
+            }
+            ((View) viewParent).setVisibility(visibility);
+        }
     }
 
-    public static void viewInVisible(View view) {
-        if (view == null) {
-            return;
-        }
-        view.setVisibility(View.INVISIBLE);
+    public static void viewVisible(View... views) {
+        viewVisibility(View.VISIBLE, views);
     }
 
-    public static void viewParentInVisible(ViewParent viewParent) {
-        if (viewParent == null) {
-            return;
-        }
-        ((View) viewParent).setVisibility(View.INVISIBLE);
+    public static void viewParentVisible(ViewParent... viewParents) {
+        viewParentVisibility(View.VISIBLE, viewParents);
     }
 
-    public static void viewGone(View view) {
-        if (view == null) {
-            return;
-        }
-        view.setVisibility(View.GONE);
+    public static void viewInVisible(View... views) {
+        viewVisibility(View.INVISIBLE, views);
     }
 
-    public static void viewParentGone(ViewParent viewParent) {
-        if (viewParent == null) {
-            return;
-        }
-        ((View) viewParent).setVisibility(View.GONE);
+    public static void viewParentInVisible(ViewParent... viewParents) {
+        viewParentVisibility(View.INVISIBLE, viewParents);
+    }
+
+    public static void viewGone(View... views) {
+        viewVisibility(View.GONE, views);
+    }
+
+    public static void viewParentGone(ViewParent... viewParents) {
+        viewParentVisibility(View.GONE, viewParents);
     }
 
     public static <T extends View> T inflate(Context context, @LayoutRes int resource) {
@@ -665,23 +595,26 @@ public class UIUtils {
     }
 
     public static <T extends View> T inflate(Context context, @LayoutRes int resource,
-                                             ViewGroup root) {
+            ViewGroup root) {
         return inflate(context, resource, root, root != null);
     }
 
-    @SuppressWarnings("unchecked") public static <T extends View> T inflate(Context context,
-                                                                            @LayoutRes int resource,
-                                                                            ViewGroup root,
-                                                                            boolean attachToRoot) {
+    @SuppressWarnings("unchecked")
+    public static <T extends View> T inflate(Context context,
+            @LayoutRes int resource,
+            ViewGroup root,
+            boolean attachToRoot) {
         return (T) LayoutInflater.from(context).inflate(resource, root, attachToRoot);
     }
 
-    @SuppressWarnings("unchecked") public static <T extends View> T findViewById(@NonNull View view,
-                                                                                 @IdRes int resource) {
+    @SuppressWarnings("unchecked")
+    public static <T extends View> T findViewById(@NonNull View view,
+            @IdRes int resource) {
         return (T) view.findViewById(resource);
     }
 
-    @SuppressWarnings("unchecked") public static <T extends View> T findViewById(
+    @SuppressWarnings("unchecked")
+    public static <T extends View> T findViewById(
             @NonNull Activity activity, @IdRes int resource) {
         return (T) activity.findViewById(resource);
     }

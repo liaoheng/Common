@@ -33,6 +33,9 @@ dependencies {
     compileOnly deps.rxlifecycle
     compileOnly deps.rxlifecycle_android
 
+    compileOnly 'com.trello.rxlifecycle2:rxlifecycle:2.2.1'
+    compileOnly 'com.trello.rxlifecycle2:rxlifecycle-android:2.2.1'
+
     //TabLayout:https://github.com/h6ah4i/android-tablayouthelper
     compileOnly 'com.h6ah4i.android.tablayouthelper:tablayouthelper:0.8.0'
 

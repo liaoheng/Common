@@ -55,10 +55,10 @@ public class CountDownHelper {
     }
 
     /**
-     * @param interval 倒计时的间隔，单位是秒
+     * @param futureTime 需要进行倒计时的最大值,单位是秒
      */
-    public CountDownHelper(int interval, CountDownListener listener) {
-        this(0, interval, listener);
+    public CountDownHelper(long futureTime, CountDownListener listener) {
+        this(futureTime, 1, listener);
     }
 
     /**
