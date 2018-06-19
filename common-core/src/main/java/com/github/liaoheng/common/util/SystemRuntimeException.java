@@ -20,26 +20,36 @@ public class SystemRuntimeException extends RuntimeException implements ISystemE
         this(e.getMessage(), e);
     }
 
-    @Override public Throwable getCause() {
+    @Override
+    public Throwable getCause() {
         if (mExceptionHelper == null) {
-            return super.getCause();
+            return getOriginalCause();
         }
         return mExceptionHelper.getCause();
     }
 
     /**
      * {@link Throwable#getCause()}
-     * @return
      */
+    @Override
     public Throwable getOriginalCause() {
         return super.getCause();
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
         if (mExceptionHelper == null || mExceptionHelper.getThrowable() == null) {
             return super.toString();
         }
         return mExceptionHelper.throwableToString(this);
+    }
+
+    /**
+     * {@link Throwable#getMessage()}
+     */
+    @Override
+    public String getOriginalMessage() {
+        return super.getMessage();
     }
 
     public Throwable getThrowable() {

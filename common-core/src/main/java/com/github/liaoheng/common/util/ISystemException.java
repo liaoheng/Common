@@ -5,9 +5,13 @@ package com.github.liaoheng.common.util;
  * @version 2016-07-25 15:08
  */
 public interface ISystemException {
-    String DEFALUT               = "内部错误！";
-    String DATA_ERROR            = "参数错误！";
-    String PICTURE_ACQUIRE_ERROR = "无法获取图片！";
+    int UNKNOWN_ERROR = 1;
+    int INTERNAL_ERROR = 2;
+
+    String INTERNAL_ERROR_STRING = "Internal Error";
+    String UNKNOWN_ERROR_STRING = "Unknown Error";
 
     Throwable getCause();
+    Throwable getOriginalCause();
+    String getOriginalMessage();
 }

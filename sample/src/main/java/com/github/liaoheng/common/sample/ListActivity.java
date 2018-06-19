@@ -2,6 +2,7 @@ package com.github.liaoheng.common.sample;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
@@ -107,11 +108,12 @@ public class ListActivity extends CUBaseActivity {
             super(context, list);
         }
 
+        @NonNull
         @Override public RecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             return new RecyclerViewHolder(inflate(R.layout.view_list_item,parent));
         }
 
-        @Override public void onBindViewHolderItem(RecyclerViewHolder holder, String item,
+        @Override public void onBindViewHolderItem(@NonNull RecyclerViewHolder holder, String item,
                                                    int position) {
                 holder.onHandle(item,position,null);
         }

@@ -50,11 +50,12 @@ public class CustomViewHolderRecyclerAdapter<K, H extends BaseRecyclerViewHolder
         return mOperation.getItemViewType(getList(), position);
     }
 
-    @Override public H onCreateViewHolder(ViewGroup parent, int viewType) {
+    @NonNull
+    @Override public H onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return mOperation.createView(parent, viewType);
     }
 
-    @Override public void onBindViewHolderItem(H holder, K item, int position) {
+    @Override public void onBindViewHolderItem(@NonNull H holder, K item, int position) {
         mOperation.onHandle(holder, item, position);
     }
 }

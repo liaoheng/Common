@@ -66,15 +66,12 @@ public class LogFileUtils {
     }
 
     public void init(String fileName) {
-        try {
-            File log = FileUtils.createCacheSDAndroidDirectory("Log");
-            if (TextUtils.isEmpty(fileName)) {
-                fileName = DEFAULT_FILE_NAME;
-            }
-            mLogFile = FileUtils.createFile(log, fileName);
-            L.Log.d(TAG, "init log file : %s ", mLogFile.getAbsoluteFile());
-        } catch (SystemException ignored) {
+        File log = FileUtils.createProjectSpaceDir("Log");
+        if (TextUtils.isEmpty(fileName)) {
+            fileName = DEFAULT_FILE_NAME;
         }
+        mLogFile = FileUtils.createFile(log, fileName);
+        L.Log.d(TAG, "init log file : %s ", mLogFile.getAbsoluteFile());
     }
 
     private OutputStream mFileOutputStream;

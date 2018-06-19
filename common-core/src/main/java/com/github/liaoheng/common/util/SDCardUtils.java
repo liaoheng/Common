@@ -15,7 +15,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 /**
- * SD卡相关的辅助类
+ * 外部储存相关的辅助类
  * <br/> Dependency : android.permission.READ_EXTERNAL_STORAGE
  * <br/> Dependency : android.permission.WRITE_EXTERNAL_STORAGE
  *
@@ -25,18 +25,70 @@ import java.util.ArrayList;
 public class SDCardUtils {
     private static final String TAG = SDCardUtils.class.getSimpleName();
 
-    /**
-     * 判断SDCard是否可用
-     */
+    @Deprecated
     public static boolean isSDCardEnable() {
+        return isExternalStorageEnable();
+    }
+
+    @Deprecated
+    public static File getSDCardPath() {
+        return getExternalStorageDirectory();
+    }
+
+    /**
+     * 判断外部储存是否可用
+     */
+    public static boolean isExternalStorageEnable() {
         return Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState());
     }
 
     /**
-     * 获取SD卡路径
+     * 获取外部储存根目录，/storage/emulated/0 or /sdcard
      */
-    public static File getSDCardPath() {
+    public static File getExternalStorageDirectory() {
         return Environment.getExternalStorageDirectory();
+    }
+
+    /**
+     * 获取外部储存系统音乐目录，/storage/emulated/0/Music
+     */
+    public static File getExternalStorageMusicPublicDirectory() {
+        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC);
+    }
+
+    /**
+     * 获取外部储存系统相册目录，/storage/emulated/0/Pictures
+     */
+    public static File getExternalStoragePicturesPublicDirectory() {
+        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+    }
+
+    /**
+     * 获取外部储存系统视频目录，/storage/emulated/0/Movies
+     */
+    public static File getExternalStorageMoviesPublicDirectory() {
+        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES);
+    }
+
+    /**
+     * 获取外部储存系统下载目录，/storage/emulated/0/Download
+     */
+    public static File getExternalStorageDownloadPublicDirectory() {
+        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+    }
+
+    /**
+     * 获取外部储存系统相机目录，/storage/emulated/0/DCIM
+     */
+    public static File getExternalStorageDCIMPublicDirectory() {
+        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
+    }
+
+    /**
+     * 获取外部储存系统文档目录，/storage/emulated/0/Documents
+     */
+    public static File getExternalStorageDocumentsPublicDirectory() {
+        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
     }
 
     /**

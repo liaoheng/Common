@@ -17,6 +17,7 @@ package com.github.liaoheng.common.adapter.internal;
  * limitations under the License.
  */
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -116,8 +117,9 @@ public class HeaderViewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
         }
     }
 
+    @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         if (viewType <=HEADERS_START + getHeaderCount()){
             return new StaticViewHolder(mHeaderViews.get(viewType - HEADERS_START));
         }else if (viewType <= FOOTERS_START + getFooterCount()){
@@ -128,7 +130,7 @@ public class HeaderViewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
         if (isFooter(position) || isHeader(position)){
             return;
         }

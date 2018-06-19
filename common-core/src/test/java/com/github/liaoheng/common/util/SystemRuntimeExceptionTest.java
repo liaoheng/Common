@@ -7,10 +7,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
-import org.robolectric.internal.SdkConfig;
+
+import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -26,10 +28,23 @@ public class SystemRuntimeExceptionTest extends BaseTest {
         try {
             throw new SystemRuntimeException(new SystemException("timeout"));
         } catch (SystemRuntimeException e) {
+            loge(e);
             Throwable cause = e.getCause();
-            assertNotNull("is null", cause);
-            //ShadowLog.d(TAG, "", cause);
-            assertTrue("is not TimeoutException", cause instanceof SystemDataException);
+            assertNull("cause not null", cause);
+            assertEquals("msg is error", e.getMessage(), "timeout");
+        }
+    }
+
+    @Test
+    public void SystemRuntimeException2Test() {
+        try {
+            throw new SystemRuntimeException(new SystemException("timeout",new IOException("io")));
+        } catch (SystemRuntimeException e) {
+            loge(e);
+            Throwable cause = e.getCause();
+            assertNotNull("cause is null", cause);
+            //loge(cause);
+            assertTrue("is not IOException", cause instanceof IOException);
             assertEquals("msg is error", e.getMessage(), "timeout");
         }
     }

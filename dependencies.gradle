@@ -23,7 +23,7 @@ ext.deps = [
             design                      : "com.android.support:design:$supportVersion",
             gridlayoutv7                : "com.android.support:gridlayout-v7:$supportVersion",
             //https://github.com/apache/commons-io
-            commons_io                  : "commons-io:commons-io:2.4",
+            commons_io                  : "commons-io:commons-io:2.6",
             //https://github.com/FasterXML/jackson-annotations
             jackson_annotations         : "com.fasterxml.jackson.core:jackson-annotations:$JacksonVersion",
             //https://github.com/FasterXML/jackson-databind

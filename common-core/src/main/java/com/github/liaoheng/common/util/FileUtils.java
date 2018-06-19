@@ -1,7 +1,6 @@
 package com.github.liaoheng.common.util;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.github.liaoheng.common.Common;
@@ -20,151 +19,69 @@ import java.util.UUID;
  */
 public class FileUtils extends org.apache.commons.io.FileUtils {
     private static final String TAG = FileUtils.class.getSimpleName();
+    public static final int ERROR_SDCARD_NOT_AVAILABLE = 1;
+    public static final int ERROR_SDCARD__SPACE_INSUFFICIENT = 2;
 
     /**
-     * 创建临时文件
-     *
-     * @param fileName 文件名
-     * @throws SystemException
+     * 得到SD卡的路径
      */
-    public static File createFile(File path, String fileName) throws SystemException {
-        try {
-            if (!path.exists()) {
-                createPath(path);
-            }
-            File tempPath = new File(path, fileName);
-            if (!tempPath.exists()) {
-                if (!tempPath.createNewFile()) {
-                    throw new IOException(tempPath.getAbsolutePath());
-                } else {
-                    L.Log.d(TAG, "create file :" + tempPath.getAbsolutePath());
+    public static File getExternalStoragePath() throws SystemException {
+        isExternalStorageEnable();
+        return SDCardUtils.getExternalStorageDirectory();// 获取根目录
+    }
+
+    public static void isExternalStorageEnable() throws SystemException {
+        if (!SDCardUtils.isExternalStorageEnable()) {
+            throw new SystemException(ERROR_SDCARD_NOT_AVAILABLE);
+        }
+    }
+
+    public static void isExternalStorageLessMB(long mb) throws SystemException {
+        if (SDCardUtils.getSDAvailableSize() < mb * 1024) {
+            throw new SystemException(ERROR_SDCARD__SPACE_INSUFFICIENT);
+        }
+    }
+
+    /**
+     * 在父目录下创建文件
+     *
+     * @param parent 父目录，不存在会自动创建
+     * @param fileName 需要创建文件名
+     */
+    public static File createFile(File parent, String fileName) {
+        if (!parent.exists()) {
+            createPath(parent);
+        }
+        File newFile = new File(parent, fileName);
+        if (!newFile.exists()) {
+            try {
+                if (newFile.createNewFile()) {
+                    L.alog().d(TAG, "create file :" + newFile.getAbsolutePath());
                 }
+            } catch (IOException ignored) {
             }
-            return tempPath;
-        } catch (IOException e) {
-            throw new SystemException("文件创建失败！", e);
         }
+        return newFile;
     }
 
     /**
-     * 创建临时文件
+     * 在父目录下创建临时文件，使用{@link UUID#randomUUID()}生成文件名
      *
-     * @param nameEx 文件后缀
-     * @return {@link UUID#randomUUID()}
-     * @throws SystemException
+     * @param parent 父目录，不存在会自动创建
+     * @param nameEx 需要创建文件格式
      */
-    public static File createTempFile(File path, String nameEx) throws SystemException {
-        try {
-            if (!path.exists()) {
-                createPath(path);
-            }
-            File tempPath = new File(path, UUID.randomUUID().toString() + nameEx);
-            if (!tempPath.exists()) {
-                if (!tempPath.createNewFile()) {
-                    throw new IOException(tempPath.getAbsolutePath());
-                } else {
-                    L.Log.d(TAG, "create file :" + tempPath.getAbsolutePath());
-                }
-            }
-            return tempPath;
-        } catch (IOException e) {
-            throw new SystemException("临时文件创建失败！", e);
-        }
+    public static File createTempFile(File parent, String nameEx) {
+        String fileName = UUID.randomUUID().toString() + "." + nameEx;
+        return createFile(parent, fileName);
     }
 
     /**
-     * 创建临时文件
+     * 在父目录下创建临时文件，使用{@link UUID#randomUUID()}生成文件名
      *
-     * @param nameEx 文件后缀
-     * @throws SystemException
+     * @param parent 父目录，不存在会自动创建
      */
-    public static File createTempFile(String path, String nameEx) throws SystemException {
-        return createTempFile(new File(path), nameEx);
-    }
-
-    /**
-     * 得到临时目录
-     *
-     * @throws SystemException
-     */
-    public static File getProjectTempDirectory() throws SystemException {
-        return createProjectSDExternalPath("temp");
-    }
-
-    /**
-     * 得到保存图片目录
-     *
-     * @throws SystemException
-     */
-    public static File getProjectImageDirectory() throws SystemException {
-        return createProjectSDPath("images");
-    }
-
-    /**
-     * 在SD卡项目名下创建目录
-     *
-     * @param ptah 路径
-     * @return {@link File}
-     * @throws SystemException
-     */
-    public static File createProjectSDPath(String ptah) throws SystemException {
-        return createPath(getProjectSDPath(ptah));
-    }
-
-    /**
-     * 在SD  {@link Context#getExternalCacheDir()} 项目名下创建目录
-     *
-     * @param ptah 路径
-     * @return {@link File}
-     * @throws SystemException
-     */
-    public static File createProjectSDExternalPath(String ptah) throws SystemException {
-        File sdAndroidPath = Common.getSDExternalPath();
-        return createPath(sdAndroidPath.getAbsolutePath(), ptah);
-    }
-
-    public static File getSDExternalPath(@NonNull Context context) {
-        File externalCacheDir = context.getExternalCacheDir();
-        if (externalCacheDir == null) {
-            return context.getCacheDir();
-        }
-        return externalCacheDir.getParentFile();
-    }
-
-    /**
-     * 得到项目名下路径
-     *
-     * @param ptah 路径
-     * @return {@link File}
-     * @throws SystemException
-     */
-    public static File getProjectSDPath(String ptah) throws SystemException {
-        File root = new File(getSDPath(), Common.getProjectName());
-        return new File(root, ptah);
-    }
-
-    /**
-     * 在SD卡上创建路径
-     *
-     * @param rootPath 父路径
-     * @param path 建立的路径
-     * @return {@link File}
-     * @throws SystemException
-     */
-    public static File createSDPath(String rootPath, String path) throws SystemException {
-        String temp = getSDPath().getAbsolutePath() + File.separator + rootPath;
-        return createSDPath(new File(temp, path).getAbsolutePath());
-    }
-
-    /**
-     * 在SD卡上创建路径
-     *
-     * @param path 路径
-     * @return {@link File}
-     * @throws SystemException
-     */
-    public static File createSDPath(String path) throws SystemException {
-        return createPath(getSDPath().getAbsolutePath(), path);
+    public static File createTempFile(File parent) {
+        return createTempFile(parent, "tmp");
     }
 
     /**
@@ -172,10 +89,18 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
      *
      * @param rootPath 父路径
      * @param path 建立的路径
-     * @return {@link File}
-     * @throws SystemException
      */
-    public static File createPath(String rootPath, String path) throws SystemException {
+    public static File createPath(String rootPath, String path) {
+        return createPath(new File(rootPath, path));
+    }
+
+    /**
+     * 创建路径
+     *
+     * @param rootPath 父路径
+     * @param path 建立的路径
+     */
+    public static File createPath(File rootPath, String path) {
         return createPath(new File(rootPath, path));
     }
 
@@ -183,54 +108,23 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
      * 创建路径
      *
      * @param path 路径
-     * @return {@link File}
-     * @throws SystemException
      */
-    public static File createPath(File path) throws SystemException {
-        if (!path.exists()) {
-            if (!path.mkdirs()) {
-                throw new SystemException("创建路径失败:" + path.getAbsolutePath());
-            } else {
-                L.Log.d(TAG, "create path:" + path.getAbsolutePath());
-            }
-        }
-        return path;
+    public static File createPath(String path) {
+        return createPath(new File(path));
     }
 
     /**
      * 创建路径
      *
      * @param path 路径
-     * @return {@link File}
-     * @throws SystemException
      */
-    public static File createPath(String path) throws SystemException {
-        return createPath(new File(path));
-    }
-
-    /**
-     * SD卡建立缓存文件夹
-     *
-     * @param cacheDir 缓存目录名
-     * @return {@link File} 以建立的缓存路径
-     */
-    public static File createCacheSDDirectory(String cacheDir) throws SystemException {
-        isSDCardEnable();
-        isSDLessMB(100);
-        return createHideMediaDirectory(createProjectSDPath(cacheDir));
-    }
-
-    /**
-     * SD {@link Context#getExternalCacheDir()} 建立缓存文件夹
-     *
-     * @param cacheDir 缓存目录名
-     * @return {@link File} 以建立的缓存路径
-     */
-    public static File createCacheSDAndroidDirectory(String cacheDir) throws SystemException {
-        isSDCardEnable();
-        isSDLessMB(100);
-        File parentFile = Common.getSDExternalPath();
-        return createHideMediaDirectory(createPath(parentFile.getAbsolutePath(), cacheDir));
+    public static File createPath(File path) {
+        if (!path.exists()) {
+            if (path.mkdirs()) {
+                L.alog().d(TAG, "create path:" + path.getAbsolutePath());
+            }
+        }
+        return path;
     }
 
     /**
@@ -239,51 +133,139 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
      * @param path 缓存目录
      * @return {@link File}
      */
-    public static File createHideMediaDirectory(File path) throws SystemException {
-        try {
-            if (!path.exists()) {
-                if (path.mkdirs()) {
-                    throw new IOException("path create failure");
-                }
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    public static File createHideMediaDirectory(File path) {
+        createPath(path);
+        File noMedia = new File(path, ".nomedia");
+        if (!noMedia.exists()) {
+            try {
+                noMedia.createNewFile();
+            } catch (IOException ignored) {
             }
-            File noMedia = new File(path, ".nomedia");
-            if (!noMedia.exists()) {
-                if (!noMedia.createNewFile()) {
-                    throw new IOException(" \".nomedia\" create failure");
-                }
-            }
-        } catch (IOException e) {
-            throw new SystemException(e);
         }
         return path;
     }
 
+    //-----------------------------------------外部储存空间----------------------------------------------------
+
     /**
-     * 得到SD卡的路径
-     *
-     * @throws SystemException
+     * 获取外部储存项目空间目录的路径，sd/Android/data/{package}/
      */
-    public static File getSDPath() throws SystemException {
-        isSDCardEnable();
-        return SDCardUtils.getSDCardPath();// 获取根目录
+    @SuppressWarnings("ConstantConditions")
+    public static File getProjectSpacePath(Context context) throws SystemException {
+        File externalCacheDir = context.getExternalCacheDir();
+        if (externalCacheDir == null) {
+            throw new SystemException(ERROR_SDCARD_NOT_AVAILABLE);
+        }
+        return externalCacheDir.getParentFile();
     }
 
-    public static void isSDCardEnable() throws SystemException {
-        if (!SDCardUtils.isSDCardEnable()) {
-            throw new SystemException("SD卡不存在或不可用！");
-        }
+    /**
+     * 在外部储存项目空间中创建目录，sd/Android/data/{package}/{dir}/
+     *
+     * @param dir 目录名
+     */
+    public static File createProjectSpaceDir(Context context, String dir) throws SystemException {
+        return createPath(getProjectSpacePath(context), dir);
     }
 
-    public static void isSDLessMB(long mb) throws SystemException {
-        if (SDCardUtils.getSDAvailableSize() < mb * 1024) {
-            throw new SystemException("SD卡空间不足" + mb + "MB！");
-        }
+    /**
+     * 得到外部储存项目空间的临时目录，sd/Android/data/{package}/temp/
+     */
+    public static File getProjectSpaceTempDirectory(Context context) throws SystemException {
+        return createProjectSpaceDir(context, "temp");
     }
+
+    /**
+     * 得到外部储存项目空间的图片目录，sd/Android/data/{package}/pictures/
+     */
+    public static File getProjectSpacePicturesDirectory(Context context) throws SystemException {
+        return createProjectSpaceDir(context, "pictures");
+    }
+
+    /**
+     * 得到内部储存项目空间的缓存目录，sd/Android/data/{package}/{cacheDir}/
+     *
+     * @param cacheDir 缓存目录名
+     */
+    public static File getProjectSpaceCacheDirectory(Context context, String cacheDir) throws SystemException {
+        isExternalStorageEnable();
+        isExternalStorageLessMB(100);
+        return createHideMediaDirectory(createProjectSpaceDir(context, cacheDir));
+    }
+
+    //-----------------------------------------外部储存----------------------------------------------------
+
+    /**
+     * 获取外部储存项目目录的路径，sd/{project_name}/
+     */
+    public static File getProjectPath(String projectName) throws SystemException {
+        return new File(getExternalStoragePath(), projectName);
+    }
+
+    /**
+     * 获取外部储存项目目录的路径，sd/{project_name}/
+     */
+    public static File getProjectPath() throws SystemException {
+        return getProjectPath(Common.getProjectName());
+    }
+
+    /**
+     * 在外部储存项目中创建目录，sd/{project_name}/{dir}/
+     *
+     * @param dir 目录名
+     */
+    public static File createProjectDir(String dir) throws SystemException {
+        return createPath(getProjectPath(), dir);
+    }
+
+    /**
+     * 得到外部储存项目的临时目录，sd/{project_name}/temp/
+     */
+    public static File getProjectTempDirectory() throws SystemException {
+        return createProjectDir("temp");
+    }
+
+    /**
+     * 得到外部储存项目的图片目录，sd/{project_name}/pictures/
+     */
+    public static File getProjectPicturesDirectory() throws SystemException {
+        return createProjectDir("pictures");
+    }
+
+    /**
+     * 得到外部储存项目的缓存目录，sd/{project_name}/{cacheDir}/
+     *
+     * @param cacheDir 缓存目录名
+     */
+    public static File getProjectCacheDirectory(String cacheDir) throws SystemException {
+        isExternalStorageEnable();
+        isExternalStorageLessMB(100);
+        return createHideMediaDirectory(createProjectDir(cacheDir));
+    }
+
+    //-----------------------------------------内部储存----------------------------------------------------
+
+    /**
+     * 获取内部储存项目空间的路径，/data/data/{package}/
+     */
+    public static File getDataProjectPath(Context context) {
+        return context.getCacheDir().getParentFile();
+    }
+
+    /**
+     * 在内部储存项目空间中创建目录，/data/data/{package}/{dir}/
+     *
+     * @param dir 目录名
+     */
+    public static File createDataProjectDir(Context context, String dir) {
+        return context.getDir(dir, Context.MODE_PRIVATE);
+    }
+
+    //-----------------------------------------完----------------------------------------------------
 
     /**
      * 判断文件是否存在
-     *
-     * @throws SystemException
      */
     public static void exists(File file, String errorMessage) throws SystemException {
         if (TextUtils.isEmpty(errorMessage)) {

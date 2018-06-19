@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import io.reactivex.Flowable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.subscribers.ResourceSubscriber;
 import rx.Observable;
 import rx.Subscriber;
@@ -235,9 +236,9 @@ public class Utils {
     /**
      * 弃置RxJava
      *
-     * @param subscription {@link ResourceSubscriber#dispose()}
+     * @param subscription {@link Disposable#dispose()}
      */
-    public static void dispose(ResourceSubscriber subscription) {
+    public static void dispose(Disposable subscription) {
         if (subscription == null) {
             return;
         }

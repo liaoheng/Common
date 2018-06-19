@@ -100,7 +100,7 @@ public class CUBaseActivity extends AppCompatActivity {
         return UIUtils.findViewById(this,id);
     }
 
-    public FragmentActivity getActivity() {
+    public CUBaseActivity getActivity() {
         return this;
     }
 

@@ -1,5 +1,7 @@
 package com.github.liaoheng.common.util;
 
+import android.util.Log;
+
 import com.github.liaoheng.common.BaseTest;
 import com.github.liaoheng.common.BuildConfig;
 
@@ -13,6 +15,7 @@ import java.util.concurrent.TimeoutException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -58,7 +61,7 @@ public class SystemExceptionTest extends BaseTest {
             throw new SystemException("one error");
         } catch (SystemException e) {
             assertNotNull("is null", e);
-            //ShadowLog.d(TAG, "", cause);
+            //loge(e);
             assertEquals("msg is error", e.getMessage(), "one error");
         }
     }
@@ -68,9 +71,9 @@ public class SystemExceptionTest extends BaseTest {
         try {
             throw new SystemException(new SystemDataException("two error"));
         } catch (SystemException e) {
+            loge(e);
             Throwable cause = e.getCause();
             assertNotNull("is null", cause);
-            //ShadowLog.d(TAG, "", cause);
             assertEquals("msg is error", e.getMessage(), "two error");
         }
     }
@@ -82,7 +85,7 @@ public class SystemExceptionTest extends BaseTest {
             try {
                 String s1 = s[3];
             } catch (ArrayIndexOutOfBoundsException e) {
-                throw new SystemException(SystemException.DATA_ERROR, e);
+                throw new SystemException("error", e);
             }
         } catch (SystemException e) {
             Throwable cause = e.getCause();
@@ -90,7 +93,7 @@ public class SystemExceptionTest extends BaseTest {
             //ShadowLog.d(TAG, "", cause);
             assertTrue("is not ArrayIndexOutOfBoundsException",
                     cause instanceof ArrayIndexOutOfBoundsException);
-            assertEquals("msg is error", e.getMessage(), SystemException.DATA_ERROR);
+            assertEquals("msg is error", e.getMessage(), "error");
         }
     }
 
@@ -117,7 +120,7 @@ public class SystemExceptionTest extends BaseTest {
             Throwable cause = e.getCause();
             assertNotNull("is null", cause);
             //ShadowLog.d(TAG, "", cause);
-            assertTrue("is not SystemException", cause instanceof IllegalArgumentException);
+            assertTrue("is not IllegalArgumentException", cause instanceof IllegalArgumentException);
         }
     }
 
@@ -128,28 +131,81 @@ public class SystemExceptionTest extends BaseTest {
                     new SystemException(new FileNotFoundException("not can file found")));
         } catch (IllegalArgumentException ex) {
             SystemException e = new SystemException(ex);
+            //loge(e);
             Throwable cause = e.getCause();
             assertNotNull("is null", cause);
-            //ShadowLog.d(TAG, "", cause);
-            assertTrue("is not SystemException", cause instanceof IllegalArgumentException);
+            //loge(cause);
+            assertTrue("is not IllegalArgumentException", cause instanceof IllegalArgumentException);
             assertEquals("msg is error", e.getMessage(),
-                    "java.io.FileNotFoundException: java.io.FileNotFoundException: not can file found");
+                    "java.io.FileNotFoundException : not can file found");
         }
     }
 
     @Test
     public void addSystemException8Test() {
+        String[] s = new String[] { "123", "456" };
         try {
-            throw new IllegalArgumentException(
-                    new SystemException(new FileNotFoundException("not can file found")));
-        } catch (IllegalArgumentException ex) {
-            SystemException e = new SystemException(ex);
+            try {
+                String s1 = s[3];
+            } catch (ArrayIndexOutOfBoundsException e) {
+                throw new SystemException(SystemException.INTERNAL_ERROR, SystemException.UNKNOWN_ERROR_STRING, e);
+            }
+        } catch (SystemException e) {
             Throwable cause = e.getCause();
-            assertNotNull("not null", cause);
+            assertNotNull("is null", cause);
             //ShadowLog.d(TAG, "", cause);
-            assertTrue("is not SystemException", cause instanceof IllegalArgumentException);
-            assertEquals("msg is error", e.getMessage(),
-                    "java.io.FileNotFoundException: java.io.FileNotFoundException: not can file found");
+            assertTrue("is not ArrayIndexOutOfBoundsException",
+                    cause instanceof ArrayIndexOutOfBoundsException);
+            assertEquals("msg is error", e.getMessage(), SystemException.INTERNAL_ERROR_STRING);
+            assertEquals("type is error", e.getType(), SystemException.INTERNAL_ERROR);
+            assertEquals("type msg is error", e.getTypeMessage(), SystemException.INTERNAL_ERROR_STRING);
+        }
+    }
+
+    @Test
+    public void addSystemException9Test() {
+        try {
+            try {
+                throw new FileNotFoundException("not can file found");
+            } catch (FileNotFoundException e) {
+                throw new SystemException("error", e);
+            }
+        } catch (SystemException e) {
+            Throwable cause = e.getCause();
+            assertNotNull("is null", cause);
+            assertTrue("is not FileNotFoundException",
+                    cause instanceof FileNotFoundException);
+            assertEquals("type is error", e.getType(), 0);
+            assertEquals("type msg is error", e.getTypeMessage(), "");
+        }
+    }
+
+    @Test
+    public void addSystemException10Test() {
+        try {
+            throw new SystemException("error", "data error");
+        } catch (SystemException e) {
+            Throwable cause = e.getCause();
+            assertNotNull("is null", cause);
+            assertTrue("is not SystemDataException",
+                    cause instanceof SystemDataException);
+            assertEquals("msg is error", e.getMessage(), "error");
+            assertEquals("cause msg is error", cause.getMessage(), "data error");
+            assertEquals("type is error", e.getType(), 0);
+            assertEquals("type msg is error", e.getTypeMessage(), "");
+        }
+    }
+
+    @Test
+    public void addSystemException11Test() {
+        try {
+            throw new SystemException(SystemException.INTERNAL_ERROR, "my error");
+        } catch (SystemException e) {
+            Throwable cause = e.getCause();
+            assertNull("is null", cause);
+            assertEquals("msg is error", e.getMessage(), "my error");
+            assertEquals("type is error", e.getType(), SystemException.INTERNAL_ERROR);
+            assertEquals("type msg is error", e.getTypeMessage(), SystemException.INTERNAL_ERROR_STRING);
         }
     }
 }

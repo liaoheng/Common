@@ -10,6 +10,11 @@ android {
         versionCode VERSION_CODE as int
         versionName VERSION_NAME
     }
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
     lintOptions {
         abortOnError false
     }

@@ -562,7 +562,7 @@ public class L {
         void e(String TAG, @NonNull Activity activity, @StringRes int userHint);
     }
 
-    public class LogToast implements L.ILogToast {
+    public static class LogToast implements L.ILogToast {
 
         @Override
         public void showLog(Context context, String hint) {
@@ -601,16 +601,16 @@ public class L {
         }
     }
 
-    private ILogToast toast;
+    private static ILogToast toast;
 
-    public ILogToast getToast() {
+    public static ILogToast getToast() {
         if (toast == null) {
             toast = new LogToast();
         }
         return toast;
     }
 
-    public class LogSnack implements L.ILogSnack {
+    public static class LogSnack implements L.ILogSnack {
         @Override
         public void showLog(View view, String hint) {
             UIUtils.showSnack(view, hint);
@@ -675,9 +675,9 @@ public class L {
         }
     }
 
-    private ILogSnack snack;
+    private static ILogSnack snack;
 
-    public ILogSnack getSnack() {
+    public static ILogSnack getSnack() {
         if (snack == null) {
             snack = new LogSnack();
         }

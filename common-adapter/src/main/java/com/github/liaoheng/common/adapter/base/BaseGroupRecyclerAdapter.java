@@ -1,6 +1,8 @@
 package com.github.liaoheng.common.adapter.base;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.ViewGroup;
 
 import com.github.liaoheng.common.adapter.holder.BaseRecyclerViewHolder;
@@ -23,11 +25,14 @@ public abstract class BaseGroupRecyclerAdapter<K>
         super(context, list);
     }
 
-    @Override public int getItemViewType(int position) {
+    @Override
+    public int getItemViewType(int position) {
         return getList().get(position).getType().getCode();
     }
 
-    @Override public BaseRecyclerViewHolder<K> onCreateViewHolder(ViewGroup parent, int viewType) {
+    @NonNull
+    @Override
+    public BaseRecyclerViewHolder<K> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == Group.GroupType.HEADER.getCode()) {
             return onCreateGroupHeaderViewHolder(parent, viewType);
         } else if (viewType == Group.GroupType.FOOTER.getCode()) {
@@ -37,32 +42,34 @@ public abstract class BaseGroupRecyclerAdapter<K>
         }
     }
 
-    @Override public void onBindViewHolder(BaseRecyclerViewHolder<K> holder, int position) {
+    @Override
+    public void onBindViewHolder(@NonNull BaseRecyclerViewHolder<K> holder, int position) {
         Group<K> item = getList().get(position);
         if (item == null) {
             onBindViewHolderItem(holder, null, position);
             return;
         }
-        if (Group.GroupType.CONTENT.equals(item.getType())){
+        if (Group.GroupType.CONTENT.equals(item.getType())) {
             initOnItemClick(item, holder.itemView, position);
             initOnItemLongClick(item, holder.itemView, position);
         }
         onBindViewHolderItem(holder, item, position);
     }
 
-    @Override public void onBindViewHolderItem(BaseRecyclerViewHolder<K> holder, Group<K> item,
-                                               int position) {
-        holder.onHandle(item.getContent(), position, item);
+    @Override
+    public void onBindViewHolderItem(@NonNull BaseRecyclerViewHolder<K> holder, @Nullable Group<K> item,
+            int position) {
+        holder.onHandle(item == null ? null : item.getContent(), position, item);
     }
 
     public abstract BaseRecyclerViewHolder<K> onCreateGroupHeaderViewHolder(ViewGroup parent,
-                                                                            int viewType);
+            int viewType);
 
     public abstract BaseRecyclerViewHolder<K> onCreateGroupFooterViewHolder(ViewGroup parent,
-                                                                            int viewType);
+            int viewType);
 
     public abstract BaseRecyclerViewHolder<K> onCreateGroupContentViewHolder(ViewGroup parent,
-                                                                             int viewType);
+            int viewType);
 }
 
 

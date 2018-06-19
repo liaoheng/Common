@@ -2,6 +2,7 @@ package com.github.liaoheng.common.adapter.base;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v4.util.SparseArrayCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -71,6 +72,7 @@ public class BaseRecyclerDelegationAdapter<T> extends BaseRecyclerAdapter<T, Rec
         return mAdapterDelegatesManager.getItemViewType(getList(), position);
     }
 
+    @SuppressWarnings("unchecked")
     @SuppressLint("LongLogTag")
     private SparseArrayCompat<AdapterDelegate<T>> getDelegates() {
         try {
@@ -83,9 +85,10 @@ public class BaseRecyclerDelegationAdapter<T> extends BaseRecyclerAdapter<T, Rec
         return null;
     }
 
-    @SuppressWarnings("unchecked")
+    @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    @SuppressWarnings("unchecked")
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (getDelegates() != null) {
             //TODO 可以优化一下
             //为各代理Adapter设置点击与长按事件回调
@@ -117,12 +120,12 @@ public class BaseRecyclerDelegationAdapter<T> extends BaseRecyclerAdapter<T, Rec
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         mAdapterDelegatesManager.onBindViewHolder(getList(), position, holder);
     }
 
     @Override
-    public void onBindViewHolderItem(RecyclerView.ViewHolder holder, T item,
+    public void onBindViewHolderItem(@NonNull RecyclerView.ViewHolder holder, T item,
             int position) {
     }
 }

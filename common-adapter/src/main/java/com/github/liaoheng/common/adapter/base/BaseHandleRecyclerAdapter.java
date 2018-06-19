@@ -1,6 +1,7 @@
 package com.github.liaoheng.common.adapter.base;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import com.github.liaoheng.common.adapter.holder.IBaseViewHolder;
 import java.util.List;
@@ -26,7 +27,7 @@ public abstract class BaseHandleRecyclerAdapter<K, V extends RecyclerView.ViewHo
      * @see RecyclerView.Adapter#onBindViewHolder(RecyclerView.ViewHolder, int)
      * @param item  Current list item
      */
-    @SuppressWarnings("unchecked") public void onBindViewHolderItem(V holder, K item,
+    @SuppressWarnings("unchecked") public void onBindViewHolderItem(@NonNull V holder, K item,
                                                                     int position) {
         if (holder instanceof IBaseViewHolder) {
             ((IBaseViewHolder) holder).onHandle(item, position, null);

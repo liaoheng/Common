@@ -3,6 +3,7 @@ package com.github.liaoheng.common.adapter.base;
 import android.content.Context;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -136,11 +137,12 @@ public abstract class BaseRecyclerAdapter<T, V extends RecyclerView.ViewHolder>
         getList().remove(item);
     }
 
+    @NonNull
     @Override
-    public abstract V onCreateViewHolder(ViewGroup parent, int viewType);
+    public abstract V onCreateViewHolder(@NonNull ViewGroup parent, int viewType);
 
     @Override
-    public void onBindViewHolder(V holder, int position) {
+    public void onBindViewHolder(@NonNull V holder, int position) {
         T item = getList().get(position);
         if (item == null) {
             onBindViewHolderItem(holder, null, position);
@@ -155,7 +157,7 @@ public abstract class BaseRecyclerAdapter<T, V extends RecyclerView.ViewHolder>
      * @param item Current list item
      * @see RecyclerView.Adapter#onBindViewHolder(RecyclerView.ViewHolder, int)
      */
-    public abstract void onBindViewHolderItem(V holder, T item, int position);
+    public abstract void onBindViewHolderItem(@NonNull V holder,@Nullable T item, int position);
 
     @Override
     public int getItemCount() {
