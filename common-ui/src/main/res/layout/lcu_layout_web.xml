@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.github.liaoheng.common.ui.view.WebViewLayout
+    <com.github.liaoheng.common.ui.widget.WebViewLayout
         android:id="@id/lcu_web_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

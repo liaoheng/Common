@@ -52,14 +52,14 @@
                 android:layout_height="wrap_content"/>
 
 
-        <com.github.liaoheng.common.ui.view.ToggleImageButton
+        <com.github.liaoheng.common.ui.widget.ToggleImageButton
                 app:normalDrawableRes="@drawable/ic_wallpaper_black_24dp"
                 app:selectedDrawableRes="@drawable/ic_wallpaper_white_24dp"
                 app:enableSelected="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
-        <com.github.liaoheng.common.ui.view.ToggleTextButton
+        <com.github.liaoheng.common.ui.widget.ToggleTextButton
                 android:textColor="@android:color/background_dark"
                 app:normalText="ok"
                 app:selectedText="off"

@@ -1,7 +1,7 @@
 package com.github.liaoheng.common.ui.core;
 
 import android.widget.EditText;
-import com.github.liaoheng.common.ui.view.CUInputDialog;
+import com.github.liaoheng.common.ui.widget.CUInputDialog;
 import com.github.liaoheng.common.util.UIUtils;
 
 /**

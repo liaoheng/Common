@@ -13,7 +13,7 @@ import com.github.liaoheng.common.core.BackPressedListener;
 import com.github.liaoheng.common.ui.base.CULazyFragment;
 import com.github.liaoheng.common.ui.core.WebHelper;
 import com.github.liaoheng.common.ui.core.WebViewMenuHelper;
-import com.github.liaoheng.common.ui.view.WebViewLayout;
+import com.github.liaoheng.common.ui.widget.WebViewLayout;
 
 /**
  * Simple WebView Fragment

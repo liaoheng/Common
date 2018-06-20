@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -16,11 +15,10 @@ import com.github.liaoheng.common.adapter.base.BaseListAdapter;
 import com.github.liaoheng.common.adapter.base.BaseRecyclerAdapter;
 import com.github.liaoheng.common.adapter.base.IBaseAdapter;
 import com.github.liaoheng.common.adapter.holder.BaseRecyclerViewHolder;
-import com.github.liaoheng.common.adapter.view.ListLinearLayout;
+import com.github.liaoheng.common.adapter.widget.ListLinearLayout;
 import com.github.liaoheng.common.ui.base.CUBaseActivity;
 import com.github.liaoheng.common.util.UIUtils;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**

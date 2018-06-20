@@ -1,4 +1,4 @@
-package com.github.liaoheng.common.adapter.view;
+package com.github.liaoheng.common.adapter.widget;
 
 import android.content.Context;
 import android.database.DataSetObserver;

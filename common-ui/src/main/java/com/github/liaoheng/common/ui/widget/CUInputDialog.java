@@ -1,4 +1,4 @@
-package com.github.liaoheng.common.ui.view;
+package com.github.liaoheng.common.ui.widget;
 
 import android.content.Context;
 import android.content.DialogInterface;
