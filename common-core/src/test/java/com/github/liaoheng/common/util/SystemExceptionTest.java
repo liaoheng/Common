@@ -156,7 +156,7 @@ public class SystemExceptionTest extends BaseTest {
             //ShadowLog.d(TAG, "", cause);
             assertTrue("is not ArrayIndexOutOfBoundsException",
                     cause instanceof ArrayIndexOutOfBoundsException);
-            assertEquals("msg is error", e.getMessage(), SystemException.INTERNAL_ERROR_STRING);
+            assertEquals("msg is error", e.getMessage(), SystemException.UNKNOWN_ERROR_STRING);
             assertEquals("type is error", e.getType(), SystemException.INTERNAL_ERROR);
             assertEquals("type msg is error", e.getTypeMessage(), SystemException.INTERNAL_ERROR_STRING);
         }

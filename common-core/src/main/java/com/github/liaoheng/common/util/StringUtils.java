@@ -372,18 +372,6 @@ public class StringUtils {
     // ---------------------------------------------------------------- miscellaneous
 
     /**
-     * Compares 2 strings. If one of the strings is <code>null</code>, <code>false</code> is returned. if
-     * both string are <code>null</code>, <code>true</code> is returned.
-     *
-     * @param s1 first string to compare
-     * @param s2 second string
-     * @return <code>true</code> if strings are equal, otherwise <code>false</code>
-     */
-    public static boolean equals(String s1, String s2) {
-        return Utils.equals(s1, s2);
-    }
-
-    /**
      * Determines if a string is empty (<code>null</code> or zero-length).
      */
     public static boolean isEmpty(CharSequence string) {

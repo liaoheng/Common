@@ -1,5 +1,6 @@
 package com.github.liaoheng.common.network;
 
+import android.content.Context;
 import android.text.TextUtils;
 
 import com.github.liaoheng.common.util.Callback;
@@ -170,20 +171,20 @@ public class OkHttp3Utils {
         private List<HeaderPlusListener> headerPlus;
         private Cache cache;
 
-        public Init setDefaultCache() {
-            return setDefaultCache(DEFAULT_HTTP_DISK_CACHE_SIZE);
+        public Init setDefaultCache(Context context) {
+            return setDefaultCache(context, DEFAULT_HTTP_DISK_CACHE_SIZE);
         }
 
-        public Init setDefaultCache(long httpDiskCacheSize) {
+        public Init setDefaultCache(Context context, long httpDiskCacheSize) {
             try {
-                cache = getDefaultCache(httpDiskCacheSize);
+                cache = getDefaultCache(context, httpDiskCacheSize);
             } catch (SystemException ignored) {
             }
             return this;
         }
 
-        private Cache getDefaultCache(long httpDiskCacheSize) throws SystemException {
-            File cacheFile = FileUtils.createCacheSDAndroidDirectory(CommonNet.HTTP_CACHE_DIR);
+        private Cache getDefaultCache(Context context, long httpDiskCacheSize) throws SystemException {
+            File cacheFile = FileUtils.getProjectSpaceCacheDirectory(context, CommonNet.HTTP_CACHE_DIR);
             if (httpDiskCacheSize == 0) {
                 httpDiskCacheSize = DEFAULT_HTTP_DISK_CACHE_SIZE;
             }
@@ -809,7 +810,7 @@ public class OkHttp3Utils {
                             File file = FileUtils.createFile(dir, fileName.getFileName());
                             FileUtils.writeByteArrayToFile(file, fileName.getBytes());
                             return new FileDownload(file);
-                        } catch (SystemException | IOException e) {
+                        } catch (IOException e) {
                             throw new SystemRuntimeException(e);
                         }
                     }

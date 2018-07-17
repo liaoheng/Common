@@ -1,5 +1,6 @@
 package com.github.liaoheng.common.util;
 
+import android.content.Context;
 import android.os.Environment;
 import android.support.annotation.StringDef;
 import android.text.TextUtils;
@@ -53,8 +54,8 @@ public class LogFileUtils {
         return instance;
     }
 
-    public void init() {
-        init("");
+    public void init(Context context) throws SystemException {
+        init(context,"");
     }
 
     public void init(File logFile) {
@@ -65,8 +66,8 @@ public class LogFileUtils {
         L.Log.d(TAG, "init log file : %s ", mLogFile.getAbsoluteFile());
     }
 
-    public void init(String fileName) {
-        File log = FileUtils.createProjectSpaceDir("Log");
+    public void init(Context context,String fileName) throws SystemException {
+        File log = FileUtils.createProjectSpaceDir(context,"Log");
         if (TextUtils.isEmpty(fileName)) {
             fileName = DEFAULT_FILE_NAME;
         }

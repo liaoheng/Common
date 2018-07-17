@@ -19,7 +19,7 @@ public class CNGlideModule {
 
     public static void applyOptions(Context context, GlideBuilder builder) {
         try {
-            File imgCache = FileUtils.createCacheSDAndroidDirectory(CommonNet.DISK_CACHE_DIR);
+            File imgCache = FileUtils.getProjectSpaceCacheDirectory(context,CommonNet.DISK_CACHE_DIR);
             builder.setDiskCache(new DiskLruCacheFactory(imgCache.getAbsolutePath(),
                     (int) CommonNet.IMAGE_DISK_CACHE_SIZE));
         } catch (SystemException ignored) {

@@ -18,6 +18,8 @@ import android.provider.Settings;
 import android.support.annotation.RequiresPermission;
 import android.text.TextUtils;
 
+import com.github.liaoheng.common.R;
+
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -121,7 +123,6 @@ public class AppUtils {
     }
 
     /**
-     * //TODO 需要测试
      * app是否有Activity运行
      *
      * @see <a href='https://stackoverflow.com/questions/30619349/android-5-1-1-and-above-getrunningappprocesses-returns-my-application-packag'>stackoverflow</a>
@@ -193,6 +194,27 @@ public class AppUtils {
     }
 
     /**
+     * 打开忽略电池优化系统设置界面
+     *
+     * @see <a href="https://developer.android.com/reference/android/provider/Settings#ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS">android doc</a>
+     */
+    public static boolean showIgnoreBatteryOptimizationSetting(Context context) {
+        if (context == null) {
+            return false;
+        }
+        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.M) {
+            return false;
+        }
+        Intent intent = new Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS);
+        if (intent.resolveActivity(context.getPackageManager()) != null) {
+            context.startActivity(intent);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * 打开忽略电池优化对话框
      *
      * @see <a href="https://developer.android.com/reference/android/provider/Settings#ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS">android doc</a>
@@ -228,4 +250,44 @@ public class AppUtils {
         PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
         return powerManager == null || powerManager.isIgnoringBatteryOptimizations(context.getPackageName());
     }
+
+    /**
+     * open map application
+     *
+     * @param longitude 经度
+     * @param latitude 纬度
+     */
+    public static void openMap(Context context, String longitude, String latitude) {
+        if (TextUtils.isEmpty(latitude) || TextUtils.isEmpty(longitude)) {
+            return;
+        }
+        Uri uri = Uri.parse("geo:" + latitude + "," + longitude);
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(uri);
+        if (intent.resolveActivity(context.getPackageManager()) == null) {
+            return;
+        }
+        context.startActivity(intent);
+    }
+
+    public static Intent sendEmail(String to[], String subject, String content) {
+        Intent emailIntent = new Intent(Intent.ACTION_SEND);
+        emailIntent.setType("message/rfc822");
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, to);
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        emailIntent.putExtra(Intent.EXTRA_TEXT, content);
+        return emailIntent;
+    }
+
+    public static boolean sendEmail(Context context, String to[], String subject, String content) {
+        Intent emailIntent = sendEmail(to, subject, content);
+
+        if (emailIntent.resolveActivity(context.getPackageManager()) == null) {
+            return false;
+        }
+
+        context.startActivity(Intent.createChooser(emailIntent, context.getString(R.string.lcm_send_email)));
+        return true;
+    }
+
 }
