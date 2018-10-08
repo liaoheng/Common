@@ -16,22 +16,27 @@ import net.danlew.android.joda.JodaTimeAndroid;
 public class Common {
 
     private static String PROJECT_NAME;
-    private static boolean DEBUG;
+    private static String PACKAGE_NAME;
+    private static boolean sDebug;
 
-    public static void init(@NonNull Context context, String projectName, boolean isDebug) {
-        if (TextUtils.isEmpty(projectName)) {
-            PROJECT_NAME = context.getPackageName();
-        } else {
-            PROJECT_NAME = projectName;
-        }
-        DEBUG = isDebug;
+    public static void baseInit(@NonNull Context context, String projectName, boolean isDebug) {
+        baseInit(context, projectName, context.getPackageName(), isDebug);
+    }
 
-        L.init(PROJECT_NAME, isDebug);
+    public static void baseInit(@NonNull Context context, String projectName, String packageName, boolean isDebug) {
+        PACKAGE_NAME = packageName;
+        PROJECT_NAME = TextUtils.isEmpty(projectName) ? PACKAGE_NAME : projectName;
+        sDebug = isDebug;
         try {
             Class.forName("net.danlew.android.joda.JodaTimeAndroid");
             JodaTimeAndroid.init(context);
         } catch (ClassNotFoundException ignored) {
         }
+    }
+
+    public static void init(@NonNull Context context, String projectName, boolean isDebug) {
+        baseInit(context, projectName, isDebug);
+        L.init(PROJECT_NAME, isDebug);
         PreferencesUtils.init(context);
     }
 
@@ -42,7 +47,11 @@ public class Common {
         return PROJECT_NAME;
     }
 
+    public static String getPackageName() {
+        return PACKAGE_NAME;
+    }
+
     public static boolean isDebug() {
-        return DEBUG;
+        return sDebug;
     }
 }

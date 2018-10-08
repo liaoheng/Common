@@ -28,4 +28,15 @@ public class DateTimeUtilsTest extends BaseTest {
         assertTrue("day is equals", dateTime1.getDayOfMonth() == dateTime.getDayOfMonth() + 1);
     }
 
+    @Test
+    public void isToDaysDoTest() {
+        DateTime now = DateTime.now();
+        //log("now : %s", now.toString());
+        DateTime next = DateTime.now().minusHours(now.getHourOfDay() + 1);
+        //log("next : %s", next.toString());
+        boolean toDaysDo = DateTimeUtils.isToDaysDo(next, now, 1);
+        //log("toDaysDo : %s", toDaysDo);
+        assertTrue(toDaysDo);
+    }
+
 }

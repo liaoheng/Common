@@ -3,6 +3,7 @@ package com.github.liaoheng.common.util;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.support.annotation.AttrRes;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
@@ -14,6 +15,7 @@ import android.text.TextUtils;
 import android.util.TypedValue;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -27,6 +29,16 @@ import java.util.List;
  * @author liaoheng
  */
 public class ResourceUtils {
+    public static final String ANDROID_RESOURCE = "android.resource://";
+
+    /**
+     * Resource to Uri
+     *
+     * @return {@link Uri}
+     */
+    public static String resourceIdToUri(Context context, int resourceId) {
+        return ANDROID_RESOURCE + context.getPackageName() + File.separator + resourceId;
+    }
 
     @ColorInt
     public static int getAttrColor(@NonNull Context context, @AttrRes int attrColor) {

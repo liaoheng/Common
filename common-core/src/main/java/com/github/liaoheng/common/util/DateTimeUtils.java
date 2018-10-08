@@ -2,6 +2,7 @@ package com.github.liaoheng.common.util;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+import org.joda.time.Days;
 import org.joda.time.LocalTime;
 
 import java.text.ParseException;
@@ -86,23 +87,6 @@ public class DateTimeUtils {
     }
 
     /**
-     * 处理微博时间
-     *
-     * @param date 时间字符串
-     * @return 多久之前的中文字符
-     */
-    public static String weiboFormat(String date) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy",
-                Locale.ENGLISH);
-        dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-        try {
-            return format(dateFormat.parse(date));
-        } catch (ParseException e) {
-            return date;
-        }
-    }
-
-    /**
      * 传入时间比当前时间小，则传入时间加24小时。
      */
     public static DateTime checkTimeToNextDay(LocalTime time) {
@@ -113,6 +97,52 @@ public class DateTimeUtils {
         }
         return new DateTime(now.getYear(), now.getMonthOfYear(), now.getDayOfMonth(),
                 time.getHourOfDay(), time.getMinuteOfHour());
+    }
+
+    /**
+     * 解析标准GMT时间
+     *
+     * @param date 时间字符串(EEE MMM dd HH:mm:ss z yyyy)
+     */
+    public static Date standardGMTparse(String date) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy",
+                Locale.ENGLISH);
+        dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+        try {
+            return dateFormat.parse(date);
+        } catch (ParseException e) {
+            return null;
+        }
+    }
+
+    /**
+     * 上一次操作与当前操作的距离，单位天
+     *
+     * @param lastDate 上一次操作, local date
+     * @param day 距离，天
+     * @return true，超过或等于@param day
+     */
+    public static boolean isToDaysDo(long lastDate, int day) {
+        if (lastDate == -1) {
+            return true;
+        }
+
+        DateTime last = new DateTime(lastDate);
+        DateTime now = DateTime.now();
+        return isToDaysDo(last, now, day);
+    }
+
+    /**
+     * 上一次操作与当前操作的距离，单位天
+     *
+     * @param last 上一次操作, local date
+     * @param now 当前操作, local date
+     * @param day 距离，天
+     * @return true，超过或等于@param day
+     */
+    public static boolean isToDaysDo(DateTime last, DateTime now, int day) {
+        int days = Days.daysBetween(last.toLocalDate(), now.toLocalDate()).getDays();
+        return days >= day;
     }
 
     private static final long ONE_MINUTE = 60000L;

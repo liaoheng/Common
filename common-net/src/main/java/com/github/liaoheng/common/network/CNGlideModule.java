@@ -11,7 +11,15 @@ import java.io.File;
 
 /**
  * Glide Config
- *
+ *  <pre>
+ * &#64;GlideModule
+ * public class MGlideModule extends AppGlideModule {
+ *     &#64;Override
+ *     public void applyOptions(@NonNull Context context, @NonNull GlideBuilder builder) {
+ *             CNGlideModule.applyOptions(context,builder);
+ *     }
+ * }
+ *  </pre>
  * @author liaoheng
  * @version 2016-06-24 14:19
  */

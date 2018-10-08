@@ -12,10 +12,12 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Parcelable;
 import android.os.PowerManager;
 import android.provider.Settings;
 import android.support.annotation.RequiresPermission;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
 import com.github.liaoheng.common.R;
@@ -23,6 +25,7 @@ import com.github.liaoheng.common.R;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.UUID;
 
 /**
  * app工具
@@ -106,9 +109,22 @@ public class AppUtils {
      */
     @SuppressLint({ "HardwareIds" })
     @RequiresPermission(Manifest.permission.READ_PHONE_STATE)
-    @Deprecated
     public static String getDeviceId(Context context) {
-        return Utils.getDeviceId(context);
+        final TelephonyManager tm = (TelephonyManager) context
+                .getSystemService(Context.TELEPHONY_SERVICE);
+        if (tm == null) {
+            return UUID.randomUUID().toString();
+        }
+
+        final String tmDevice, tmSerial, androidId;
+        tmDevice = "" + tm.getDeviceId();
+        tmSerial = "" + tm.getSimSerialNumber();
+        androidId = "" + android.provider.Settings.Secure.getString(context.getContentResolver(),
+                android.provider.Settings.Secure.ANDROID_ID);
+
+        UUID deviceUuid = new UUID(androidId.hashCode(),
+                ((long) tmDevice.hashCode() << 32) | tmSerial.hashCode());
+        return deviceUuid.toString();
     }
 
     /**
@@ -117,9 +133,18 @@ public class AppUtils {
      * @see <a href='http://stackoverflow.com/questions/2785485/is-there-a-unique-android-device-id/2853253#2853253'>stackoverflow</a>
      */
     @SuppressLint("HardwareIds")
-    @Deprecated
+    @RequiresPermission(Manifest.permission.READ_PHONE_STATE)
     public static String getDeviceSerialId() {
-        return Utils.getDeviceSerialId();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            return Build.getSerial();
+        } else {
+            return Build.SERIAL;
+        }
+    }
+
+    @SuppressLint("HardwareIds")
+    public static String getAndroidId(Context context) {
+        return Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
     }
 
     /**

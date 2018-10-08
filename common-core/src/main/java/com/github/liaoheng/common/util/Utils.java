@@ -1,21 +1,15 @@
 package com.github.liaoheng.common.util;
 
-import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.net.Uri;
-import android.os.Build;
-import android.support.annotation.RequiresPermission;
-import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.github.liaoheng.common.R;
 
 import java.io.File;
-import java.util.UUID;
 
 import io.reactivex.Flowable;
 import io.reactivex.disposables.Disposable;
@@ -30,21 +24,9 @@ import rx.android.schedulers.AndroidSchedulers;
  * * <br/> Dependency : rxjava ,rxandroid
  *
  * @author liaoheng
- * @author <a href="http://jodd.org" target="_blank">jodd</a>
  * @version 2015-11-25 23:33
  */
 public class Utils {
-    public static final String ANDROID_RESOURCE = "android.resource://";
-
-    /**
-     * Resource to Uri
-     *
-     * @return {@link Uri}
-     */
-    public static String resourceIdToUri(Context context, int resourceId) {
-        return ANDROID_RESOURCE + context.getPackageName() + File.separator + resourceId;
-    }
-
     /**
      * URL是否为指定网站
      */
@@ -349,42 +331,6 @@ public class Utils {
             return phoneString;
         }
         return phoneString.replaceAll("-", "").replaceAll(" ", "");
-    }
-
-    /**
-     * 得到由设备生成的唯一ID
-     * <br/> Dependency : android.permission.READ_PHONE_STATE
-     *
-     * @see <a href='http://stackoverflow.com/questions/2785485/is-there-a-unique-android-device-id/2853253#2853253'>stackoverflow</a>
-     */
-    @SuppressLint({ "HardwareIds" })
-    @RequiresPermission(Manifest.permission.READ_PHONE_STATE)
-    public static String getDeviceId(Context context) {
-        final TelephonyManager tm = (TelephonyManager) context
-                .getSystemService(Context.TELEPHONY_SERVICE);
-        if (tm == null) {
-            return UUID.randomUUID().toString();
-        }
-
-        final String tmDevice, tmSerial, androidId;
-        tmDevice = "" + tm.getDeviceId();
-        tmSerial = "" + tm.getSimSerialNumber();
-        androidId = "" + android.provider.Settings.Secure.getString(context.getContentResolver(),
-                android.provider.Settings.Secure.ANDROID_ID);
-
-        UUID deviceUuid = new UUID(androidId.hashCode(),
-                ((long) tmDevice.hashCode() << 32) | tmSerial.hashCode());
-        return deviceUuid.toString();
-    }
-
-    /**
-     * 得到唯一设备ID
-     *
-     * @see <a href='http://stackoverflow.com/questions/2785485/is-there-a-unique-android-device-id/2853253#2853253'>stackoverflow</a>
-     */
-    @SuppressLint("HardwareIds")
-    public static String getDeviceSerialId() {
-        return Build.SERIAL;
     }
 
     /**

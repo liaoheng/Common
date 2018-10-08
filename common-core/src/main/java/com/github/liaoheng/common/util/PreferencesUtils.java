@@ -25,21 +25,33 @@ public class PreferencesUtils {
     }
 
     public static PreferencesUtils with() {
-        if (mContext == null) {
-            throw new IllegalStateException("not init");
+        return with(mContext);
+    }
+
+    public static PreferencesUtils with(Context context) {
+        if (context == null) {
+            throw new IllegalArgumentException("Context is null");
         }
-        return new PreferencesUtils(PreferenceManager.getDefaultSharedPreferences(mContext));
+        return new PreferencesUtils(PreferenceManager.getDefaultSharedPreferences(context));
     }
 
     public static PreferencesUtils from(String name) {
-        return from(name, Context.MODE_PRIVATE);
+        return from(mContext, name);
+    }
+
+    public static PreferencesUtils from(Context context, String name) {
+        return from(context, name, Context.MODE_PRIVATE);
     }
 
     public static PreferencesUtils from(String name, int mode) {
-        if (mContext == null) {
-            throw new IllegalStateException("not init");
+        return from(mContext, name, mode);
+    }
+
+    public static PreferencesUtils from(Context context, String name, int mode) {
+        if (context == null) {
+            throw new IllegalArgumentException("Context is null");
         }
-        return new PreferencesUtils(mContext.getSharedPreferences(name, mode));
+        return new PreferencesUtils(context.getSharedPreferences(name, mode));
     }
 
     public PreferencesUtils(SharedPreferences sharedPreferences) {
