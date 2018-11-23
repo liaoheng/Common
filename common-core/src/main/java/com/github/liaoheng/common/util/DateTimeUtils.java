@@ -19,7 +19,7 @@ import java.util.TimeZone;
  */
 public class DateTimeUtils {
     public final static String DATAFORMAT_YYYYMMDD = "YYYY-MM-dd";
-    public final static String DATAFORMAT_YYYYMMDDHHSS = "YYYY-MM-dd HH:ss";
+    public final static String DATAFORMAT_YYYYMMDDHHMMSS = "YYYY-MM-dd HH:mm:ss";
 
     /**
      * 得到当前时间的utc标准时间

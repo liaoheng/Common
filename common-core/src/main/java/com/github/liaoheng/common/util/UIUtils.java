@@ -69,7 +69,7 @@ public class UIUtils {
     @SuppressLint("ShowToast")
     public static void showToast(@NonNull Context context, String hint, int duration) {
         if (mToast == null) {
-            mToast = Toast.makeText(context, hint, duration);
+            mToast = Toast.makeText(context.getApplicationContext(), hint, duration);
             mToast.setGravity(Gravity.CENTER, 0, 0);
         } else {
             mToast.setText(hint);
@@ -98,6 +98,7 @@ public class UIUtils {
         if (mToast != null) {
             mToast.cancel();
         }
+        mToast = null;
     }
 
     /*******

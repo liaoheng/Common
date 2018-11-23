@@ -1,6 +1,7 @@
 package com.github.liaoheng.common.network;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.github.liaoheng.common.util.Callback;
@@ -20,6 +21,7 @@ import org.json.JSONObject;
 import java.io.EOFException;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -94,7 +96,8 @@ public class OkHttp3Utils {
         if (errorInterceptor != null) {
             builder.interceptors().add(errorInterceptor);
         }
-        builder.interceptors().add(new LogInterceptor(TAG));
+        //https://www.jianshu.com/p/e044cab4f530
+        builder.networkInterceptors().add(new LogInterceptor(TAG));
 
         this.mClient = builder.build();
         this.mHeaderPlus = headerPluses;
@@ -197,9 +200,10 @@ public class OkHttp3Utils {
                 public Response checkError(Response response) throws NetServerException {
                     if (!response.isSuccessful()) {
                         String string = "code : " + response.code();
-                        if (response.body().contentLength() > 0) {
+                        ResponseBody body = response.body();
+                        if (body != null && body.contentLength() > 0) {
                             try {
-                                string = response.body().string();
+                                string = body.string();
                             } catch (IOException ignored) {
                             }
                         }
@@ -438,7 +442,7 @@ public class OkHttp3Utils {
     private class HeaderPlusInterceptor implements Interceptor {
 
         @Override
-        public Response intercept(Chain chain) throws IOException {
+        public Response intercept(@NonNull Chain chain) throws IOException {
             Request.Builder builder = chain.request().newBuilder();
             Request request = chain.request();
             Map<String, Object> map = new HashMap<>();
@@ -451,7 +455,7 @@ public class OkHttp3Utils {
             if (!getHeaders().isEmpty()) {
                 for (Map.Entry<String, String> entry : getHeaders().entrySet()) {
                     builder.addHeader(entry.getKey(), entry.getValue());
-                    L.Log.d(TAG, "add header: %s : %s", entry.getKey(), entry.getValue());
+                    L.alog().d(TAG, "add header: %s : %s", entry.getKey(), entry.getValue());
                 }
             }
             return chain.proceed(builder.build());
@@ -466,7 +470,7 @@ public class OkHttp3Utils {
         }
 
         @Override
-        public Response intercept(Chain chain) throws IOException {
+        public Response intercept(@NonNull Chain chain) throws IOException {
             Response response = chain.proceed(chain.request());
             if (mErrorHandleListener != null) {
                 try {
@@ -501,7 +505,7 @@ public class OkHttp3Utils {
          * Returns true if the body in question probably contains human readable text. Uses a small sample
          * of code points to detect unicode control characters commonly used in binary file signatures.
          */
-        private static boolean isPlaintext(Buffer buffer) {
+        private boolean isPlaintext(Buffer buffer) {
             try {
                 Buffer prefix = new Buffer();
                 long byteCount = buffer.size() < 64 ? buffer.size() : 64;
@@ -522,21 +526,21 @@ public class OkHttp3Utils {
         }
 
         @Override
-        public Response intercept(Chain chain) throws IOException {
+        public Response intercept(@NonNull Chain chain) throws IOException {
 
             Request request = chain.request();
             long t1 = System.nanoTime();
-            L.Log.d(tag, "Sending request %s on %s%n%s", request.url(), request.method(),
+            L.alog().d(tag, "Sending request %s on %s%n%s", request.url(), request.method(),
                     request.headers());
 
             try {
-                if (request.body() != null) {
-                    if (!request.body().contentType()
-                            .equals(MediaType.parse("multipart/form-data"))) {
-                        final Buffer buffer = new Buffer();
-                        request.body().writeTo(buffer);
+                RequestBody body = request.body();
+                if (body != null) {
+                    if (!MediaType.parse("multipart/form-data").equals(body.contentType())) {
+                        Buffer buffer = new Buffer();
+                        body.writeTo(buffer);
                         if (isPlaintext(buffer)) {
-                            L.Log.d(tag, buffer.clone().readUtf8());
+                            L.alog().d(tag, buffer.clone().readUtf8());
                         }
                     }
                 }
@@ -546,7 +550,7 @@ public class OkHttp3Utils {
             Response response = chain.proceed(request);
 
             long t2 = System.nanoTime();
-            L.Log.d(tag, "Received response(%s) for %s in %.1fms%n%s", response.code(),
+            L.alog().d(tag, "Received response(%s) for %s in %.1fms%n%s", response.code(),
                     response.request().url(), (t2 - t1) / 1e6d, response.headers());
 
             try {
@@ -556,13 +560,17 @@ public class OkHttp3Utils {
                     source.request(Long.MAX_VALUE); // Buffer the entire body.
                     Buffer buffer = source.buffer();
                     if (isPlaintext(buffer)) {
-                        L.Log.d(tag, buffer.clone().readUtf8());
+                        L.alog().d(tag, buffer.clone().readUtf8());
                     }
                 }
             } catch (Exception ignored) {
             }
             return response;
         }
+    }
+
+    private String getResponseBody(Response response) {
+        return response.body() == null ? "" : response.body().toString();
     }
 
     public String getSync(String url) throws NetException {
@@ -577,7 +585,7 @@ public class OkHttp3Utils {
     public String getSync(Request request) throws NetException {
         try {
             Response response = getClient().newCall(request).execute();
-            return response.body().string();
+            return getResponseBody(response);
         } catch (IOException e) {
             throw new NetLocalException(NetException.NET_ERROR, e);
         }
@@ -596,7 +604,7 @@ public class OkHttp3Utils {
     public String postSync(Request request) throws NetException {
         try {
             Response response = getClient().newCall(request).execute();
-            return response.body().string();
+            return getResponseBody(response);
         } catch (IOException e) {
             throw new NetLocalException(NetException.NET_ERROR, e);
         }
@@ -616,7 +624,7 @@ public class OkHttp3Utils {
             Response response = getClient().newCall(request).execute();
             Map<String, List<String>> stringListMap = response.headers().toMultimap();
             for (Map.Entry<String, List<String>> entry : stringListMap.entrySet()) {
-                L.Log.d(TAG, "header > key:%s   value:%s ", entry.getKey(), entry.getValue());
+                L.alog().d(TAG, "header > key:%s   value:%s ", entry.getKey(), entry.getValue());
             }
             return response;
         } catch (IOException e) {
@@ -688,7 +696,7 @@ public class OkHttp3Utils {
     public class FileDownload {
         private String fileName;
         private String url;
-        private byte[] bytes;
+        private InputStream inputStream;
         private File file;
 
         public FileDownload() {
@@ -703,9 +711,9 @@ public class OkHttp3Utils {
             this.url = url;
         }
 
-        public FileDownload(String fileName, byte[] bytes) {
+        public FileDownload(String fileName, InputStream inputStream) {
             this.fileName = fileName;
-            this.bytes = bytes;
+            this.inputStream = inputStream;
         }
 
         public String getFileName() {
@@ -724,12 +732,12 @@ public class OkHttp3Utils {
             this.url = url;
         }
 
-        public byte[] getBytes() {
-            return bytes;
+        public InputStream getInputStream() {
+            return inputStream;
         }
 
-        public void setBytes(byte[] bytes) {
-            this.bytes = bytes;
+        public void setInputStream(InputStream inputStream) {
+            this.inputStream = inputStream;
         }
 
         public File getFile() {
@@ -786,11 +794,18 @@ public class OkHttp3Utils {
                                     Request request = new Request.Builder()
                                             .url(fileDownload.getUrl()).build();
                                     Response response = builder.build().newCall(request).execute();
+                                    if (!response.isSuccessful()) {
+                                        return Observable.error(new IOException("Response error"));
+                                    }
+                                    ResponseBody body = response.body();
+                                    if (body == null) {
+                                        return Observable.error(new IOException("Response body is null"));
+                                    }
                                     return Observable
                                             .just(new FileDownload(fileDownload.getFileName(),
-                                                    response.body().bytes()));
+                                                    body.byteStream()));
                                 } catch (IOException e) {
-                                    throw new SystemRuntimeException(e);
+                                    return Observable.error(e);
                                 }
                             }
                         });
@@ -808,7 +823,7 @@ public class OkHttp3Utils {
                     public FileDownload call(FileDownload fileName) {
                         try {
                             File file = FileUtils.createFile(dir, fileName.getFileName());
-                            FileUtils.writeByteArrayToFile(file, fileName.getBytes());
+                            FileUtils.copyInputStreamToFile(fileName.getInputStream(), file);
                             return new FileDownload(file);
                         } catch (IOException e) {
                             throw new SystemRuntimeException(e);
