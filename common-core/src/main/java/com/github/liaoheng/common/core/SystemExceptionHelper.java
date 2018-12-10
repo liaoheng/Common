@@ -1,9 +1,9 @@
 package com.github.liaoheng.common.core;
 
-import android.support.annotation.Nullable;
-
 import com.github.liaoheng.common.util.ISystemException;
 import com.github.liaoheng.common.util.SystemExceptionNoVessel;
+
+import androidx.annotation.Nullable;
 
 /**
  * 对自定义异常类处理，两种类型的异常：1.载体类型，处理时过滤这个异常；2.内容类型，不过滤。通过注解{@link SystemExceptionNoVessel}判断。

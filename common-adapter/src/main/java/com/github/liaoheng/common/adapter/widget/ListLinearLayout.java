@@ -2,8 +2,6 @@ package com.github.liaoheng.common.adapter.widget;
 
 import android.content.Context;
 import android.database.DataSetObserver;
-import android.support.v7.widget.LinearLayoutCompat;
-import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -11,6 +9,9 @@ import android.widget.ListAdapter;
 import com.github.liaoheng.common.adapter.base.BaseListAdapter;
 import com.github.liaoheng.common.adapter.base.BaseRecyclerAdapter;
 import com.github.liaoheng.common.adapter.base.IBaseAdapter;
+
+import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * @author liaoheng

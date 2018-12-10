@@ -1,13 +1,14 @@
 package com.github.liaoheng.common;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.github.liaoheng.common.util.L;
 import com.github.liaoheng.common.util.PreferencesUtils;
 
 import net.danlew.android.joda.JodaTimeAndroid;
+
+import androidx.annotation.NonNull;
 
 /**
  * @author liaoheng

@@ -1,12 +1,13 @@
 package com.github.liaoheng.common.sample;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 
 import com.bumptech.glide.GlideBuilder;
 import com.bumptech.glide.annotation.GlideModule;
 import com.bumptech.glide.module.AppGlideModule;
 import com.github.liaoheng.common.network.CNGlideModule;
+
+import androidx.annotation.NonNull;
 
 /**
  * @author liaoheng

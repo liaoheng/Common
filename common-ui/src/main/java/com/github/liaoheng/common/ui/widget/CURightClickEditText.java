@@ -2,9 +2,10 @@ package com.github.liaoheng.common.ui.widget;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.support.v7.widget.AppCompatEditText;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+
+import androidx.appcompat.widget.AppCompatEditText;
 
 /**
  * 右边图片可以点击的 EditText

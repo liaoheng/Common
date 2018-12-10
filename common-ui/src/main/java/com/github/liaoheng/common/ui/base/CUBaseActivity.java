@@ -1,11 +1,5 @@
 package com.github.liaoheng.common.ui.base;
 
-import android.support.annotation.IdRes;
-import android.support.annotation.LayoutRes;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.AndroidRuntimeException;
 import android.view.MenuItem;
@@ -15,12 +9,18 @@ import android.view.ViewGroup;
 import com.github.liaoheng.common.ui.core.ToolBarHelper;
 import com.github.liaoheng.common.util.UIUtils;
 
+import androidx.annotation.IdRes;
+import androidx.annotation.LayoutRes;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 /**
  * 基础通用Activity
  *
  * @author liaoheng
  */
-public class CUBaseActivity extends AppCompatActivity {
+public abstract class CUBaseActivity extends AppCompatActivity {
 
     protected final String TAG = getActivity().getClass().getSimpleName();
     private ToolBarHelper toolBarUtils;
@@ -97,7 +97,7 @@ public class CUBaseActivity extends AppCompatActivity {
     }
 
     public <T extends View> T findSupportViewById(@IdRes int id) {
-        return UIUtils.findViewById(this,id);
+        return UIUtils.findViewById(this, id);
     }
 
     public CUBaseActivity getActivity() {

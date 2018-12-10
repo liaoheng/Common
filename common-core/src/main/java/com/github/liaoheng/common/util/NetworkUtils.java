@@ -6,11 +6,12 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+
+import androidx.annotation.NonNull;
 
 /**
  * assist us in sensing state of the networks.

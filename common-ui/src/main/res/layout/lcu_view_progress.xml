@@ -2,12 +2,13 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              android:id="@id/lcu_progress_layout"
              android:clickable="true"
+             android:focusable="true"
              android:visibility="gone"
              android:background="@android:color/white"
              android:layout_width="match_parent"
              android:layout_height="match_parent">
 
-    <android.support.v4.widget.ContentLoadingProgressBar
+    <androidx.core.widget.ContentLoadingProgressBar
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@id/lcu_progress"
             android:layout_width="wrap_content"

@@ -1,11 +1,13 @@
 package com.github.liaoheng.common.ui.core;
 
 import android.content.Context;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
+
+import com.google.android.material.appbar.AppBarLayout;
+
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * <a href="http://www.jianshu.com/p/4535442d568f">解决RecyclerView折叠动画不平滑问题</a>

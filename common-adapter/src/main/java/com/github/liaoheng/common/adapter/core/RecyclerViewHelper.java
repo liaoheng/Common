@@ -2,26 +2,24 @@ package com.github.liaoheng.common.adapter.core;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.annotation.ColorInt;
-import android.support.annotation.ColorRes;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.github.liaoheng.common.adapter.R;
 import com.github.liaoheng.common.adapter.base.IBaseRecyclerAdapter;
 import com.github.liaoheng.common.adapter.internal.HeaderViewRecyclerAdapter;
-import com.mugen.Mugen;
-import com.mugen.MugenCallbacks;
-import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
-import com.yqritc.recyclerviewflexibledivider.VerticalDividerItemDecoration;
+import com.github.liaoheng.mugen.Mugen;
+import com.github.liaoheng.mugen.MugenCallbacks;
+
+import androidx.annotation.ColorInt;
+import androidx.annotation.ColorRes;
+import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 /**
  * 使用layout: {@link R.layout#lca_view_list} 或使用相同id控件,基本实现：
@@ -43,8 +41,8 @@ import com.yqritc.recyclerviewflexibledivider.VerticalDividerItemDecoration;
      * 全部数据加载是否以加载完成  ，true 完成 ，false 相反
      */
     private boolean                   mHasLoadedAllItems;
-    private RecyclerView              mRecyclerView;
-    private SwipeRefreshLayout        mSwipeRefreshLayout;
+    private RecyclerView mRecyclerView;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     private HeaderViewRecyclerAdapter mHeaderViewRecyclerAdapter;
     /**
      * 数据全部加载完成显示view
@@ -713,7 +711,7 @@ import com.yqritc.recyclerviewflexibledivider.VerticalDividerItemDecoration;
         }
         if (mSwipeRefreshLayout != null) {
             mSwipeRefreshLayout.setEnabled(true);
-            mSwipeRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
 
                 @Override public void onRefresh() {
                     mRefreshListener.onRefresh();

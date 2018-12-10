@@ -31,30 +31,23 @@ android {
     exclude 'META-INF/LICENSE'
     exclude 'META-INF/NOTICE'
   }
+  compileOptions {
+    sourceCompatibility 1.8
+    targetCompatibility 1.8
+  }
 }
 
 dependencies {
   implementation fileTree(dir: 'libs', include: ['*.jar'])
   testImplementation deps.junit
 
-  //android system
-  implementation deps.supportv4
-  implementation deps.appcompatv7
-  implementation deps.recyclerviewv7
-  implementation deps.design
-
   implementation deps.glide
   annotationProcessor deps.glide_compiler
   implementation deps.glide_okhttp3_integration
-  implementation deps.okhttp
 
-  implementation 'com.jakewharton:butterknife:8.6.0'
-  annotationProcessor 'com.jakewharton:butterknife-compiler:8.6.0'
+  implementation 'com.jakewharton:butterknife:9.0.0-rc2'
+  annotationProcessor 'com.jakewharton:butterknife-compiler:9.0.0-rc2'
 
-  implementation deps.rxandroid
-  implementation deps.rxjava
-  implementation deps.rxlifecycle
-  implementation deps.rxlifecycle_android
 
 //  implementation group: "com.github.liaoheng", name: "common-plus", version: "0.0.6-SNAPSHOT", changing: true
   api project(':common-plus')

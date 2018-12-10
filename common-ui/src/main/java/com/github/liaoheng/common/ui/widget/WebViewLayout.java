@@ -10,8 +10,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
@@ -29,6 +27,9 @@ import com.github.liaoheng.common.util.L;
 import com.github.liaoheng.common.util.UIUtils;
 import com.github.liaoheng.common.util.Utils;
 import java.util.Map;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
 
 /**
  * WebView

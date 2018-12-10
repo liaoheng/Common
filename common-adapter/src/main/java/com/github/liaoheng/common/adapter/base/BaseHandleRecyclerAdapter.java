@@ -1,10 +1,11 @@
 package com.github.liaoheng.common.adapter.base;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import com.github.liaoheng.common.adapter.holder.IBaseViewHolder;
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Base Adapter for RecyclerView

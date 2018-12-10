@@ -9,19 +9,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.ColorInt;
-import android.support.annotation.ColorRes;
-import android.support.annotation.IdRes;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.StringRes;
-import android.support.annotation.StyleRes;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatDialog;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
@@ -33,9 +20,23 @@ import android.view.ViewParent;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.liaoheng.common.R;
+
+import androidx.annotation.ColorInt;
+import androidx.annotation.ColorRes;
+import androidx.annotation.IdRes;
+import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
+import androidx.annotation.StyleRes;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatDialog;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 
 /**
  * 界面工具
@@ -45,7 +46,6 @@ import com.github.liaoheng.common.R;
  */
 public class UIUtils {
     public static int TOAST_DEFAULT_TIME = Toast.LENGTH_LONG;
-    public static int SNACK_BAR_DEFAULT_TIME = Snackbar.LENGTH_LONG;
 
     private static Toast mToast;
 
@@ -101,101 +101,6 @@ public class UIUtils {
         mToast = null;
     }
 
-    /*******
-     * Snack  start
-     ********/
-
-    public static void showSnack(@NonNull Activity activity, String hint) {
-        showSnack(activity, hint, SNACK_BAR_DEFAULT_TIME);
-    }
-
-    public static void showSnack(@NonNull Activity activity, @StringRes int hint) {
-        showSnack(activity, activity.getResources().getString(hint));
-    }
-
-    public static void showSnack(@NonNull final Activity activity, final String hint,
-            final int duration) {
-        showSnack(activity, hint, duration, activity.getText(R.string.lcm_ok).toString(), null);
-    }
-
-    public static void showSnack(@NonNull Activity activity, final String hint, final String action,
-            final Callback2<View> callback2) {
-        showSnack(activity, hint, SNACK_BAR_DEFAULT_TIME, action, callback2);
-    }
-
-    public static void showSnack(@NonNull Activity activity, final String hint, final int duration,
-            final String action, final Callback2<View> callback2) {
-        getCoordinatorLayout(activity, new Callback4.EmptyCallback<View>() {
-            @Override
-            public void onYes(View view) {
-                Snackbar.make(view, hint, duration).setAction(action, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (callback2 == null) {
-                            return;
-                        }
-                        callback2.onSuccess(v);
-                    }
-                }).show();
-            }
-        });
-    }
-
-    public static void showSnack(@NonNull View view, String hint) {
-        showSnack(view, hint, SNACK_BAR_DEFAULT_TIME);
-    }
-
-    public static void showSnack(@NonNull View view, final String hint, final int duration) {
-        showSnack(view, hint, duration, view.getResources().getText(R.string.lcm_ok).toString(),
-                null);
-    }
-
-    public static void showSnack(@NonNull View view, final String hint, final String action,
-            final Callback2<View> callback2) {
-        showSnack(view, hint, SNACK_BAR_DEFAULT_TIME, action, callback2);
-    }
-
-    public static void showSnack(@NonNull View view, final String hint, final int duration,
-            final String action, final Callback2<View> callback2) {
-        getCoordinatorLayout(view, new Callback4.EmptyCallback<View>() {
-            @Override
-            public void onYes(View view) {
-                Snackbar.make(view, hint, duration).setAction(action, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (callback2 == null) {
-                            return;
-                        }
-                        callback2.onSuccess(v);
-                    }
-                }).show();
-            }
-        });
-    }
-
-    public static void showLogSnack(String TAG, @NonNull View view, String hint, int duration) {
-        showSnack(view, hint, duration);
-        L.i(TAG, hint);
-    }
-
-    public static void showLogSnack(String TAG, @NonNull final Activity activity, final String hint,
-            final int duration) {
-        showSnack(activity, hint, duration);
-        L.i(TAG, hint);
-    }
-
-    public static void showLogSnack(String TAG, @NonNull View view, String hint) {
-        showSnack(view, hint);
-        L.i(TAG, hint);
-    }
-
-    public static void showLogSnack(String TAG, @NonNull Activity activity, final String hint) {
-        showSnack(activity, hint);
-        L.i(TAG, hint);
-    }
-
-    /*******  Snack  end ********/
-
     public static View getActivityContentView(Activity activity) {
         if (activity == null) {
             return null;
@@ -215,34 +120,35 @@ public class UIUtils {
      * 得到CoordinatorLayout
      */
     public static void getCoordinatorLayout(View view, final Callback4<View> call) {
-        try {
-            Class.forName("android.support.design.widget.CoordinatorLayout");
-        } catch (ClassNotFoundException e) {
-            throw new IllegalArgumentException("CoordinatorLayout is null");
-        }
         if (view == null) {
+            call.onNo(null);
             return;
         }
-        if (!isCoordinatorLayout(view)) {
-            findCoordinatorLayout(view, call);
-        } else {
+        if (isCoordinatorLayout(view)) {
             call.onYes(view);
+            return;
+        } else {
+            if (findCoordinatorLayout(view, call)) {
+                return;
+            }
         }
+        call.onNo(null);
     }
 
     public static boolean isCoordinatorLayout(View view) {
         return view instanceof CoordinatorLayout;
     }
 
-    private static void findCoordinatorLayout(View view, Callback4<View> mCall) {
+    private static boolean findCoordinatorLayout(View view, Callback4<View> mCall) {
         ViewGroup group = (ViewGroup) view;
         for (int i = 0; i < group.getChildCount(); i++) {
             View view1 = group.getChildAt(i);
             if (isCoordinatorLayout(view1)) {
                 mCall.onYes(view1);
-                return;
+                return true;
             }
         }
+        return false;
     }
 
     /**
@@ -253,6 +159,13 @@ public class UIUtils {
         dialog.setCanceledOnTouchOutside(false);
         dialog.setMessage(message);
         return dialog;
+    }
+
+    /**
+     * 创建进度条
+     */
+    public static ProgressDialog createProgressDialog(Context context, @StringRes int message) {
+        return createProgressDialog(context, context.getString(message));
     }
 
     /**
@@ -270,6 +183,14 @@ public class UIUtils {
         ProgressDialog progressDialog = createProgressDialog(context, message);
         progressDialog.show();
         return progressDialog;
+    }
+
+    /**
+     * 显示进度条
+     */
+    public static ProgressDialog showProgressDialog(@NonNull Context context,
+            @StringRes int message) {
+        return createProgressDialog(context, context.getString(message));
     }
 
     /**
@@ -595,28 +516,29 @@ public class UIUtils {
         return inflate(context, resource, null);
     }
 
-    public static <T extends View> T inflate(Context context, @LayoutRes int resource,
-            ViewGroup root) {
+    public static <T extends View> T inflate(@NonNull Context context, @LayoutRes int resource, ViewGroup root) {
         return inflate(context, resource, root, root != null);
     }
 
     @SuppressWarnings("unchecked")
-    public static <T extends View> T inflate(Context context,
-            @LayoutRes int resource,
-            ViewGroup root,
+    public static <T extends View> T inflate(@NonNull Context context, @LayoutRes int resource, ViewGroup root,
             boolean attachToRoot) {
         return (T) LayoutInflater.from(context).inflate(resource, root, attachToRoot);
     }
 
     @SuppressWarnings("unchecked")
-    public static <T extends View> T findViewById(@NonNull View view,
-            @IdRes int resource) {
+    public static <T extends View> T findViewById(@NonNull View view, @IdRes int resource) {
+        if (view == null) {
+            return null;
+        }
         return (T) view.findViewById(resource);
     }
 
     @SuppressWarnings("unchecked")
-    public static <T extends View> T findViewById(
-            @NonNull Activity activity, @IdRes int resource) {
+    public static <T extends View> T findViewById(@NonNull Activity activity, @IdRes int resource) {
+        if (activity == null) {
+            return null;
+        }
         return (T) activity.findViewById(resource);
     }
 
@@ -625,15 +547,22 @@ public class UIUtils {
      *
      * @param show true 显示，false 隐藏
      */
-    public static void showOrHintPassword(boolean show, @NonNull EditText editText) {
+    public static void showOrHintEditTextContent(boolean show, @NonNull EditText editText) {
         if (show) {
-            //设置EditText文本为可见的
             editText.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
         } else {
-            //设置EditText文本为隐藏的
             editText.setTransformationMethod(PasswordTransformationMethod.getInstance());
         }
         editText.postInvalidate();
+    }
+
+    public static void clearTextView(TextView... textViews) {
+        if (textViews == null) {
+            return;
+        }
+        for (TextView textView : textViews) {
+            textView.setText("");
+        }
     }
 
 }

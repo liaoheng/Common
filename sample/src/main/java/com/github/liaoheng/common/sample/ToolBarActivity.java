@@ -3,13 +3,14 @@ package com.github.liaoheng.common.sample;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
 import com.github.liaoheng.common.ui.base.CUBaseActivity;
+
+import androidx.annotation.Nullable;
 
 /**
  * @author liaoheng

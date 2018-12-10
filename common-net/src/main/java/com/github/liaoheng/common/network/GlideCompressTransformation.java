@@ -1,13 +1,14 @@
 package com.github.liaoheng.common.network;
 
 import android.graphics.Bitmap;
-import android.support.annotation.NonNull;
 
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 import com.github.liaoheng.common.util.BitmapUtils;
 
 import java.security.MessageDigest;
+
+import androidx.annotation.NonNull;
 
 /**
  * 压缩

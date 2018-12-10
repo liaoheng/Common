@@ -16,7 +16,6 @@ import android.os.Build;
 import android.os.Parcelable;
 import android.os.PowerManager;
 import android.provider.Settings;
-import android.support.annotation.RequiresPermission;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
@@ -26,6 +25,8 @@ import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.UUID;
+
+import androidx.annotation.RequiresPermission;
 
 /**
  * app工具

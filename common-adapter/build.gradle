@@ -24,15 +24,13 @@ dependencies {
     testImplementation deps.robolectric
     testImplementation deps.junit
 
-    //android system
-    implementation deps.supportv4
-    compileOnly deps.appcompatv7
-    implementation deps.recyclerviewv7
+    implementation deps.core
+    compileOnly deps.fragment
+    compileOnly deps.swiperefreshlayout
+    compileOnly deps.appcompat
+    implementation deps.recyclerview
 
-    //https://github.com/vinaysshenoy/mugen
-    implementation 'com.vinaysshenoy:mugen:1.0.3'
-    compileOnly deps.recyclerview_flexibledivider
-    compileOnly deps.adapterdelegates2
+    compileOnly deps.adapterdelegates4
 }
 
 apply from: rootProject.file('gradle-mvn-push.gradle')

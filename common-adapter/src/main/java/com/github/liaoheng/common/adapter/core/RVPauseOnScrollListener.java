@@ -1,7 +1,8 @@
 package com.github.liaoheng.common.adapter.core;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * RecyclerView滑动时停止加载图片

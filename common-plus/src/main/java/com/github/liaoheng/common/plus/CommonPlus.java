@@ -1,10 +1,11 @@
 package com.github.liaoheng.common.plus;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 
 import com.github.liaoheng.common.Common;
 import com.github.liaoheng.common.network.CommonNet;
+
+import androidx.annotation.NonNull;
 
 /**
  * @author liaoheng

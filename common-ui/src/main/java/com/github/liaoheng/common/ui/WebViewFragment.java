@@ -3,7 +3,6 @@ package com.github.liaoheng.common.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -14,6 +13,8 @@ import com.github.liaoheng.common.ui.base.CULazyFragment;
 import com.github.liaoheng.common.ui.core.WebHelper;
 import com.github.liaoheng.common.ui.core.WebViewMenuHelper;
 import com.github.liaoheng.common.ui.widget.WebViewLayout;
+
+import androidx.fragment.app.Fragment;
 
 /**
  * Simple WebView Fragment
@@ -54,7 +55,6 @@ public class WebViewFragment extends CULazyFragment implements BackPressedListen
 
     @Override
     protected void onCreateViewLazy(Bundle savedInstanceState) {
-        super.onCreateViewLazy(savedInstanceState);
         setContentView(R.layout.lcu_layout_web);
 
         mWebHelper = WebHelper.with(getContentView());

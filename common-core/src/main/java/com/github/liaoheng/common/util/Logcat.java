@@ -1,7 +1,5 @@
 package com.github.liaoheng.common.util;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.orhanobut.logger.AndroidLogAdapter;
@@ -9,6 +7,9 @@ import com.orhanobut.logger.FormatStrategy;
 import com.orhanobut.logger.PrettyFormatStrategy;
 
 import java.util.Arrays;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * 日志处理
@@ -33,6 +34,7 @@ public final class Logcat {
         try {
             Class.forName("com.orhanobut.logger.Logger");
             FormatStrategy formatStrategy = PrettyFormatStrategy.newBuilder().methodCount(0).tag(tag).build();
+            com.orhanobut.logger.Logger.clearLogAdapters();
             com.orhanobut.logger.Logger.addLogAdapter(new AndroidLogAdapter(formatStrategy) {
                 @Override
                 public boolean isLoggable(int priority, @Nullable String tag) {

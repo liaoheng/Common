@@ -2,17 +2,18 @@ package com.github.liaoheng.common.adapter.base;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v4.util.SparseArrayCompat;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.ViewGroup;
 
-import com.hannesdorfmann.adapterdelegates2.AdapterDelegate;
-import com.hannesdorfmann.adapterdelegates2.AdapterDelegatesManager;
+import com.hannesdorfmann.adapterdelegates4.AdapterDelegate;
+import com.hannesdorfmann.adapterdelegates4.AdapterDelegatesManager;
 
 import java.lang.reflect.Field;
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.collection.SparseArrayCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * An implementation of an Adapter that already uses a {@link AdapterDelegatesManager} and calls
@@ -43,7 +44,7 @@ import java.util.List;
  * }
  * </pre>
  *
- * adapter委托,修改于<a href="https://github.com/sockeqwe/AdapterDelegates/blob/2.0.1/library/src/main/java/com/hannesdorfmann/adapterdelegates2/AbsDelegationAdapter.java">AbsDelegationAdapter</a>
+ * adapter委托,修改于<a href="https://github.com/sockeqwe/AdapterDelegates/blob/4.0.0/library/src/main/java/com/hannesdorfmann/adapterdelegates4/AbsListItemAdapterDelegate.java">AbsDelegationAdapter</a>
  *
  * @author Hannes Dorfmann
  * @author liaoheng

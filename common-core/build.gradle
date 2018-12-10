@@ -29,13 +29,13 @@ android {
 dependencies {
     testImplementation deps.robolectric
     testImplementation deps.junit
-    testImplementation 'joda-time:joda-time:2.9.9'
+    testImplementation 'joda-time:joda-time:2.10.1'
 
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation deps.annotations
-    compileOnly deps.supportv4
-    compileOnly deps.appcompatv7
-    compileOnly deps.design
+    compileOnly deps.core
+    compileOnly deps.fragment
+    compileOnly deps.appcompat
+    compileOnly deps.coordinatorlayout
 
     implementation deps.commons_io
     //https://github.com/orhanobut/logger
@@ -47,10 +47,8 @@ dependencies {
     compileOnly deps.jackson_core
     compileOnly deps.rxandroid
     compileOnly deps.rxjava
-
-    compileOnly "io.reactivex.rxjava2:rxjava:2.1.13"
-    compileOnly 'io.reactivex.rxjava2:rxandroid:2.0.2'
-
+    compileOnly deps.rxandroid2
+    compileOnly deps.rxjava2
 }
 
 apply from: rootProject.file('gradle-mvn-push.gradle')

@@ -2,10 +2,6 @@ package com.github.liaoheng.common.ui.widget;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.StringRes;
-import android.support.annotation.StyleRes;
-import android.support.v7.app.AppCompatDialog;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
@@ -21,6 +17,11 @@ import com.github.liaoheng.common.util.InputMethodUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.annotation.LayoutRes;
+import androidx.annotation.StringRes;
+import androidx.annotation.StyleRes;
+import androidx.appcompat.app.AppCompatDialog;
 
 /**
  * 文字输入对话框，带进度条，<br/>
@@ -185,7 +186,6 @@ public class CUInputDialog extends AppCompatDialog {
         mEditText.setVerticalScrollBarEnabled(true);
         return this;
     }
-
 
     /**
      * 默认对话框标题

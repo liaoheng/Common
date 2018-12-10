@@ -31,23 +31,27 @@ dependencies {
     testImplementation deps.junit
 
     //android system
-    implementation deps.supportv4
-    implementation deps.appcompatv7
-    implementation deps.recyclerviewv7
-    implementation deps.design
+    api deps.core
+    api deps.annotations
+    api deps.appcompat
+    api deps.recyclerview
+    api deps.viewpager
+    api deps.coordinatorlayout
+    api deps.design
+    api deps.fragment
 
-    implementation deps.jackson_annotations
-    implementation deps.jackson_databind
-    implementation deps.jackson_core
-    implementation deps.joda_time_android
-
-    implementation deps.rxandroid
-    implementation deps.rxjava
-    implementation deps.rxlifecycle
-    implementation deps.rxlifecycle_android
+    api deps.jackson_annotations
+    api deps.jackson_databind
+    api deps.jackson_core
+    api deps.joda_time_android
+    api deps.okhttp
+    api deps.rxandroid2
+    api deps.rxjava2
+    api deps.rxlifecycle3
+    api deps.rxlifecycle_android3
 
 //    implementation group: "com.github.liaoheng", name: "common-core", version: "0.0.6-SNAPSHOT", changing: true
-  api project(':common-core')
+    api project(':common-core')
 //    implementation group: "com.github.liaoheng", name: "common-adapter", version: "0.0.6-SNAPSHOT", changing: true
     api project(':common-adapter')
 //    implementation group: "com.github.liaoheng", name: "common-net", version: "0.0.6-SNAPSHOT", changing: true

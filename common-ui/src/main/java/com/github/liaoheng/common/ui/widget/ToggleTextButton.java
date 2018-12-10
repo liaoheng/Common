@@ -2,13 +2,14 @@ package com.github.liaoheng.common.ui.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.support.v7.widget.AppCompatButton;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.widget.Checkable;
 
 import com.github.liaoheng.common.core.OnCheckedChangeListener;
 import com.github.liaoheng.common.ui.R;
+
+import androidx.appcompat.widget.AppCompatButton;
 
 /**
  * @author liaoheng

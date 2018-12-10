@@ -1,10 +1,11 @@
 package com.github.liaoheng.common.util;
 
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+
+import androidx.annotation.NonNull;
 
 /**
  * 数字处理工具
@@ -321,7 +322,6 @@ public class NumberUtils {
         int inNumber = Integer.valueOf(strings[1]);//in值
         return ftNumber * 12 * 254 + inNumber * 254;
     }
-
 
     /** BigDecimal  计算 与工具 **/
 

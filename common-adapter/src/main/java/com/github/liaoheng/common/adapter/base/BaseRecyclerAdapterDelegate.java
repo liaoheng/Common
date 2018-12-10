@@ -1,16 +1,17 @@
 package com.github.liaoheng.common.adapter.base;
 
 import android.content.Context;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.hannesdorfmann.adapterdelegates2.AdapterDelegate;
+import com.hannesdorfmann.adapterdelegates4.AdapterDelegate;
 
 import java.util.List;
+
+import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * A simplified {@link AdapterDelegate} when the underlying adapter's dataset is a  {@linkplain
@@ -22,32 +23,34 @@ import java.util.List;
  * etc. assuming all have a common super class Animal) you want to display in your adapter and
  * you want to create a CatAdapterDelegate then this class would look like this:
  * {@code
- * class CatAdapterDelegate extends BaseRecyclerAdapterDelegate<Cat, Animal, CatViewHolder>{
+ * class CatAdapterDelegate extends AbsListItemAdapterDelegate<Cat, Animal, CatViewHolder>{
  *
- * @param <I> The type of the item that is managed by this AdapterDelegate. Must be a subtype of T
- * @param <T> The generic type of the list, in other words: {@code List<T>}
+ * @param <I>  The type of the item that is managed by this AdapterDelegate. Must be a subtype of T
+ * @param <T>  The generic type of the list, in other words: {@code List<T>}
  * @param <VH> The type of the ViewHolder
  * @author Hannes Dorfmann
- * @author liaoheng
- * @version 2016-09-23 11:44
  * @Override protected boolean isForViewType(Animal item, List<Animal> items, position){
  * return item instanceof Cat;
  * }
  * @Override public CatViewHolder onCreateViewHolder(ViewGroup parent){
  * return new CatViewHolder(inflater.inflate(R.layout.item_cat, parent, false));
  * }
- * @Override protected void onBindViewHolder(Cat item, CatViewHolder viewHolder);
- * viewHolder.setName(cat.getName());
+ * @Override protected void onBindViewHolder(Cat item, CatViewHolder holder);
+ * holder.setName(item.getName());
  * ...
  * }
  * }
- *
+ * <p>
  * }
  * </p>
- * adapter委托实现,修改于<a href="https://github.com/sockeqwe/AdapterDelegates/blob/2.0.1/library/src/main/java/com/hannesdorfmann/adapterdelegates2/AbsListItemAdapterDelegate.java">AbsListItemAdapterDelegate</a>
+ * adapter委托实现,修改于<a href="https://github.com/sockeqwe/AdapterDelegates/blob/4.0.0/library/src/main/java/com/hannesdorfmann/adapterdelegates4/AbsListItemAdapterDelegate.java">AbsListItemAdapterDelegate</a>
+ * @author Hannes Dorfmann
+ * @author liaoheng
+ * @version 2016-09-23 11:44
  */
 public abstract class BaseRecyclerAdapterDelegate<I extends T, T, VH extends RecyclerView.ViewHolder>
-        implements AdapterDelegate<List<T>> ,IBaseRecyclerAdapter<I> {
+        extends AdapterDelegate<List<T>>
+        implements IBaseRecyclerAdapter<I> {
     private Context mContext;
     private IBaseAdapter.OnItemClickListener<I> mOnItemClickListener;
     private IBaseAdapter.OnItemLongClickListener<I> mOnItemLongClickListener;
@@ -130,16 +133,15 @@ public abstract class BaseRecyclerAdapterDelegate<I extends T, T, VH extends Rec
 
     @SuppressWarnings("unchecked")
     @Override
-    public void onBindViewHolder(
-            @NonNull List<T> items, final int position,
-            @NonNull final RecyclerView.ViewHolder holder) {
+    protected void onBindViewHolder(@NonNull List<T> items, int position, @NonNull RecyclerView.ViewHolder holder,
+            @NonNull List<Object> payloads) {
         I item = (I) items.get(position);
         initOnItemClick(item, holder.itemView, position);
-        initOnItemLongClick(item,holder.itemView,position);
+        initOnItemLongClick(item, holder.itemView, position);
         onBindViewHolderItem((VH) holder, item, position);
     }
 
-    protected void initOnItemClick(final I item,View itemView, final int position) {
+    protected void initOnItemClick(final I item, View itemView, final int position) {
         if (mOnItemClickListener == null) {
             return;
         }
@@ -156,7 +158,8 @@ public abstract class BaseRecyclerAdapterDelegate<I extends T, T, VH extends Rec
             return;
         }
         itemView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override public boolean onLongClick(View v) {
+            @Override
+            public boolean onLongClick(View v) {
                 return mOnItemLongClickListener.onItemLongClick(item, v, position);
             }
         });

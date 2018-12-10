@@ -2,12 +2,13 @@ package com.github.liaoheng.common.ui.core;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.view.View;
 import com.github.liaoheng.common.ui.R;
 import com.github.liaoheng.common.ui.widget.WebViewLayout;
 import com.github.liaoheng.common.util.Callback4;
 import com.github.liaoheng.common.util.UIUtils;
+
+import androidx.annotation.NonNull;
 
 /**
  *  may use {@link R.layout#lcu_layout_web}

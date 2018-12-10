@@ -1,9 +1,10 @@
 package com.github.liaoheng.common.util;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * 通用回调
+ *
  * @author liaoheng
  * @version 2015-07-21 19:55
  */
@@ -20,15 +21,13 @@ public interface Callback<T> {
 
     /**
      * 成功
-     * @param t
      */
     void onSuccess(T t);
 
     /**
      * 失败
-     * @param e
      */
-    void onError(SystemException e);
+    void onError(@Nullable Throwable e);
 
     /**
      * 完成
@@ -37,7 +36,6 @@ public interface Callback<T> {
 
     /**
      * 无操作通用回调
-     * @param <T>
      */
     class EmptyCallback<T> implements Callback<T> {
         @Override
@@ -56,7 +54,7 @@ public interface Callback<T> {
         }
 
         @Override
-        public void onError(SystemException e) {
+        public void onError(Throwable e) {
 
         }
 
@@ -68,6 +66,7 @@ public interface Callback<T> {
 
     /**
      * 对于onSuccess与onError打印日志
+     *
      * @author liaoheng
      * @version 2015年9月16日
      */
@@ -76,6 +75,7 @@ public interface Callback<T> {
 
         /**
          * 对于成功与失败打印日志
+         *
          * @param TAG 日志TAG
          */
         public LogEmptyCallback(String TAG) {
@@ -95,12 +95,12 @@ public interface Callback<T> {
 
         @Override
         public void onSuccess(T t) {
-            L.Log.d(TAG, " onSuccess :" + t);
+            L.alog().d(TAG, " onSuccess : " + t);
         }
 
         @Override
-        public void onError(@NonNull SystemException e) {
-            L.Log.w(TAG, e.getMessage(), e);
+        public void onError(Throwable e) {
+            L.alog().w(TAG, e, e.getMessage());
         }
 
         @Override

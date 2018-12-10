@@ -1,26 +1,27 @@
 package com.github.liaoheng.common.ui.base;
 
 import android.os.Bundle;
-import android.support.annotation.CallSuper;
-import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
-import com.trello.rxlifecycle.LifecycleProvider;
-import com.trello.rxlifecycle.LifecycleTransformer;
-import com.trello.rxlifecycle.RxLifecycle;
-import com.trello.rxlifecycle.android.ActivityEvent;
-import com.trello.rxlifecycle.android.RxLifecycleAndroid;
+import com.trello.rxlifecycle3.LifecycleProvider;
+import com.trello.rxlifecycle3.LifecycleTransformer;
+import com.trello.rxlifecycle3.RxLifecycle;
+import com.trello.rxlifecycle3.android.ActivityEvent;
+import com.trello.rxlifecycle3.android.RxLifecycleAndroid;
 
-import rx.Observable;
-import rx.subjects.BehaviorSubject;
+import androidx.annotation.CallSuper;
+import androidx.annotation.CheckResult;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import io.reactivex.Observable;
+import io.reactivex.subjects.BehaviorSubject;
 
 /**
  * 基础通用 RxJava Lifecycle Activity
  *
  * @author liaoheng
+ * @see <a href="https://github.com/trello/RxLifecycle/blob/master/rxlifecycle-components/src/main/java/com/trello/rxlifecycle3/components/support/RxAppCompatActivity.java">RxAppCompatActivity</a>
  */
-public class CURxBaseActivity extends CUBaseActivity implements LifecycleProvider<ActivityEvent> {
+public abstract class CURxBaseActivity extends CUBaseActivity implements LifecycleProvider<ActivityEvent> {
 
     private final BehaviorSubject<ActivityEvent> lifecycleSubject = BehaviorSubject.create();
 
@@ -32,7 +33,7 @@ public class CURxBaseActivity extends CUBaseActivity implements LifecycleProvide
     @NonNull
     @CheckResult
     public final Observable<ActivityEvent> lifecycle() {
-        return lifecycleSubject.asObservable();
+        return lifecycleSubject.hide();
     }
 
     @Override

@@ -5,6 +5,7 @@ package com.github.liaoheng.common.util;
  * @author liaoheng
  * @version 2015-07-21 19:55
  */
+@Deprecated
 public interface Callback2<T> {
     /**
      * 开始
@@ -37,6 +38,7 @@ public interface Callback2<T> {
      * 无操作通用回调
      * @param <T>
      */
+    @Deprecated
     class EmptyCallback<T> implements Callback2<T> {
         @Override public void onPreExecute() {
 

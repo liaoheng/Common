@@ -1,11 +1,12 @@
 package com.github.liaoheng.common.adapter;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.view.ViewGroup;
 import com.github.liaoheng.common.adapter.base.BaseRecyclerAdapter;
 import com.github.liaoheng.common.adapter.holder.BaseRecyclerViewHolder;
 import java.util.List;
+
+import androidx.annotation.NonNull;
 
 /**
  *  Custom ViewHolder for RecyclerAdapter
@@ -19,7 +20,8 @@ public class CustomViewHolderRecyclerAdapter<K, H extends BaseRecyclerViewHolder
 
         int getItemViewType(List<T> items, int position);
 
-        @NonNull V createView(ViewGroup parent, int viewType);
+        @NonNull
+        V createView(ViewGroup parent, int viewType);
 
         void onHandle(V holder, T item, int position);
     }

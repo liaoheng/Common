@@ -2,15 +2,11 @@ package com.github.liaoheng.common.sample;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
+
 import com.github.liaoheng.common.adapter.base.BaseListAdapter;
 import com.github.liaoheng.common.adapter.base.BaseRecyclerAdapter;
 import com.github.liaoheng.common.adapter.base.IBaseAdapter;
@@ -18,6 +14,12 @@ import com.github.liaoheng.common.adapter.holder.BaseRecyclerViewHolder;
 import com.github.liaoheng.common.adapter.widget.ListLinearLayout;
 import com.github.liaoheng.common.ui.base.CUBaseActivity;
 import com.github.liaoheng.common.util.UIUtils;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -88,7 +90,7 @@ public class ListActivity extends CUBaseActivity {
         //list.setAdapter(listAdapter);
     }
 
-    public class RecyclerViewHolder extends BaseRecyclerViewHolder<String>{
+    public class RecyclerViewHolder extends BaseRecyclerViewHolder<String> {
         TextView text;
         public RecyclerViewHolder(View itemView) {
             super(itemView);
@@ -100,7 +102,7 @@ public class ListActivity extends CUBaseActivity {
         }
     }
 
-    public class RecyclerAdapter extends BaseRecyclerAdapter<String,RecyclerViewHolder>{
+    public class RecyclerAdapter extends BaseRecyclerAdapter<String,RecyclerViewHolder> {
 
         public RecyclerAdapter(Context context, List<String> list) {
             super(context, list);

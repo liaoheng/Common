@@ -1,16 +1,17 @@
 package com.github.liaoheng.common.ui.widget;
 
 import android.content.Context;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.StyleRes;
-import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.BottomSheetDialog;
 
 import com.github.liaoheng.common.adapter.core.HandleView;
 import com.github.liaoheng.common.util.DisplayUtils;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.lang.reflect.Field;
+
+import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.StyleRes;
 
 /**
  * 底部卡片对话框

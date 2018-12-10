@@ -2,30 +2,33 @@ package com.github.liaoheng.common.ui.core;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.view.View;
+
 import com.github.liaoheng.common.ui.R;
 import com.github.liaoheng.common.ui.adapter.TabPagerAdapter;
 import com.github.liaoheng.common.ui.model.PagerTab;
 import com.github.liaoheng.common.util.UIUtils;
-import com.github.liaoheng.common.util.ValidateUtils;
+import com.google.android.material.tabs.TabLayout;
 import com.h6ah4i.android.tablayouthelper.TabLayoutHelper;
+
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+
 /**
- *may use {@link R.layout#lcu_layout_tab_pager}
+ * may use {@link R.layout#lcu_layout_tab_pager}
+ *
  * @author liaoheng
  * @version 2015年10月16日
  */
 public class TabPagerHelper {
 
-    private ViewPager       mViewPager;
-    private TabLayout       mTabLayout;
+    private ViewPager mViewPager;
+    private TabLayout mTabLayout;
     private TabLayoutHelper mTabLayoutHelper;
     private TabPagerAdapter mTabPagerAdapter;
 
@@ -44,8 +47,6 @@ public class TabPagerHelper {
     }
 
     public TabPagerHelper(ViewPager viewPager, TabLayout tabLayout) {
-        ValidateUtils.checkArgument(viewPager == null, "ViewPager is null");
-        ValidateUtils.checkArgument(tabLayout == null, "TabLayout is null");
         this.mViewPager = viewPager;
         this.mTabLayout = tabLayout;
     }
@@ -67,13 +68,13 @@ public class TabPagerHelper {
     }
 
     public void setAdapter(FragmentManager fm, Context context, List<PagerTab> list,
-                           TabPagerOperation operation) {
+            TabPagerOperation operation) {
         mTabPagerAdapter = new TabPagerAdapter(fm, context, list, operation);
         setAdapter(mTabPagerAdapter);
     }
 
     public void setViewPagerAdapter(FragmentManager fm, Context context, List<PagerTab> list,
-                                    TabPagerOperation operation) {
+            TabPagerOperation operation) {
         mTabPagerAdapter = new TabPagerAdapter(fm, context, list, operation);
         setViewPagerAdapter(mTabPagerAdapter);
     }

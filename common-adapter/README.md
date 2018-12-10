@@ -1,12 +1,15 @@
 # Common adapter
 
+- compileOnly deps.fragment
+- compileOnly deps.appcompat
 - compileOnly deps.recyclerview_flexibledivider
 - compileOnly deps.adapterdelegates2
-- compileOnly deps.appcompatv7
+- compileOnly deps.v4swiperefreshlayout
 
-- implementation deps.supportv4
-- implementation deps.recyclerviewv7
-- implementation 'com.vinaysshenoy:mugen:1.0.3'
+- implementation deps.core
+- implementation deps.v7recyclerview
+- implementation com.vinaysshenoy:mugen
+
 
 ---
 

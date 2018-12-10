@@ -2,8 +2,6 @@ package com.github.liaoheng.common.ui.base;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,11 +10,14 @@ import com.github.liaoheng.common.util.UIUtils;
 
 import java.lang.reflect.Field;
 
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+
 /**
  * @author https://github.com/LuckyJayce/ViewPagerIndicator
  */
 @SuppressWarnings("TryWithIdenticalCatches")
-public class CUBaseFragment extends Fragment {
+public abstract class CUBaseFragment extends Fragment {
     protected final String TAG = getFragment().getClass().getSimpleName();
     protected LayoutInflater inflater;
     private View contentView;
@@ -56,9 +57,7 @@ public class CUBaseFragment extends Fragment {
         return contentView;
     }
 
-    protected void onCreateView(Bundle savedInstanceState) {
-
-    }
+    protected abstract void onCreateView(Bundle savedInstanceState);
 
     @Override
     public void onDestroyView() {

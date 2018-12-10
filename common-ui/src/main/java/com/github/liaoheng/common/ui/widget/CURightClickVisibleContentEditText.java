@@ -3,11 +3,12 @@ package com.github.liaoheng.common.ui.widget;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 
 import com.github.liaoheng.common.ui.R;
 import com.github.liaoheng.common.util.UIUtils;
+
+import androidx.core.content.ContextCompat;
 
 /**
  * 点击右侧图片显示密码
@@ -71,12 +72,12 @@ public class CURightClickVisibleContentEditText extends CURightClickEditText {
             setCompoundDrawablesWithIntrinsicBounds(
                     left, null,
                     mShowImage, null);
-            UIUtils.showOrHintPassword(true, this);
+            UIUtils.showOrHintEditTextContent(true, this);
         } else {
             setCompoundDrawablesWithIntrinsicBounds(
                     left, null,
                     mHideImage, null);
-            UIUtils.showOrHintPassword(false, this);
+            UIUtils.showOrHintEditTextContent(false, this);
         }
     }
 }

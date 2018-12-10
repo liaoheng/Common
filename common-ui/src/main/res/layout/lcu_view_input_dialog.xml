@@ -25,19 +25,18 @@
                     android:textSize="22sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
-
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                <android.support.design.widget.TextInputEditText
+                <com.google.android.material.textfield.TextInputEditText
                         android:textSize="16sp"
                         android:focusable="true"
                         android:id="@id/lcu_input_dialog_edit_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"/>
 
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
         </LinearLayout>
 

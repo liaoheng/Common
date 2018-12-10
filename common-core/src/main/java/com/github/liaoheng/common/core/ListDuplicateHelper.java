@@ -1,10 +1,11 @@
 package com.github.liaoheng.common.core;
 
-import android.support.annotation.NonNull;
 import android.util.SparseArray;
 
 import java.util.Collections;
 import java.util.List;
+
+import androidx.annotation.NonNull;
 
 /**
  * 列表数据除重，使用不可重复缓存实现。KEY与数据列表中的数据没有直接关系，需要使用ID等不重复的数据为KEY值。

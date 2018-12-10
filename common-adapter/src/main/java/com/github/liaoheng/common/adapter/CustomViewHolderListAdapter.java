@@ -1,12 +1,13 @@
 package com.github.liaoheng.common.adapter;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import com.github.liaoheng.common.adapter.base.BaseListAdapter;
 import com.github.liaoheng.common.adapter.holder.BaseListViewHolder;
 import java.util.List;
+
+import androidx.annotation.NonNull;
 
 /**
  *  Custom ViewHolder for ListAdapter
@@ -20,7 +21,8 @@ public class CustomViewHolderListAdapter<K, VH extends BaseListViewHolder>
 
         int getItemViewType(List<T> items, int position);
 
-        @NonNull V createView(ViewGroup parent, int viewType);
+        @NonNull
+        V createView(ViewGroup parent, int viewType);
 
         void onHandle(V holder, T item, int position);
     }

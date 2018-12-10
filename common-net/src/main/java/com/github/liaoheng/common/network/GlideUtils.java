@@ -2,9 +2,6 @@ package com.github.liaoheng.common.network;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -13,14 +10,17 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.bumptech.glide.request.transition.Transition;
-import com.github.liaoheng.common.util.Callback2;
-import com.github.liaoheng.common.util.HandlerUtils;
+import com.github.liaoheng.common.util.Callback;
+import com.github.liaoheng.common.util.Utils;
 
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Glide Utils
@@ -78,7 +78,7 @@ public class GlideUtils {
     }
 
     public void bitmapImageViewTarget(RequestManager request, ImageView imageView,
-            final Callback2<Bitmap> listener) {
+            final Callback<Bitmap> listener) {
         request.asBitmap().into(new BitmapImageViewTarget(imageView) {
             @Override
             public void onStart() {
@@ -98,48 +98,28 @@ public class GlideUtils {
         });
     }
 
-    public void clearCache(Context context, final Callback2<Object> callback) {
-        Subscriber<String> subscriber = new Subscriber<String>() {
-            @Override
-            public void onStart() {
-                HandlerUtils.runOnUiThread(new Runnable() {
+    public Observable<String> clearCache(Context context) {
+        return Observable.just(context)
+                .observeOn(Schedulers.io())
+                .map(new Function<Context, Context>() {
                     @Override
-                    public void run() {
-                        callback.onPreExecute();
+                    public Context apply(Context context) {
+                        Glide.get(context).clearDiskCache();
+                        return context;
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .map(new Function<Context, String>() {
+                    @Override
+                    public String apply(Context context) {
+                        Glide.get(context).clearMemory();
+                        return "ok";
                     }
                 });
-            }
+    }
 
-            @Override
-            public void onCompleted() {
-                callback.onFinish();
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                callback.onPostExecute();
-                callback.onError(e);
-            }
-
-            @Override
-            public void onNext(String o) {
-                callback.onPostExecute();
-                callback.onSuccess(o);
-            }
-        };
-        Observable.just(context).observeOn(Schedulers.io()).map(new Func1<Context, Context>() {
-            @Override
-            public Context call(Context context) {
-                Glide.get(context).clearDiskCache();
-                return context;
-            }
-        }).observeOn(AndroidSchedulers.mainThread()).map(new Func1<Context, String>() {
-            @Override
-            public String call(Context context) {
-                Glide.get(context).clearMemory();
-                return "ok";
-            }
-        }).subscribe(subscriber);
+    public Disposable clearCache(Context context, Callback<String> callback) {
+        return Utils.addSubscribe(clearCache(context), callback);
     }
 
 }
