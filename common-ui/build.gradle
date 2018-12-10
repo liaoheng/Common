@@ -24,6 +24,10 @@ android {
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/NOTICE'
     }
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
 }
 
 dependencies {
@@ -47,9 +51,9 @@ dependencies {
     //https://github.com/h6ah4i/android-tablayouthelper
     compileOnly 'com.h6ah4i.android.tablayouthelper:tablayouthelper:1.0.0'
 
-//    implementation group: "com.github.liaoheng", name: "common-core", version: "0.0.6-SNAPSHOT", changing: true
+//    implementation group: "com.github.liaoheng", name: "common-core", version: "0.0.7-SNAPSHOT", changing: true
     implementation project(':common-core')
-//    implementation group: "com.github.liaoheng", name: "common-adapter", version: "0.0.6-SNAPSHOT", changing: true
+//    implementation group: "com.github.liaoheng", name: "common-adapter", version: "0.0.7-SNAPSHOT", changing: true
     implementation project(':common-adapter')
 }
 apply from: rootProject.file('gradle-mvn-push.gradle')

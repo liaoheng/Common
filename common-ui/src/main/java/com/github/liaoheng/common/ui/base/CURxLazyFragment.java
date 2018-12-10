@@ -16,11 +16,13 @@ import io.reactivex.Observable;
 import io.reactivex.subjects.BehaviorSubject;
 
 /**
+ * RxLifecycle3 Base LazyFragment
+ *
  * @author liaoheng
  * @version 2016-7-29 14:19
  * @see <a href="https://github.com/trello/RxLifecycle/blob/master/rxlifecycle-components/src/main/java/com/trello/rxlifecycle3/components/support/RxFragment.java">RxFragment</a>
  */
-public class CURxLazyFragment extends CULazyFragment implements LifecycleProvider<FragmentEvent> {
+public abstract class CURxLazyFragment extends CULazyFragment implements LifecycleProvider<FragmentEvent> {
     private final BehaviorSubject<FragmentEvent> lifecycleSubject = BehaviorSubject.create();
 
     public CURxLazyFragment getFragment() {

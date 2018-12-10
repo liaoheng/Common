@@ -18,6 +18,10 @@ android {
     lintOptions {
         abortOnError false
     }
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
 }
 
 dependencies {
@@ -25,11 +29,10 @@ dependencies {
     testImplementation deps.junit
 
     implementation deps.core
-    compileOnly deps.fragment
-    compileOnly deps.swiperefreshlayout
-    compileOnly deps.appcompat
     implementation deps.recyclerview
-
+    implementation deps.swiperefreshlayout
+    compileOnly deps.appcompat
+    compileOnly deps.fragment
     compileOnly deps.adapterdelegates4
 }
 

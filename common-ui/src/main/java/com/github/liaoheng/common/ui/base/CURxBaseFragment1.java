@@ -3,29 +3,29 @@ package com.github.liaoheng.common.ui.base;
 import android.content.Context;
 import android.os.Bundle;
 
-import com.trello.rxlifecycle3.LifecycleProvider;
-import com.trello.rxlifecycle3.LifecycleTransformer;
-import com.trello.rxlifecycle3.RxLifecycle;
-import com.trello.rxlifecycle3.android.FragmentEvent;
-import com.trello.rxlifecycle3.android.RxLifecycleAndroid;
+import com.trello.rxlifecycle.LifecycleProvider;
+import com.trello.rxlifecycle.LifecycleTransformer;
+import com.trello.rxlifecycle.RxLifecycle;
+import com.trello.rxlifecycle.android.FragmentEvent;
+import com.trello.rxlifecycle.android.RxLifecycleAndroid;
 
 import androidx.annotation.CheckResult;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import io.reactivex.Observable;
-import io.reactivex.subjects.BehaviorSubject;
+import rx.Observable;
+import rx.subjects.BehaviorSubject;
 
 /**
- * RxLifecycle3 Base Fragment
+ * RxLifecycle1 Base Fragment
  *
  * @author liaoheng
  * @version 2016-7-29 14:19
  * @see <a href="https://github.com/trello/RxLifecycle/blob/master/rxlifecycle-components/src/main/java/com/trello/rxlifecycle3/components/support/RxFragment.java">RxFragment</a>
  */
-public abstract class CURxBaseFragment extends CUBaseFragment implements LifecycleProvider<FragmentEvent> {
+public abstract class CURxBaseFragment1 extends CUBaseFragment implements LifecycleProvider<FragmentEvent> {
     private final BehaviorSubject<FragmentEvent> lifecycleSubject = BehaviorSubject.create();
 
-    public CURxBaseFragment getFragment() {
+    public CURxBaseFragment1 getFragment() {
         return this;
     }
 
@@ -33,7 +33,7 @@ public abstract class CURxBaseFragment extends CUBaseFragment implements Lifecyc
     @NonNull
     @CheckResult
     public final Observable<FragmentEvent> lifecycle() {
-        return lifecycleSubject.hide();
+        return lifecycleSubject.asObservable();
     }
 
     @Override

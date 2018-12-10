@@ -14,7 +14,11 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 /**
- * @author https://github.com/LuckyJayce/ViewPagerIndicator
+ * 基础通用Fragment
+ *
+ * @author LuckyJayce
+ * @author liaoheng
+ * @see <a href="https://github.com/LuckyJayce/ViewPagerIndicator">LuckyJayce</a>
  */
 @SuppressWarnings("TryWithIdenticalCatches")
 public abstract class CUBaseFragment extends Fragment {

@@ -24,6 +24,10 @@ android {
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/NOTICE'
     }
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
 }
 
 dependencies {
@@ -39,7 +43,7 @@ dependencies {
 
     implementation deps.commons_io
 
-//    implementation group: "com.github.liaoheng", name: "common-core", version: "0.0.6-SNAPSHOT", changing: true
+//    implementation group: "com.github.liaoheng", name: "common-core", version: "0.0.7-SNAPSHOT", changing: true
     implementation project(':common-core')
 }
 apply from: rootProject.file('gradle-mvn-push.gradle')

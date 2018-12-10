@@ -2,13 +2,7 @@
 
 - compileOnly deps.fragment
 - compileOnly deps.appcompat
-- compileOnly deps.recyclerview_flexibledivider
-- compileOnly deps.adapterdelegates2
-- compileOnly deps.v4swiperefreshlayout
-
-- implementation deps.core
-- implementation deps.v7recyclerview
-- implementation com.vinaysshenoy:mugen
+- compileOnly deps.adapterdelegates4
 
 
 ---
@@ -22,7 +16,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-  <android.support.v7.widget.RecyclerView
+  <androidx.recyclerview.widget.RecyclerView
       android:id="@id/lca_list_recycler_view"
       android:layout_width="match_parent"
       android:layout_height="match_parent"/>

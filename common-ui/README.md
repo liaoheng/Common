@@ -2,12 +2,18 @@
 
 - compileOnly deps.rxlifecycle
 - compileOnly deps.rxlifecycle_android
-- compileOnly 'com.h6ah4i.android.tablayouthelper:tablayouthelper:0.8.0'
+- compileOnly deps.rxlifecycle3
+- compileOnly deps.rxlifecycle_android3
+- compileOnly com.h6ah4i.android.tablayouthelper
 
+- implementation deps.core
+- implementation deps.annotations
+- implementation deps.appcompat
+- implementation deps.recyclerview
+- implementation deps.viewpager
+- implementation deps.coordinatorlayout
 - implementation deps.design
-- implementation deps.supportv4
-- implementation deps.appcompatv7
-- implementation deps.recyclerviewv7
+- implementation deps.fragment
 
 ---
 

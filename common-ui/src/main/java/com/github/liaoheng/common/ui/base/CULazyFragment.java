@@ -21,7 +21,7 @@ import androidx.annotation.CallSuper;
  * 《2》使用该LazyFragment会导致多一层布局深度
  *
  * @author LuckyJayce
- * https://github.com/LuckyJayce/ViewPagerIndicator
+ * @see <a href="https://github.com/LuckyJayce/ViewPagerIndicator">LuckyJayce</a>
  */
 public abstract class CULazyFragment extends CUBaseFragment {
     private boolean isInit = false;
