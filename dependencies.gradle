@@ -13,9 +13,6 @@ def glideVersion = '4.8.0'
 ext.deps = [
             robolectric                 : 'org.robolectric:robolectric:4.0.2',
             junit                       : 'junit:junit:4.12',
-            //support
-            v7recyclerview              : "com.android.support:recyclerview-v7:$supportVersion",
-            v4swiperefreshlayout        : "com.android.support:swiperefreshlayout:$supportVersion",
             //android x
             core                        : "androidx.core:core:$xVersion",
             annotations                 : "androidx.annotation:annotation:$xVersion",

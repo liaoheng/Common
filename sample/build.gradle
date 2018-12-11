@@ -50,7 +50,7 @@ dependencies {
   annotationProcessor 'com.jakewharton:butterknife-compiler:9.0.0-rc2'
 
 
-//  implementation group: "com.github.liaoheng", name: "common-plus", version: "0.0.6-SNAPSHOT", changing: true
+//  api group: "com.github.liaoheng", name: "common-plus", version: "0.0.7-SNAPSHOT", changing: true
   api project(':common-plus')
 }
 //configurations.all {
