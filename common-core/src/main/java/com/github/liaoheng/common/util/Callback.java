@@ -28,7 +28,7 @@ public interface Callback<T> {
      * 失败
      * @param e
      */
-    void onError(SystemException e);
+    void onError(Throwable e);
 
     /**
      * 完成
@@ -56,7 +56,7 @@ public interface Callback<T> {
         }
 
         @Override
-        public void onError(SystemException e) {
+        public void onError(Throwable e) {
 
         }
 
@@ -99,7 +99,7 @@ public interface Callback<T> {
         }
 
         @Override
-        public void onError(@NonNull SystemException e) {
+        public void onError(@NonNull Throwable e) {
             L.Log.w(TAG, e.getMessage(), e);
         }
 

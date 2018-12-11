@@ -37,27 +37,16 @@ dependencies {
   implementation fileTree(dir: 'libs', include: ['*.jar'])
   testImplementation deps.junit
 
-  //android system
-  implementation deps.supportv4
-  implementation deps.appcompatv7
-  implementation deps.recyclerviewv7
-  implementation deps.design
-
+  implementation deps.okhttp
   implementation deps.glide
   annotationProcessor deps.glide_compiler
   implementation deps.glide_okhttp3_integration
-  implementation deps.okhttp
 
-  implementation 'com.jakewharton:butterknife:8.6.0'
-  annotationProcessor 'com.jakewharton:butterknife-compiler:8.6.0'
-
-  implementation deps.rxandroid
-  implementation deps.rxjava
-  implementation deps.rxlifecycle
-  implementation deps.rxlifecycle_android
+  implementation 'com.jakewharton:butterknife:8.8.1'
+  annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 
 //  implementation group: "com.github.liaoheng", name: "common-plus", version: "0.0.6-SNAPSHOT", changing: true
-  api project(':common-plus')
+  implementation project(':common-plus')
 }
 //configurations.all {
 //  // check for updates every build

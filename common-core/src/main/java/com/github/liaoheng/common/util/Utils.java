@@ -3,21 +3,28 @@ package com.github.liaoheng.common.util;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.SurfaceTexture;
 import android.net.Uri;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+import android.view.Surface;
 import android.widget.Toast;
 
 import com.github.liaoheng.common.R;
 
-import java.io.File;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
 
 import io.reactivex.Flowable;
+import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.observers.ResourceObserver;
 import io.reactivex.subscribers.ResourceSubscriber;
-import rx.Observable;
-import rx.Subscriber;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * 未分类工具
@@ -95,234 +102,6 @@ public class Utils {
         }
     }
 
-    //==============================================================================================
-    //  rxjava1
-    //==============================================================================================
-
-    /**
-     * 退订RxJava
-     *
-     * @param subscription {@link Subscription#unsubscribe()}
-     */
-    public static void unsubscribe(Subscription subscription) {
-        if (subscription == null) {
-            return;
-        }
-        if (subscription.isUnsubscribed()) {
-            return;
-        }
-        subscription.unsubscribe();
-    }
-
-    public static <T> Subscriber<T> getSubscribe(final Callback<T> listener) {
-        return new Subscriber<T>() {
-            @Override
-            public void onStart() {
-                super.onStart();
-                if (listener != null) {
-                    HandlerUtils.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            listener.onPreExecute();
-                        }
-                    });
-                }
-            }
-
-            @Override
-            public void onCompleted() {
-                if (listener != null) {
-                    listener.onFinish();
-                }
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                if (listener != null) {
-                    listener.onPostExecute();
-                    listener.onError(new SystemException(e));
-                }
-            }
-
-            @Override
-            public void onNext(T t) {
-                if (listener != null) {
-                    listener.onPostExecute();
-                    listener.onSuccess(t);
-                }
-            }
-        };
-    }
-
-    public static <T> Subscriber<T> getSubscribe2(final Callback2<T> listener) {
-        return new Subscriber<T>() {
-            @Override
-            public void onStart() {
-                super.onStart();
-                if (listener != null) {
-                    HandlerUtils.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            listener.onPreExecute();
-                        }
-                    });
-                }
-            }
-
-            @Override
-            public void onCompleted() {
-                if (listener != null) {
-                    listener.onFinish();
-                }
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                if (listener != null) {
-                    listener.onPostExecute();
-                    listener.onError(e);
-                }
-            }
-
-            @Override
-            public void onNext(T t) {
-                if (listener != null) {
-                    listener.onPostExecute();
-                    listener.onSuccess(t);
-                }
-            }
-        };
-    }
-
-    public static <T> Subscription addSubscribe(Observable<T> observable,
-            final Callback<T> listener) {
-        return observable.observeOn(AndroidSchedulers.mainThread())
-                .subscribe(getSubscribe(listener));
-    }
-
-    public static <T> Subscription addSubscribe2(Observable<T> observable,
-            final Callback2<T> listener) {
-        return observable.observeOn(AndroidSchedulers.mainThread())
-                .subscribe(getSubscribe2(listener));
-    }
-
-    //==============================================================================================
-    //  rxjava2
-    //==============================================================================================
-
-    /**
-     * 弃置RxJava
-     *
-     * @param subscription {@link Disposable#dispose()}
-     */
-    public static void dispose(Disposable subscription) {
-        if (subscription == null) {
-            return;
-        }
-        if (subscription.isDisposed()) {
-            return;
-        }
-        subscription.dispose();
-    }
-
-    public static <T> ResourceSubscriber<T> getFlowableSubscriber(final Callback<T> listener) {
-        return new ResourceSubscriber<T>() {
-            @Override
-            protected void onStart() {
-                if (listener != null) {
-                    HandlerUtils.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            listener.onPreExecute();
-                        }
-                    });
-                }
-                super.onStart();
-            }
-
-            @Override
-            public void onComplete() {
-                if (listener != null) {
-                    listener.onFinish();
-                }
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                if (listener != null) {
-                    listener.onPostExecute();
-                    listener.onError(new SystemException(e));
-                }
-            }
-
-            @Override
-            public void onNext(T t) {
-                if (listener != null) {
-                    listener.onPostExecute();
-                    listener.onSuccess(t);
-                }
-            }
-        };
-    }
-
-    public static <T> ResourceSubscriber<T> getFlowableSubscriber2(final Callback2<T> listener) {
-        return new ResourceSubscriber<T>() {
-            @Override
-            protected void onStart() {
-                if (listener != null) {
-                    HandlerUtils.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            listener.onPreExecute();
-                        }
-                    });
-                }
-                super.onStart();
-            }
-
-            @Override
-            public void onComplete() {
-                if (listener != null) {
-                    listener.onFinish();
-                }
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                if (listener != null) {
-                    listener.onPostExecute();
-                    listener.onError(e);
-                }
-            }
-
-            @Override
-            public void onNext(T t) {
-                if (listener != null) {
-                    listener.onPostExecute();
-                    listener.onSuccess(t);
-                }
-            }
-        };
-    }
-
-    public static <T> ResourceSubscriber addFlowableSubscriber(Flowable<T> observable,
-            final Callback<T> listener) {
-        ResourceSubscriber<T> flowableSubscriber = getFlowableSubscriber(listener);
-
-        observable.observeOn(io.reactivex.android.schedulers.AndroidSchedulers.mainThread())
-                .subscribe(flowableSubscriber);
-        return flowableSubscriber;
-    }
-
-    public static <T> ResourceSubscriber addFlowableSubscriber2(Flowable<T> observable,
-            final Callback2<T> listener) {
-        ResourceSubscriber<T> flowableSubscriber = getFlowableSubscriber2(listener);
-
-        observable.observeOn(io.reactivex.android.schedulers.AndroidSchedulers.mainThread())
-                .subscribe(flowableSubscriber);
-        return flowableSubscriber;
-    }
-
     /**
      * 去除电话号码中的 "-" 和" "
      */
@@ -396,5 +175,314 @@ public class Utils {
         request.setNotificationVisibility(notificationVisibility);
         request.setVisibleInDownloadsUi(true);
         return request;
+    }
+
+    //https://stackoverflow.com/questions/3366925/deep-copy-duplicate-of-javas-bytebuffer
+    public static ByteBuffer cloneByteBuffer(ByteBuffer original) {
+        ByteBuffer clone = ByteBuffer.allocate(original.capacity());
+        original.rewind();//copy from the beginning
+        clone.put(original);
+        original.rewind();
+        clone.flip();
+        return clone;
+    }
+
+    public static String toNotNullString(String s) {
+        return TextUtils.isEmpty(s) ? "" : s;
+    }
+
+    public static String toNotNullString(Object o) {
+        return o == null ? "" : String.valueOf(o);
+    }
+
+    public static String toNullString(String s) {
+        return TextUtils.isEmpty(s) ? null : s;
+    }
+
+    public static Long toNullLong(String s) {
+        return TextUtils.isEmpty(s) ? null : Long.parseLong(s);
+    }
+
+    public static Integer toNullInteger(String s) {
+        return TextUtils.isEmpty(s) ? null : Integer.parseInt(s);
+    }
+
+    public static List<Long> longArray2List(long[] array) {
+        List<Long> longs = new ArrayList<>();
+        if (array == null || array.length <= 0) {
+            return longs;
+        }
+        for (long a : array) {
+            longs.add(a);
+        }
+        return longs;
+    }
+
+    public static List<Integer> intArray2List(int[] array) {
+        List<Integer> longs = new ArrayList<>();
+        if (array == null || array.length <= 0) {
+            return longs;
+        }
+        for (int a : array) {
+            longs.add(a);
+        }
+        return longs;
+    }
+
+    public static void clearSurface(SurfaceTexture texture) {
+        Surface surface = new Surface(texture);
+        if (surface.isValid()) {
+            Canvas canvas = surface.lockCanvas(null);
+            canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+            surface.unlockCanvasAndPost(canvas);
+        }
+        surface.release();
+    }
+
+    /**
+     * 检查是否拥有指定的所有权限
+     */
+    public static boolean checkPermissionAllGranted(Context context, String[] permissions) {
+        for (String permission : permissions) {
+            if (!checkPermissionGranted(context, permission)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 检查权限
+     */
+    public static boolean checkPermissionGranted(Context context, String permission) {
+        return ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    //==============================================================================================
+    //  rxjava1
+    //==============================================================================================
+
+    /**
+     * 退订RxJava
+     *
+     * @param subscription {@link rx.Subscription#unsubscribe()}
+     */
+    public static void unsubscribe(rx.Subscription subscription) {
+        if (subscription == null) {
+            return;
+        }
+        if (subscription.isUnsubscribed()) {
+            return;
+        }
+        subscription.unsubscribe();
+    }
+
+    public static <T> rx.Subscriber<T> getSubscribe(final Callback<T> listener) {
+        return new rx.Subscriber<T>() {
+            @Override
+            public void onStart() {
+                super.onStart();
+                if (listener != null) {
+                    HandlerUtils.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            listener.onPreExecute();
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCompleted() {
+                if (listener != null) {
+                    listener.onFinish();
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if (listener != null) {
+                    listener.onPostExecute();
+                    listener.onError(new SystemException(e));
+                }
+            }
+
+            @Override
+            public void onNext(T t) {
+                if (listener != null) {
+                    listener.onPostExecute();
+                    listener.onSuccess(t);
+                }
+            }
+        };
+    }
+
+    @Deprecated
+    public static <T> rx.Subscriber<T> getSubscribe2(final Callback2<T> listener) {
+        return new rx.Subscriber<T>() {
+            @Override
+            public void onStart() {
+                super.onStart();
+                if (listener != null) {
+                    HandlerUtils.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            listener.onPreExecute();
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCompleted() {
+                if (listener != null) {
+                    listener.onFinish();
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if (listener != null) {
+                    listener.onPostExecute();
+                    listener.onError(e);
+                }
+            }
+
+            @Override
+            public void onNext(T t) {
+                if (listener != null) {
+                    listener.onPostExecute();
+                    listener.onSuccess(t);
+                }
+            }
+        };
+    }
+
+    public static <T> rx.Subscription addSubscribe1(rx.Observable<T> observable,
+            final Callback<T> listener) {
+        return observable.observeOn(rx.android.schedulers.AndroidSchedulers.mainThread())
+                .subscribe(getSubscribe(listener));
+    }
+
+    @Deprecated
+    public static <T> rx.Subscription addSubscribe2(rx.Observable<T> observable,
+            final Callback2<T> listener) {
+        return observable.observeOn(rx.android.schedulers.AndroidSchedulers.mainThread())
+                .subscribe(getSubscribe2(listener));
+    }
+
+    //==============================================================================================
+    //  rxjava2
+    //==============================================================================================
+
+    /**
+     * 弃置RxJava
+     *
+     * @param subscription {@link Disposable#dispose()}
+     */
+    public static void dispose(Disposable subscription) {
+        if (subscription == null) {
+            return;
+        }
+        if (subscription.isDisposed()) {
+            return;
+        }
+        subscription.dispose();
+    }
+
+    public static <T> ResourceObserver<T> getResourceObserver(final Callback<T> listener) {
+        return new ResourceObserver<T>() {
+            @Override
+            protected void onStart() {
+                if (listener != null) {
+                    HandlerUtils.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            listener.onPreExecute();
+                        }
+                    });
+                }
+                super.onStart();
+            }
+
+            @Override
+            public void onComplete() {
+                if (listener != null) {
+                    listener.onFinish();
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if (listener != null) {
+                    listener.onPostExecute();
+                    listener.onError(new SystemException(e));
+                }
+            }
+
+            @Override
+            public void onNext(T t) {
+                if (listener != null) {
+                    listener.onPostExecute();
+                    listener.onSuccess(t);
+                }
+            }
+        };
+    }
+
+    public static <T> ResourceSubscriber<T> getResourceSubscriber(final Callback<T> listener) {
+        return new ResourceSubscriber<T>() {
+            @Override
+            protected void onStart() {
+                if (listener != null) {
+                    HandlerUtils.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            listener.onPreExecute();
+                        }
+                    });
+                }
+                super.onStart();
+            }
+
+            @Override
+            public void onComplete() {
+                if (listener != null) {
+                    listener.onFinish();
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if (listener != null) {
+                    listener.onPostExecute();
+                    listener.onError(new SystemException(e));
+                }
+            }
+
+            @Override
+            public void onNext(T t) {
+                if (listener != null) {
+                    listener.onPostExecute();
+                    listener.onSuccess(t);
+                }
+            }
+        };
+    }
+
+    public static <T> Disposable addSubscribe(Observable<T> observable,
+            final Callback<T> listener) {
+        ResourceObserver<T> resourceObserver = getResourceObserver(listener);
+        observable.observeOn(io.reactivex.android.schedulers.AndroidSchedulers.mainThread())
+                .subscribe(resourceObserver);
+        return resourceObserver;
+    }
+
+    public static <T> Disposable addSubscribe(Flowable<T> observable,
+            final Callback<T> listener) {
+        ResourceSubscriber<T> resourceSubscriber = getResourceSubscriber(listener);
+        observable.observeOn(io.reactivex.android.schedulers.AndroidSchedulers.mainThread())
+                .subscribe(resourceSubscriber);
+        return resourceSubscriber;
     }
 }

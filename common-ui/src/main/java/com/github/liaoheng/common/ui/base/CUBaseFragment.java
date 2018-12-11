@@ -12,11 +12,16 @@ import com.github.liaoheng.common.util.UIUtils;
 
 import java.lang.reflect.Field;
 
+
 /**
- * @author https://github.com/LuckyJayce/ViewPagerIndicator
+ * 基础通用Fragment
+ *
+ * @author LuckyJayce
+ * @author liaoheng
+ * @see <a href="https://github.com/LuckyJayce/ViewPagerIndicator">LuckyJayce</a>
  */
 @SuppressWarnings("TryWithIdenticalCatches")
-public class CUBaseFragment extends Fragment {
+public abstract class CUBaseFragment extends Fragment {
     protected final String TAG = getFragment().getClass().getSimpleName();
     protected LayoutInflater inflater;
     private View contentView;
@@ -56,9 +61,7 @@ public class CUBaseFragment extends Fragment {
         return contentView;
     }
 
-    protected void onCreateView(Bundle savedInstanceState) {
-
-    }
+    protected abstract void onCreateView(Bundle savedInstanceState);
 
     @Override
     public void onDestroyView() {
