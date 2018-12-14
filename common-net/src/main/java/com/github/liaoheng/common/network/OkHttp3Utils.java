@@ -569,8 +569,8 @@ public class OkHttp3Utils {
         }
     }
 
-    private String getResponseBody(Response response) {
-        return response.body() == null ? "" : response.body().toString();
+    private String getResponseBody(Response response) throws IOException {
+        return response.body() == null ? "" : response.body().string();
     }
 
     public String getSync(String url) throws NetException {
