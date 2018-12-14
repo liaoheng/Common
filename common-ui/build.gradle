@@ -37,16 +37,17 @@ dependencies {
 
     compileOnly deps.rxlifecycle
     compileOnly deps.rxlifecycle_android
-    compileOnly deps.rxlifecycle2
-    compileOnly deps.rxlifecycle_android2
+
+    compileOnly 'com.trello.rxlifecycle2:rxlifecycle:2.2.1'
+    compileOnly 'com.trello.rxlifecycle2:rxlifecycle-android:2.2.1'
 
     //TabLayout:https://github.com/h6ah4i/android-tablayouthelper
     compileOnly 'com.h6ah4i.android.tablayouthelper:tablayouthelper:0.8.0'
 
 //    implementation group: "com.github.liaoheng", name: "common-core", version: "0.0.6-SNAPSHOT", changing: true
-    implementation project(':common-core')
+    api project(':common-core')
 //    implementation group: "com.github.liaoheng", name: "common-adapter", version: "0.0.6-SNAPSHOT", changing: true
-    implementation project(':common-adapter')
+    api project(':common-adapter')
 }
 apply from: rootProject.file('gradle-mvn-push.gradle')
 

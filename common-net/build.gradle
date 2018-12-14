@@ -32,13 +32,13 @@ dependencies {
 
     compileOnly deps.glide
     compileOnly deps.okhttp
-    compileOnly deps.rxandroid2
-    compileOnly deps.rxjava2
+    compileOnly deps.rxandroid
+    compileOnly deps.rxjava
 
     compileOnly deps.commons_io
 
 //    implementation group: "com.github.liaoheng", name: "common-core", version: "0.0.6-SNAPSHOT", changing: true
-    implementation project(':common-core')
+    api project(':common-core')
 }
 apply from: rootProject.file('gradle-mvn-push.gradle')
 

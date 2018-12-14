@@ -1,7 +1,6 @@
 package com.github.liaoheng.common.sample;
 
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -17,9 +16,9 @@ import com.github.liaoheng.common.ui.widget.CUBottomSheetDialog;
 import com.github.liaoheng.common.ui.widget.CUInputDialog;
 import com.github.liaoheng.common.util.Callback;
 import com.github.liaoheng.common.util.L;
+import com.github.liaoheng.common.util.SystemException;
 import com.github.liaoheng.common.util.UIUtils;
 import com.github.liaoheng.common.util.Utils;
-import com.github.liaoheng.common.util.ValidateUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -31,8 +30,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.reactivex.Observable;
 import okhttp3.OkHttpClient;
+import rx.Observable;
 
 public class MainActivity extends CURxBaseActivity {
 
@@ -120,7 +119,7 @@ public class MainActivity extends CURxBaseActivity {
         OkHttp3Utils utils = OkHttp3Utils.init().buildClone(builder);
 
         Observable<String> photo = OkHttp3Utils.get()
-                .getAsyncToJsonString("https://gank.io/api/data/Android/10/1");
+                .getAsyncToJsonString("http://gank.io/api/data/%E7%A6%8F%E5%88%A9/10/1");
         Utils.addSubscribe(photo.compose(this.<String>bindToLifecycle()),
                 new Callback.EmptyCallback<String>() {
                     @Override
@@ -129,7 +128,7 @@ public class MainActivity extends CURxBaseActivity {
                     }
 
                     @Override
-                    public void onError(Throwable e) {
+                    public void onError(SystemException e) {
                         mProgressHelper.hide();
                         L.getToast().e(TAG, getActivity(), e);
                     }
@@ -139,20 +138,15 @@ public class MainActivity extends CURxBaseActivity {
                         Album album = new Album();
                         try {
                             JSONObject jsonObject = new JSONObject(json);
-                            JSONArray results = jsonObject.getJSONArray("results");
-                            for (int i = 0; i < results.length(); i++) {
-                                JSONObject item = results.getJSONObject(i);
-                                JSONArray images = item.getJSONArray("images");
-                                String image = images.getString(0);
-                                if (!TextUtils.isEmpty(image)) {
-                                    album.setItem("" + i, image);
-                                }
+                            JSONArray JsonPhotos = jsonObject.getJSONArray("results");
+                            for (int i = 0; i < JsonPhotos.length(); i++) {
+                                JSONObject photo = JsonPhotos.getJSONObject(i);
+                                String image = photo.getString("url");
+                                album.setItem("" + i, image);
                             }
-                            if (!ValidateUtils.isItemEmpty(album.getItems())) {
-                                GlideApp.with(getActivity()).load(album.getItems().get(0).getUrl()).transform(
-                                        new GlideCompressTransformation(
-                                                800)).into(image);
-                            }
+                            GlideApp.with(getActivity()).load(album.getItems().get(0).getUrl()).transform(
+                                    new GlideCompressTransformation(
+                                            800)).into(image);
                             mProgressHelper.hide();
                         } catch (Exception e) {
                             L.getToast().e(TAG, getActivity(), e);

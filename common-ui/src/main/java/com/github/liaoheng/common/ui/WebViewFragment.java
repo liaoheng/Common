@@ -54,6 +54,7 @@ public class WebViewFragment extends CULazyFragment implements BackPressedListen
 
     @Override
     protected void onCreateViewLazy(Bundle savedInstanceState) {
+        super.onCreateViewLazy(savedInstanceState);
         setContentView(R.layout.lcu_layout_web);
 
         mWebHelper = WebHelper.with(getContentView());

@@ -13,15 +13,14 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.bumptech.glide.request.transition.Transition;
-import com.github.liaoheng.common.util.Callback;
 import com.github.liaoheng.common.util.Callback2;
-import com.github.liaoheng.common.util.Utils;
+import com.github.liaoheng.common.util.HandlerUtils;
 
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Function;
-import io.reactivex.schedulers.Schedulers;
+import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 /**
  * Glide Utils
@@ -99,28 +98,48 @@ public class GlideUtils {
         });
     }
 
-    public Observable<String> clearCache(Context context) {
-        return Observable.just(context)
-                .observeOn(Schedulers.io())
-                .map(new Function<Context, Context>() {
+    public void clearCache(Context context, final Callback2<Object> callback) {
+        Subscriber<String> subscriber = new Subscriber<String>() {
+            @Override
+            public void onStart() {
+                HandlerUtils.runOnUiThread(new Runnable() {
                     @Override
-                    public Context apply(Context context) {
-                        Glide.get(context).clearDiskCache();
-                        return context;
-                    }
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .map(new Function<Context, String>() {
-                    @Override
-                    public String apply(Context context) {
-                        Glide.get(context).clearMemory();
-                        return "ok";
+                    public void run() {
+                        callback.onPreExecute();
                     }
                 });
-    }
+            }
 
-    public Disposable clearCache(Context context, Callback<String> callback) {
-        return Utils.addSubscribe(clearCache(context), callback);
+            @Override
+            public void onCompleted() {
+                callback.onFinish();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                callback.onPostExecute();
+                callback.onError(e);
+            }
+
+            @Override
+            public void onNext(String o) {
+                callback.onPostExecute();
+                callback.onSuccess(o);
+            }
+        };
+        Observable.just(context).observeOn(Schedulers.io()).map(new Func1<Context, Context>() {
+            @Override
+            public Context call(Context context) {
+                Glide.get(context).clearDiskCache();
+                return context;
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).map(new Func1<Context, String>() {
+            @Override
+            public String call(Context context) {
+                Glide.get(context).clearMemory();
+                return "ok";
+            }
+        }).subscribe(subscriber);
     }
 
 }

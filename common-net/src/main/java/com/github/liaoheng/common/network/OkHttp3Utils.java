@@ -34,12 +34,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
-import io.reactivex.ObservableTransformer;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Function;
-import io.reactivex.schedulers.Schedulers;
 import okhttp3.Cache;
 import okhttp3.Dispatcher;
 import okhttp3.Interceptor;
@@ -52,6 +46,10 @@ import okhttp3.ResponseBody;
 import okhttp3.internal.Util;
 import okio.Buffer;
 import okio.BufferedSource;
+import rx.Observable;
+import rx.Subscription;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 /**
  * OKHttp3 工具类
@@ -471,7 +469,6 @@ public class OkHttp3Utils {
             mErrorHandleListener = errorHandleListener;
         }
 
-        @NonNull
         @Override
         public Response intercept(@NonNull Chain chain) throws IOException {
             Response response = chain.proceed(chain.request());
@@ -573,11 +570,7 @@ public class OkHttp3Utils {
     }
 
     private String getResponseBody(Response response) {
-        try {
-            return response.body() == null ? "" : response.body().string();
-        } catch (IOException e) {
-            return "";
-        }
+        return response.body() == null ? "" : response.body().toString();
     }
 
     public String getSync(String url) throws NetException {
@@ -639,12 +632,12 @@ public class OkHttp3Utils {
         }
     }
 
-    public Disposable getAsyncToJsonString(String url,
+    public Subscription getAsyncToJsonString(String url,
             Callback<String> listener) {
         return Utils.addSubscribe(getAsyncToJsonString(url), listener);
     }
 
-    public Disposable getAsyncToJsonString(String url, Request.Builder builder,
+    public Subscription getAsyncToJsonString(String url, Request.Builder builder,
             Callback<String> listener) {
         return Utils.addSubscribe(getAsyncToJsonString(url, builder), listener);
     }
@@ -660,24 +653,24 @@ public class OkHttp3Utils {
     public Observable<String> getAsyncToJsonString(
             final Request.Builder builder,
             Observable<String> observable) {
-        return observable.observeOn(Schedulers.io())
-                .flatMap(new Function<String, ObservableSource<String>>() {
-                    @Override
-                    public ObservableSource<String> apply(String s) throws Exception {
-                        try {
-                            return Observable.just(getSync(s, builder));
-                        } catch (SystemException e) {
-                            return Observable.error(e);
-                        }
-                    }
-                });
+        return observable.observeOn(Schedulers.io()).map(new Func1<String, String>() {
+            @Override
+            public String call(String s) {
+                try {
+                    return getSync(s, builder);
+                } catch (SystemException e) {
+                    throw new SystemRuntimeException(e);
+                }
+            }
+        });
     }
 
-    public Disposable postAsyncToJsonString(String url, String json, Callback<String> listener) {
+    public Subscription postAsyncToJsonString(String url, String json,
+            final Callback<String> listener) {
         return postAsyncToJsonString(url, Observable.just(json), listener);
     }
 
-    public Disposable postAsyncToJsonString(String url, Observable<String> observable,
+    public Subscription postAsyncToJsonString(final String url, Observable<String> observable,
             final Callback<String> listener) {
         return Utils.addSubscribe(postAsyncToJsonString(url, observable), listener);
     }
@@ -688,13 +681,13 @@ public class OkHttp3Utils {
 
     public Observable<String> postAsyncToJsonString(final String url,
             Observable<String> observable) {
-        return observable.observeOn(Schedulers.io()).flatMap(new Function<String, ObservableSource<String>>() {
+        return observable.observeOn(Schedulers.io()).map(new Func1<String, String>() {
             @Override
-            public ObservableSource<String> apply(String jsonBody) {
+            public String call(String jsonBody) {
                 try {
-                    return Observable.just(postSync(url, jsonBody));
+                    return postSync(url, jsonBody);
                 } catch (SystemException e) {
-                    return Observable.error(e);
+                    throw new SystemRuntimeException(e);
                 }
             }
         });
@@ -756,14 +749,14 @@ public class OkHttp3Utils {
         }
     }
 
-    public ObservableTransformer<String, FileDownload> applyGetFileName() {
-        return new ObservableTransformer<String, FileDownload>() {
+    public Observable.Transformer<String, FileDownload> applyGetFileName() {
+        return new Observable.Transformer<String, FileDownload>() {
             @Override
-            public ObservableSource<FileDownload> apply(Observable<String> upstream) {
-                return upstream.observeOn(Schedulers.io())
-                        .flatMap(new Function<String, Observable<FileDownload>>() {
+            public Observable<FileDownload> call(Observable<String> stringObservable) {
+                return stringObservable.observeOn(Schedulers.io())
+                        .flatMap(new Func1<String, Observable<FileDownload>>() {
                             @Override
-                            public Observable<FileDownload> apply(String url) {
+                            public Observable<FileDownload> call(String url) {
                                 try {
                                     String extension = FilenameUtils.getExtension(url);
                                     if (!TextUtils.isEmpty(extension)) {
@@ -777,7 +770,7 @@ public class OkHttp3Utils {
                                             UUID.randomUUID().toString() + ".jpg");
                                     return Observable.just(new FileDownload(fileName, url));
                                 } catch (NetException e) {
-                                    return Observable.error(e);
+                                    throw new SystemRuntimeException(e);
                                 }
                             }
                         });
@@ -785,14 +778,16 @@ public class OkHttp3Utils {
         };
     }
 
-    public ObservableTransformer<FileDownload, FileDownload> applyDownloadFile() {
-        return new ObservableTransformer<FileDownload, FileDownload>() {
+    public Observable.Transformer<FileDownload, FileDownload> applyDownloadFile() {
+        return new Observable.Transformer<FileDownload, FileDownload>() {
             @Override
-            public ObservableSource<FileDownload> apply(Observable<FileDownload> upstream) {
-                return upstream
-                        .flatMap(new Function<FileDownload, ObservableSource<FileDownload>>() {
+            public Observable<FileDownload> call(
+                    Observable<FileDownload> downloadObservable) {
+                return downloadObservable
+                        .flatMap(new Func1<FileDownload, Observable<FileDownload>>() {
                             @Override
-                            public ObservableSource<FileDownload> apply(FileDownload fileDownload) {
+                            public Observable<FileDownload> call(
+                                    FileDownload fileDownload) {
                                 try {
                                     OkHttpClient.Builder builder = OkHttp3Utils.get().cloneClient();
                                     builder.readTimeout(2, TimeUnit.MINUTES);
@@ -818,19 +813,20 @@ public class OkHttp3Utils {
         };
     }
 
-    public Disposable downloadFile(String url, final File dir,
+    public Subscription downloadFile(final String url, final File dir,
             Callback<FileDownload> callback) {
         Observable<FileDownload> observable = Observable.just(url)
                 .compose(applyGetFileName())
-                .compose(applyDownloadFile()).flatMap(new Function<FileDownload, ObservableSource<FileDownload>>() {
+                .compose(applyDownloadFile())
+                .map(new Func1<FileDownload, FileDownload>() {
                     @Override
-                    public ObservableSource<FileDownload> apply(FileDownload fileName) {
+                    public FileDownload call(FileDownload fileName) {
                         try {
                             File file = FileUtils.createFile(dir, fileName.getFileName());
                             FileUtils.copyInputStreamToFile(fileName.getInputStream(), file);
-                            return Observable.just(new FileDownload(file));
+                            return new FileDownload(file);
                         } catch (IOException e) {
-                            return Observable.error(e);
+                            throw new SystemRuntimeException(e);
                         }
                     }
                 });

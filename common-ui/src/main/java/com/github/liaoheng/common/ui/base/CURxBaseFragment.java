@@ -6,23 +6,20 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.trello.rxlifecycle2.LifecycleProvider;
-import com.trello.rxlifecycle2.LifecycleTransformer;
-import com.trello.rxlifecycle2.RxLifecycle;
-import com.trello.rxlifecycle2.android.FragmentEvent;
-import com.trello.rxlifecycle2.android.RxLifecycleAndroid;
+import com.trello.rxlifecycle.LifecycleProvider;
+import com.trello.rxlifecycle.LifecycleTransformer;
+import com.trello.rxlifecycle.RxLifecycle;
+import com.trello.rxlifecycle.android.FragmentEvent;
+import com.trello.rxlifecycle.android.RxLifecycleAndroid;
 
-import io.reactivex.Observable;
-import io.reactivex.subjects.BehaviorSubject;
+import rx.Observable;
+import rx.subjects.BehaviorSubject;
 
 /**
- * RxLifecycle3 Base Fragment
- *
  * @author liaoheng
  * @version 2016-7-29 14:19
- * @see <a href="https://github.com/trello/RxLifecycle/blob/master/rxlifecycle-components/src/main/java/com/trello/rxlifecycle3/components/support/RxFragment.java">RxFragment</a>
  */
-public abstract class CURxBaseFragment extends CUBaseFragment implements LifecycleProvider<FragmentEvent> {
+public class CURxBaseFragment extends CUBaseFragment implements LifecycleProvider<FragmentEvent> {
     private final BehaviorSubject<FragmentEvent> lifecycleSubject = BehaviorSubject.create();
 
     public CURxBaseFragment getFragment() {
@@ -33,7 +30,7 @@ public abstract class CURxBaseFragment extends CUBaseFragment implements Lifecyc
     @NonNull
     @CheckResult
     public final Observable<FragmentEvent> lifecycle() {
-        return lifecycleSubject.hide();
+        return lifecycleSubject.asObservable();
     }
 
     @Override
@@ -64,6 +61,7 @@ public abstract class CURxBaseFragment extends CUBaseFragment implements Lifecyc
 
     @Override
     protected void onCreateView(Bundle savedInstanceState) {
+        super.onCreateView(savedInstanceState);
         lifecycleSubject.onNext(FragmentEvent.CREATE_VIEW);
     }
 
