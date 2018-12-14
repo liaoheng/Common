@@ -13,15 +13,18 @@ ext.deps = [
             //test
             robolectric                 : 'org.robolectric:robolectric:3.8',
             junit                       : 'junit:junit:4.12',
-            //dev
+            //support
             annotations                 : "com.android.support:support-annotations:$supportVersion",
-            supportv4                   : "com.android.support:support-v4:$supportVersion",
+            support_compat                   : "com.android.support:support-compat:$supportVersion",
+            support_core_utils                   : "com.android.support:support-core-utils:$supportVersion",
+            support_core_ui                   : "com.android.support:support-core-ui:$supportVersion",
+            support_fragment                   : "com.android.support:support-fragment:$supportVersion",
             appcompatv7                 : "com.android.support:appcompat-v7:$supportVersion",
-            support_annotations         : "com.android.support:support-annotations:$supportVersion",
             recyclerviewv7              : "com.android.support:recyclerview-v7:$supportVersion",
             cardviewv7                  : "com.android.support:cardview-v7:$supportVersion",
-            design                      : "com.android.support:design:$supportVersion",
             gridlayoutv7                : "com.android.support:gridlayout-v7:$supportVersion",
+            design                      : "com.android.support:design:$supportVersion",
+            //third part
             //https://github.com/apache/commons-io
             commons_io                  : "commons-io:commons-io:2.6",
             //https://github.com/FasterXML/jackson-annotations
@@ -56,6 +59,7 @@ ext.deps = [
             retrofit                    : "com.squareup.retrofit2:retrofit:$retrofitVersion",
             retrofit_converter_jackson  : "com.squareup.retrofit2:converter-jackson:$retrofitVersion",
             retrofit_adapter_rxjava     : "com.squareup.retrofit2:adapter-rxjava:$retrofitVersion",
+            retrofit_adapter_rxjava2     : "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion",
             //https://github.com/yqritc/RecyclerView-FlexibleDivider
             recyclerview_flexibledivider: 'com.yqritc:recyclerview-flexibledivider:1.4.0',
             //https://github.com/sockeqwe/AdapterDelegates

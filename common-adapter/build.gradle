@@ -25,12 +25,14 @@ dependencies {
     testImplementation deps.junit
 
     //android system
-    implementation deps.supportv4
+    implementation deps.support_core_ui
     compileOnly deps.appcompatv7
     implementation deps.recyclerviewv7
 
     //https://github.com/vinaysshenoy/mugen
-    implementation 'com.vinaysshenoy:mugen:1.0.3'
+    implementation('com.vinaysshenoy:mugen:1.0.3') {
+        exclude group: 'com.android.support', module: 'support-v4'
+    }
     compileOnly deps.recyclerview_flexibledivider
     compileOnly deps.adapterdelegates2
 }

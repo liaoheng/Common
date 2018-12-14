@@ -30,7 +30,8 @@ dependencies {
     testImplementation deps.robolectric
     testImplementation deps.junit
 
-    implementation deps.supportv4
+    implementation deps.support_core_ui
+    implementation deps.support_fragment
     implementation deps.appcompatv7
     implementation deps.recyclerviewv7
     implementation deps.design

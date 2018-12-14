@@ -31,7 +31,8 @@ dependencies {
     testImplementation deps.junit
 
     //android system
-    api deps.supportv4
+    api deps.support_core_ui
+    api deps.support_fragment
     api deps.appcompatv7
     api deps.recyclerviewv7
     api deps.design

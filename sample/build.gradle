@@ -37,6 +37,8 @@ dependencies {
   implementation fileTree(dir: 'libs', include: ['*.jar'])
   testImplementation deps.junit
 
+  implementation deps.support_compat
+
   implementation deps.okhttp
   implementation deps.glide
   annotationProcessor deps.glide_compiler

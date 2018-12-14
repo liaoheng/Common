@@ -142,6 +142,9 @@ public class MainActivity extends CURxBaseActivity {
                             JSONArray results = jsonObject.getJSONArray("results");
                             for (int i = 0; i < results.length(); i++) {
                                 JSONObject item = results.getJSONObject(i);
+                                if (!item.has("images")) {
+                                    continue;
+                                }
                                 JSONArray images = item.getJSONArray("images");
                                 String image = images.getString(0);
                                 if (!TextUtils.isEmpty(image)) {

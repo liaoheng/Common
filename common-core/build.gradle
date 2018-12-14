@@ -33,7 +33,7 @@ dependencies {
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation deps.annotations
-    compileOnly deps.supportv4
+    compileOnly deps.support_fragment
     compileOnly deps.appcompatv7
     compileOnly deps.design
 
