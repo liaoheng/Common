@@ -60,7 +60,11 @@ public class LogFileUtils {
     }
 
     public void init(Context context, String fileName) throws SystemException {
-        File log = FileUtils.createProjectSpaceDir(context, "Log");
+        init(context, "Log", fileName);
+    }
+
+    public void init(Context context, String dir, String fileName) throws SystemException {
+        File log = FileUtils.createProjectSpaceDir(context, dir);
         if (TextUtils.isEmpty(fileName)) {
             fileName = DEFAULT_FILE_NAME;
         }
@@ -73,6 +77,10 @@ public class LogFileUtils {
         }
         mLogFile = logFile;
         L.alog().d(TAG, "init log file : %s ", mLogFile.getAbsoluteFile());
+    }
+
+    public File getLogFile() {
+        return mLogFile;
     }
 
     private OutputStream mFileOutputStream;

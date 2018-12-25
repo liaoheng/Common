@@ -39,7 +39,7 @@ dependencies {
 
     implementation deps.commons_io
 
-//    implementation group: "com.github.liaoheng", name: "common-core", version: "0.0.7-SNAPSHOT", changing: true
+//    implementation group: "com.github.liaoheng", name: "common-core", version: "0.1.0-SNAPSHOT", changing: true
     implementation project(':common-core')
 }
 apply from: rootProject.file('gradle-mvn-push.gradle')

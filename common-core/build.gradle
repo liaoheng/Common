@@ -32,10 +32,7 @@ dependencies {
     testImplementation 'joda-time:joda-time:2.10.1'
 
     implementation deps.annotations
-    compileOnly deps.core
-    compileOnly deps.fragment
     compileOnly deps.appcompat
-    compileOnly deps.coordinatorlayout
 
     implementation deps.commons_io
     //https://github.com/orhanobut/logger

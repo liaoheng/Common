@@ -35,14 +35,8 @@ dependencies {
     testImplementation deps.junit
 
     //android system
-    api deps.core
-    api deps.annotations
     api deps.appcompat
-    api deps.recyclerview
-    api deps.viewpager
-    api deps.coordinatorlayout
     api deps.design
-    api deps.fragment
 
     api deps.jackson_annotations
     api deps.jackson_databind
@@ -53,13 +47,13 @@ dependencies {
     api deps.rxlifecycle3
     api deps.rxlifecycle_android3
 
-//    api group: "com.github.liaoheng", name: "common-core", version: "0.0.7-SNAPSHOT", changing: true
+//    api group: "com.github.liaoheng", name: "common-core", version: "0.1.0-SNAPSHOT", changing: true
     api project(':common-core')
-//    api group: "com.github.liaoheng", name: "common-adapter", version: "0.0.7-SNAPSHOT", changing: true
+//    api group: "com.github.liaoheng", name: "common-adapter", version: "0.1.0-SNAPSHOT", changing: true
     api project(':common-adapter')
-//    api group: "com.github.liaoheng", name: "common-net", version: "0.0.7-SNAPSHOT", changing: true
+//    api group: "com.github.liaoheng", name: "common-net", version: "0.1.0-SNAPSHOT", changing: true
     api project(':common-net')
-//    api group: "com.github.liaoheng", name: "common-ui", version: "0.0.7-SNAPSHOT", changing: true
+//    api group: "com.github.liaoheng", name: "common-ui", version: "0.1.0-SNAPSHOT", changing: true
     api project(':common-ui')
 }
 

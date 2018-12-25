@@ -41,6 +41,8 @@ dependencies {
   implementation fileTree(dir: 'libs', include: ['*.jar'])
   testImplementation deps.junit
 
+  implementation deps.recyclerview
+
   implementation deps.okhttp
   implementation deps.glide
   annotationProcessor deps.glide_compiler
@@ -50,7 +52,7 @@ dependencies {
   annotationProcessor 'com.jakewharton:butterknife-compiler:9.0.0-rc2'
 
 
-//  api group: "com.github.liaoheng", name: "common-plus", version: "0.0.7-SNAPSHOT", changing: true
+//  api group: "com.github.liaoheng", name: "common-plus", version: "0.1.0-SNAPSHOT", changing: true
   api project(':common-plus')
 }
 //configurations.all {
