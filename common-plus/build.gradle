@@ -47,13 +47,13 @@ dependencies {
     api deps.rxlifecycle2
     api deps.rxlifecycle_android2
 
-//    implementation group: "com.github.liaoheng", name: "common-core", version: "0.0.6-SNAPSHOT", changing: true
+//    api group: "com.github.liaoheng", name: "common-core", version: "0.0.7-SNAPSHOT", changing: true
     api project(':common-core')
-//    implementation group: "com.github.liaoheng", name: "common-adapter", version: "0.0.6-SNAPSHOT", changing: true
+//    api group: "com.github.liaoheng", name: "common-adapter", version: "0.0.7-SNAPSHOT", changing: true
     api project(':common-adapter')
-//    implementation group: "com.github.liaoheng", name: "common-net", version: "0.0.6-SNAPSHOT", changing: true
+//    api group: "com.github.liaoheng", name: "common-net", version: "0.0.7-SNAPSHOT", changing: true
     api project(':common-net')
-//    implementation group: "com.github.liaoheng", name: "common-ui", version: "0.0.6-SNAPSHOT", changing: true
+//    api group: "com.github.liaoheng", name: "common-ui", version: "0.0.7-SNAPSHOT", changing: true
     api project(':common-ui')
 }
 
