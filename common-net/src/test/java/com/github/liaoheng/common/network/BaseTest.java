@@ -1,5 +1,6 @@
 package com.github.liaoheng.common.network;
 
+import android.util.Log;
 import org.junit.Before;
 import org.robolectric.shadows.ShadowLog;
 
@@ -9,13 +10,22 @@ import org.robolectric.shadows.ShadowLog;
  */
 public class BaseTest {
 
-    public final String TAG = this.getClass().getSimpleName();
+    protected final String TAG = this.getClass().getSimpleName();
 
-    @Before public void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         ShadowLog.stream = System.out;
     }
 
-    public void log(String msg, Object... o) {
-        ShadowLog.d(TAG, String.format(msg, o));
+    protected void log(String msg, Object... o) {
+        Log.d(TAG, String.format(msg, o));
+    }
+
+    protected void loge(Throwable e) {
+        loge(e.getMessage(), e);
+    }
+
+    protected void loge(String msg, Throwable e) {
+        Log.e(TAG, msg, e);
     }
 }

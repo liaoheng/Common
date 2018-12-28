@@ -1,5 +1,6 @@
 package com.github.liaoheng.common;
 
+import android.util.Log;
 import org.junit.Before;
 import org.robolectric.shadows.ShadowLog;
 
@@ -17,7 +18,7 @@ public class BaseTest {
     }
 
     protected void log(String msg, Object... o) {
-        ShadowLog.d(TAG, String.format(msg, o));
+        Log.d(TAG, String.format(msg, o));
     }
 
     protected void loge(Throwable e) {
@@ -25,6 +26,6 @@ public class BaseTest {
     }
 
     protected void loge(String msg, Throwable e) {
-        ShadowLog.e(TAG, msg, e);
+        Log.e(TAG, msg, e);
     }
 }

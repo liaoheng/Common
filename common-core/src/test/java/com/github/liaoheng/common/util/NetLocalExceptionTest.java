@@ -1,8 +1,7 @@
 package com.github.liaoheng.common.util;
 
 import com.github.liaoheng.common.BaseTest;
-import com.github.liaoheng.common.BuildConfig;
-
+import com.github.liaoheng.common.TestApplication;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
@@ -10,16 +9,14 @@ import org.robolectric.annotation.Config;
 
 import java.util.concurrent.TimeoutException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * @author liaoheng
  * @version 2016-07-25 13:26
  */
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class)
+@Config(application = TestApplication.class)
 public class NetLocalExceptionTest extends BaseTest {
 
     @Test

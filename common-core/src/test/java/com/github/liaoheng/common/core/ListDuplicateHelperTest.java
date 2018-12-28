@@ -1,8 +1,7 @@
 package com.github.liaoheng.common.core;
 
 import com.github.liaoheng.common.BaseTest;
-import com.github.liaoheng.common.BuildConfig;
-
+import com.github.liaoheng.common.TestApplication;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
@@ -18,7 +17,7 @@ import static org.junit.Assert.assertEquals;
  * @version 2016-07-28 15:31
  */
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class)
+@Config(application = TestApplication.class)
 public class ListDuplicateHelperTest extends BaseTest {
 
     class D {
