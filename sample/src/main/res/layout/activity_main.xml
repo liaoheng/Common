@@ -5,11 +5,6 @@
         android:layout_height="match_parent"
         xmlns:app="http://schemas.android.com/apk/res-auto">
 
-  <ImageView
-      android:id="@+id/image"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"/>
-
     <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
@@ -17,7 +12,7 @@
 
         <Button
                 android:id="@+id/load_image"
-                android:text="load image"
+                android:text="open image list"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
@@ -67,7 +62,4 @@
                 android:layout_height="wrap_content"/>
 
     </LinearLayout>
-<include
-        android:visibility="gone"
-        layout="@layout/lcu_view_progress"/>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

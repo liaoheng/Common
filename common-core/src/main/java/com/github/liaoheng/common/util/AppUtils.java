@@ -18,15 +18,13 @@ import android.os.PowerManager;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
-
+import androidx.annotation.RequiresPermission;
 import com.github.liaoheng.common.R;
 
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.UUID;
-
-import androidx.annotation.RequiresPermission;
 
 /**
  * app工具
@@ -82,7 +80,7 @@ public class AppUtils {
      * 创建一个启动图标
      *
      * @param title 快捷键的标题
-     * @param logo 快捷键的图标
+     * @param logo  快捷键的图标
      */
     public static void createShortCut(Context context, String title, int logo,
             Class<? extends Activity> activity) {
@@ -281,7 +279,7 @@ public class AppUtils {
      * open map application
      *
      * @param longitude 经度
-     * @param latitude 纬度
+     * @param latitude  纬度
      */
     public static void openMap(Context context, String longitude, String latitude) {
         if (TextUtils.isEmpty(latitude) || TextUtils.isEmpty(longitude)) {
@@ -316,4 +314,15 @@ public class AppUtils {
         return true;
     }
 
+    public static void openBrowser(Context context, String url) {
+        try {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            if (intent.resolveActivity(context.getPackageManager()) == null) {
+                throw new IllegalArgumentException("Unknown component");
+            }
+            context.startActivity(intent);
+        } catch (Exception ignore) {
+            UIUtils.showToast(context, R.string.lcm_unable_open_url);
+        }
+    }
 }

@@ -443,6 +443,7 @@ public class OkHttp3Utils {
 
     private class HeaderPlusInterceptor implements Interceptor {
 
+        @NonNull
         @Override
         public Response intercept(@NonNull Chain chain) throws IOException {
             Request.Builder builder = chain.request().newBuilder();
@@ -528,6 +529,7 @@ public class OkHttp3Utils {
             }
         }
 
+        @NonNull
         @Override
         public Response intercept(@NonNull Chain chain) throws IOException {
 
@@ -660,10 +662,10 @@ public class OkHttp3Utils {
     public Observable<String> getAsyncToJsonString(
             final Request.Builder builder,
             Observable<String> observable) {
-        return observable.observeOn(Schedulers.io())
+        return observable.subscribeOn(Schedulers.io())
                 .flatMap(new Function<String, ObservableSource<String>>() {
                     @Override
-                    public ObservableSource<String> apply(String s) throws Exception {
+                    public ObservableSource<String> apply(String s) {
                         try {
                             return Observable.just(getSync(s, builder));
                         } catch (SystemException e) {
@@ -688,7 +690,7 @@ public class OkHttp3Utils {
 
     public Observable<String> postAsyncToJsonString(final String url,
             Observable<String> observable) {
-        return observable.observeOn(Schedulers.io()).flatMap(new Function<String, ObservableSource<String>>() {
+        return observable.subscribeOn(Schedulers.io()).flatMap(new Function<String, ObservableSource<String>>() {
             @Override
             public ObservableSource<String> apply(String jsonBody) {
                 try {
@@ -760,7 +762,7 @@ public class OkHttp3Utils {
         return new ObservableTransformer<String, FileDownload>() {
             @Override
             public ObservableSource<FileDownload> apply(Observable<String> upstream) {
-                return upstream.observeOn(Schedulers.io())
+                return upstream
                         .flatMap(new Function<String, Observable<FileDownload>>() {
                             @Override
                             public Observable<FileDownload> apply(String url) {
@@ -820,7 +822,7 @@ public class OkHttp3Utils {
 
     public Disposable downloadFile(String url, final File dir,
             Callback<FileDownload> callback) {
-        Observable<FileDownload> observable = Observable.just(url)
+        Observable<FileDownload> observable = Observable.just(url).subscribeOn(Schedulers.io())
                 .compose(applyGetFileName())
                 .compose(applyDownloadFile()).flatMap(new Function<FileDownload, ObservableSource<FileDownload>>() {
                     @Override

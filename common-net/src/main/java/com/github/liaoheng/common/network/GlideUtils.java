@@ -100,7 +100,7 @@ public class GlideUtils {
 
     public Observable<String> clearCache(Context context) {
         return Observable.just(context)
-                .observeOn(Schedulers.io())
+                .subscribeOn(Schedulers.io())
                 .map(new Function<Context, Context>() {
                     @Override
                     public Context apply(Context context) {
