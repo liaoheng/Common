@@ -10,6 +10,7 @@
                                    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                                    app:contentInsetStart="0dp"
                                    app:layout_scrollFlags="scroll|enterAlways"
+                                   app:navigationIcon="?homeAsUpIndicator"
                                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
     <ImageButton
@@ -21,7 +22,6 @@
             android:visibility="gone" />
 
     <TextView
-            tools:text="title"
             android:id="@id/lcu_toolbar_title"
             style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
             android:layout_width="wrap_content"
@@ -30,7 +30,8 @@
             android:ellipsize="marquee"
             android:maxLines="1"
             android:singleLine="true"
-            android:visibility="gone" />
+            android:visibility="gone"
+            tools:text="title" />
 
     <ImageButton
             android:id="@id/lcu_toolbar_right"

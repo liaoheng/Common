@@ -168,23 +168,31 @@ public class DisplayUtils {
     }
 
     /**
-     * 获取vivo手机设置中的"navigation_gesture_on"值，判断当前系统是使用导航键还是手势导航操作
+     * Check if vivo is enabled for gestures
      *
-     * @return false 表示使用的是虚拟导航键(NavigationBar)， true 表示使用的是手势， 默认是false
+     * @return true gestures
      */
     public static boolean vivoNavigationGestureEnabled(Context context) {
-        int val = Settings.Secure.getInt(context.getContentResolver(), "navigation_gesture_on", 0);
-        return val != 0;
+        return Settings.Secure.getInt(context.getContentResolver(), "navigation_gesture_on", 0) != 0;
     }
 
     /**
-     * 判断EMUI是否开启导航栏
+     * Check if MIUI is enabled for gestures
      *
-     * @return true 开启
+     * @return true gestures
+     * @see <a href="https://www.v2ex.com/t/470543">v2ex</a>
+     */
+    public static boolean miuiNavigationGestureEnabled(Context context) {
+        return Settings.Global.getInt(context.getContentResolver(), "force_fsg_nav_bar", 0) != 0;
+    }
+
+    /**
+     * Check if MIUI is enabled for navigation
+     *
+     * @return true navigation
      */
     public static boolean emuiNavigationEnabled(Context context) {
-        int g = Settings.Global.getInt(context.getContentResolver(), "navigationbar_is_min", 0);
-        return g != 1;
+        return Settings.Global.getInt(context.getContentResolver(), "navigationbar_is_min", 0) != 1;
     }
 
     /**
