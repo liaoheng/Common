@@ -83,6 +83,7 @@ public class SystemException extends Exception implements ISystemException {
         return super.getCause();
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public String toString() {
         if (mExceptionHelper == null || mExceptionHelper.getThrowable() == null) {

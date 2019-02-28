@@ -3,6 +3,7 @@ package com.github.liaoheng.common.util;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Patterns;
+import android.webkit.URLUtil;
 
 import java.util.List;
 import java.util.regex.Pattern;
@@ -12,36 +13,39 @@ import java.util.regex.Pattern;
  *
  * @author liaoheng
  */
-public class ValidateUtils {
+public final class ValidateUtils {
 
     /**
      * 是否为网络地址
      */
-    public static boolean isWebUrl(String url) {
-        return isWebUrl(Uri.parse(url));
+    public static boolean isWebUrl(Uri url) {
+        return isWebUrl(url.toString());
     }
 
     /**
      * 是否为网络地址
      */
-    public static boolean isWebUrl(Uri uri) {
-        return Patterns.WEB_URL.matcher(uri.toString()).matches();
+    public static boolean isWebUrl(String uri) {
+        if (!isUrl(uri)) {
+            return false;
+        }
+        return Patterns.WEB_URL.matcher(uri).matches();
+    }
+
+    public static boolean isUrl(String url) {
+        return URLUtil.isValidUrl(url);
     }
 
     /**
      * 数据为空
-     *
-     * @throws SystemException
      */
     public static String isEmpty(String key, String hint) throws SystemException {
-        isEmpty(key, new SystemException(hint));
+        isEmpty(key, new SystemDataException(hint));
         return key;
     }
 
     /**
      * 数据为空
-     *
-     * @throws SystemException
      */
     public static String isEmpty(String key, SystemException hint) throws SystemException {
         if (TextUtils.isEmpty(key)) {
@@ -65,7 +69,7 @@ public class ValidateUtils {
 
     public static void isEmail(String email, String hint) throws SystemException {
         if (!isEmail(email)) {
-            throw new SystemException(hint);
+            throw new SystemDataException(hint);
         }
     }
 
@@ -103,45 +107,35 @@ public class ValidateUtils {
 
     public static void greaterLength(String s, int length, String hint) throws SystemException {
         if (greaterLength(s, length)) {
-            throw new SystemException(hint);
+            throw new SystemDataException(hint);
         }
     }
 
     public static void lessLength(String s, int length, String hint) throws SystemException {
         if (lessLength(s, length)) {
-            throw new SystemException(hint);
+            throw new SystemDataException(hint);
         }
     }
 
     /**
      * 对像为空
-     *
-     * @throws SystemException
      */
     public static <T> T isNull(T key, String hint) throws SystemException {
-        return isNull(key, new SystemException(hint));
+        return isNull(key, new SystemDataException(hint));
     }
 
     /**
      * 对像为空
-     *
-     * @throws SystemException
      */
     public static <T> T isNull(T key, SystemException hint) throws SystemException {
-        if (null == key) {
+        if (isNull(key)) {
             throw hint;
         }
         return key;
     }
 
-    /**
-     * 对像为空
-     */
-    public static <T> boolean isNull(T key) {
-        if (null == key) {
-            return true;
-        }
-        return false;
+    public static boolean isNull(Object key) {
+        return null == key;
     }
 
     /**
@@ -163,12 +157,10 @@ public class ValidateUtils {
 
     /**
      * 列表数据为空
-     *
-     * @throws SystemException
      */
     public static void isItemEmpty(List<?> list, String hint) throws SystemException {
         if (isItemEmpty(list)) {
-            throw new SystemException(hint);
+            throw new SystemDataException(hint);
         }
     }
 }

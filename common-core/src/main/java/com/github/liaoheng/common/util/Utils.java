@@ -28,7 +28,7 @@ import io.reactivex.observers.ResourceObserver;
 import io.reactivex.subscribers.ResourceSubscriber;
 
 /**
- * 未分类工具
+ * 工具集
  * * <br/> Dependency : rxjava ,rxandroid
  *
  * @author liaoheng
@@ -39,27 +39,17 @@ public class Utils {
      * URL是否为指定网站
      */
     public static boolean isCurAuthority(String baseAuthority, String url) {
-        Uri uri = Uri.parse(url);
-        if (!ValidateUtils.isWebUrl(uri)) {
-            return false;
-        }
-        String authority = uri.getAuthority();
+        String authority = Uri.parse(url).getAuthority();
         if (TextUtils.isEmpty(authority)) {
             return false;
         }
-        if (!baseAuthority.contentEquals(authority)) {
-            return false;
-        }
-        return true;
+        return baseAuthority.contentEquals(authority);
     }
 
     /**
      * URL链接添加参数
      */
     public static String appendUrlParameter(String url, String key, String value) {
-        //if (!ValidateUtils.isWebUrl(url)) {
-        //    return url;
-        //}
         Uri uri = Uri.parse(url);
         if (uri.getBooleanQueryParameter(key, false)) {//有KEY值不修改
             return url;
@@ -136,7 +126,7 @@ public class Utils {
     /**
      * download file to sd /
      *
-     * @see {@link  DownloadManager.Request#setDestinationInExternalPublicDir}
+     * @see DownloadManager.Request#setDestinationInExternalPublicDir
      */
     public static long systemDownloadPublicDir(Context context, String title, String url,
             String dir, String fileName) {
@@ -152,7 +142,7 @@ public class Utils {
     /**
      * download file to sd /Android/data/:package/files/
      *
-     * @see {@link  DownloadManager.Request#setDestinationInExternalFilesDir}
+     * @see DownloadManager.Request#setDestinationInExternalFilesDir
      */
     public static long systemDownloadFilesDir(Context context, String title, String url, String dir,
             String fileName) {
