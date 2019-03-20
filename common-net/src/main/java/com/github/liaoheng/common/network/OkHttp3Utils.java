@@ -475,7 +475,7 @@ public class OkHttp3Utils {
         private String tag;
 
         public LogInterceptor() {
-            tag = LogInterceptor.class.getSimpleName();
+            this(LogInterceptor.class.getSimpleName());
         }
 
         public LogInterceptor(String tag) {
@@ -558,10 +558,9 @@ public class OkHttp3Utils {
                 L.alog().d(tag, "--> END " + request.method());
             } else if (bodyHasUnknownEncoding(request.headers())) {
                 L.alog().d(tag, "--> END " + request.method() + " (encoded body omitted)");
+            } else if (requestBody.isDuplex()) {
+                L.alog().d(tag, "--> END " + request.method() + " (duplex request body omitted)");
             }
-            //else if (requestBody.isDuplex()) {
-            //    L.alog().d(tag, "--> END " + request.method() + " (duplex request body omitted)");
-            //}
             else {
                 Buffer buffer = new Buffer();
                 requestBody.writeTo(buffer);
