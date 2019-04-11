@@ -9,6 +9,7 @@
                                    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                                    app:contentInsetStart="0dp"
                                    app:layout_scrollFlags="scroll|enterAlways"
+                                   app:navigationIcon="?homeAsUpIndicator"
                                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
     <ImageButton

@@ -13,21 +13,20 @@ import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.Surface;
 import android.widget.Toast;
-
 import com.github.liaoheng.common.R;
+import io.reactivex.Flowable;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.observers.ResourceObserver;
+import io.reactivex.subscribers.ResourceSubscriber;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.Flowable;
-import io.reactivex.Observable;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.observers.ResourceObserver;
-import io.reactivex.subscribers.ResourceSubscriber;
-
 /**
- * 未分类工具
+ * 工具集
  * * <br/> Dependency : rxjava ,rxandroid
  *
  * @author liaoheng
@@ -38,27 +37,17 @@ public class Utils {
      * URL是否为指定网站
      */
     public static boolean isCurAuthority(String baseAuthority, String url) {
-        Uri uri = Uri.parse(url);
-        if (!ValidateUtils.isWebUrl(uri)) {
-            return false;
-        }
-        String authority = uri.getAuthority();
+        String authority = Uri.parse(url).getAuthority();
         if (TextUtils.isEmpty(authority)) {
             return false;
         }
-        if (!baseAuthority.contentEquals(authority)) {
-            return false;
-        }
-        return true;
+        return baseAuthority.contentEquals(authority);
     }
 
     /**
      * URL链接添加参数
      */
     public static String appendUrlParameter(String url, String key, String value) {
-        //if (!ValidateUtils.isWebUrl(url)) {
-        //    return url;
-        //}
         Uri uri = Uri.parse(url);
         if (uri.getBooleanQueryParameter(key, false)) {//有KEY值不修改
             return url;
@@ -87,9 +76,9 @@ public class Utils {
     /**
      * 双击事件触发
      *
-     * @param context {@link Context}
+     * @param context  {@link Context}
      * @param interval 间隔时间 ms
-     * @param msg 提示
+     * @param msg      提示
      * @param callback 回调{@link Callback#onSuccess(Object)}
      */
     public static void doubleOperation(Context context, int interval, String msg,
@@ -116,7 +105,7 @@ public class Utils {
      * 从HTTP Response contentDisposition 中得到文件名
      *
      * @param contentDisposition <a href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec19.html">rfc2616</a>
-     * @param def 默认值
+     * @param def                默认值
      */
     public static String getContentDispositionFileName(String contentDisposition, String def) {
         if (TextUtils.isEmpty(contentDisposition)) {
@@ -135,7 +124,7 @@ public class Utils {
     /**
      * download file to sd /
      *
-     * @see {@link  DownloadManager.Request#setDestinationInExternalPublicDir}
+     * @see DownloadManager.Request#setDestinationInExternalPublicDir
      */
     public static long systemDownloadPublicDir(Context context, String title, String url,
             String dir, String fileName) {
@@ -151,7 +140,7 @@ public class Utils {
     /**
      * download file to sd /Android/data/:package/files/
      *
-     * @see {@link  DownloadManager.Request#setDestinationInExternalFilesDir}
+     * @see DownloadManager.Request#setDestinationInExternalFilesDir
      */
     public static long systemDownloadFilesDir(Context context, String title, String url, String dir,
             String fileName) {
@@ -473,7 +462,7 @@ public class Utils {
     public static <T> Disposable addSubscribe(Observable<T> observable,
             final Callback<T> listener) {
         ResourceObserver<T> resourceObserver = getResourceObserver(listener);
-        observable.observeOn(io.reactivex.android.schedulers.AndroidSchedulers.mainThread())
+        observable.observeOn(AndroidSchedulers.mainThread())
                 .subscribe(resourceObserver);
         return resourceObserver;
     }
@@ -481,7 +470,7 @@ public class Utils {
     public static <T> Disposable addSubscribe(Flowable<T> observable,
             final Callback<T> listener) {
         ResourceSubscriber<T> resourceSubscriber = getResourceSubscriber(listener);
-        observable.observeOn(io.reactivex.android.schedulers.AndroidSchedulers.mainThread())
+        observable.observeOn(AndroidSchedulers.mainThread())
                 .subscribe(resourceSubscriber);
         return resourceSubscriber;
     }

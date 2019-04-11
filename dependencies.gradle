@@ -1,38 +1,38 @@
+//AM 10:38 2019/3/1
 ext {
     minSdkVersion = 15
     targetSdkVersion = 28
     compileSdkVersion = 28
     buildToolsVersion = '28.0.3'
+    supportVersion = '28.0.0'
+    retrofitVersion = '2.5.0'
+    jacksonVersion = '2.9.7'
+    glideVersion = '4.8.0'
 }
-//共用的依赖库
-def supportVersion = '28.0.0'
-def retrofitVersion = '2.5.0'
-def JacksonVersion = '2.9.7'
-def glideVersion = '4.8.0'
 ext.deps = [
             //test
             robolectric                 : 'org.robolectric:robolectric:3.8',
             junit                       : 'junit:junit:4.12',
             //support
-            annotations                 : "com.android.support:support-annotations:$supportVersion",
-            support_compat                   : "com.android.support:support-compat:$supportVersion",
-            support_core_utils                   : "com.android.support:support-core-utils:$supportVersion",
-            support_core_ui                   : "com.android.support:support-core-ui:$supportVersion",
-            support_fragment                   : "com.android.support:support-fragment:$supportVersion",
-            appcompatv7                 : "com.android.support:appcompat-v7:$supportVersion",
-            recyclerviewv7              : "com.android.support:recyclerview-v7:$supportVersion",
-            cardviewv7                  : "com.android.support:cardview-v7:$supportVersion",
-            gridlayoutv7                : "com.android.support:gridlayout-v7:$supportVersion",
-            design                      : "com.android.support:design:$supportVersion",
+            annotations                 : "com.android.support:support-annotations:$ext.supportVersion",
+            support_compat                   : "com.android.support:support-compat:$ext.supportVersion",
+            support_core_utils                   : "com.android.support:support-core-utils:$ext.supportVersion",
+            support_core_ui                   : "com.android.support:support-core-ui:$ext.supportVersion",
+            support_fragment                   : "com.android.support:support-fragment:$ext.supportVersion",
+            appcompatv7                 : "com.android.support:appcompat-v7:$ext.supportVersion",
+            recyclerviewv7              : "com.android.support:recyclerview-v7:$ext.supportVersion",
+            cardviewv7                  : "com.android.support:cardview-v7:$ext.supportVersion",
+            gridlayoutv7                : "com.android.support:gridlayout-v7:$ext.supportVersion",
+            design                      : "com.android.support:design:$ext.supportVersion",
             //third part
             //https://github.com/apache/commons-io
             commons_io                  : "commons-io:commons-io:2.6",
             //https://github.com/FasterXML/jackson-annotations
-            jackson_annotations         : "com.fasterxml.jackson.core:jackson-annotations:$JacksonVersion",
+            jackson_annotations         : "com.fasterxml.jackson.core:jackson-annotations:$ext.jacksonVersion",
             //https://github.com/FasterXML/jackson-databind
-            jackson_databind            : "com.fasterxml.jackson.core:jackson-databind:$JacksonVersion",
+            jackson_databind            : "com.fasterxml.jackson.core:jackson-databind:$ext.jacksonVersion",
             //https://github.com/FasterXML/jackson-core
-            jackson_core                : "com.fasterxml.jackson.core:jackson-core:$JacksonVersion",
+            jackson_core                : "com.fasterxml.jackson.core:jackson-core:$ext.jacksonVersion",
             //https://github.com/trello/RxLifecycle
             rxlifecycle                 : 'com.trello:rxlifecycle:1.0',
             rxlifecycle_android         : 'com.trello:rxlifecycle-android:1.0',
@@ -50,16 +50,16 @@ ext.deps = [
             //https://github.com/greenrobot/EventBus
             eventbus                    : 'org.greenrobot:eventbus:3.1.1',
             //https://github.com/bumptech/glide
-            glide                       : "com.github.bumptech.glide:glide:$glideVersion",
-            glide_compiler              : "com.github.bumptech.glide:compiler:$glideVersion",
-            glide_okhttp3_integration   : "com.github.bumptech.glide:okhttp3-integration:$glideVersion",
+            glide                       : "com.github.bumptech.glide:glide:$ext.glideVersion",
+            glide_compiler              : "com.github.bumptech.glide:compiler:$ext.glideVersion",
+            glide_okhttp3_integration   : "com.github.bumptech.glide:okhttp3-integration:$ext.glideVersion",
             //https://github.com/square/okhttp
-            okhttp                      : 'com.squareup.okhttp3:okhttp:3.12.0',
+            okhttp                      : 'com.squareup.okhttp3:okhttp:3.13.1',
             //https://github.com/square/retrofit
-            retrofit                    : "com.squareup.retrofit2:retrofit:$retrofitVersion",
-            retrofit_converter_jackson  : "com.squareup.retrofit2:converter-jackson:$retrofitVersion",
-            retrofit_adapter_rxjava     : "com.squareup.retrofit2:adapter-rxjava:$retrofitVersion",
-            retrofit_adapter_rxjava2     : "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion",
+            retrofit                    : "com.squareup.retrofit2:retrofit:$ext.retrofitVersion",
+            retrofit_converter_jackson  : "com.squareup.retrofit2:converter-jackson:$ext.retrofitVersion",
+            retrofit_adapter_rxjava     : "com.squareup.retrofit2:adapter-rxjava:$ext.retrofitVersion",
+            retrofit_adapter_rxjava2     : "com.squareup.retrofit2:adapter-rxjava2:$ext.retrofitVersion",
             //https://github.com/yqritc/RecyclerView-FlexibleDivider
             recyclerview_flexibledivider: 'com.yqritc:recyclerview-flexibledivider:1.4.0',
             //https://github.com/sockeqwe/AdapterDelegates
