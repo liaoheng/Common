@@ -12,20 +12,19 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.view.Surface;
 import android.widget.Toast;
-
-import com.github.liaoheng.common.R;
-
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.List;
-
 import androidx.core.content.ContextCompat;
+import com.github.liaoheng.common.R;
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.ResourceObserver;
 import io.reactivex.subscribers.ResourceSubscriber;
+
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
 
 /**
  * 工具集
@@ -78,9 +77,9 @@ public class Utils {
     /**
      * 双击事件触发
      *
-     * @param context {@link Context}
+     * @param context  {@link Context}
      * @param interval 间隔时间 ms
-     * @param msg 提示
+     * @param msg      提示
      * @param callback 回调{@link Callback#onSuccess(Object)}
      */
     public static void doubleOperation(Context context, int interval, String msg,
@@ -107,7 +106,7 @@ public class Utils {
      * 从HTTP Response contentDisposition 中得到文件名
      *
      * @param contentDisposition <a href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec19.html">rfc2616</a>
-     * @param def 默认值
+     * @param def                默认值
      */
     public static String getContentDispositionFileName(String contentDisposition, String def) {
         if (TextUtils.isEmpty(contentDisposition)) {
@@ -176,6 +175,10 @@ public class Utils {
         original.rewind();
         clone.flip();
         return clone;
+    }
+
+    public static boolean checkExecutorService(ExecutorService executorService) {
+        return executorService == null || executorService.isShutdown() || executorService.isTerminated();
     }
 
     public static String toNotNullString(String s) {
