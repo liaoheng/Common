@@ -46,8 +46,6 @@ dependencies {
     compileOnly deps.jackson_annotations
     compileOnly deps.jackson_databind
     compileOnly deps.jackson_core
-    compileOnly deps.rxandroid
-    compileOnly deps.rxjava
     compileOnly deps.rxandroid2
     compileOnly deps.rxjava2
 }

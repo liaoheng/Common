@@ -37,8 +37,6 @@ dependencies {
     compileOnly deps.rxandroid2
     compileOnly deps.rxjava2
 
-    implementation deps.commons_io
-
 //    implementation group: "com.github.liaoheng", name: "common-core", version: "0.1.0-SNAPSHOT", changing: true
     implementation project(':common-core')
 }

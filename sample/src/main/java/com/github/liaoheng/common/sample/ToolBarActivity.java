@@ -23,6 +23,7 @@ public class ToolBarActivity extends CUBaseActivity {
         setContentView(R.layout.activity_toolbar);
         //initToolBar();
         initToolBarCustom();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
         //    Window window = getWindow();

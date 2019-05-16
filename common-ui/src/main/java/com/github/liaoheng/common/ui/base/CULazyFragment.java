@@ -42,7 +42,7 @@ public abstract class CULazyFragment extends CUBaseFragment {
                 this.savedInstanceState = savedInstanceState;
                 onCreateViewLazy(savedInstanceState);
             } else {
-                layout = new FrameLayout(getActivity());
+                layout = new FrameLayout(getContext());
                 layout.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
                 super.setContentView(layout);
             }
@@ -115,7 +115,7 @@ public abstract class CULazyFragment extends CUBaseFragment {
     public void setContentView(int layoutResID) {
         if (isLazyLoad && getContentView() != null && getContentView().getParent() != null) {
             layout.removeAllViews();
-            View view = inflater.inflate(layoutResID, layout, false);
+            View view = getInflater().inflate(layoutResID, layout, false);
             layout.addView(view);
         } else {
             super.setContentView(layoutResID);

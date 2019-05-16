@@ -5,13 +5,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.github.liaoheng.common.util.UIUtils;
-
-import java.lang.reflect.Field;
-
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import com.github.liaoheng.common.util.UIUtils;
 
 /**
  * 基础通用Fragment
@@ -23,9 +20,9 @@ import androidx.fragment.app.FragmentActivity;
 @SuppressWarnings("TryWithIdenticalCatches")
 public abstract class CUBaseFragment extends Fragment {
     protected final String TAG = getFragment().getClass().getSimpleName();
-    protected LayoutInflater inflater;
-    private View contentView;
-    private ViewGroup container;
+    private LayoutInflater mInflater;
+    private View mContentView;
+    private ViewGroup mContainer;
 
     public static Fragment setBundle(Fragment fragment, Bundle args) {
         if (args != null) {
@@ -36,6 +33,10 @@ public abstract class CUBaseFragment extends Fragment {
 
     public Fragment getFragment() {
         return this;
+    }
+
+    public LayoutInflater getInflater() {
+        return mInflater;
     }
 
     public Context getApplicationContext() {
@@ -50,15 +51,15 @@ public abstract class CUBaseFragment extends Fragment {
     }
 
     @Override
-    public final View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public final View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        this.inflater = inflater;
-        this.container = container;
+        mInflater = inflater;
+        mContainer = container;
         onCreateView(savedInstanceState);
-        if (contentView == null) {
+        if (mContentView == null) {
             return super.onCreateView(inflater, container, savedInstanceState);
         }
-        return contentView;
+        return mContentView;
     }
 
     protected abstract void onCreateView(Bundle savedInstanceState);
@@ -66,44 +67,27 @@ public abstract class CUBaseFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        contentView = null;
-        container = null;
-        inflater = null;
+        mContentView = null;
+        mContainer = null;
+        mInflater = null;
     }
 
     public void setContentView(int layoutResID) {
-        setContentView(inflater.inflate(layoutResID, container, false));
+        setContentView(mInflater.inflate(layoutResID, mContainer, false));
     }
 
     public void setContentView(View view) {
-        contentView = view;
+        mContentView = view;
     }
 
     public View getContentView() {
-        return contentView;
+        return mContentView;
     }
 
     public <T extends View> T findViewById(int id) {
-        if (contentView == null) {
+        if (mContentView == null) {
             return null;
         }
-        return UIUtils.findViewById(contentView, id);
+        return UIUtils.findViewById(mContentView, id);
     }
-
-    // http://stackoverflow.com/questions/15207305/getting-the-error-java-lang-illegalstateexception-activity-has-been-destroyed
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        try {
-            Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
-            childFragmentManager.setAccessible(true);
-            childFragmentManager.set(this, null);
-
-        } catch (NoSuchFieldException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
 }

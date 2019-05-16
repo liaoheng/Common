@@ -2,16 +2,14 @@ package com.github.liaoheng.common.ui.base;
 
 import android.content.Context;
 import android.os.Bundle;
-
+import androidx.annotation.CheckResult;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.trello.rxlifecycle3.LifecycleProvider;
 import com.trello.rxlifecycle3.LifecycleTransformer;
 import com.trello.rxlifecycle3.RxLifecycle;
 import com.trello.rxlifecycle3.android.FragmentEvent;
 import com.trello.rxlifecycle3.android.RxLifecycleAndroid;
-
-import androidx.annotation.CheckResult;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import io.reactivex.Observable;
 import io.reactivex.subjects.BehaviorSubject;
 
@@ -51,7 +49,7 @@ public abstract class CURxLazyFragment extends CULazyFragment implements Lifecyc
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         lifecycleSubject.onNext(FragmentEvent.ATTACH);
     }

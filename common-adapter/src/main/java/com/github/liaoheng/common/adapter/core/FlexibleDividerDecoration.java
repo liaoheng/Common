@@ -19,7 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Created by yqritc on 2015/01/08.
- * @link <a href="https://github.com/yqritc/RecyclerView-FlexibleDivider/blob/master/library/src/main/java/com/yqritc/recyclerviewflexibledivider/VerticalDividerItemDecoration.java">VerticalDividerItemDecoration</a>
+ * @see <a href="https://github.com/yqritc/RecyclerView-FlexibleDivider/blob/master/library/src/main/java/com/yqritc/recyclerviewflexibledivider/VerticalDividerItemDecoration.java">VerticalDividerItemDecoration</a>
  */
 public abstract class FlexibleDividerDecoration extends RecyclerView.ItemDecoration {
 

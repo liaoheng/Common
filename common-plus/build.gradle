@@ -36,7 +36,7 @@ dependencies {
 
     //android system
     api deps.appcompat
-    api deps.design
+    api deps.material
 
     api deps.jackson_annotations
     api deps.jackson_databind

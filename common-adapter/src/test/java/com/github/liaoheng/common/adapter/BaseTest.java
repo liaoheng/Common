@@ -1,10 +1,6 @@
 package com.github.liaoheng.common.adapter;
 
 import org.junit.Before;
-import org.junit.runner.RunWith;
-import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
-import org.robolectric.internal.SdkConfig;
 import org.robolectric.shadows.ShadowLog;
 
 /**

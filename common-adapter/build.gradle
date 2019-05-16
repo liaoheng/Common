@@ -24,6 +24,7 @@ dependencies {
     testImplementation deps.robolectric
     testImplementation deps.junit
 
+    implementation deps.core
     implementation deps.recyclerview
     implementation deps.swiperefreshlayout
     compileOnly deps.appcompat

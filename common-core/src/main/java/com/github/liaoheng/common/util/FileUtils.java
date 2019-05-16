@@ -2,11 +2,13 @@ package com.github.liaoheng.common.util;
 
 import android.content.Context;
 import android.text.TextUtils;
-
 import com.github.liaoheng.common.Common;
+import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.UUID;
 
@@ -17,7 +19,7 @@ import java.util.UUID;
  *
  * @author liaoheng
  */
-public class FileUtils extends org.apache.commons.io.FileUtils {
+public class FileUtils {
     private static final String TAG = FileUtils.class.getSimpleName();
     public static final int ERROR_SDCARD_NOT_AVAILABLE = 1;
     public static final int ERROR_SDCARD__SPACE_INSUFFICIENT = 2;
@@ -45,7 +47,7 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
     /**
      * 在父目录下创建文件
      *
-     * @param parent 父目录，不存在会自动创建
+     * @param parent   父目录，不存在会自动创建
      * @param fileName 需要创建文件名
      */
     public static File createFile(File parent, String fileName) {
@@ -88,7 +90,7 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
      * 创建路径
      *
      * @param rootPath 父路径
-     * @param path 建立的路径
+     * @param path     建立的路径
      */
     public static File createPath(String rootPath, String path) {
         return createPath(new File(rootPath, path));
@@ -98,7 +100,7 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
      * 创建路径
      *
      * @param rootPath 父路径
-     * @param path 建立的路径
+     * @param path     建立的路径
      */
     public static File createPath(File rootPath, String path) {
         return createPath(new File(rootPath, path));
@@ -339,7 +341,7 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
      */
     public static void delete(File file) {
         try {
-            forceDelete(file);
+            org.apache.commons.io.FileUtils.forceDelete(file);
         } catch (IOException e) {
             L.Log.w(TAG, "删除文件失败：" + file.getAbsolutePath(), e);
             return;
@@ -355,7 +357,7 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
             return;
         }
         try {
-            cleanDirectory(path);
+            org.apache.commons.io.FileUtils.cleanDirectory(path);
             L.Log.d(TAG, "清空:" + path);
         } catch (IOException e) {
             L.Log.w(TAG, "", e);
@@ -420,5 +422,33 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
         BigDecimal result4 = new BigDecimal(teraBytes);
         return result4.setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString()
                 + "TB";
+    }
+
+    /**
+     * @see FilenameUtils#getExtension(String)
+     */
+    public static String getExtension(String filename) {
+        return FilenameUtils.getExtension(filename);
+    }
+
+    /**
+     * @see FilenameUtils#getName(String)
+     */
+    public static String getName(String filename) {
+        return FilenameUtils.getName(filename);
+    }
+
+    /**
+     * @see org.apache.commons.io.FileUtils#copyInputStreamToFile(InputStream, File)
+     */
+    public static void copyInputStreamToFile(InputStream source, final File destination) throws IOException {
+        org.apache.commons.io.FileUtils.copyInputStreamToFile(source, destination);
+    }
+
+    /**
+     * @see org.apache.commons.io.FileUtils#openOutputStream(File, boolean)
+     */
+    public static FileOutputStream openOutputStream(File file, boolean append) throws IOException {
+        return org.apache.commons.io.FileUtils.openOutputStream(file, append);
     }
 }

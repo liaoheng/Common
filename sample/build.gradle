@@ -42,7 +42,8 @@ dependencies {
   testImplementation deps.junit
 
   implementation deps.recyclerview
-  implementation deps.customtabs
+  implementation deps.browser
+  implementation deps.material
 
   implementation deps.okhttp
   implementation deps.glide

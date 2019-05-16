@@ -17,7 +17,6 @@ import okhttp3.internal.http.HttpHeaders;
 import okio.Buffer;
 import okio.BufferedSource;
 import okio.GzipSource;
-import org.apache.commons.io.FilenameUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -849,10 +848,10 @@ public class OkHttp3Utils {
                             @Override
                             public Observable<FileDownload> apply(String url) {
                                 try {
-                                    String extension = FilenameUtils.getExtension(url);
+                                    String extension = FileUtils.getExtension(url);
                                     if (!TextUtils.isEmpty(extension)) {
                                         return Observable
-                                                .just(new FileDownload(FilenameUtils.getName(url),
+                                                .just(new FileDownload(FileUtils.getName(url),
                                                         url));
                                     }
                                     Response response = OkHttp3Utils.get().headSync(url);
