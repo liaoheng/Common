@@ -1,20 +1,22 @@
 package com.github.liaoheng.common.util;
 
 import android.content.Context;
-import android.os.Environment;
 import android.text.TextUtils;
+import android.util.Log;
 
-import org.apache.commons.io.IOUtils;
+import androidx.annotation.StringDef;
+
 import org.joda.time.DateTime;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintStream;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-
-import androidx.annotation.StringDef;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 不带system log
@@ -37,8 +39,9 @@ public class LogFileUtils {
     public @interface LevelFlags {}
 
     private static final String DEFAULT_FILE_NAME = "debug_log.txt";
-    private File mLogFile = new File(
-            Environment.getExternalStorageDirectory(), DEFAULT_FILE_NAME);
+    private File mLogFile;
+    private FileOutputStream mFileOutputStream;
+
     private static LogFileUtils instance;
 
     private LogFileUtils() {
@@ -55,15 +58,15 @@ public class LogFileUtils {
         return instance;
     }
 
-    public void init(Context context) throws SystemException {
+    public void init(Context context) throws IOException {
         init(context, "");
     }
 
-    public void init(Context context, String fileName) throws SystemException {
+    public void init(Context context, String fileName) throws IOException {
         init(context, "Log", fileName);
     }
 
-    public void init(Context context, String dir, String fileName) throws SystemException {
+    public void init(Context context, String dir, String fileName) throws IOException {
         File log = FileUtils.createProjectSpaceDir(context, dir);
         if (TextUtils.isEmpty(fileName)) {
             fileName = DEFAULT_FILE_NAME;
@@ -72,29 +75,32 @@ public class LogFileUtils {
     }
 
     public void init(File logFile) {
-        if (logFile == null) {
-            return;
-        }
         mLogFile = logFile;
-        L.alog().d(TAG, "init log file : %s ", mLogFile.getAbsoluteFile());
+        open();
     }
 
     public File getLogFile() {
         return mLogFile;
     }
 
-    private OutputStream mFileOutputStream;
-
-    public synchronized void open() {
+    public void open() {
+        if (mLogFile == null) {
+            throw new IllegalStateException("No initialization");
+        }
         try {
-            mFileOutputStream = FileUtils.openOutputStream(mLogFile, true);//不覆盖
+            mFileOutputStream = new FileOutputStream(mLogFile, true);//不覆盖
         } catch (IOException ignored) {
         }
     }
 
-    public synchronized void close() {
-        IOUtils.closeQuietly(mFileOutputStream);
-        mFileOutputStream = null;
+    public void close() {
+        if (mFileOutputStream == null) {
+            return;
+        }
+        try {
+            mFileOutputStream.close();
+        } catch (IOException ignored) {
+        }
     }
 
     public void clearFile() {
@@ -155,13 +161,13 @@ public class LogFileUtils {
         String currentDateTime = DateTime.now().toString("yyyy-MM-dd HH:mm:ss.SSS");
         String stencil = currentDateTime + "   |" + severityLevel + "|   " + tag + " : " + logEntry;
         try {
-            IOUtils.write(stencil, mFileOutputStream);
+            FileChannel channel = mFileOutputStream.getChannel();
+            channel.write(ByteBuffer.wrap(stencil.getBytes()));
             if (throwable != null) {
-                IOUtils.write("\n", mFileOutputStream);
-                throwable.printStackTrace(new PrintStream(mFileOutputStream));
-                mFileOutputStream.flush();
+                channel.write(ByteBuffer.wrap("\n".getBytes()));
+                channel.write(ByteBuffer.wrap(Log.getStackTraceString(throwable).getBytes()));
             }
-            IOUtils.write("\n", mFileOutputStream);
+            channel.write(ByteBuffer.wrap("\n".getBytes()));
         } catch (IOException ignored) {
         }
     }

@@ -2,7 +2,9 @@ package com.github.liaoheng.common.util;
 
 import android.content.Context;
 import android.text.TextUtils;
+
 import com.github.liaoheng.common.Common;
+
 import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
@@ -21,26 +23,26 @@ import java.util.UUID;
  */
 public class FileUtils {
     private static final String TAG = FileUtils.class.getSimpleName();
-    public static final int ERROR_SDCARD_NOT_AVAILABLE = 1;
-    public static final int ERROR_SDCARD__SPACE_INSUFFICIENT = 2;
+    public static final String ERROR_SDCARD_NOT_AVAILABLE = "error_sdcard_not_available";
+    public static final String ERROR_SDCARD_SPACE_INSUFFICIENT = "error_sdcard__space_insufficient";
 
     /**
      * 得到SD卡的路径
      */
-    public static File getExternalStoragePath() throws SystemException {
+    public static File getExternalStoragePath() throws IOException {
         isExternalStorageEnable();
         return SDCardUtils.getExternalStorageDirectory();// 获取根目录
     }
 
-    public static void isExternalStorageEnable() throws SystemException {
+    public static void isExternalStorageEnable() throws IOException {
         if (!SDCardUtils.isExternalStorageEnable()) {
-            throw new SystemException(ERROR_SDCARD_NOT_AVAILABLE);
+            throw new IOException(ERROR_SDCARD_NOT_AVAILABLE);
         }
     }
 
-    public static void isExternalStorageLessMB(long mb) throws SystemException {
+    public static void isExternalStorageLessMB(long mb) throws IOException {
         if (SDCardUtils.getSDAvailableSize() < mb * 1024) {
-            throw new SystemException(ERROR_SDCARD__SPACE_INSUFFICIENT);
+            throw new IOException(ERROR_SDCARD_SPACE_INSUFFICIENT);
         }
     }
 
@@ -154,10 +156,10 @@ public class FileUtils {
      * 获取外部储存项目空间目录的路径，sd/Android/data/{package}/
      */
     @SuppressWarnings("ConstantConditions")
-    public static File getProjectSpacePath(Context context) throws SystemException {
+    public static File getProjectSpacePath(Context context) throws IOException {
         File externalCacheDir = context.getExternalCacheDir();
         if (externalCacheDir == null) {
-            throw new SystemException(ERROR_SDCARD_NOT_AVAILABLE);
+            throw new IOException(ERROR_SDCARD_NOT_AVAILABLE);
         }
         return externalCacheDir.getParentFile();
     }
@@ -167,21 +169,21 @@ public class FileUtils {
      *
      * @param dir 目录名
      */
-    public static File createProjectSpaceDir(Context context, String dir) throws SystemException {
+    public static File createProjectSpaceDir(Context context, String dir) throws IOException {
         return createPath(getProjectSpacePath(context), dir);
     }
 
     /**
      * 得到外部储存项目空间的临时目录，sd/Android/data/{package}/temp/
      */
-    public static File getProjectSpaceTempDirectory(Context context) throws SystemException {
+    public static File getProjectSpaceTempDirectory(Context context) throws IOException {
         return createProjectSpaceDir(context, "temp");
     }
 
     /**
      * 得到外部储存项目空间的图片目录，sd/Android/data/{package}/pictures/
      */
-    public static File getProjectSpacePicturesDirectory(Context context) throws SystemException {
+    public static File getProjectSpacePicturesDirectory(Context context) throws IOException {
         return createProjectSpaceDir(context, "pictures");
     }
 
@@ -190,7 +192,7 @@ public class FileUtils {
      *
      * @param cacheDir 缓存目录名
      */
-    public static File getProjectSpaceCacheDirectory(Context context, String cacheDir) throws SystemException {
+    public static File getProjectSpaceCacheDirectory(Context context, String cacheDir) throws IOException {
         isExternalStorageEnable();
         isExternalStorageLessMB(100);
         return createHideMediaDirectory(createProjectSpaceDir(context, cacheDir));
@@ -201,14 +203,14 @@ public class FileUtils {
     /**
      * 获取外部储存项目目录的路径，sd/{project_name}/
      */
-    public static File getProjectPath(String projectName) throws SystemException {
+    public static File getProjectPath(String projectName) throws IOException {
         return new File(getExternalStoragePath(), projectName);
     }
 
     /**
      * 获取外部储存项目目录的路径，sd/{project_name}/
      */
-    public static File getProjectPath() throws SystemException {
+    public static File getProjectPath() throws IOException {
         return getProjectPath(Common.getProjectName());
     }
 
@@ -217,21 +219,21 @@ public class FileUtils {
      *
      * @param dir 目录名
      */
-    public static File createProjectDir(String dir) throws SystemException {
+    public static File createProjectDir(String dir) throws IOException {
         return createPath(getProjectPath(), dir);
     }
 
     /**
      * 得到外部储存项目的临时目录，sd/{project_name}/temp/
      */
-    public static File getProjectTempDirectory() throws SystemException {
+    public static File getProjectTempDirectory() throws IOException {
         return createProjectDir("temp");
     }
 
     /**
      * 得到外部储存项目的图片目录，sd/{project_name}/pictures/
      */
-    public static File getProjectPicturesDirectory() throws SystemException {
+    public static File getProjectPicturesDirectory() throws IOException {
         return createProjectDir("pictures");
     }
 
@@ -240,7 +242,7 @@ public class FileUtils {
      *
      * @param cacheDir 缓存目录名
      */
-    public static File getProjectCacheDirectory(String cacheDir) throws SystemException {
+    public static File getProjectCacheDirectory(String cacheDir) throws IOException {
         isExternalStorageEnable();
         isExternalStorageLessMB(100);
         return createHideMediaDirectory(createProjectDir(cacheDir));
@@ -269,46 +271,36 @@ public class FileUtils {
     /**
      * 判断文件是否存在
      */
-    public static void exists(File file, String errorMessage) throws SystemException {
+    public static void exists(File file, String errorMessage) throws IOException {
         if (TextUtils.isEmpty(errorMessage)) {
-            errorMessage = "文件不存在！";
+            errorMessage = "File does not exist.";
         }
         if (file == null) {
-            throw new SystemException("文件为null");
+            throw new IOException("File is null.");
         }
         if (!file.exists()) {
-            throw new SystemException(errorMessage);
-        }
-        if (!file.isFile()) {
-            throw new SystemException("不是文件",
-                    new SystemException(file.getAbsolutePath() + "不是文件!"));
+            throw new IOException(errorMessage);
         }
     }
 
     /**
      * 判断文件是否存在
-     *
-     * @throws SystemException
      */
-    public static void exists(String file, String errorMessage) throws SystemException {
+    public static void exists(String file, String errorMessage) throws IOException {
         exists(new File(file), errorMessage);
     }
 
     /**
      * 判断文件是否存在
-     *
-     * @throws SystemException
      */
-    public static void exists(String filePath) throws SystemException {
+    public static void exists(String filePath) throws IOException {
         exists(new File(filePath));
     }
 
     /**
      * 判断文件是否存在
-     *
-     * @throws SystemException
      */
-    public static void exists(File filePath) throws SystemException {
+    public static void exists(File filePath) throws IOException {
         exists(filePath, "");
     }
 
@@ -319,7 +311,7 @@ public class FileUtils {
         try {
             exists(filePath, "");
             return true;
-        } catch (SystemException e) {
+        } catch (IOException e) {
             return false;
         }
     }
@@ -331,7 +323,7 @@ public class FileUtils {
         try {
             exists(filePath, "");
             return true;
-        } catch (SystemException e) {
+        } catch (IOException e) {
             return false;
         }
     }
@@ -340,13 +332,14 @@ public class FileUtils {
      * 删除文件或目录
      */
     public static void delete(File file) {
-        try {
-            org.apache.commons.io.FileUtils.forceDelete(file);
-        } catch (IOException e) {
-            L.Log.w(TAG, "删除文件失败：" + file.getAbsolutePath(), e);
+        if (file == null) {
             return;
         }
-        L.Log.d(TAG, "删除文件成功：" + file.getAbsolutePath());
+        try {
+            org.apache.commons.io.FileUtils.forceDelete(file);
+            L.alog().d(TAG, "delete file ：" + file.getAbsolutePath());
+        } catch (IOException ignored) {
+        }
     }
 
     /**
@@ -358,9 +351,8 @@ public class FileUtils {
         }
         try {
             org.apache.commons.io.FileUtils.cleanDirectory(path);
-            L.Log.d(TAG, "清空:" + path);
-        } catch (IOException e) {
-            L.Log.w(TAG, "", e);
+            L.alog().d(TAG, "clean path ：" + path.getAbsolutePath());
+        } catch (IOException ignored) {
         }
     }
 
@@ -443,12 +435,5 @@ public class FileUtils {
      */
     public static void copyInputStreamToFile(InputStream source, final File destination) throws IOException {
         org.apache.commons.io.FileUtils.copyInputStreamToFile(source, destination);
-    }
-
-    /**
-     * @see org.apache.commons.io.FileUtils#openOutputStream(File, boolean)
-     */
-    public static FileOutputStream openOutputStream(File file, boolean append) throws IOException {
-        return org.apache.commons.io.FileUtils.openOutputStream(file, append);
     }
 }

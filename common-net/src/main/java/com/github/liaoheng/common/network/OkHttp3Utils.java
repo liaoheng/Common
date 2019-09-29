@@ -2,21 +2,19 @@ package com.github.liaoheng.common.network;
 
 import android.content.Context;
 import android.text.TextUtils;
+
 import androidx.annotation.NonNull;
+
 import com.github.liaoheng.common.util.Callback;
-import com.github.liaoheng.common.util.*;
-import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
-import io.reactivex.ObservableTransformer;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Function;
-import io.reactivex.schedulers.Schedulers;
-import okhttp3.*;
-import okhttp3.internal.Util;
-import okhttp3.internal.http.HttpHeaders;
-import okio.Buffer;
-import okio.BufferedSource;
-import okio.GzipSource;
+import com.github.liaoheng.common.util.FileUtils;
+import com.github.liaoheng.common.util.L;
+import com.github.liaoheng.common.util.NetException;
+import com.github.liaoheng.common.util.NetLocalException;
+import com.github.liaoheng.common.util.NetServerException;
+import com.github.liaoheng.common.util.SystemException;
+import com.github.liaoheng.common.util.SystemRuntimeException;
+import com.github.liaoheng.common.util.Utils;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -25,10 +23,40 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.ObservableTransformer;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
+import okhttp3.Cache;
+import okhttp3.Connection;
+import okhttp3.Dispatcher;
+import okhttp3.Headers;
+import okhttp3.Interceptor;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
+import okhttp3.internal.Util;
+import okhttp3.internal.http.HttpHeaders;
+import okio.Buffer;
+import okio.BufferedSource;
+import okio.GzipSource;
 
 /**
  * OKHttp3 工具类
@@ -159,12 +187,12 @@ public class OkHttp3Utils {
         public Init setDefaultCache(Context context, long httpDiskCacheSize) {
             try {
                 cache = getDefaultCache(context, httpDiskCacheSize);
-            } catch (SystemException ignored) {
+            } catch (IOException ignored) {
             }
             return this;
         }
 
-        private Cache getDefaultCache(Context context, long httpDiskCacheSize) throws SystemException {
+        private Cache getDefaultCache(Context context, long httpDiskCacheSize) throws IOException {
             File cacheFile = FileUtils.getProjectSpaceCacheDirectory(context, CommonNet.HTTP_CACHE_DIR);
             if (httpDiskCacheSize == 0) {
                 httpDiskCacheSize = DEFAULT_HTTP_DISK_CACHE_SIZE;
@@ -559,8 +587,7 @@ public class OkHttp3Utils {
                 L.alog().d(tag, "--> END " + request.method() + " (encoded body omitted)");
             } else if (requestBody.isDuplex()) {
                 L.alog().d(tag, "--> END " + request.method() + " (duplex request body omitted)");
-            }
-            else {
+            } else {
                 Buffer buffer = new Buffer();
                 requestBody.writeTo(buffer);
 

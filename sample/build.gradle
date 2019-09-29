@@ -22,18 +22,9 @@ android {
       includeAndroidResources = true
     }
   }
-  lintOptions {
-    abortOnError false
-  }
-  packagingOptions {
-    exclude 'META-INF/LICENSE.txt'
-    exclude 'META-INF/NOTICE.txt'
-    exclude 'META-INF/LICENSE'
-    exclude 'META-INF/NOTICE'
-  }
   compileOptions {
-    sourceCompatibility 1.8
-    targetCompatibility 1.8
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
   }
 }
 
@@ -50,8 +41,8 @@ dependencies {
   annotationProcessor deps.glide_compiler
   implementation deps.glide_okhttp3_integration
 
-  implementation 'com.jakewharton:butterknife:10.0.0'
-  annotationProcessor 'com.jakewharton:butterknife-compiler:10.0.0'
+  implementation 'com.jakewharton:butterknife:10.2.0'
+  annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.0'
 
 
 //  api group: "com.github.liaoheng", name: "common-plus", version: "0.1.0-SNAPSHOT", changing: true

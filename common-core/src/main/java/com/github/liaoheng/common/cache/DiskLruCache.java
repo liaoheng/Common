@@ -163,7 +163,7 @@ public final class DiskLruCache implements Closeable {
     private long nextSequenceNumber = 0;
 
     /** This cache uses a single background thread to evict entries. */
-    final ThreadPoolExecutor executorService =
+    private final ThreadPoolExecutor executorService =
             new ThreadPoolExecutor(0, 1, 60L, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
     private final Callable<Void> cleanupCallable = new Callable<Void>() {
         public Void call() throws Exception {
@@ -688,6 +688,15 @@ public final class DiskLruCache implements Closeable {
     public void delete() throws IOException {
         close();
         Util.deleteContents(directory);
+    }
+
+    /**
+     *  clear cache & reopen
+     */
+    public void clear() throws IOException{
+        close();
+        Util.deleteContents(directory);
+        open(directory,appVersion,valueCount,maxSize);
     }
 
     private void validateKey(String key) {

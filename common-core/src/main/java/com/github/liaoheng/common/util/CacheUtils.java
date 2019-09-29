@@ -1,11 +1,17 @@
 package com.github.liaoheng.common.util;
 
 import android.content.Context;
+
 import com.github.liaoheng.common.BuildConfig;
 import com.github.liaoheng.common.cache.DiskLruCache;
+
 import org.apache.commons.io.IOUtils;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * @author liaoheng
@@ -23,34 +29,42 @@ public class CacheUtils {
 
     private DiskLruCache diskLruCache;
 
-    private void init(Context context, String cacheDir) throws IOException {
-        init(getFileCachePath(context, cacheDir));
+    public void init(Context context, String cacheDir) {
+        try {
+            init(FileUtils.getProjectSpaceCacheDirectory(context, cacheDir));
+        } catch (IOException ignored) {
+        }
     }
 
-    private void init(File cachePath) throws IOException {
+    public void init(File cachePath) throws IOException {
+        init(cachePath, 1024 * 1024 * 10);
+    }
+
+    /**
+     * @param maxSize Bytes
+     */
+    public void init(File cachePath, long maxSize) throws IOException {
+        //valueCount : 同一个key可以对应多少个缓存文件
         diskLruCache = DiskLruCache.open(cachePath, BuildConfig.VERSION_CODE, 1,
-                1024 * 1024 * 10);//Bytes
+                maxSize);
     }
 
-    public static File getFileCachePath(Context context, String cacheDir) throws IOException {
+    public void clear() {
+        if (diskLruCache == null) {
+            return;
+        }
         try {
-            File sdExternalPath = FileUtils.getProjectSpacePath(context);
-            return FileUtils.createHideMediaDirectory(
-                    FileUtils.createPath(sdExternalPath.getAbsolutePath(), cacheDir));
-        } catch (SystemException e) {
-            throw new IOException(e);
+            diskLruCache.clear();
+        } catch (IOException ignored) {
         }
     }
 
-    public void put(String key, File file) {
-        FileInputStream inputStream = null;
-        try {
-            inputStream = new FileInputStream(file);
-            put(key, inputStream);
-        } catch (FileNotFoundException ignored) {
-        } finally {
-            IOUtils.closeQuietly(inputStream);
+    public File put(String key, File file) {
+        try (FileInputStream inputStream = new FileInputStream(file)) {
+            return put(key, inputStream);
+        } catch (IOException ignored) {
         }
+        return null;
     }
 
     public File put(int key, InputStream inputStream) {
@@ -58,6 +72,9 @@ public class CacheUtils {
     }
 
     public File put(String key, InputStream inputStream) {
+        if (diskLruCache == null) {
+            return null;
+        }
         DiskLruCache.Editor edit = null;
         OutputStream outputStream = null;
         try {
@@ -83,6 +100,9 @@ public class CacheUtils {
     }
 
     public File get(String key) {
+        if (diskLruCache == null) {
+            return null;
+        }
         try {
             return diskLruCache.getFile(key, 0);
         } catch (Exception ignored) {

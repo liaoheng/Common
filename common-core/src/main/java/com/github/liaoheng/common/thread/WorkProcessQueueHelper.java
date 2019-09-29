@@ -27,10 +27,7 @@ public class WorkProcessQueueHelper<T> {
         if (!isWorkThreadRunning()) {
             return;
         }
-        try {
-            mDataQueue.put(data);
-        } catch (InterruptedException ignored) {
-        }
+        mDataQueue.offer(data);
     }
 
     public T takeQueue() {

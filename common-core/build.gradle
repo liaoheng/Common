@@ -15,15 +15,6 @@ android {
             includeAndroidResources = true
         }
     }
-    lintOptions {
-        abortOnError false
-    }
-    packagingOptions {
-        exclude 'META-INF/LICENSE.txt'
-        exclude 'META-INF/NOTICE.txt'
-        exclude 'META-INF/LICENSE'
-        exclude 'META-INF/NOTICE'
-    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -33,7 +24,7 @@ android {
 dependencies {
     testImplementation deps.robolectric
     testImplementation deps.junit
-    testImplementation 'joda-time:joda-time:2.10.1'
+    testImplementation 'joda-time:joda-time:2.10.3'
 
     implementation deps.annotations
     compileOnly deps.appcompat

@@ -15,8 +15,9 @@ android {
             includeAndroidResources = true
         }
     }
-    lintOptions {
-        abortOnError false
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
@@ -26,8 +27,13 @@ dependencies {
 
     implementation deps.core
     implementation deps.recyclerview
-    implementation deps.swiperefreshlayout
-    compileOnly deps.appcompat
+    implementation(deps.swiperefreshlayout) {
+        exclude module: 'core'
+    }
+    compileOnly(deps.appcompat){
+        exclude module: 'activity'
+        exclude module: 'collection'
+    }
     compileOnly deps.adapterdelegates4
 }
 
