@@ -13,6 +13,7 @@ public class MD5Utils {
 
     /**
      * 得到32位的16进制字符串
+     *
      * @param byteArray
      * @return
      */
@@ -22,6 +23,7 @@ public class MD5Utils {
 
     /**
      * 得到16位的16进制字符串
+     *
      * @param byteArray
      * @return
      */
@@ -31,6 +33,7 @@ public class MD5Utils {
 
     /**
      * 得到MD5加密16进制的字符串
+     *
      * @param txt
      * @return 32位16进制字符串
      */

@@ -1,27 +1,27 @@
 package com.github.liaoheng.common.ui.widget;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
-import com.github.liaoheng.common.ui.R;
-import com.github.liaoheng.common.ui.core.CUInputDialogClickListener;
-import com.github.liaoheng.common.ui.core.ProgressHelper;
-import com.github.liaoheng.common.util.InputMethodUtils;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.StringRes;
 import androidx.annotation.StyleRes;
 import androidx.appcompat.app.AppCompatDialog;
+import androidx.core.content.ContextCompat;
+
+import com.github.liaoheng.common.ui.R;
+import com.github.liaoheng.common.ui.core.CUInputDialogClickListener;
+import com.github.liaoheng.common.ui.core.ProgressHelper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 文字输入对话框，带进度条，<br/>
@@ -36,6 +36,7 @@ import androidx.appcompat.app.AppCompatDialog;
  * @version 2016-08-30 14:10
  */
 public class CUInputDialog extends AppCompatDialog {
+    private InputMethodManager mInputMethodManager;
 
     public CUInputDialog(Context context) {
         super(context, R.style.LCU_Input_Dialog);
@@ -70,16 +71,19 @@ public class CUInputDialog extends AppCompatDialog {
         } else {
             setContentView(layout);
         }
+        mInputMethodManager = ContextCompat.getSystemService(getContext(), InputMethodManager.class);
         initAction();
     }
 
     private CUInputDialog initAction() {
         mProgressHelper = ProgressHelper.with(getWindow().getDecorView());
 
-        mMessage = (TextView) findViewById(R.id.lcu_input_dialog_message);
-        mEditText = (EditText) findViewById(R.id.lcu_input_dialog_edit_text);
-        mOK = (Button) findViewById(R.id.lcu_input_dialog_ok);
-        mCancel = (Button) findViewById(R.id.lcu_input_dialog_cancel);
+        mMessage = findViewById(R.id.lcu_input_dialog_message);
+        mEditText = findViewById(R.id.lcu_input_dialog_edit_text);
+        mEditText.requestFocus();
+        mEditText.post(() -> mInputMethodManager.showSoftInput(mEditText, InputMethodManager.SHOW_IMPLICIT));
+        mOK = findViewById(R.id.lcu_input_dialog_ok);
+        mCancel = findViewById(R.id.lcu_input_dialog_cancel);
         View.OnClickListener oKClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,48 +94,28 @@ public class CUInputDialog extends AppCompatDialog {
                 mClickListener.onFinish(getDialog());
             }
         };
-        View.OnClickListener cancelClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mClickListener == null) {
-                    return;
-                }
-                mClickListener.onCancel(getDialog(), getEditTextString());
-                mClickListener.onFinish(getDialog());
+        View.OnClickListener cancelClickListener = v -> {
+            if (mClickListener == null) {
+                return;
             }
+            mClickListener.onCancel(getDialog(), getEditTextString());
+            mClickListener.onFinish(getDialog());
         };
         mOK.setOnClickListener(oKClickListener);
         mCancel.setOnClickListener(cancelClickListener);
 
-        mOnShowListeners.add(new OnShowListener() {
-            @Override
-            public void onShow(DialogInterface dialog) {
-                InputMethodUtils.showSoftInput(getEditText());
+        super.setOnShowListener(dialog -> {
+            for (OnShowListener mOnShowListener : mOnShowListeners) {
+                mOnShowListener.onShow(dialog);
             }
         });
-
-        super.setOnShowListener(new OnShowListener() {
-            @Override
-            public void onShow(DialogInterface dialog) {
-                for (OnShowListener mOnShowListener : mOnShowListeners) {
-                    mOnShowListener.onShow(dialog);
-                }
-            }
+        mOnDismissListeners.add(dialog -> {
+            getProgressHelper().hide();
+            getEditText().setText("");
         });
-
-        mOnDismissListeners.add(new OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                getProgressHelper().hide();
-                getEditText().setText("");
-            }
-        });
-        super.setOnDismissListener(new OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                for (OnDismissListener onDismissListener : mOnDismissListeners) {
-                    onDismissListener.onDismiss(dialog);
-                }
+        super.setOnDismissListener(dialog -> {
+            for (OnDismissListener onDismissListener : mOnDismissListeners) {
+                onDismissListener.onDismiss(dialog);
             }
         });
         return this;
@@ -139,7 +123,8 @@ public class CUInputDialog extends AppCompatDialog {
 
     @Override
     public void dismiss() {
-        InputMethodUtils.hideSoftInput(getEditText());
+        mInputMethodManager.hideSoftInputFromWindow(getEditText().getWindowToken(),
+                InputMethodManager.HIDE_IMPLICIT_ONLY);
         super.dismiss();
     }
 
@@ -189,8 +174,6 @@ public class CUInputDialog extends AppCompatDialog {
 
     /**
      * 默认对话框标题
-     *
-     * @see {@link #setTitle(CharSequence)}
      */
     public CUInputDialog setMTitle(CharSequence title) {
         super.setTitle(title);
@@ -199,8 +182,6 @@ public class CUInputDialog extends AppCompatDialog {
 
     /**
      * 默认对话框标题
-     *
-     * @see {@link #setTitle(int)}
      */
     public CUInputDialog setMTitle(@StringRes int titleId) {
         super.setTitle(titleId);

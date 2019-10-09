@@ -18,7 +18,10 @@ import android.os.PowerManager;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresPermission;
+
 import com.github.liaoheng.common.R;
 
 import java.util.List;
@@ -34,18 +37,15 @@ import java.util.UUID;
 public class AppUtils {
     /**
      * 获取应用程序名称
-     *
-     * @throws SystemException
-     * @author <a href="http://www.trinea.cn" target="_blank">Trinea</a> 2014-5-07
      */
-    public static String getAppName(Context context) throws SystemException {
+    public static String getAppName(Context context) {
         try {
             PackageManager packageManager = context.getPackageManager();
             PackageInfo packageInfo = packageManager.getPackageInfo(context.getPackageName(), 0);
             int labelRes = packageInfo.applicationInfo.labelRes;
             return context.getResources().getString(labelRes);
         } catch (PackageManager.NameNotFoundException e) {
-            throw new SystemException("Application name fetching failed", e);
+            return "";
         }
     }
 
@@ -55,12 +55,13 @@ public class AppUtils {
      * @param application {@link Context}
      * @return {@link PackageInfo}
      */
-    public static PackageInfo getVersionInfo(Context application) throws SystemException {
+    @Nullable
+    public static PackageInfo getVersionInfo(Context application) {
         PackageManager mg = application.getPackageManager();
         try {
             return mg.getPackageInfo(application.getPackageName(), 0);
         } catch (PackageManager.NameNotFoundException e) {
-            throw new SystemException("Version information acquisition failed", e);
+            return null;
         }
     }
 

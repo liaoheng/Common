@@ -1,6 +1,6 @@
-//PM 15:29 2019/9/29
+//AM 11:35 2019/10/9
 ext {
-    minSdkVersion = 19
+    minSdkVersion = 21
     targetSdkVersion = 29
     compileSdkVersion = 29
     buildToolsVersion = '29.0.2'
@@ -24,9 +24,9 @@ ext.deps = [
         cardview                  : "androidx.cardview:cardview:1.0.0",
         browser                   : "androidx.browser:browser:1.2.0-alpha08",
         preference                : "androidx.preference:preference:$ext.androidxVersion",
-        material                  : "com.google.android.material:material:1.1.0-alpha10",
-        //https://github.com/apache/commons-io
-        commons_io                : "commons-io:commons-io:2.6",
+        material                  : "com.google.android.material:material:1.1.0-beta01",
+        //https://github.com/google/guava
+        guava                : "com.google.guava:guava:28.1-android",
         //https://github.com/FasterXML/jackson-annotations
         jackson_annotations       : "com.fasterxml.jackson.core:jackson-annotations:$ext.jacksonVersion",
         //https://github.com/FasterXML/jackson-databind

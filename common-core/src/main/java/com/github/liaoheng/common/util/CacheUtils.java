@@ -4,8 +4,7 @@ import android.content.Context;
 
 import com.github.liaoheng.common.BuildConfig;
 import com.github.liaoheng.common.cache.DiskLruCache;
-
-import org.apache.commons.io.IOUtils;
+import com.google.common.io.ByteStreams;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -76,11 +75,11 @@ public class CacheUtils {
             return null;
         }
         DiskLruCache.Editor edit = null;
-        OutputStream outputStream = null;
         try {
             edit = diskLruCache.edit(key);
-            outputStream = edit.newOutputStream(0);
-            IOUtils.copy(inputStream, outputStream);
+            try (OutputStream outputStream = edit.newOutputStream(0)) {
+                ByteStreams.copy(inputStream, outputStream);
+            }
             edit.commit();
             diskLruCache.flush();
         } catch (IOException e) {
@@ -90,8 +89,6 @@ public class CacheUtils {
                 }
             } catch (IOException ignored) {
             }
-        } finally {
-            IOUtils.closeQuietly(outputStream);
         }
         if (edit == null || edit.isHasErrors()) {
             return null;

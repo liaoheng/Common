@@ -7,7 +7,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  * @author liaoheng
  * @version 2018-11-15 12:35
  */
-public class WorkProcessQueueHelper<T> {
+public class WorkProcessQueueHelper<T> implements IWorkProcessThread {
     private final BlockingQueue<T> mDataQueue = new LinkedBlockingQueue<>();
     private IWorkProcessThread mWorkProcessThread;
 
@@ -15,23 +15,40 @@ public class WorkProcessQueueHelper<T> {
         mWorkProcessThread = workProcessThread;
     }
 
-    public boolean isWorkThreadRunning() {
-        return mWorkProcessThread != null && mWorkProcessThread.isRunning();
-    }
-
     public IWorkProcessThread getWorkProcessThread() {
         return mWorkProcessThread;
     }
 
+    @Override
+    public void start() {
+        if (mWorkProcessThread == null) {
+            return;
+        }
+        mWorkProcessThread.start();
+    }
+
+    @Override
+    public void stop() {
+        if (mWorkProcessThread == null) {
+            return;
+        }
+        mWorkProcessThread.stop();
+    }
+
+    @Override
+    public boolean isRunning() {
+        return mWorkProcessThread != null && mWorkProcessThread.isRunning();
+    }
+
     public void putQueue(T data) {
-        if (!isWorkThreadRunning()) {
+        if (!isRunning()) {
             return;
         }
         mDataQueue.offer(data);
     }
 
     public T takeQueue() {
-        if (!isWorkThreadRunning()) {
+        if (!isRunning()) {
             return null;
         }
         try {
@@ -43,6 +60,11 @@ public class WorkProcessQueueHelper<T> {
 
     public void clearQueue() {
         mDataQueue.clear();
+    }
+
+    public void destroy() {
+        stop();
+        clearQueue();
     }
 
 }

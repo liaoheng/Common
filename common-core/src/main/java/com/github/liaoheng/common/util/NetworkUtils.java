@@ -80,23 +80,11 @@ public class NetworkUtils {
      * @return boolean 不管wifi，还是mobile net，只有当前在连接状态返回true,反之false。
      */
     public static boolean isConnected(Context context) {
-        NetworkInfo net = getConnManager(context).getActiveNetworkInfo();
-        return net != null && net.isConnected();
-    }
-
-    /**
-     * 判断有无网络正在连接中（查找网络、校验、获取IP等）。
-     *
-     * @return boolean 不管wifi，还是mobile net，只有当前在连接状态（可有效传输数据）才返回true,反之false。
-     */
-    public static boolean isConnectedOrConnecting(Context context) {
-        if (NetworkUtils.isConnected(context)) {
-            NetworkInfo[] nets = getConnManager(context).getAllNetworkInfo();
-            if (nets != null) {
-                for (NetworkInfo net : nets) {
-                    if (net.isConnectedOrConnecting()) {
-                        return true;
-                    }
+        NetworkInfo[] nets = NetworkUtils.getConnManager(context).getAllNetworkInfo();
+        if (nets.length > 0) {
+            for (NetworkInfo net : nets) {
+                if (net.isConnected()) {
+                    return true;
                 }
             }
         }
@@ -183,38 +171,5 @@ public class NetworkUtils {
      */
     public static String getMacAddress(@NonNull Context context) {
         return getWifiInfo(context).getMacAddress();
-    }
-
-    /**
-     * 打印当前各种网络状态
-     *
-     * @return boolean
-     */
-    public static boolean printNetworkInfo(Context context) {
-        ConnectivityManager connectivity = (ConnectivityManager) context
-                .getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (connectivity != null) {
-            NetworkInfo in = connectivity.getActiveNetworkInfo();
-            L.Log.d(TAG, "-------------$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$-------------");
-            L.Log.d(TAG, "getActiveNetworkInfo: " + in);
-            NetworkInfo[] info = connectivity.getAllNetworkInfo();
-            if (info != null) {
-                for (int i = 0; i < info.length; i++) {
-                    // if (info[i].getType() == ConnectivityManager.TYPE_WIFI) {
-                    L.Log.d(TAG, "NetworkInfo[" + i + "]isAvailable : " + info[i].isAvailable());
-                    L.Log.d(TAG, "NetworkInfo[" + i + "]isConnected : " + info[i].isConnected());
-                    L.Log.d(
-                            TAG,
-                            "NetworkInfo[" + i + "]isConnectedOrConnecting : "
-                                    + info[i].isConnectedOrConnecting());
-                    L.Log.d(TAG, "NetworkInfo[" + i + "]: " + info[i]);
-                    // }
-                }
-                L.Log.d(TAG, "\n");
-            } else {
-                L.Log.d(TAG, "getAllNetworkInfo is null");
-            }
-        }
-        return false;
     }
 }

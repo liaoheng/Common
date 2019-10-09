@@ -1,6 +1,10 @@
 package com.github.liaoheng.common.thread;
 
+import android.text.TextUtils;
+
 import com.github.liaoheng.common.util.Logcat;
+
+import java.util.UUID;
 
 /**
  * @author liaoheng
@@ -30,22 +34,33 @@ public class WorkProcessThread implements IWorkProcessThread {
     }
 
     public abstract static class BaseHandler implements Handler {
-        private Logcat.ILogcat mLog;
+        private String mThreadName;
+        private Logcat.ILogcat mLogcat;
         private String mTag;
 
-        public BaseHandler(Logcat.ILogcat log, String tag) {
-            mLog = log;
+        public BaseHandler(Logcat.ILogcat logcat, String tag) {
+            mLogcat = logcat;
             mTag = tag;
+        }
+
+        public BaseHandler(Logcat.ILogcat logcat, String tag, String name) {
+            this(logcat, tag);
+            mThreadName = name;
+        }
+
+        @Override
+        public String name() {
+            return TextUtils.isEmpty(mThreadName) ? UUID.randomUUID().toString() : mThreadName;
         }
 
         @Override
         public void onStart(String name) {
-            mLog.d(mTag, name + " start");
+            mLogcat.d(mTag, "start > %s", name);
         }
 
         @Override
         public void onStop(String name) {
-            mLog.d(mTag, name + " stop");
+            mLogcat.d(mTag, "stop > %s", name);
         }
     }
 
@@ -67,5 +82,6 @@ public class WorkProcessThread implements IWorkProcessThread {
             return;
         }
         mThread.shutdown();
+        mThread = null;
     }
 }

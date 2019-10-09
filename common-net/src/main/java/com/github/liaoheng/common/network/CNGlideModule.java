@@ -7,6 +7,7 @@ import com.github.liaoheng.common.util.FileUtils;
 import com.github.liaoheng.common.util.SystemException;
 
 import java.io.File;
+import java.io.IOException;
 
 /**
  * Glide Config
@@ -29,7 +30,7 @@ public class CNGlideModule {
         try {
             File imgCache = FileUtils.getProjectSpaceCacheDirectory(context, CommonNet.DISK_CACHE_DIR);
             applyOptions(builder, imgCache, CommonNet.IMAGE_DISK_CACHE_SIZE);
-        } catch (SystemException ignored) {
+        } catch (IOException ignored) {
         }
     }
 

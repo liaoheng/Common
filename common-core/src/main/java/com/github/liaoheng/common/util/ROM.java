@@ -3,8 +3,6 @@ package com.github.liaoheng.common.util;
 import android.os.Build;
 import android.text.TextUtils;
 
-import org.apache.commons.io.IOUtils;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -57,17 +55,15 @@ public class ROM {
     }
 
     public static String getProp(String name) {
-        BufferedReader input = null;
         try {
             Process p = Runtime.getRuntime().exec("getprop " + name);
-            input = new BufferedReader(new InputStreamReader(p.getInputStream()), 1024);
-            String line = input.readLine();
-            input.close();
-            return line;
+            try (BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()), 1024)) {
+                String line = input.readLine();
+                input.close();
+                return line;
+            }
         } catch (IOException ex) {
-            L.alog().e("getProp", "Unable to read prop " + name, ex);
-        } finally {
-            IOUtils.closeQuietly(input);
+            L.alog().e(TAG, "Unable to read prop " + name, ex);
         }
         return null;
     }

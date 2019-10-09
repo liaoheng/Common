@@ -29,7 +29,7 @@ dependencies {
     implementation deps.annotations
     compileOnly deps.appcompat
 
-    implementation deps.commons_io
+    implementation deps.guava
     //https://github.com/orhanobut/logger
     implementation 'com.orhanobut:logger:2.2.0'
 

@@ -21,8 +21,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
 
-import org.apache.commons.io.FilenameUtils;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -168,7 +166,7 @@ public class BitmapUtils {
      * @see Bitmap.CompressFormat
      */
     public static Bitmap.CompressFormat getImageExtension(String file) {
-        String extension = FilenameUtils.getExtension(file);
+        String extension = FileUtils.getExtension(file);
         Bitmap.CompressFormat format = Bitmap.CompressFormat.PNG;
         MimeTypeMap.MimeType mimeType = MimeTypeMap.MimeType.findFromExtension(extension);
         if (IMG_JPG.equalsMimeType(mimeType)) {
@@ -207,10 +205,8 @@ public class BitmapUtils {
 
     /**
      * 从相机获取image
-     *
-     * @throws SystemException
      */
-    public static String getImageFromCamera(Activity activity) throws SystemException {
+    public static String getImageFromCamera(Activity activity) throws IOException {
         String name = FileUtils.createTempFile(FileUtils.getProjectTempDirectory(), BitmapUtils.IMG_JPG.getExtension())
                 .getAbsolutePath();
         /**
@@ -225,10 +221,8 @@ public class BitmapUtils {
 
     /**
      * 从相机获取image
-     *
-     * @throws SystemException
      */
-    public static String getImageFromCamera(Fragment fragment) throws SystemException {
+    public static String getImageFromCamera(Fragment fragment) throws IOException {
         String name = FileUtils
                 .createTempFile(FileUtils.getProjectTempDirectory(), BitmapUtils.IMG_JPG.getExtension())
                 .getAbsolutePath();
@@ -246,9 +240,8 @@ public class BitmapUtils {
      * 通过文件路径获取bitmap
      *
      * @param filePath 图片路径 等比例800
-     * @throws SystemException
      */
-    public static Bitmap getBitmapByUri(String filePath) throws SystemException {
+    public static Bitmap getBitmapByUri(String filePath) {
         return getBitmapByUri(filePath, 800, 800);
     }
 
@@ -258,7 +251,6 @@ public class BitmapUtils {
      * @param filePath 图片路径
      * @param width 等比例压缩图片 宽
      * @param height 等比例压缩图片 长
-     * @throws SystemException
      */
     @Nullable
     public static Bitmap getBitmapByUri(String filePath, int width,

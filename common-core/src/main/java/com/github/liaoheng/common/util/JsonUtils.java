@@ -1,5 +1,7 @@
 package com.github.liaoheng.common.util;
 
+import androidx.annotation.Nullable;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JavaType;
@@ -61,54 +63,57 @@ public class JsonUtils {
         return "";
     }
 
+    private static ObjectMapper mObjectMapper;
+
     //https://stackoverflow.com/questions/5455014/ignoring-new-fields-on-json-objects-using-jackson
     public static ObjectMapper getObjectMapper() {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        return objectMapper;
+        if (mObjectMapper == null) {
+            mObjectMapper = new ObjectMapper();
+            mObjectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        }
+        return mObjectMapper;
     }
 
-    public static <T> String toJson(T t) throws SystemException {
+    public static <T> String toJson(T t) {
         try {
             return getObjectMapper().writeValueAsString(t);
         } catch (JsonProcessingException e) {
-            throw new SystemException(e);
+            return "";
         }
     }
 
-    public static <T> T parse(String json, Class<T> clazz) throws SystemException {
-        try {
-            return getObjectMapper().readValue(json, clazz);
-        } catch (IOException e) {
-            throw new SystemException(e);
-        }
+    @Nullable
+    public static <T> T parse(String json, Class<T> clazz) throws IOException {
+        return getObjectMapper().readValue(json, clazz);
     }
 
-    public static <T> T parse(String json, String parameter,
-            Class<T> clazz) throws SystemException {
+    @Nullable
+    public static <T> T parse(String json, String parameter, Class<T> clazz) {
         try {
             JSONObject jsonObject = new JSONObject(json);
             return getObjectMapper().readValue(jsonObject.getString(parameter), clazz);
-        } catch (Exception e) {
-            throw new SystemException(e);
+        } catch (IOException | JSONException e) {
+            return null;
         }
     }
 
     /**
      * @param valueType {@link TypeFactory}
      */
+    @Nullable
     public static <T> List<T> parseList(String json, String parameter,
-            JavaType valueType) throws SystemException {
+            JavaType valueType) {
         try {
             JSONObject jsonObject = new JSONObject(json);
             return getObjectMapper().readValue(jsonObject.getString(parameter), valueType);
-        } catch (Exception e) {
-            throw new SystemException(e);
+        } catch (IOException | JSONException e) {
+            return null;
         }
     }
 
+    @Nullable
     public static <T> List<T> parseList(String json, String parameter,
-            Class<T> clazz) throws SystemException {
+            Class<T> clazz) {
         return parseList(json, parameter, TypeFactory.defaultInstance().constructCollectionType(List.class, clazz));
     }
 }

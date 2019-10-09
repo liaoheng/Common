@@ -4,11 +4,10 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import com.github.liaoheng.common.Common;
-
-import org.apache.commons.io.FilenameUtils;
+import com.google.common.io.FileWriteMode;
+import com.google.common.io.Files;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -21,10 +20,11 @@ import java.util.UUID;
  *
  * @author liaoheng
  */
+@SuppressWarnings("UnstableApiUsage")
 public class FileUtils {
     private static final String TAG = FileUtils.class.getSimpleName();
     public static final String ERROR_SDCARD_NOT_AVAILABLE = "error_sdcard_not_available";
-    public static final String ERROR_SDCARD_SPACE_INSUFFICIENT = "error_sdcard__space_insufficient";
+    public static final String ERROR_SDCARD_SPACE_INSUFFICIENT = "error_sdcard_space_insufficient";
 
     /**
      * 得到SD卡的路径
@@ -335,25 +335,33 @@ public class FileUtils {
         if (file == null) {
             return;
         }
-        try {
-            org.apache.commons.io.FileUtils.forceDelete(file);
+        if (!file.exists()) {
+            return;
+        }
+        if (file.delete()) {
             L.alog().d(TAG, "delete file ：" + file.getAbsolutePath());
-        } catch (IOException ignored) {
         }
     }
 
     /**
      * 清空路径
      */
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public static void cleanPath(File path) {
         if (path == null) {
             return;
         }
-        try {
-            org.apache.commons.io.FileUtils.cleanDirectory(path);
-            L.alog().d(TAG, "clean path ：" + path.getAbsolutePath());
-        } catch (IOException ignored) {
+        if (!path.isDirectory()) {
+            return;
         }
+        File[] files = path.listFiles();
+        if (files == null) {
+            return;
+        }
+        for (final File file : files) {
+            file.delete();
+        }
+        L.alog().d(TAG, "clean path ：" + path.getAbsolutePath());
     }
 
     /**
@@ -416,24 +424,15 @@ public class FileUtils {
                 + "TB";
     }
 
-    /**
-     * @see FilenameUtils#getExtension(String)
-     */
-    public static String getExtension(String filename) {
-        return FilenameUtils.getExtension(filename);
+    public static String getExtension(String fullName) {
+        return Files.getFileExtension(fullName);
     }
 
-    /**
-     * @see FilenameUtils#getName(String)
-     */
-    public static String getName(String filename) {
-        return FilenameUtils.getName(filename);
+    public static String getName(String fullName) {
+        return Files.getNameWithoutExtension(fullName);
     }
 
-    /**
-     * @see org.apache.commons.io.FileUtils#copyInputStreamToFile(InputStream, File)
-     */
     public static void copyInputStreamToFile(InputStream source, final File destination) throws IOException {
-        org.apache.commons.io.FileUtils.copyInputStreamToFile(source, destination);
+        Files.asByteSink(destination, FileWriteMode.APPEND).writeFrom(source);
     }
 }

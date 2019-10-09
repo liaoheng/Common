@@ -5,6 +5,7 @@ package com.github.liaoheng.common.util;
  * @author liaoheng
  * @version 2015-07-21 19:55
  */
+@Deprecated
 public interface Callback3 {
     /**
      * 开始
@@ -35,6 +36,7 @@ public interface Callback3 {
     /**
      * 无操作通用回调
      */
+    @Deprecated
     class EmptyCallback implements Callback3 {
         @Override public void onPreExecute() {
 

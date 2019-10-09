@@ -34,7 +34,6 @@ import androidx.annotation.StringRes;
 import androidx.annotation.StyleRes;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDialog;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
@@ -83,7 +82,7 @@ public class UIUtils {
     public static void showLogToast(String TAG, @NonNull Context context, String hint,
             int duration) {
         showToast(context, hint, duration);
-        L.i(TAG, hint);
+        L.alog().d(TAG, hint);
     }
 
     /**
@@ -91,7 +90,7 @@ public class UIUtils {
      */
     public static void showLogToast(String TAG, @NonNull Context context, String hint) {
         showToast(context, hint);
-        L.i(TAG, hint);
+        L.alog().d(TAG, hint);
     }
 
     public static void cancelToast() {
@@ -107,48 +106,6 @@ public class UIUtils {
         }
         ViewGroup group = findViewById(activity, android.R.id.content);
         return group.getChildAt(0);
-    }
-
-    /**
-     * 得到CoordinatorLayout
-     */
-    public static void getCoordinatorLayout(Activity activity, final Callback4<View> call) {
-        getCoordinatorLayout(getActivityContentView(activity), call);
-    }
-
-    /**
-     * 得到CoordinatorLayout
-     */
-    public static void getCoordinatorLayout(View view, final Callback4<View> call) {
-        if (view == null) {
-            call.onNo(null);
-            return;
-        }
-        if (isCoordinatorLayout(view)) {
-            call.onYes(view);
-            return;
-        } else {
-            if (findCoordinatorLayout(view, call)) {
-                return;
-            }
-        }
-        call.onNo(null);
-    }
-
-    public static boolean isCoordinatorLayout(View view) {
-        return view instanceof CoordinatorLayout;
-    }
-
-    private static boolean findCoordinatorLayout(View view, Callback4<View> mCall) {
-        ViewGroup group = (ViewGroup) view;
-        for (int i = 0; i < group.getChildCount(); i++) {
-            View view1 = group.getChildAt(i);
-            if (isCoordinatorLayout(view1)) {
-                mCall.onYes(view1);
-                return true;
-            }
-        }
-        return false;
     }
 
     /**
@@ -527,7 +484,7 @@ public class UIUtils {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T extends View> T findViewById(@NonNull View view, @IdRes int resource) {
+    public static <T extends View> T findViewById(View view, @IdRes int resource) {
         if (view == null) {
             return null;
         }
@@ -535,7 +492,7 @@ public class UIUtils {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T extends View> T findViewById(@NonNull Activity activity, @IdRes int resource) {
+    public static <T extends View> T findViewById(Activity activity, @IdRes int resource) {
         if (activity == null) {
             return null;
         }

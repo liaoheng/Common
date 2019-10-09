@@ -2,40 +2,32 @@ package com.github.liaoheng.common.util;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
-import org.apache.commons.io.Charsets;
 
 /**
  * @author https://github.com/apache/commons-codec/blob/trunk/src/main/java/org/apache/commons/codec/binary/Hex.java
  */
 public class HexUtils {
-    /**
-     * Default charset is {@link Charsets#UTF_8}
-     *
-     * @since 1.7
-     */
-    public final  Charset DEFAULT_CHARSET = Charsets.UTF_8;
+    public final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
     /**
      * Used to build output as Hex
      */
-    private final char[]  DIGITS_LOWER    = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a',
-                                              'b', 'c', 'd', 'e', 'f' };
+    private final char[] DIGITS_LOWER = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a',
+            'b', 'c', 'd', 'e', 'f' };
 
     /**
      * Used to build output as Hex
      */
     private final char[] DIGITS_UPPER = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A',
-                                          'B', 'C', 'D', 'E', 'F' };
+            'B', 'C', 'D', 'E', 'F' };
 
     /**
      * Converts a String representing hexadecimal values into an array of bytes of those same values. The
      * returned array will be half the length of the passed String, as it takes two characters to represent any given
      * byte. An exception is thrown if the passed String has an odd number of elements.
      *
-     * @param data
-     *            A String containing hexadecimal digits
+     * @param data A String containing hexadecimal digits
      * @return A byte array containing binary data decoded from the supplied char array.
-     * @throws SystemException
-     *             Thrown if an odd number or illegal of characters is supplied
+     * @throws SystemException Thrown if an odd number or illegal of characters is supplied
      * @since 1.11
      */
     public byte[] decodeHex(String data) throws SystemException {
@@ -47,11 +39,9 @@ public class HexUtils {
      * returned array will be half the length of the passed array, as it takes two characters to represent any given
      * byte. An exception is thrown if the passed char array has an odd number of elements.
      *
-     * @param data
-     *            An array of characters containing hexadecimal digits
+     * @param data An array of characters containing hexadecimal digits
      * @return A byte array containing binary data decoded from the supplied char array.
-     * @throws SystemException
-     *             Thrown if an odd number or illegal of characters is supplied
+     * @throws SystemException Thrown if an odd number or illegal of characters is supplied
      */
     public byte[] decodeHex(final char[] data) throws SystemException {
 
@@ -80,8 +70,7 @@ public class HexUtils {
      * The returned array will be double the length of the passed array, as it takes two characters to represent any
      * given byte.
      *
-     * @param data
-     *            a byte[] to convert to Hex characters
+     * @param data a byte[] to convert to Hex characters
      * @return A char[] containing lower-case hexadecimal characters
      */
     public char[] encodeHex(final byte[] data) {
@@ -93,8 +82,7 @@ public class HexUtils {
      * The returned array will be double the length of the passed array, as it takes two characters to represent any
      * given byte.
      *
-     * @param data
-     *            a byte buffer to convert to Hex characters
+     * @param data a byte buffer to convert to Hex characters
      * @return A char[] containing lower-case hexadecimal characters
      * @since 1.11
      */
@@ -107,10 +95,8 @@ public class HexUtils {
      * The returned array will be double the length of the passed array, as it takes two characters to represent any
      * given byte.
      *
-     * @param data
-     *            a byte[] to convert to Hex characters
-     * @param toLowerCase
-     *            <code>true</code> converts to lowercase, <code>false</code> to uppercase
+     * @param data        a byte[] to convert to Hex characters
+     * @param toLowerCase <code>true</code> converts to lowercase, <code>false</code> to uppercase
      * @return A char[] containing hexadecimal characters in the selected case
      * @since 1.4
      */
@@ -123,10 +109,8 @@ public class HexUtils {
      * The returned array will be double the length of the passed array, as it takes two characters to represent any
      * given byte.
      *
-     * @param data
-     *            a byte buffer to convert to Hex characters
-     * @param toLowerCase
-     *            <code>true</code> converts to lowercase, <code>false</code> to uppercase
+     * @param data        a byte buffer to convert to Hex characters
+     * @param toLowerCase <code>true</code> converts to lowercase, <code>false</code> to uppercase
      * @return A char[] containing hexadecimal characters in the selected case
      * @since 1.11
      */
@@ -139,12 +123,10 @@ public class HexUtils {
      * The returned array will be double the length of the passed array, as it takes two characters to represent any
      * given byte.
      *
-     * @param data
-     *            a byte[] to convert to Hex characters
-     * @param toDigits
-     *            the output alphabet (must contain at least 16 chars)
+     * @param data     a byte[] to convert to Hex characters
+     * @param toDigits the output alphabet (must contain at least 16 chars)
      * @return A char[] containing the appropriate characters from the alphabet
-     *         For best results, this should be either upper- or lower-case hex.
+     * For best results, this should be either upper- or lower-case hex.
      * @since 1.4
      */
     public char[] encodeHex(final byte[] data, final char[] toDigits) {
@@ -163,12 +145,10 @@ public class HexUtils {
      * The returned array will be double the length of the passed array, as it takes two characters to represent any
      * given byte.
      *
-     * @param data
-     *            a byte buffer to convert to Hex characters
-     * @param toDigits
-     *            the output alphabet (must be at least 16 characters)
+     * @param data     a byte buffer to convert to Hex characters
+     * @param toDigits the output alphabet (must be at least 16 characters)
      * @return A char[] containing the appropriate characters from the alphabet
-     *         For best results, this should be either upper- or lower-case hex.
+     * For best results, this should be either upper- or lower-case hex.
      * @since 1.11
      */
     public char[] encodeHex(final ByteBuffer data, final char[] toDigits) {
@@ -179,8 +159,7 @@ public class HexUtils {
      * Converts an array of bytes into a String representing the hexadecimal values of each byte in order. The returned
      * String will be double the length of the passed array, as it takes two characters to represent any given byte.
      *
-     * @param data
-     *            a byte[] to convert to Hex characters
+     * @param data a byte[] to convert to Hex characters
      * @return A String containing lower-case hexadecimal characters
      * @since 1.4
      */
@@ -192,10 +171,8 @@ public class HexUtils {
      * Converts an array of bytes into a String representing the hexadecimal values of each byte in order. The returned
      * String will be double the length of the passed array, as it takes two characters to represent any given byte.
      *
-     * @param data
-     *            a byte[] to convert to Hex characters
-     * @param toLowerCase
-     *            <code>true</code> converts to lowercase, <code>false</code> to uppercase
+     * @param data        a byte[] to convert to Hex characters
+     * @param toLowerCase <code>true</code> converts to lowercase, <code>false</code> to uppercase
      * @return A String containing lower-case hexadecimal characters
      * @since 1.11
      */
@@ -207,8 +184,7 @@ public class HexUtils {
      * Converts a byte buffer into a String representing the hexadecimal values of each byte in order. The returned
      * String will be double the length of the passed array, as it takes two characters to represent any given byte.
      *
-     * @param data
-     *            a byte buffer to convert to Hex characters
+     * @param data a byte buffer to convert to Hex characters
      * @return A String containing lower-case hexadecimal characters
      * @since 1.11
      */
@@ -220,10 +196,8 @@ public class HexUtils {
      * Converts a byte buffer into a String representing the hexadecimal values of each byte in order. The returned
      * String will be double the length of the passed array, as it takes two characters to represent any given byte.
      *
-     * @param data
-     *            a byte buffer to convert to Hex characters
-     * @param toLowerCase
-     *            <code>true</code> converts to lowercase, <code>false</code> to uppercase
+     * @param data        a byte buffer to convert to Hex characters
+     * @param toLowerCase <code>true</code> converts to lowercase, <code>false</code> to uppercase
      * @return A String containing lower-case hexadecimal characters
      * @since 1.11
      */
@@ -234,13 +208,10 @@ public class HexUtils {
     /**
      * Converts a hexadecimal character to an integer.
      *
-     * @param ch
-     *            A character to convert to an integer digit
-     * @param index
-     *            The index of the character in the source
+     * @param ch    A character to convert to an integer digit
+     * @param index The index of the character in the source
      * @return An integer
-     * @throws SystemException
-     *             Thrown if ch is an illegal hex character
+     * @throws SystemException Thrown if ch is an illegal hex character
      */
     public int toDigit(final char ch, final int index) throws SystemException {
         final int digit = Character.digit(ch, 16);
@@ -263,8 +234,7 @@ public class HexUtils {
     /**
      * Creates a new codec with the given Charset.
      *
-     * @param charset
-     *            the charset.
+     * @param charset the charset.
      * @since 1.7
      */
     private HexUtils(final Charset charset) {
@@ -274,10 +244,8 @@ public class HexUtils {
     /**
      * Creates a new codec with the given charset name.
      *
-     * @param charsetName
-     *            the charset name.
-     * @throws java.nio.charset.UnsupportedCharsetException
-     *             If the named charset is unavailable
+     * @param charsetName the charset name.
+     * @throws java.nio.charset.UnsupportedCharsetException If the named charset is unavailable
      * @since 1.4
      * @since 1.7 throws UnsupportedCharsetException if the named charset is unavailable
      */
@@ -302,11 +270,9 @@ public class HexUtils {
      * The returned array will be half the length of the passed array, as it takes two characters to represent any given
      * byte. An exception is thrown if the passed char array has an odd number of elements.
      *
-     * @param buffer
-     *            An array of character bytes containing hexadecimal digits
+     * @param buffer An array of character bytes containing hexadecimal digits
      * @return A byte array containing binary data decoded from the supplied byte array (representing characters).
-     * @throws SystemException
-     *             Thrown if an odd number of characters is supplied to this function
+     * @throws SystemException Thrown if an odd number of characters is supplied to this function
      * @see #decodeHex(char[])
      * @since 1.11
      */
@@ -323,8 +289,7 @@ public class HexUtils {
      * {@link #getCharset()}.
      * </p>
      *
-     * @param array
-     *            a byte buffer to convert to Hex characters
+     * @param array a byte buffer to convert to Hex characters
      * @return A byte[] containing the bytes of the lower-case hexadecimal characters
      * @see #encodeHex(byte[])
      * @since 1.11
@@ -358,7 +323,8 @@ public class HexUtils {
      *
      * @return a string representation of the object.
      */
-    @Override public String toString() {
+    @Override
+    public String toString() {
         return super.toString() + "[charsetName=" + this.charset + "]";
     }
 }
