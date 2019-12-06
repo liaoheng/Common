@@ -9,9 +9,7 @@ import com.github.liaoheng.common.util.Callback;
 import com.github.liaoheng.common.util.FileUtils;
 import com.github.liaoheng.common.util.L;
 import com.github.liaoheng.common.util.NetException;
-import com.github.liaoheng.common.util.NetLocalException;
 import com.github.liaoheng.common.util.NetServerException;
-import com.github.liaoheng.common.util.SystemException;
 import com.github.liaoheng.common.util.SystemRuntimeException;
 import com.github.liaoheng.common.util.Utils;
 
@@ -203,7 +201,7 @@ public class OkHttp3Utils {
         public Init setDefaultErrorHandleListener() {
             errorHandleListener = new ErrorHandleListener() {
                 @Override
-                public Response checkError(Response response) throws NetServerException {
+                public Response checkError(Response response) throws NetException {
                     if (!response.isSuccessful()) {
                         String string = "code : " + response.code();
                         ResponseBody body = response.body();
@@ -547,7 +545,7 @@ public class OkHttp3Utils {
         public Response intercept(@NonNull Chain chain) throws IOException {
             Request request = chain.request();
 
-            if (L.isPrint()) {
+            if (!L.isPrint()) {
                 return chain.proceed(request);
             }
 
@@ -690,63 +688,51 @@ public class OkHttp3Utils {
         }
     }
 
-    public String getSync(String url) throws NetException {
+    public String getSync(String url) throws IOException {
         return getSync(url, newRequestBuilder());
     }
 
     public String getSync(String url, Request.Builder builder)
-            throws NetException {
+            throws IOException {
         return getSync(builder.url(url).build());
     }
 
-    public String getSync(Request request) throws NetException {
-        try {
-            Response response = getClient().newCall(request).execute();
-            return getResponseBody(response);
-        } catch (IOException e) {
-            throw new NetLocalException(NetException.NET_ERROR, e);
-        }
+    public String getSync(Request request) throws IOException {
+        Response response = getClient().newCall(request).execute();
+        return getResponseBody(response);
     }
 
-    public String postSync(String url, String jsonBody) throws NetException {
+    public String postSync(String url, String jsonBody) throws IOException {
         return postSync(url, jsonBody, newRequestBuilder());
     }
 
     public String postSync(String url, String jsonBody,
-            Request.Builder builder) throws NetException {
+            Request.Builder builder) throws IOException {
         RequestBody body = RequestBody.create(JSON, jsonBody);
         return postSync(builder.post(body).url(url).build());
     }
 
-    public String postSync(Request request) throws NetException {
-        try {
-            Response response = getClient().newCall(request).execute();
-            return getResponseBody(response);
-        } catch (IOException e) {
-            throw new NetLocalException(NetException.NET_ERROR, e);
-        }
+    public String postSync(Request request) throws IOException {
+        Response response = getClient().newCall(request).execute();
+        return getResponseBody(response);
     }
 
-    public Response headSync(String url) throws NetException {
+    public Response headSync(String url) throws IOException {
         return headSync(url, newRequestBuilder());
     }
 
     public Response headSync(String url, Request.Builder builder)
-            throws NetException {
+            throws IOException {
         return headSync(builder.url(url).head().build());
     }
 
-    public Response headSync(Request request) throws NetException {
-        try {
-            Response response = getClient().newCall(request).execute();
-            Map<String, List<String>> stringListMap = response.headers().toMultimap();
-            for (Map.Entry<String, List<String>> entry : stringListMap.entrySet()) {
-                L.alog().d(TAG, "header > key:%s   value:%s ", entry.getKey(), entry.getValue());
-            }
-            return response;
-        } catch (IOException e) {
-            throw new NetLocalException(NetException.NET_ERROR, e);
+    public Response headSync(Request request) throws IOException {
+        Response response = getClient().newCall(request).execute();
+        Map<String, List<String>> stringListMap = response.headers().toMultimap();
+        for (Map.Entry<String, List<String>> entry : stringListMap.entrySet()) {
+            L.alog().d(TAG, "header > key:%s   value:%s ", entry.getKey(), entry.getValue());
         }
+        return response;
     }
 
     public Disposable getAsyncToJsonString(String url,
@@ -771,14 +757,11 @@ public class OkHttp3Utils {
             final Request.Builder builder,
             Observable<String> observable) {
         return observable.subscribeOn(Schedulers.io())
-                .flatMap(new Function<String, ObservableSource<String>>() {
-                    @Override
-                    public ObservableSource<String> apply(String s) {
-                        try {
-                            return Observable.just(getSync(s, builder));
-                        } catch (SystemException e) {
-                            return Observable.error(e);
-                        }
+                .flatMap((Function<String, ObservableSource<String>>) s -> {
+                    try {
+                        return Observable.just(getSync(s, builder));
+                    } catch (IOException e) {
+                        return Observable.error(e);
                     }
                 });
     }
@@ -803,7 +786,7 @@ public class OkHttp3Utils {
             public ObservableSource<String> apply(String jsonBody) {
                 try {
                     return Observable.just(postSync(url, jsonBody));
-                } catch (SystemException e) {
+                } catch (IOException e) {
                     return Observable.error(e);
                 }
             }
@@ -886,7 +869,7 @@ public class OkHttp3Utils {
                                     String fileName = Utils.getContentDispositionFileName(header,
                                             UUID.randomUUID().toString() + ".jpg");
                                     return Observable.just(new FileDownload(fileName, url));
-                                } catch (NetException e) {
+                                } catch (IOException e) {
                                     return Observable.error(e);
                                 }
                             }

@@ -3,12 +3,11 @@ package com.github.liaoheng.common;
 import android.content.Context;
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
+
 import com.github.liaoheng.common.util.L;
-import com.github.liaoheng.common.util.PreferencesUtils;
 
 import net.danlew.android.joda.JodaTimeAndroid;
-
-import androidx.annotation.NonNull;
 
 /**
  * @author liaoheng
@@ -21,11 +20,11 @@ public class Common {
     private static boolean sDebug;
 
     public static void baseInit(@NonNull Context context, String projectName, boolean isDebug) {
-        baseInit(context, projectName, context.getPackageName(), isDebug);
+        baseInit(context, projectName, null, isDebug);
     }
 
     public static void baseInit(@NonNull Context context, String projectName, String packageName, boolean isDebug) {
-        PACKAGE_NAME = packageName;
+        PACKAGE_NAME = TextUtils.isEmpty(packageName) ? context.getPackageName() : packageName;
         PROJECT_NAME = TextUtils.isEmpty(projectName) ? PACKAGE_NAME : projectName;
         sDebug = isDebug;
         try {
@@ -38,7 +37,6 @@ public class Common {
     public static void init(@NonNull Context context, String projectName, boolean isDebug) {
         baseInit(context, projectName, isDebug);
         L.init(PROJECT_NAME, isDebug);
-        PreferencesUtils.init(context);
     }
 
     public static String getProjectName() {

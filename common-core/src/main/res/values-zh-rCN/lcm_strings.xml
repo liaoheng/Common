@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="lcm_ok">@android:string/ok</string>
-    <string name="lcm_no">@android:string/no</string>
     <string name="lcm_loading">加载中</string>
     <string name="lcm_press_again_to_exit">再按一次退出程序！</string>
     <string name="lcm_download_complete">下载完成</string>

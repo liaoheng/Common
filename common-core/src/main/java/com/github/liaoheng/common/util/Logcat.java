@@ -25,7 +25,7 @@ public final class Logcat {
     /**
      * LOG INIT
      *
-     * @param tag global
+     * @param tag        global
      * @param isLoggable 是否开启日志
      */
     public void init(String tag, boolean isLoggable) {
@@ -92,7 +92,7 @@ public final class Logcat {
         /**
          * JSON
          *
-         * @param TAG LOG tag
+         * @param TAG     LOG tag
          * @param message json string
          */
         void json(@NonNull String TAG, String message);
@@ -107,7 +107,7 @@ public final class Logcat {
         /**
          * XML
          *
-         * @param TAG LOG tag
+         * @param TAG     LOG tag
          * @param message xml string
          */
         void xml(@NonNull String TAG, String message);
@@ -115,7 +115,7 @@ public final class Logcat {
         /**
          * VERBOSE
          *
-         * @param message 提示模板 %s
+         * @param message   提示模板 %s
          * @param parameter 参数
          */
         void v(String message, @Nullable Object... parameter);
@@ -123,8 +123,8 @@ public final class Logcat {
         /**
          * VERBOSE
          *
-         * @param TAG LOG tag
-         * @param message 提示模板 %s
+         * @param TAG       LOG tag
+         * @param message   提示模板 %s
          * @param parameter 参数
          */
         void v(@NonNull String TAG, String message, @Nullable Object... parameter);
@@ -139,7 +139,7 @@ public final class Logcat {
         /**
          * DEBUG,Collections are supported
          *
-         * @param TAG LOG tag
+         * @param TAG    LOG tag
          * @param object 参数
          */
         void da(@NonNull String TAG, Object object);
@@ -147,7 +147,7 @@ public final class Logcat {
         /**
          * DEBUG
          *
-         * @param message 提示模板 %s
+         * @param message   提示模板 %s
          * @param parameter 参数
          */
         void d(String message, @Nullable Object... parameter);
@@ -155,8 +155,8 @@ public final class Logcat {
         /**
          * DEBUG
          *
-         * @param TAG LOG tag
-         * @param message 提示模板 %s
+         * @param TAG       LOG tag
+         * @param message   提示模板 %s
          * @param parameter 参数
          */
         void d(@NonNull String TAG, String message, @Nullable Object... parameter);
@@ -164,7 +164,7 @@ public final class Logcat {
         /**
          * INFO
          *
-         * @param message 提示模板 %s
+         * @param message   提示模板 %s
          * @param parameter 参数
          */
         void i(String message, @Nullable Object... parameter);
@@ -172,8 +172,8 @@ public final class Logcat {
         /**
          * INFO
          *
-         * @param TAG LOG tag
-         * @param message 提示模板 %s
+         * @param TAG       LOG tag
+         * @param message   提示模板 %s
          * @param parameter 参数
          */
         void i(@NonNull String TAG, String message, @Nullable Object... parameter);
@@ -181,7 +181,7 @@ public final class Logcat {
         /**
          * WARN
          *
-         * @param message 提示模板 %s
+         * @param message   提示模板 %s
          * @param parameter 参数
          */
         void w(String message, @Nullable Object... parameter);
@@ -189,8 +189,8 @@ public final class Logcat {
         /**
          * WARN
          *
-         * @param TAG LOG tag
-         * @param message 提示模板 %s
+         * @param TAG       LOG tag
+         * @param message   提示模板 %s
          * @param parameter 参数
          */
         void w(@NonNull String TAG, String message, @Nullable Object... parameter);
@@ -198,8 +198,8 @@ public final class Logcat {
         /**
          * WARN
          *
-         * @param e {@link Throwable}
-         * @param message 提示模板 %s
+         * @param e         {@link Throwable}
+         * @param message   提示模板 %s
          * @param parameter 参数
          */
         void w(@Nullable Throwable e, String message, @Nullable Object... parameter);
@@ -207,9 +207,9 @@ public final class Logcat {
         /**
          * WARN
          *
-         * @param TAG LOG tag
-         * @param e {@link Throwable}
-         * @param message 提示模板 %s
+         * @param TAG       LOG tag
+         * @param e         {@link Throwable}
+         * @param message   提示模板 %s
          * @param parameter 参数
          */
         void w(String TAG, @Nullable Throwable e, String message,
@@ -226,15 +226,15 @@ public final class Logcat {
          * WARN
          *
          * @param TAG LOG tag
-         * @param e {@link Throwable}
+         * @param e   {@link Throwable}
          */
         void w(String TAG, @Nullable Throwable e);
 
         /**
          * ERROR
          *
-         * @param e {@link Throwable}
-         * @param message 错误信息 %s站位
+         * @param e         {@link Throwable}
+         * @param message   错误信息 %s站位
          * @param parameter 错误信息内容
          */
         void e(@NonNull Throwable e, String message, @Nullable Object... parameter);
@@ -242,9 +242,9 @@ public final class Logcat {
         /**
          * ERROR
          *
-         * @param TAG LOG tag
-         * @param e {@link Throwable}
-         * @param message 错误信息 %s站位
+         * @param TAG       LOG tag
+         * @param e         {@link Throwable}
+         * @param message   错误信息 %s站位
          * @param parameter 错误信息内容
          */
         void e(@NonNull String TAG, @NonNull Throwable e, String message, @Nullable Object... parameter);
@@ -252,7 +252,7 @@ public final class Logcat {
         /**
          * ERROR
          *
-         * @param message 错误信息 %s站位
+         * @param message   错误信息 %s站位
          * @param parameter 错误信息内容
          */
         void e(String message, @Nullable Object... parameter);
@@ -260,8 +260,8 @@ public final class Logcat {
         /**
          * ERROR
          *
-         * @param TAG LOG tag
-         * @param message 错误信息 %s站位
+         * @param TAG       LOG tag
+         * @param message   错误信息 %s站位
          * @param parameter 错误信息内容
          */
         void e(@NonNull String TAG, String message, @Nullable Object... parameter);
@@ -277,7 +277,7 @@ public final class Logcat {
          * ERROR
          *
          * @param TAG LOG tag
-         * @param e {@link Throwable}
+         * @param e   {@link Throwable}
          */
         void e(@NonNull String TAG, @NonNull Throwable e);
     }
@@ -429,12 +429,12 @@ public final class Logcat {
 
         @Override
         public void e(@NonNull Throwable e) {
-            com.orhanobut.logger.Logger.t(createTag(null)).e(e, e.getMessage());
+            com.orhanobut.logger.Logger.t(createTag(null)).e(e, e.getMessage() == null ? "" : e.getMessage());
         }
 
         @Override
         public void e(@NonNull String TAG, @NonNull Throwable e) {
-            com.orhanobut.logger.Logger.t(createTag(TAG)).e(e, e.getMessage());
+            com.orhanobut.logger.Logger.t(createTag(TAG)).e(e, e.getMessage() == null ? "" : e.getMessage());
         }
     }
 

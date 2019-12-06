@@ -26,7 +26,6 @@ dependencies {
     testImplementation deps.junit
 
     //android system
-    api deps.appcompat
     api deps.material
 
     api deps.jackson_annotations

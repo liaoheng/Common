@@ -2,6 +2,7 @@ package com.github.liaoheng.common.util;
 
 import com.github.liaoheng.common.BaseTest;
 import com.github.liaoheng.common.TestApplication;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
@@ -9,7 +10,10 @@ import org.robolectric.annotation.Config;
 
 import java.io.IOException;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author liaoheng
@@ -24,10 +28,9 @@ public class SystemRuntimeExceptionTest extends BaseTest {
         try {
             throw new SystemRuntimeException(new SystemException("timeout"));
         } catch (SystemRuntimeException e) {
-            loge(e);
             Throwable cause = e.getCause();
             assertNull("cause not null", cause);
-            assertEquals("msg is error", e.getMessage(), "timeout");
+            assertEquals("msg incorrect", e.getMessage(), "timeout");
         }
     }
 
@@ -36,12 +39,10 @@ public class SystemRuntimeExceptionTest extends BaseTest {
         try {
             throw new SystemRuntimeException(new SystemException("timeout", new IOException("io")));
         } catch (SystemRuntimeException e) {
-            loge(e);
             Throwable cause = e.getCause();
             assertNotNull("cause is null", cause);
-            //loge(cause);
             assertTrue("is not IOException", cause instanceof IOException);
-            assertEquals("msg is error", e.getMessage(), "timeout");
+            assertEquals("msg incorrect", e.getMessage(), "timeout");
         }
     }
 }

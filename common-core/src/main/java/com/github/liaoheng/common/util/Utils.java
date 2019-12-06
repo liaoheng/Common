@@ -23,6 +23,7 @@ import io.reactivex.subscribers.ResourceSubscriber;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 
@@ -201,28 +202,6 @@ public class Utils {
         return TextUtils.isEmpty(s) ? null : Integer.parseInt(s);
     }
 
-    public static List<Long> longArray2List(long[] array) {
-        List<Long> longs = new ArrayList<>();
-        if (array == null || array.length <= 0) {
-            return longs;
-        }
-        for (long a : array) {
-            longs.add(a);
-        }
-        return longs;
-    }
-
-    public static List<Integer> intArray2List(int[] array) {
-        List<Integer> longs = new ArrayList<>();
-        if (array == null || array.length <= 0) {
-            return longs;
-        }
-        for (int a : array) {
-            longs.add(a);
-        }
-        return longs;
-    }
-
     public static void clearSurface(SurfaceTexture texture) {
         Surface surface = new Surface(texture);
         if (surface.isValid()) {
@@ -297,7 +276,7 @@ public class Utils {
             public void onError(Throwable e) {
                 if (listener != null) {
                     listener.onPostExecute();
-                    listener.onError(new SystemException(e));
+                    listener.onError(e);
                 }
             }
 
@@ -337,7 +316,7 @@ public class Utils {
             public void onError(Throwable e) {
                 if (listener != null) {
                     listener.onPostExecute();
-                    listener.onError(new SystemException(e));
+                    listener.onError(e);
                 }
             }
 

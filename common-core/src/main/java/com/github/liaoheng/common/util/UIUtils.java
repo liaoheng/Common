@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,19 +22,17 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.github.liaoheng.common.R;
-
 import androidx.annotation.ColorInt;
 import androidx.annotation.ColorRes;
 import androidx.annotation.IdRes;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
-import androidx.annotation.StyleRes;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+
+import com.github.liaoheng.common.R;
 
 /**
  * 界面工具
@@ -76,23 +73,6 @@ public class UIUtils {
         mToast.show();
     }
 
-    /**
-     * 吐丝提示与log
-     */
-    public static void showLogToast(String TAG, @NonNull Context context, String hint,
-            int duration) {
-        showToast(context, hint, duration);
-        L.alog().d(TAG, hint);
-    }
-
-    /**
-     * 吐丝提示与log
-     */
-    public static void showLogToast(String TAG, @NonNull Context context, String hint) {
-        showToast(context, hint);
-        L.alog().d(TAG, hint);
-    }
-
     public static void cancelToast() {
         if (mToast != null) {
             mToast.cancel();
@@ -111,18 +91,18 @@ public class UIUtils {
     /**
      * 创建进度条
      */
-    public static ProgressDialog createProgressDialog(Context context, String message) {
-        ProgressDialog dialog = new ProgressDialog(context);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setMessage(message);
-        return dialog;
+    public static ProgressDialog createProgressDialog(Context context, @StringRes int message) {
+        return createProgressDialog(context, context.getString(message));
     }
 
     /**
      * 创建进度条
      */
-    public static ProgressDialog createProgressDialog(Context context, @StringRes int message) {
-        return createProgressDialog(context, context.getString(message));
+    public static ProgressDialog createProgressDialog(Context context, String message) {
+        ProgressDialog dialog = new ProgressDialog(context);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setMessage(message);
+        return dialog;
     }
 
     /**
@@ -136,18 +116,18 @@ public class UIUtils {
      * 显示进度条
      */
     public static ProgressDialog showProgressDialog(@NonNull Context context,
-            @NonNull String message) {
-        ProgressDialog progressDialog = createProgressDialog(context, message);
-        progressDialog.show();
-        return progressDialog;
+            @StringRes int message) {
+        return showProgressDialog(context, context.getString(message));
     }
 
     /**
      * 显示进度条
      */
     public static ProgressDialog showProgressDialog(@NonNull Context context,
-            @StringRes int message) {
-        return createProgressDialog(context, context.getString(message));
+            @NonNull String message) {
+        ProgressDialog progressDialog = createProgressDialog(context, message);
+        progressDialog.show();
+        return progressDialog;
     }
 
     /**
@@ -169,27 +149,10 @@ public class UIUtils {
     }
 
     /**
-     * 创建对像框
-     */
-    public static Dialog createDialog(Context context, @StyleRes int style) {
-        AppCompatDialog dialog = new AppCompatDialog(context, style);
-        Window window = dialog.getWindow();
-        window.setGravity(Gravity.CENTER);
-        return dialog;
-    }
-
-    /**
-     * 创建对像框
-     */
-    public static Dialog createDialog(Context context) {
-        return createDialog(context, 0);
-    }
-
-    /**
      * 是否提示框
      */
     public static AlertDialog createYNAlertDialog(Context context, String message,
-            final Callback4<DialogInterface> call) {
+            final Callback5 call) {
         return createAlertDialog(context, message, call);
     }
 
@@ -197,7 +160,7 @@ public class UIUtils {
      * 是否提示框
      */
     public static AlertDialog showYNAlertDialog(Context context, String message,
-            final Callback4<DialogInterface> call) {
+            final Callback5 call) {
         AlertDialog dialog = createYNAlertDialog(context, message, call);
         dialog.show();
         return dialog;
@@ -207,13 +170,16 @@ public class UIUtils {
      * 信息提示框
      */
     public static AlertDialog createInfoAlertDialog(Context context, String message,
-            final Callback4<DialogInterface> call) {
+            final Callback5 call) {
         return createAlertDialog(context, message, context.getString(R.string.lcm_ok),
-                null, new Callback4.EmptyCallback<DialogInterface>() {
+                null, new Callback5() {
                     @Override
-                    public void onYes(DialogInterface result) {
-                        call.onYes(result);
-                        result.dismiss();
+                    public void onAllow() {
+                        call.onAllow();
+                    }
+
+                    @Override
+                    public void onDeny() {
                     }
                 });
     }
@@ -222,7 +188,7 @@ public class UIUtils {
      * 信息提示框
      */
     public static AlertDialog showInfoAlertDialog(Context context, String message,
-            final Callback4<DialogInterface> call) {
+            final Callback5 call) {
         AlertDialog alb = createInfoAlertDialog(context, message, call);
         alb.show();
         return alb;
@@ -232,7 +198,7 @@ public class UIUtils {
      * 对话框
      */
     public static AlertDialog createAlertDialog(Context context, String message,
-            final Callback4<DialogInterface> call) {
+            final Callback5 call) {
         return createAlertDialog(context, message, context.getString(R.string.lcm_ok),
                 context.getString(R.string.lcm_no), call);
     }
@@ -241,7 +207,7 @@ public class UIUtils {
      * 对话框
      */
     public static AlertDialog showAlertDialog(Context context, String message,
-            final Callback4<DialogInterface> call) {
+            final Callback5 call) {
         AlertDialog alb = createAlertDialog(context, message, call);
         alb.show();
         return alb;
@@ -253,25 +219,13 @@ public class UIUtils {
     public static AlertDialog createAlertDialog(Context context, String message,
             String positiveButtonText,
             String negativeButtonText,
-            final Callback4<DialogInterface> call) {
+            Callback5 call) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context).setMessage(message);
         if (!TextUtils.isEmpty(positiveButtonText)) {
-            builder.setPositiveButton(positiveButtonText, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    call.onYes(dialog);
-                    call.onFinish(dialog);
-                }
-            });
+            builder.setPositiveButton(positiveButtonText, (dialog, which) -> call.onAllow());
         }
         if (!TextUtils.isEmpty(negativeButtonText)) {
-            builder.setNegativeButton(negativeButtonText, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    call.onNo(dialog);
-                    call.onFinish(dialog);
-                }
-            });
+            builder.setNegativeButton(negativeButtonText, (dialog, which) -> call.onDeny());
         }
         return builder.create();
     }

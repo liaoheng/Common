@@ -16,14 +16,17 @@ import java.util.Map;
  */
 @SuppressWarnings({ "SameParameterValue", "WeakerAccess" })
 public class PreferencesUtils {
+    @Deprecated
     private static Context mContext;
     private SharedPreferences mSharedPreferences;
     private SharedPreferences.Editor mSharedPreferencesEditor;
 
+    @Deprecated
     public static void init(Context context) {
         mContext = context.getApplicationContext();
     }
 
+    @Deprecated
     public static PreferencesUtils with() {
         return with(mContext);
     }
@@ -35,6 +38,7 @@ public class PreferencesUtils {
         return new PreferencesUtils(PreferenceManager.getDefaultSharedPreferences(context));
     }
 
+    @Deprecated
     public static PreferencesUtils from(String name) {
         return from(mContext, name);
     }
@@ -43,6 +47,7 @@ public class PreferencesUtils {
         return from(context, name, Context.MODE_PRIVATE);
     }
 
+    @Deprecated
     public static PreferencesUtils from(String name, int mode) {
         return from(mContext, name, mode);
     }
