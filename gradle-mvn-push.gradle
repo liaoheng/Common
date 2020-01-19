@@ -1,2 +1,1 @@
-//apply from: 'https://raw.github.com/liaoheng/gradle-mvn-push/master/gradle-mvn-push-android.gradle'
-apply from: rootProject.file('gradle-mvn-push-android.gradle')
+apply from: 'https://raw.githubusercontent.com/liaoheng/gradle-mvn-push/master/gradle-mvn-push-android.gradle'

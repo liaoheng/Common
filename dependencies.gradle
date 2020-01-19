@@ -1,10 +1,10 @@
-//AM 11:35 2019/10/9
+//2020-01-19 11:05
 ext {
     minSdkVersion = 21
     targetSdkVersion = 29
     compileSdkVersion = 29
     buildToolsVersion = '29.0.2'
-    retrofitVersion = '2.6.1'
+    retrofitVersion = '2.7.1'
     jacksonVersion = '2.9.9'
     glideVersion = '4.10.0'
     androidxVersion = '1.1.0'
@@ -17,14 +17,14 @@ ext.deps = [
         annotations               : "androidx.annotation:annotation:$ext.androidxVersion",
         appcompat                 : "androidx.appcompat:appcompat:$ext.androidxVersion",
         fragment                  : "androidx.fragment:fragment:$ext.androidxVersion",
-        coordinatorlayout         : "androidx.coordinatorlayout:coordinatorlayout:1.1.0-beta01",
+        coordinatorlayout         : "androidx.coordinatorlayout:coordinatorlayout:$ext.androidxVersion",
         viewpager                 : "androidx.viewpager:viewpager:1.0.0",
-        recyclerview              : "androidx.recyclerview:recyclerview:1.1.0-beta04",
-        swiperefreshlayout        : "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0-alpha02",
+        recyclerview              : "androidx.recyclerview:recyclerview:$ext.androidxVersion",
+        swiperefreshlayout        : "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0-alpha03",
         cardview                  : "androidx.cardview:cardview:1.0.0",
-        browser                   : "androidx.browser:browser:1.2.0-alpha08",
+        browser                   : "androidx.browser:browser:1.2.0",
         preference                : "androidx.preference:preference:$ext.androidxVersion",
-        material                  : "com.google.android.material:material:1.1.0-beta01",
+        material                  : "com.google.android.material:material:1.1.0-rc02",
         //https://github.com/google/guava
         guava                : "com.google.guava:guava:28.1-android",
         //https://github.com/FasterXML/jackson-annotations
@@ -45,7 +45,7 @@ ext.deps = [
         glide_compiler            : "com.github.bumptech.glide:compiler:$ext.glideVersion",
         glide_okhttp3_integration : "com.github.bumptech.glide:okhttp3-integration:$ext.glideVersion",
         //https://github.com/square/okhttp
-        okhttp                    : 'com.squareup.okhttp3:okhttp:3.14.3',
+        okhttp                    : 'com.squareup.okhttp3:okhttp:3.14.4',
         //https://github.com/square/retrofit
         retrofit                  : "com.squareup.retrofit2:retrofit:$ext.retrofitVersion",
         retrofit_converter_jackson: "com.squareup.retrofit2:converter-jackson:$ext.retrofitVersion",

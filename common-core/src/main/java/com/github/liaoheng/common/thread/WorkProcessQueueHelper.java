@@ -19,6 +19,10 @@ public class WorkProcessQueueHelper<T> implements IWorkProcessThread {
         return mWorkProcessThread;
     }
 
+    public BlockingQueue<T> getQueue() {
+        return mDataQueue;
+    }
+
     @Override
     public void start() {
         if (mWorkProcessThread == null) {
@@ -38,6 +42,11 @@ public class WorkProcessQueueHelper<T> implements IWorkProcessThread {
     @Override
     public boolean isRunning() {
         return mWorkProcessThread != null && mWorkProcessThread.isRunning();
+    }
+
+    @Override
+    public Handler getRunnable() {
+        return mWorkProcessThread == null ? null : mWorkProcessThread.getRunnable();
     }
 
     public void putQueue(T data) {

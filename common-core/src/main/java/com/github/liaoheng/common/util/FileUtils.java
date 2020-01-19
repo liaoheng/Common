@@ -4,6 +4,7 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import com.github.liaoheng.common.Common;
+import com.google.common.base.Strings;
 import com.google.common.io.FileWriteMode;
 import com.google.common.io.Files;
 
@@ -429,7 +430,8 @@ public class FileUtils {
     }
 
     public static String getName(String fullName) {
-        return Files.getNameWithoutExtension(fullName);
+        String extension = getExtension(fullName);
+        return Files.getNameWithoutExtension(fullName) + (Strings.isNullOrEmpty(extension) ? "" : "." + extension);
     }
 
     public static void copyInputStreamToFile(InputStream source, final File destination) throws IOException {

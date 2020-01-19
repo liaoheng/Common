@@ -26,7 +26,6 @@ dependencies {
     testImplementation deps.junit
 
     implementation deps.appcompat
-    implementation deps.material
 
     compileOnly deps.rxlifecycle3
     compileOnly deps.rxlifecycle_android3
