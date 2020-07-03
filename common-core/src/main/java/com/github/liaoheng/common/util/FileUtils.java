@@ -1,7 +1,18 @@
 package com.github.liaoheng.common.util;
 
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
+import android.os.ParcelFileDescriptor;
+import android.provider.MediaStore;
 import android.text.TextUtils;
+
+import androidx.annotation.RequiresApi;
 
 import com.github.liaoheng.common.Common;
 import com.google.common.base.Strings;
@@ -9,6 +20,7 @@ import com.google.common.io.FileWriteMode;
 import com.google.common.io.Files;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -436,5 +448,83 @@ public class FileUtils {
 
     public static void copyInputStreamToFile(InputStream source, final File destination) throws IOException {
         Files.asByteSink(destination, FileWriteMode.APPEND).writeFrom(source);
+    }
+
+    //https://juejin.im/post/5d0b1739e51d4510a73280cc
+    public static Uri saveFileToPictureCompat(Context context, String url, File from) throws IOException {
+        String name = FileUtils.getName(url);
+        String[] split = name.split("=");
+        if (split.length > 1) {
+            name = split[1];
+        }
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            return saveFileToPicture(context, name, from);
+        } else {
+            boolean isExternalStorageLegacy = true;
+            try {
+                isExternalStorageLegacy = Environment.isExternalStorageLegacy();
+            } catch (NoSuchMethodError ignored) {
+            }
+            if (isExternalStorageLegacy) {
+                return saveFileToPicture(context, name, from);
+            }
+            return saveFileToPictureQ(context, name, from);
+        }
+    }
+
+    @SuppressWarnings("UnstableApiUsage")
+    public static Uri saveFileToPicture(Context context, String name, File from) throws IOException {
+        File p = new File(Environment.DIRECTORY_PICTURES, Common.getProjectName());
+        File file = new File(FileUtils.getExternalStoragePath(), p.getAbsolutePath());
+        File outFile = FileUtils.createFile(file, name);
+        Files.copy(from, outFile);
+        Uri uri = Uri.fromFile(outFile);
+        context.sendBroadcast(
+                new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri));
+        return uri;
+    }
+
+    //https://developer.android.com/training/data-storage/files/external-scoped
+    @SuppressWarnings("UnstableApiUsage")
+    @RequiresApi(api = Build.VERSION_CODES.Q)
+    public static Uri saveFileToPictureQ(Context context, String name, File from) throws IOException {
+        Uri uri;
+        ContentValues contentValues = null;
+        try (Cursor query = context.getContentResolver().query(MediaStore.Images.Media.getContentUri(
+                MediaStore.VOLUME_EXTERNAL_PRIMARY), null,
+                MediaStore.Images.Media.DISPLAY_NAME + "='" + name + "' AND "
+                        + MediaStore.Images.Media.OWNER_PACKAGE_NAME + "='"
+                        + context.getPackageName() + "'",
+                null, null)) {
+            if (query != null && query.moveToFirst()) {
+                long id = query.getLong(query.getColumnIndex(MediaStore.Images.Media._ID));
+                uri = ContentUris.withAppendedId(
+                        MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY), id);
+            } else {
+                contentValues = new ContentValues();
+                contentValues.put(MediaStore.Images.Media.DISPLAY_NAME, name);
+                contentValues.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+                contentValues.put(MediaStore.Images.Media.IS_PENDING, 1);
+                contentValues.put(MediaStore.Images.Media.RELATIVE_PATH,
+                        Environment.DIRECTORY_PICTURES + File.separator + Common.getProjectName());
+                uri = context.getContentResolver().insert(MediaStore.Images.Media.getContentUri(
+                        MediaStore.VOLUME_EXTERNAL_PRIMARY), contentValues);
+            }
+        }
+
+        if (uri == null) {
+            throw new IOException("getContentResolver uri is null");
+        }
+        ParcelFileDescriptor fd = context.getContentResolver().openFileDescriptor(uri, "w");
+        if (fd == null) {
+            throw new IOException("openFileDescriptor is null");
+        }
+        Files.copy(from, new FileOutputStream(fd.getFileDescriptor()));
+        if (contentValues != null) {
+            contentValues.clear();
+            contentValues.put(MediaStore.Images.Media.IS_PENDING, 0);
+            context.getContentResolver().update(uri, contentValues, null, null);
+        }
+        return uri;
     }
 }

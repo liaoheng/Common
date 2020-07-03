@@ -1,10 +1,10 @@
 package com.github.liaoheng.common.network;
 
 import android.content.Context;
+
 import com.bumptech.glide.GlideBuilder;
 import com.bumptech.glide.load.engine.cache.DiskLruCacheFactory;
 import com.github.liaoheng.common.util.FileUtils;
-import com.github.liaoheng.common.util.SystemException;
 
 import java.io.File;
 import java.io.IOException;

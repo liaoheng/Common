@@ -2,6 +2,7 @@ package com.github.liaoheng.common.util;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -28,9 +29,7 @@ import androidx.annotation.IdRes;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
-import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
 
 import com.github.liaoheng.common.R;
 
@@ -317,48 +316,6 @@ public class UIUtils {
             intent.putExtras(bundle);
         }
         context.startActivity(intent);
-    }
-
-    public static void startActivityForResult(Activity activity, Class<?> clazz, int resultCode) {
-        startActionForResult(activity, clazz, null, resultCode);
-    }
-
-    public static void startActivityForResult(Activity activity, Class<?> clazz, Bundle bundle,
-            int resultCode) {
-        startActionForResult(activity, clazz, bundle, resultCode);
-    }
-
-    public static void startActivityForResult(Fragment fragment, Class<?> clazz, int resultCode) {
-        startActionForResult(fragment, clazz, null, resultCode);
-    }
-
-    public static void startActivityForResult(Fragment fragment, Class<?> clazz, Bundle bundle,
-            int resultCode) {
-        startActionForResult(fragment, clazz, bundle, resultCode);
-    }
-
-    public static void startActionForResult(Object o, Class<?> clazz, Bundle bundle,
-            int requestCode) {
-        Intent intent;
-        if (o instanceof Activity) {
-            intent = new Intent((Activity) o, clazz);
-            if (bundle != null) {
-                intent.putExtras(bundle);
-            }
-            ((Activity) o).startActivityForResult(intent, requestCode);
-        } else if (o instanceof Fragment) {
-            intent = new Intent(((Fragment) o).getActivity(), clazz);
-            if (bundle != null) {
-                intent.putExtras(bundle);
-            }
-            ((Fragment) o).startActivityForResult(intent, requestCode);
-        } else if (o instanceof android.app.Fragment) {
-            intent = new Intent(((android.app.Fragment) o).getActivity(), clazz);
-            if (bundle != null) {
-                intent.putExtras(bundle);
-            }
-            ((android.app.Fragment) o).startActivityForResult(intent, requestCode);
-        }
     }
 
     public static boolean isVisible(View view) {

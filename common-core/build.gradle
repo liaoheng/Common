@@ -2,10 +2,9 @@ apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        minSdkVersion rootProject.ext.minSdkVersion
+        minSdkVersion 19
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode VERSION_CODE as int
         versionName VERSION_NAME
@@ -24,10 +23,10 @@ android {
 dependencies {
     testImplementation deps.robolectric
     testImplementation deps.junit
-    testImplementation 'joda-time:joda-time:2.10.3'
+    testImplementation 'joda-time:joda-time:2.10.6'
 
     implementation deps.annotations
-    compileOnly deps.appcompat
+    implementation deps.core
 
     implementation deps.guava
     //https://github.com/orhanobut/logger

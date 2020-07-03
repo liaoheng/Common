@@ -12,33 +12,13 @@ public class MD5Utils {
     private static final int STREAM_BUFFER_LENGTH = 1024;
 
     /**
-     * 得到32位的16进制字符串
-     *
-     * @param byteArray
-     * @return
-     */
-    public static String byteToHex32(byte[] byteArray) {
-        return HexUtils.with().encodeHexString(byteArray);
-    }
-
-    /**
-     * 得到16位的16进制字符串
-     *
-     * @param byteArray
-     * @return
-     */
-    public static String byteToHex16(byte[] byteArray) {
-        return byteToHex32(byteArray).substring(8, 24);
-    }
-
-    /**
      * 得到MD5加密16进制的字符串
      *
      * @param txt
      * @return 32位16进制字符串
      */
     public static String md5Hex(String txt) {
-        return byteToHex32(md5(txt));
+       return HexUtils.bytesToHex(md5(txt));
     }
 
     public static MessageDigest getDigest(final String algorithm) throws NoSuchAlgorithmException {

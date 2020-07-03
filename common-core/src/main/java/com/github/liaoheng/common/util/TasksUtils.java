@@ -11,12 +11,12 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.github.liaoheng.common.Common;
 
 import org.joda.time.DateTime;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 /**
  * 任务工具
@@ -37,13 +37,6 @@ public class TasksUtils {
     public static TasksUtils get(Context context) {
         if (mTasksUtils == null) {
             mTasksUtils = new TasksUtils(PreferencesUtils.from(context, TASK_FILE_NAME));
-        }
-        return mTasksUtils;
-    }
-
-    public static TasksUtils get() {
-        if (mTasksUtils == null) {
-            mTasksUtils = new TasksUtils(PreferencesUtils.from(TASK_FILE_NAME));
         }
         return mTasksUtils;
     }
@@ -73,7 +66,7 @@ public class TasksUtils {
      * 记次任务，从0开始计数
      *
      * @param count 需要执行多少次
-     * @param tag 任务标记
+     * @param tag   任务标记
      * @return 剩余多少次，为0时任务完成
      */
     public int taskCount(int count, String tag) {
@@ -123,22 +116,32 @@ public class TasksUtils {
     //*************************Provider*******************************//
 
     public static boolean isToDaysDoProvider(Context context, int day, String tag) {
-        Cursor cursor = context.getContentResolver()
+        long date;
+        try (Cursor cursor = context.getContentResolver()
                 .query(TasksContract.TaskEntry.CONTENT_URI, null, TasksContract.TaskEntry.COLUMN_TAG + "=?",
-                        new String[] { tag }, null);
-        long date = -1;
-        if (cursor != null && cursor.moveToNext()) {
-            date = cursor.getLong(2);
-        } else {
-            ContentValues contentValues = new ContentValues();
-            contentValues.put(TasksContract.TaskEntry.COLUMN_TAG, tag);
-            contentValues.put(TasksContract.TaskEntry.COLUMN_DATE, date);
-            context.getContentResolver().insert(TasksContract.TaskEntry.CONTENT_URI, contentValues);
-        }
-        if (cursor != null) {
-            cursor.close();
+                        new String[] { tag }, null)) {
+            if (cursor != null && cursor.moveToNext()) {
+                date = cursor.getLong(2);
+            } else {
+                return true;
+            }
         }
         return DateTimeUtils.isToDaysDo(date, day);
+    }
+
+    public static void markDoneProvider(Context context, String tag) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(TasksContract.TaskEntry.COLUMN_TAG, tag);
+        contentValues.put(TasksContract.TaskEntry.COLUMN_DATE, DateTime.now().getMillis());
+        context.getContentResolver()
+                .update(TasksContract.TaskEntry.CONTENT_URI, contentValues, TasksContract.TaskEntry.COLUMN_TAG + "=?",
+                        new String[] { tag });
+    }
+
+    public static void deleteDoneProvider(Context context, String tag) {
+        context.getContentResolver()
+                .delete(TasksContract.TaskEntry.CONTENT_URI, TasksContract.TaskEntry.COLUMN_TAG + "=?",
+                        new String[] { tag });
     }
 
     public static final String DB_CREATE = "create table " + TasksContract.TaskEntry.TABLE_NAME +

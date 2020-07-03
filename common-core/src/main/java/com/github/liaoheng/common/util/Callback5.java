@@ -8,4 +8,16 @@ public interface Callback5 {
     void onAllow();
 
     void onDeny();
+
+    class EmptyCallback<T> implements Callback5 {
+        @Override
+        public void onAllow() {
+
+        }
+
+        @Override
+        public void onDeny() {
+
+        }
+    }
 }

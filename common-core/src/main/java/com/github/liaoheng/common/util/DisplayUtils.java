@@ -13,6 +13,8 @@ import android.util.TypedValue;
 import android.view.View;
 import android.view.WindowManager;
 
+import androidx.core.content.ContextCompat;
+
 import java.lang.reflect.Method;
 
 /**
@@ -27,12 +29,13 @@ public class DisplayUtils {
      * @see <a href="http://stackoverflow.com/questions/32226750/android-immersive-sticky-mode-creates-margins-on-left-and-right-of-screen">stackoverflow</a>
      */
     public static DisplayMetrics getScreenInfo(Context context, boolean real) {
-        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        WindowManager wm = ContextCompat.getSystemService(context, WindowManager.class);
         DisplayMetrics outMetrics = new DisplayMetrics();
+        if (wm == null) {
+            return outMetrics;
+        }
         if (real) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                wm.getDefaultDisplay().getRealMetrics(outMetrics);
-            }
+            wm.getDefaultDisplay().getRealMetrics(outMetrics);
         } else {
             wm.getDefaultDisplay().getMetrics(outMetrics);
         }
@@ -80,6 +83,9 @@ public class DisplayUtils {
      * @see <a href="https://stackoverflow.com/questions/20264268/how-do-i-get-the-height-and-width-of-the-android-navigation-bar-programmatically">stackoverflow</a>
      */
     public static int getNavigationBarHeight(Context context) {
+        if (!hasNavigationBar(context)) {
+            return 0;
+        }
         Resources resources = context.getResources();
         int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
         if (resourceId > 0) {

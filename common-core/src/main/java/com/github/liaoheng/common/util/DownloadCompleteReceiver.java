@@ -1,4 +1,4 @@
-package com.github.liaoheng.common.receiver;
+package com.github.liaoheng.common.util;
 
 import android.app.DownloadManager;
 import android.content.ActivityNotFoundException;
@@ -10,8 +10,6 @@ import android.net.Uri;
 import android.text.TextUtils;
 
 import com.github.liaoheng.common.R;
-import com.github.liaoheng.common.util.L;
-import com.github.liaoheng.common.util.UIUtils;
 
 /**
  * System Download Management

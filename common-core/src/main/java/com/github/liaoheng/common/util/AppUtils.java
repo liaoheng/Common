@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.app.WallpaperManager;
 import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
 import android.content.ComponentName;
@@ -20,10 +21,15 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.annotation.RequiresPermission;
 
 import com.github.liaoheng.common.R;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -325,5 +331,34 @@ public class AppUtils {
         } catch (Exception ignore) {
             UIUtils.showToast(context, R.string.lcm_unable_open_url);
         }
+    }
+
+    @SuppressLint("MissingPermission")
+    public static void setWallpaper(Context context, File file, int which) throws IOException {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            try (InputStream fileInputStream = new FileInputStream(file)) {
+                WallpaperManager.getInstance(context)
+                        .setStream(fileInputStream, null, true, which);
+            }
+        } else {
+            setWallpaper(context, file);
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    public static void setWallpaper(Context context, File file) throws IOException {
+        try (InputStream fileInputStream = new FileInputStream(file)) {
+            WallpaperManager.getInstance(context).setStream(fileInputStream);
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public static void setLockScreenWallpaper(Context context, File file) throws IOException {
+        setWallpaper(context, file, WallpaperManager.FLAG_LOCK);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public static void setHomeScreenWallpaper(Context context, File file) throws IOException {
+        setWallpaper(context, file, WallpaperManager.FLAG_SYSTEM);
     }
 }
