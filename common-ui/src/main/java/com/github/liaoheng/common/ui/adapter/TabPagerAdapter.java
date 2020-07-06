@@ -2,15 +2,14 @@ package com.github.liaoheng.common.ui.adapter;
 
 import android.content.Context;
 
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+
 import com.github.liaoheng.common.adapter.base.BaseFragmentStatePagerAdapter;
-import com.github.liaoheng.common.ui.core.TabPagerHelper;
 import com.github.liaoheng.common.ui.model.PagerTab;
 import com.github.liaoheng.common.util.L;
 
 import java.util.List;
-
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
 /**
  * @author liaoheng
@@ -18,10 +17,14 @@ import androidx.fragment.app.FragmentManager;
  */
 public class TabPagerAdapter extends BaseFragmentStatePagerAdapter<PagerTab> {
     private static final String TAG = TabPagerAdapter.class.getSimpleName();
-    private TabPagerHelper.TabPagerOperation mTabPagerOperation;
+    private TabPagerOperation mTabPagerOperation;
+
+    public interface TabPagerOperation {
+        Fragment getItem(PagerTab tab, int position);
+    }
 
     public TabPagerAdapter(FragmentManager fm, Context context, List<PagerTab> list,
-                           TabPagerHelper.TabPagerOperation mTabPagerOperation) {
+            TabPagerOperation mTabPagerOperation) {
         super(fm, context, list);
         this.mTabPagerOperation = mTabPagerOperation;
     }
@@ -54,9 +57,9 @@ public class TabPagerAdapter extends BaseFragmentStatePagerAdapter<PagerTab> {
             return mTabPagerOperation.getItem(item, position);
         } else {
             Object object = item.getObject();
-            if (object instanceof Fragment){
+            if (object instanceof Fragment) {
                 return (Fragment) object;
-            }else{
+            } else {
                 L.Log.w(TAG, "TabPagerOperation is null");
                 return new Fragment();
             }
