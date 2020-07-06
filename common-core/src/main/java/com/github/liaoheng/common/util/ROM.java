@@ -3,24 +3,23 @@ package com.github.liaoheng.common.util;
 import android.os.Build;
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Field;
 
 /**
  * @author liaoheng
  * @version 2018-05-30 11:40
  * @see <a href="https://www.jianshu.com/p/ba9347a5a05a">jianshu</a>
+ * @see <a href="https://stackoverflow.com/questions/60122037/how-can-i-detect-samsung-one-ui">oneUi</a>
  */
 public class ROM {
     private static final String TAG = ROM.class.getSimpleName();
 
-    public static final String ROM_MIUI = "MIUI";
-    public static final String ROM_EMUI = "EMUI";
     public static final String ROM_FLYME = "FLYME";
-    public static final String ROM_OPPO = "OPPO";
-    public static final String ROM_VIVO = "VIVO";
-    public static final String ROM_QIKU = "QIKU";
     private static final String KEY_VERSION_MIUI = "ro.miui.ui.version.name";
     private static final String KEY_VERSION_EMUI = "ro.build.version.emui";
     private static final String KEY_VERSION_OPPO = "ro.build.version.opporom";
@@ -41,10 +40,10 @@ public class ROM {
                 ROM = createVIVO(name, version);
             } else {
                 version = Build.DISPLAY;
-                if (ROM_QIKU.equalsIgnoreCase(name)) {
-                    ROM = createQIKU(name, version);
-                } else if (version.toUpperCase().contains(ROM_FLYME)) {
+                if (version.toUpperCase().contains(ROM_FLYME)) {
                     ROM = createFLYME(name, version);
+                } else if (isOneUiSystem()) {
+                    ROM = createOneUI(name, getOneUiVersion());
                 } else {
                     ROM = createOTHER(name, version);
                 }
@@ -72,8 +71,8 @@ public class ROM {
     private static final int EMUI = 2;
     private static final int OPPO = 3;
     private static final int VIVO = 4;
-    private static final int QIKU = 5;
-    private static final int FLYME = 6;
+    private static final int FLYME = 5;
+    private static final int ONEUI = 6;
     private static final int OTHER = 0;
     private int rom;
     private String name;
@@ -97,6 +96,7 @@ public class ROM {
         return version;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "ROM{" +
@@ -122,12 +122,12 @@ public class ROM {
         return new ROM(VIVO, name, version);
     }
 
-    public static ROM createQIKU(String name, String version) {
-        return new ROM(QIKU, name, version);
-    }
-
     public static ROM createFLYME(String name, String version) {
         return new ROM(FLYME, name, version);
+    }
+
+    public static ROM createOneUI(String name, String version) {
+        return new ROM(ONEUI, name, version);
     }
 
     public static ROM createOTHER(String name, String version) {
@@ -152,6 +152,35 @@ public class ROM {
 
     public boolean isFlyme() { return check(FLYME); }
 
-    public boolean is360() { return check(QIKU) || check("360"); }
+    public boolean isOneUi() {
+        return check(ONEUI);
+    }
 
+    private static boolean isOneUiSystem() {
+        try {
+            return getSemPlatform() > 90000;
+        } catch (Throwable ignored) {
+        }
+        return false;
+    }
+
+    private static int getSemPlatform() throws Throwable {
+        Field semPlatformIntField = Build.VERSION.class.getDeclaredField("SEM_PLATFORM_INT");
+        return semPlatformIntField.getInt(null);
+    }
+
+    //https://stackoverflow.com/questions/60122037/how-can-i-detect-samsung-one-ui
+    private static String getOneUiVersion() {
+        try {
+            int fieldInt = getSemPlatform();
+            int version = fieldInt - 90000;
+            if (version < 0) {
+                // not one ui (could be previous Samsung OS)
+                return "";
+            }
+            return (version / 10000) + "." + ((version % 10000) / 100);
+        } catch (Throwable ignored) {
+        }
+        return "";
+    }
 }
