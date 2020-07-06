@@ -25,10 +25,10 @@ dependencies {
     testImplementation deps.junit
 
     implementation deps.annotations
+    implementation deps.okhttp
+    implementation deps.okhttp_logging
 
     compileOnly deps.glide
-    compileOnly deps.okhttp
-    compileOnly deps.okhttp_logging
     compileOnly deps.rxandroid2
     compileOnly deps.rxjava2
 

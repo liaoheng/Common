@@ -35,7 +35,6 @@ dependencies {
   implementation deps.browser
   implementation deps.material
 
-  implementation deps.okhttp
   implementation deps.glide
   annotationProcessor deps.glide_compiler
   implementation deps.glide_okhttp3_integration
