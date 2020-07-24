@@ -25,7 +25,18 @@ public class TtsHelper {
     private TextToSpeech mTTS;
     private WorkProcessQueueHelper<String> mQueueHelper;
 
-    public void init(Context context, String engine3rd, Callback4<Integer> initCallback, Callback<String> callback) {
+    public TtsHelper(Context context, Callback4<Integer> initCallback) {
+        this(context, initCallback, null);
+    }
+
+    public TtsHelper(Context context, Callback4<Integer> initCallback, Callback<String> callback) {
+        this(context, "", initCallback, callback);
+    }
+
+    /**
+     * @param engine3rd packageName
+     */
+    public TtsHelper(Context context, String engine3rd, Callback4<Integer> initCallback, Callback<String> callback) {
         init(context, engine3rd, initCallback);
         mQueueHelper = new WorkProcessQueueHelper<>(
                 new WorkProcessThread(new IWorkProcessThread.BaseHandler(L.alog(), TAG) {
@@ -37,9 +48,9 @@ public class TtsHelper {
                         }
                         if (callback == null) {
                             speak(msg);
-                            return;
+                        } else {
+                            callback.onSuccess(msg);
                         }
-                        callback.onSuccess(msg);
                     }
                 }));
         mQueueHelper.start();
@@ -49,12 +60,16 @@ public class TtsHelper {
         mQueueHelper.putQueue(msg);
     }
 
+    public TextToSpeech getTextToSpeech() {
+        return mTTS;
+    }
+
     /**
      * @param engine3rd packageName
      */
-    public void init(Context context, String engine3rd, Callback4<Integer> callback) {
+    private void init(Context context, String engine3rd, Callback4<Integer> callback) {
         String ttsPackage = null;
-        if (getEngineInfo(context, engine3rd) != null) {
+        if (!TextUtils.isEmpty(engine3rd) && getEngineInfo(context, engine3rd) != null) {
             ttsPackage = engine3rd;
         }
         mTTS = new TextToSpeech(context, status -> {
@@ -94,7 +109,7 @@ public class TtsHelper {
      * Returns the engine info for a given engine name. Note that engines are
      * identified by their package name.
      */
-    public TextToSpeech.EngineInfo getEngineInfo(Context context, String packageName) {
+    private TextToSpeech.EngineInfo getEngineInfo(Context context, String packageName) {
         PackageManager pm = context.getPackageManager();
         Intent intent = new Intent(TextToSpeech.Engine.INTENT_ACTION_TTS_SERVICE);
         intent.setPackage(packageName);

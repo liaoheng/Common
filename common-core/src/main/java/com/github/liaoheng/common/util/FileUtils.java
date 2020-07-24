@@ -39,22 +39,14 @@ public class FileUtils {
     public static final String ERROR_SDCARD_NOT_AVAILABLE = "error_sdcard_not_available";
     public static final String ERROR_SDCARD_SPACE_INSUFFICIENT = "error_sdcard_space_insufficient";
 
-    /**
-     * 得到SD卡的路径
-     */
-    public static File getExternalStoragePath() throws IOException {
-        isExternalStorageEnable();
-        return SDCardUtils.getExternalStorageDirectory();// 获取根目录
-    }
-
     public static void isExternalStorageEnable() throws IOException {
         if (!SDCardUtils.isExternalStorageEnable()) {
             throw new IOException(ERROR_SDCARD_NOT_AVAILABLE);
         }
     }
 
-    public static void isExternalStorageLessMB(long mb) throws IOException {
-        if (SDCardUtils.getSDAvailableSize() < mb * 1024) {
+    public static void isExternalStorageLessMB(File path, long mb) throws IOException {
+        if (SDCardUtils.getPathAvailableSize(path) < mb * 1024) {
             throw new IOException(ERROR_SDCARD_SPACE_INSUFFICIENT);
         }
     }
@@ -168,7 +160,6 @@ public class FileUtils {
     /**
      * 获取外部储存项目空间目录的路径，sd/Android/data/{package}/
      */
-    @SuppressWarnings("ConstantConditions")
     public static File getProjectSpacePath(Context context) throws IOException {
         File externalCacheDir = context.getExternalCacheDir();
         if (externalCacheDir == null) {
@@ -207,7 +198,7 @@ public class FileUtils {
      */
     public static File getProjectSpaceCacheDirectory(Context context, String cacheDir) throws IOException {
         isExternalStorageEnable();
-        isExternalStorageLessMB(100);
+        isExternalStorageLessMB(getProjectSpacePath(context), 100);
         return createHideMediaDirectory(createProjectSpaceDir(context, cacheDir));
     }
 
@@ -216,13 +207,15 @@ public class FileUtils {
     /**
      * 获取外部储存项目目录的路径，sd/{project_name}/
      */
-    public static File getProjectPath(String projectName) throws IOException {
-        return new File(getExternalStoragePath(), projectName);
+    @Deprecated
+    public static File getProjectPath(String projectName) {
+        return new File(Environment.getExternalStorageDirectory(), projectName);
     }
 
     /**
      * 获取外部储存项目目录的路径，sd/{project_name}/
      */
+    @Deprecated
     public static File getProjectPath() throws IOException {
         return getProjectPath(Common.getProjectName());
     }
@@ -232,6 +225,7 @@ public class FileUtils {
      *
      * @param dir 目录名
      */
+    @Deprecated
     public static File createProjectDir(String dir) throws IOException {
         return createPath(getProjectPath(), dir);
     }
@@ -239,6 +233,7 @@ public class FileUtils {
     /**
      * 得到外部储存项目的临时目录，sd/{project_name}/temp/
      */
+    @Deprecated
     public static File getProjectTempDirectory() throws IOException {
         return createProjectDir("temp");
     }
@@ -246,6 +241,7 @@ public class FileUtils {
     /**
      * 得到外部储存项目的图片目录，sd/{project_name}/pictures/
      */
+    @Deprecated
     public static File getProjectPicturesDirectory() throws IOException {
         return createProjectDir("pictures");
     }
@@ -255,9 +251,10 @@ public class FileUtils {
      *
      * @param cacheDir 缓存目录名
      */
+    @Deprecated
     public static File getProjectCacheDirectory(String cacheDir) throws IOException {
         isExternalStorageEnable();
-        isExternalStorageLessMB(100);
+        isExternalStorageLessMB(getProjectPath(),100);
         return createHideMediaDirectory(createProjectDir(cacheDir));
     }
 
@@ -475,7 +472,7 @@ public class FileUtils {
     @SuppressWarnings("UnstableApiUsage")
     public static Uri saveFileToPicture(Context context, String name, File from) throws IOException {
         File p = new File(Environment.DIRECTORY_PICTURES, Common.getProjectName());
-        File file = new File(FileUtils.getExternalStoragePath(), p.getAbsolutePath());
+        File file = new File(SDCardUtils.getExternalStorageDirectory(context), p.getAbsolutePath());
         File outFile = FileUtils.createFile(file, name);
         Files.copy(from, outFile);
         Uri uri = Uri.fromFile(outFile);

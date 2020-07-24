@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Created by yqritc on 2015/01/15.
- * @link <a href="https://github.com/yqritc/RecyclerView-FlexibleDivider/blob/master/library/src/main/java/com/yqritc/recyclerviewflexibledivider/HorizontalDividerItemDecoration.java">HorizontalDividerItemDecoration</a>
+ * @see <a href="https://github.com/yqritc/RecyclerView-FlexibleDivider/blob/master/library/src/main/java/com/yqritc/recyclerviewflexibledivider/HorizontalDividerItemDecoration.java">HorizontalDividerItemDecoration</a>
  */
 public class HorizontalDividerItemDecoration extends FlexibleDividerDecoration {
 

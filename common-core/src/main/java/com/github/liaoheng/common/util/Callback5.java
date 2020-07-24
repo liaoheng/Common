@@ -9,7 +9,7 @@ public interface Callback5 {
 
     void onDeny();
 
-    class EmptyCallback<T> implements Callback5 {
+    class EmptyCallback implements Callback5 {
         @Override
         public void onAllow() {
 
