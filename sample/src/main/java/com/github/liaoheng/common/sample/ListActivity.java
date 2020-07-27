@@ -29,7 +29,7 @@ import java.util.List;
  */
 public class ListActivity extends CUBaseActivity {
 
-    @BindView(R.id.list) ListLinearLayout<String> list;
+    @BindView(R.id.list) ListLinearLayout list;
 
     @OnClick(R.id.list_update)
     void update(){

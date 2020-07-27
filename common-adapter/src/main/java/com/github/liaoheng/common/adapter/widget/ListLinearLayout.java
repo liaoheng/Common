@@ -6,18 +6,19 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListAdapter;
-import com.github.liaoheng.common.adapter.base.BaseListAdapter;
-import com.github.liaoheng.common.adapter.base.BaseRecyclerAdapter;
-import com.github.liaoheng.common.adapter.base.IBaseAdapter;
 
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.github.liaoheng.common.adapter.base.BaseListAdapter;
+import com.github.liaoheng.common.adapter.base.BaseRecyclerAdapter;
+import com.github.liaoheng.common.adapter.base.IBaseAdapter;
 
 /**
  * @author liaoheng
  * @version 2016-12-19 16:13
  */
-public class ListLinearLayout<T> extends LinearLayoutCompat {
+public class ListLinearLayout extends LinearLayoutCompat {
 
     private final String TAG = ListLinearLayout.class.getSimpleName();
 
@@ -46,18 +47,20 @@ public class ListLinearLayout<T> extends LinearLayoutCompat {
         }
     }
 
-    private ListAdapter                                   mSystemListAdapter;
+    private ListAdapter mSystemListAdapter;
     private RecyclerView.Adapter<RecyclerView.ViewHolder> mSystemRecyclerAdapter;
 
     private DataSetObserver mSystemDataSetObserver = new DataSetObserver() {
-        @Override public void onChanged() {
+        @Override
+        public void onChanged() {
             Log.i(TAG, " ListView.DataSetObserver onChanged");
             updateDataAdapter(mSystemListAdapter);
         }
     };
 
     private RecyclerView.AdapterDataObserver mSystemDataObserver = new RecyclerView.AdapterDataObserver() {
-        @Override public void onChanged() {
+        @Override
+        public void onChanged() {
             Log.i(TAG, " RecyclerView.AdapterDataObserver onChanged");
             updateDataAdapter(mSystemRecyclerAdapter);
         }
@@ -103,34 +106,36 @@ public class ListLinearLayout<T> extends LinearLayoutCompat {
         }
     }
 
-    private BaseListAdapter<T>                                        mListAdapter;
-    private BaseRecyclerAdapter<T, ? extends RecyclerView.ViewHolder> mRecyclerAdapter;
-    private IBaseAdapter.OnItemClickListener<T>                       mOnItemClickListener;
+    private BaseListAdapter<?> mListAdapter;
+    private BaseRecyclerAdapter<?, ? extends RecyclerView.ViewHolder> mRecyclerAdapter;
+    @SuppressWarnings("rawtypes") private IBaseAdapter.OnItemClickListener mOnItemClickListener;
 
     private DataSetObserver dataSetObserver = new DataSetObserver() {
-        @Override public void onChanged() {
+        @Override
+        public void onChanged() {
             Log.i(TAG, " BaseListAdapter.DataSetObserver onChanged");
             updateData(mListAdapter);
         }
     };
 
     private RecyclerView.AdapterDataObserver dataObserver = new RecyclerView.AdapterDataObserver() {
-        @Override public void onChanged() {
+        @Override
+        public void onChanged() {
             Log.i(TAG, " BaseRecyclerAdapter.AdapterDataObserver onChanged");
             updateData(mRecyclerAdapter);
         }
     };
 
-    public void setAdapter(BaseListAdapter<T> adapter) {
+    public <T> void setAdapter(BaseListAdapter<T> adapter) {
         setAdapter(adapter, null);
     }
 
-    public void setAdapter(BaseRecyclerAdapter<T, ? extends RecyclerView.ViewHolder> adapter) {
+    public <T> void setAdapter(BaseRecyclerAdapter<T, ? extends RecyclerView.ViewHolder> adapter) {
         setAdapter(adapter, null);
     }
 
-    public void setAdapter(BaseListAdapter<T> adapter,
-                           IBaseAdapter.OnItemClickListener<T> onItemClickListener) {
+    public <T> void setAdapter(BaseListAdapter<T> adapter,
+            IBaseAdapter.OnItemClickListener<T> onItemClickListener) {
         checkNull("BaseListAdapter is null", adapter);
         release();
         mOnItemClickListener = onItemClickListener;
@@ -139,8 +144,8 @@ public class ListLinearLayout<T> extends LinearLayoutCompat {
         updateData(mListAdapter);
     }
 
-    public void setAdapter(BaseRecyclerAdapter<T, ? extends RecyclerView.ViewHolder> adapter,
-                           IBaseAdapter.OnItemClickListener<T> onItemClickListener) {
+    public <T> void setAdapter(BaseRecyclerAdapter<T, ? extends RecyclerView.ViewHolder> adapter,
+            IBaseAdapter.OnItemClickListener<T> onItemClickListener) {
         checkNull("BaseRecyclerAdapter is null", adapter);
         release();
         mOnItemClickListener = onItemClickListener;
@@ -149,7 +154,7 @@ public class ListLinearLayout<T> extends LinearLayoutCompat {
         updateData(mRecyclerAdapter);
     }
 
-    private void updateData(IBaseAdapter<T> adapter) {
+    private <T> void updateData(IBaseAdapter<T> adapter) {
         removeAllViews();
         if (adapter.isEmpty()) {
             return;
@@ -170,11 +175,8 @@ public class ListLinearLayout<T> extends LinearLayoutCompat {
             addView(view);
             final int finalPosition = position;
             if (this.mOnItemClickListener != null) {
-                view.setOnClickListener(new OnClickListener() {
-                    @Override public void onClick(View v) {
-                        mOnItemClickListener.onItemClick(item, v, finalPosition);
-                    }
-                });
+                //noinspection unchecked
+                view.setOnClickListener(v -> mOnItemClickListener.onItemClick(item, v, finalPosition));
             }
         }
     }
