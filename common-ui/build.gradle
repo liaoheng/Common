@@ -30,14 +30,14 @@ dependencies {
     compileOnly deps.rxlifecycle3
     compileOnly deps.rxlifecycle_android3
 
-    implementation group: "com.github.liaoheng", name: "common-core", version: "0.1.0-SNAPSHOT", changing: true
-//    implementation project(':common-core')
-    implementation group: "com.github.liaoheng", name: "common-adapter", version: "0.1.0-SNAPSHOT", changing: true
-//    implementation project(':common-adapter')
+//    implementation group: "com.github.liaoheng", name: "common-core", version: "0.1.0-SNAPSHOT", changing: true
+    implementation project(':common-core')
+//    implementation group: "com.github.liaoheng", name: "common-adapter", version: "0.1.0-SNAPSHOT", changing: true
+    implementation project(':common-adapter')
 }
 apply from: rootProject.file('gradle-mvn-push.gradle')
 
-configurations.all {
-  // check for updates every build
-  resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
-}
+//configurations.all {
+//  // check for updates every build
+//  resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+//}

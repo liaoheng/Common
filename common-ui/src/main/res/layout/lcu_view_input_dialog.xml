@@ -1,86 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--https://material.google.com/components/dialogs.html#dialogs-specs-->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content">
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
     <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
         <LinearLayout
-                android:orientation="vertical"
-                android:paddingTop="24dp"
-                android:paddingLeft="24dp"
-                android:paddingRight="24dp"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingLeft="24dp"
+                android:paddingTop="24dp"
+                android:paddingRight="24dp">
 
             <TextView
-                    android:textStyle="bold"
-                    tools:text="message"
                     android:id="@id/lcu_input_dialog_message"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:textColor="@android:color/black"
                     android:textSize="22sp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            <com.google.android.material.textfield.TextInputLayout
+                    android:textStyle="bold"
+                    tools:text="message" />
+
+            <EditText
+                    android:id="@id/lcu_input_dialog_edit_text"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                <com.google.android.material.textfield.TextInputEditText
-                        android:textSize="16sp"
-                        android:focusable="true"
-                        android:id="@id/lcu_input_dialog_edit_text"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
-
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:textSize="16sp" />
 
         </LinearLayout>
 
         <LinearLayout
-                android:paddingTop="12dp"
-                android:paddingBottom="8dp"
-                android:gravity="end"
                 android:layout_width="match_parent"
-                android:layout_height="52dp">
+                android:layout_height="52dp"
+                android:gravity="end"
+                android:paddingTop="12dp"
+                android:paddingBottom="8dp">
 
             <Button
-                    style="?buttonBarNegativeButtonStyle"
-                    android:layout_marginRight="8dp"
-                    android:textColor="?colorAccent"
                     android:id="@id/lcu_input_dialog_cancel"
+                    style="?buttonBarNegativeButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="36dp"
+                    android:layout_marginRight="8dp"
                     android:background="?selectableItemBackground"
-                    android:text="@string/lcm_no"/>
+                    android:text="@string/lcm_no"
+                    android:textColor="?colorAccent" />
 
             <Button
-                    style="?buttonBarPositiveButtonStyle"
-                    android:layout_marginRight="8dp"
-                    android:textColor="?colorAccent"
                     android:id="@id/lcu_input_dialog_ok"
+                    style="?buttonBarPositiveButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="36dp"
+                    android:layout_marginRight="8dp"
                     android:background="?selectableItemBackground"
-                    android:text="@string/lcm_ok"/>
+                    android:text="@string/lcm_ok"
+                    android:textColor="?colorAccent" />
         </LinearLayout>
     </LinearLayout>
 
     <FrameLayout
-            android:clickable="true"
-            android:visibility="gone"
-            android:background="@android:color/white"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@android:color/white"
+            android:clickable="true"
+            android:visibility="gone">
 
         <ProgressBar
-                android:layout_gravity="center"
                 android:id="@id/lcu_progress"
                 android:layout_width="40dp"
-                android:layout_height="40dp"/>
+                android:layout_height="40dp"
+                android:layout_gravity="center" />
 
     </FrameLayout>
 </FrameLayout>
