@@ -124,6 +124,16 @@ public class ListLinearLayout extends LinearLayoutCompat {
             Log.i(TAG, " BaseRecyclerAdapter.AdapterDataObserver onChanged");
             updateData(mRecyclerAdapter);
         }
+
+        @Override
+        public void onItemRangeChanged(int positionStart, int itemCount) {
+            updateData(mRecyclerAdapter, positionStart);
+        }
+
+        @Override
+        public void onItemRangeRemoved(int positionStart, int itemCount) {
+            removeView(positionStart);
+        }
     };
 
     public <T> void setAdapter(BaseListAdapter<T> adapter) {
@@ -160,24 +170,35 @@ public class ListLinearLayout extends LinearLayoutCompat {
             return;
         }
         for (int position = 0; position < adapter.getList().size(); position++) {
-            final T item = adapter.getList().get(position);
-            View view = new View(getContext());
-            if (adapter instanceof BaseListAdapter) {
-                view = ((BaseListAdapter<T>) adapter).getItemView(item, position, null, this);
-            }
-            if (adapter instanceof BaseRecyclerAdapter) {
-                BaseRecyclerAdapter<T, RecyclerView.ViewHolder> recyclerAdapter = (BaseRecyclerAdapter<T, RecyclerView.ViewHolder>) adapter;
-                RecyclerView.ViewHolder viewHolder = recyclerAdapter
-                        .onCreateViewHolder(this, recyclerAdapter.getItemViewType(position));
-                recyclerAdapter.onBindViewHolderItem(viewHolder, item, position);
-                view = viewHolder.itemView;
-            }
-            addView(view);
-            final int finalPosition = position;
-            if (this.mOnItemClickListener != null) {
-                //noinspection unchecked
-                view.setOnClickListener(v -> mOnItemClickListener.onItemClick(item, v, finalPosition));
-            }
+            updateData(adapter, position);
+        }
+    }
+
+    private <T> void updateData(IBaseAdapter<T> adapter, int position) {
+        removeView(position);
+        final T item = adapter.getList().get(position);
+        View view = new View(getContext());
+        if (adapter instanceof BaseListAdapter) {
+            view = ((BaseListAdapter<T>) adapter).getItemView(item, position, null, this);
+        }
+        if (adapter instanceof BaseRecyclerAdapter) {
+            BaseRecyclerAdapter<T, RecyclerView.ViewHolder> recyclerAdapter = (BaseRecyclerAdapter<T, RecyclerView.ViewHolder>) adapter;
+            RecyclerView.ViewHolder viewHolder = recyclerAdapter
+                    .onCreateViewHolder(this, recyclerAdapter.getItemViewType(position));
+            recyclerAdapter.onBindViewHolderItem(viewHolder, item, position);
+            view = viewHolder.itemView;
+        }
+        addView(view, position);
+        final int finalPosition = position;
+        if (this.mOnItemClickListener != null) {
+            //noinspection unchecked
+            view.setOnClickListener(v -> mOnItemClickListener.onItemClick(item, v, finalPosition));
+        }
+    }
+
+    private void removeView(int position) {
+        if (getChildAt(position) != null) {
+            removeViewAt(position);
         }
     }
 

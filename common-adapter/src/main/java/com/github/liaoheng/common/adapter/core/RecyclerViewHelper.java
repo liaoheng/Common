@@ -10,7 +10,7 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.ColorRes;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -213,22 +213,41 @@ public class RecyclerViewHelper {
             return this;
         }
 
+        public Builder enableDivider() {
+            if (getRecyclerView().getLayoutManager() == null) {
+                throw new NullPointerException("LayoutManager is null");
+            }
+            if (getRecyclerView().getLayoutManager() instanceof LinearLayoutManager) {
+                return addItemDecoration(new DividerItemDecoration(context,
+                        ((LinearLayoutManager) getRecyclerView().getLayoutManager()).getOrientation()));
+            }
+            return this;
+        }
+
         /**
          * 开启水平下滑线
          */
-        public Builder enableHorizontalDividerLineResId(@ColorRes int color) {
-            return enableHorizontalDividerLine(ContextCompat.getColor(context, color));
+        public Builder enableVerticalDivider() {
+            return addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
         }
 
         /**
          * 开启垂直下滑线
          */
-        public Builder enableVerticalDividerLineResId(@ColorRes int color) {
-            return enableVerticalDividerLine(ContextCompat.getColor(context, color));
+        public Builder enableHorizontalDivider() {
+            return addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.HORIZONTAL));
         }
 
         /**
-         * 开启水平下滑线
+         * 开启垂直下滑线
+         */
+        public Builder enableHorizontalDividerLineResId(@ColorRes int color) {
+            return addItemDecoration(
+                    new HorizontalDividerItemDecoration.Builder(context).colorResId(color).build());
+        }
+
+        /**
+         * 开启垂直下滑线
          */
         public Builder enableHorizontalDividerLine(@ColorInt int color) {
             return addItemDecoration(
@@ -236,7 +255,15 @@ public class RecyclerViewHelper {
         }
 
         /**
-         * 开启垂直下滑线
+         * 开启水平下滑线
+         */
+        public Builder enableVerticalDividerLineResId(@ColorRes int color) {
+            return addItemDecoration(
+                    new VerticalDividerItemDecoration.Builder(context).colorResId(color).build());
+        }
+
+        /**
+         * 开启水平下滑线
          */
         public Builder enableVerticalDividerLine(@ColorInt int color) {
             return addItemDecoration(
