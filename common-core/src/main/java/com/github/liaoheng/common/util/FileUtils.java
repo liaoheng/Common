@@ -254,7 +254,7 @@ public class FileUtils {
     @Deprecated
     public static File getProjectCacheDirectory(String cacheDir) throws IOException {
         isExternalStorageEnable();
-        isExternalStorageLessMB(getProjectPath(),100);
+        isExternalStorageLessMB(getProjectPath(), 100);
         return createHideMediaDirectory(createProjectDir(cacheDir));
     }
 
@@ -448,12 +448,7 @@ public class FileUtils {
     }
 
     //https://juejin.im/post/5d0b1739e51d4510a73280cc
-    public static Uri saveFileToPictureCompat(Context context, String url, File from) throws IOException {
-        String name = FileUtils.getName(url);
-        String[] split = name.split("=");
-        if (split.length > 1) {
-            name = split[1];
-        }
+    public static Uri saveFileToPictureCompat(Context context, String name, File from) throws IOException {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
             return saveFileToPicture(context, name, from);
         } else {
@@ -471,8 +466,7 @@ public class FileUtils {
 
     @SuppressWarnings("UnstableApiUsage")
     public static Uri saveFileToPicture(Context context, String name, File from) throws IOException {
-        File p = new File(Environment.DIRECTORY_PICTURES, Common.getProjectName());
-        File file = new File(SDCardUtils.getExternalStorageDirectory(context), p.getAbsolutePath());
+        File file = new File(SDCardUtils.getExternalStoragePicturesPublicDirectory(), Common.getProjectName());
         File outFile = FileUtils.createFile(file, name);
         Files.copy(from, outFile);
         Uri uri = Uri.fromFile(outFile);

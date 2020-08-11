@@ -1,6 +1,5 @@
 package com.github.liaoheng.common.util;
 
-import android.content.Context;
 import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
@@ -27,50 +26,50 @@ public class SDCardUtils {
     /**
      * 获取外部储存根目录，/storage/emulated/0 or /sdcard
      */
-    public static File getExternalStorageDirectory(Context context) {
-        return context.getExternalFilesDir(null);
+    public static File getExternalStorageDirectory() {
+        return Environment.getExternalStorageDirectory();
     }
 
     /**
      * 获取外部储存系统音乐目录，/storage/emulated/0/Music
      */
-    public static File getExternalStorageMusicPublicDirectory(Context context) {
-        return context.getExternalFilesDir(Environment.DIRECTORY_MUSIC);
+    public static File getExternalStorageMusicPublicDirectory() {
+        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC);
     }
 
     /**
      * 获取外部储存系统相册目录，/storage/emulated/0/Pictures
      */
-    public static File getExternalStoragePicturesPublicDirectory(Context context) {
-        return context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+    public static File getExternalStoragePicturesPublicDirectory() {
+        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
     }
 
     /**
      * 获取外部储存系统视频目录，/storage/emulated/0/Movies
      */
-    public static File getExternalStorageMoviesPublicDirectory(Context context) {
-        return context.getExternalFilesDir(Environment.DIRECTORY_MOVIES);
+    public static File getExternalStorageMoviesPublicDirectory() {
+        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES);
     }
 
     /**
      * 获取外部储存系统下载目录，/storage/emulated/0/Download
      */
-    public static File getExternalStorageDownloadPublicDirectory(Context context) {
-        return context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
+    public static File getExternalStorageDownloadPublicDirectory() {
+        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
     }
 
     /**
      * 获取外部储存系统相机目录，/storage/emulated/0/DCIM
      */
-    public static File getExternalStorageDCIMPublicDirectory(Context context) {
-        return context.getExternalFilesDir(Environment.DIRECTORY_DCIM);
+    public static File getExternalStorageDCIMPublicDirectory() {
+        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
     }
 
     /**
      * 获取外部储存系统文档目录，/storage/emulated/0/Documents
      */
-    public static File getExternalStorageDocumentsPublicDirectory(Context context) {
-        return context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS);
+    public static File getExternalStorageDocumentsPublicDirectory() {
+        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
     }
 
     /**
