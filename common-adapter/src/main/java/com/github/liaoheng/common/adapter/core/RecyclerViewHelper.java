@@ -2,6 +2,8 @@ package com.github.liaoheng.common.adapter.core;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -238,12 +240,58 @@ public class RecyclerViewHelper {
             return addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.HORIZONTAL));
         }
 
+        public Builder enableFlexibleDivider() {
+            if (getRecyclerView().getLayoutManager() == null) {
+                throw new NullPointerException("LayoutManager is null");
+            }
+            if (getRecyclerView().getLayoutManager() instanceof LinearLayoutManager) {
+                if (RecyclerView.VERTICAL
+                        == ((LinearLayoutManager) getRecyclerView().getLayoutManager()).getOrientation()) {
+                    return enableVerticalFlexibleDivider();
+                } else {
+                    return enableHorizontalFlexibleDivider();
+                }
+            }
+            return this;
+        }
+
+        private Drawable getListDivider() {
+            TypedArray a = context.obtainStyledAttributes(new int[] { android.R.attr.listDivider });
+            Drawable drawable = a.getDrawable(0);
+            a.recycle();
+            return drawable;
+        }
+
+        /**
+         * 开启水平下滑线
+         */
+        public Builder enableVerticalFlexibleDivider() {
+            Drawable listDivider = getListDivider();
+            if (listDivider == null) {
+                return this;
+            }
+            return addItemDecoration(
+                    new HorizontalDividerItemDecoration.Builder(context).drawable(listDivider).build());
+        }
+
+        /**
+         * 开启垂直下滑线
+         */
+        public Builder enableHorizontalFlexibleDivider() {
+            Drawable listDivider = getListDivider();
+            if (listDivider == null) {
+                return this;
+            }
+            return addItemDecoration(
+                    new VerticalDividerItemDecoration.Builder(context).drawable(listDivider).build());
+        }
+
         /**
          * 开启垂直下滑线
          */
         public Builder enableHorizontalDividerLineResId(@ColorRes int color) {
             return addItemDecoration(
-                    new HorizontalDividerItemDecoration.Builder(context).colorResId(color).build());
+                    new VerticalDividerItemDecoration.Builder(context).colorResId(color).build());
         }
 
         /**
@@ -251,7 +299,7 @@ public class RecyclerViewHelper {
          */
         public Builder enableHorizontalDividerLine(@ColorInt int color) {
             return addItemDecoration(
-                    new HorizontalDividerItemDecoration.Builder(context).color(color).build());
+                    new VerticalDividerItemDecoration.Builder(context).color(color).build());
         }
 
         /**
@@ -259,7 +307,8 @@ public class RecyclerViewHelper {
          */
         public Builder enableVerticalDividerLineResId(@ColorRes int color) {
             return addItemDecoration(
-                    new VerticalDividerItemDecoration.Builder(context).colorResId(color).build());
+                    new HorizontalDividerItemDecoration.Builder(context).colorResId(color).build());
+
         }
 
         /**
@@ -267,7 +316,7 @@ public class RecyclerViewHelper {
          */
         public Builder enableVerticalDividerLine(@ColorInt int color) {
             return addItemDecoration(
-                    new VerticalDividerItemDecoration.Builder(context).color(color).build());
+                    new HorizontalDividerItemDecoration.Builder(context).color(color).build());
         }
 
         /**
