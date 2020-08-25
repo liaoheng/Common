@@ -144,7 +144,6 @@ public class FileUtils {
      */
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public static File createHideMediaDirectory(File path) {
-        createPath(path);
         File noMedia = new File(path, ".nomedia");
         if (!noMedia.exists()) {
             try {
@@ -161,11 +160,29 @@ public class FileUtils {
      * 获取外部储存项目空间目录的路径，sd/Android/data/{package}/
      */
     public static File getProjectSpacePath(Context context) throws IOException {
+        return getProjectSpaceCachePath(context).getParentFile();
+    }
+
+    /**
+     * 获取外部储存项目空间目录的路径，sd/Android/data/{package}/cache
+     */
+    public static File getProjectSpaceCachePath(Context context) throws IOException {
         File externalCacheDir = context.getExternalCacheDir();
         if (externalCacheDir == null) {
             throw new IOException(ERROR_SDCARD_NOT_AVAILABLE);
         }
-        return externalCacheDir.getParentFile();
+        return externalCacheDir;
+    }
+
+    /**
+     * 获取外部储存项目空间目录的路径，sd/Android/data/{package}/files/{dir}
+     */
+    public static File getProjectSpaceFilesPath(Context context, String dir) throws IOException {
+        File externalFilesDir = context.getExternalFilesDir(dir);
+        if (externalFilesDir == null) {
+            throw new IOException(ERROR_SDCARD_NOT_AVAILABLE);
+        }
+        return externalFilesDir;
     }
 
     /**
@@ -178,28 +195,12 @@ public class FileUtils {
     }
 
     /**
-     * 得到外部储存项目空间的临时目录，sd/Android/data/{package}/temp/
-     */
-    public static File getProjectSpaceTempDirectory(Context context) throws IOException {
-        return createProjectSpaceDir(context, "temp");
-    }
-
-    /**
-     * 得到外部储存项目空间的图片目录，sd/Android/data/{package}/pictures/
-     */
-    public static File getProjectSpacePicturesDirectory(Context context) throws IOException {
-        return createProjectSpaceDir(context, "pictures");
-    }
-
-    /**
-     * 得到内部储存项目空间的缓存目录，sd/Android/data/{package}/{cacheDir}/
+     * 得到内部储存项目空间的缓存目录，sd/Android/data/{package}/cache/{dir}/
      *
-     * @param cacheDir 缓存目录名
+     * @param dir 缓存目录名
      */
-    public static File getProjectSpaceCacheDirectory(Context context, String cacheDir) throws IOException {
-        isExternalStorageEnable();
-        isExternalStorageLessMB(getProjectSpacePath(context), 100);
-        return createHideMediaDirectory(createProjectSpaceDir(context, cacheDir));
+    public static File getProjectSpaceCacheDirectory(Context context, String dir) throws IOException {
+        return createHideMediaDirectory(createPath(getProjectSpaceCachePath(context), dir));
     }
 
     //-----------------------------------------外部储存----------------------------------------------------
@@ -253,8 +254,6 @@ public class FileUtils {
      */
     @Deprecated
     public static File getProjectCacheDirectory(String cacheDir) throws IOException {
-        isExternalStorageEnable();
-        isExternalStorageLessMB(getProjectPath(), 100);
         return createHideMediaDirectory(createProjectDir(cacheDir));
     }
 
