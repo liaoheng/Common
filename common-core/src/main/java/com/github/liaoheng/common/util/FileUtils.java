@@ -208,16 +208,16 @@ public class FileUtils {
     /**
      * 获取外部储存项目目录的路径，sd/{project_name}/
      */
-    @Deprecated
     public static File getProjectPath(String projectName) {
-        return new File(Environment.getExternalStorageDirectory(), projectName);
+        return new File(SDCardUtils.getExternalStorageDirectory(), projectName);
     }
 
     /**
      * 获取外部储存项目目录的路径，sd/{project_name}/
+     *
+     * @see Common#getProjectName()
      */
-    @Deprecated
-    public static File getProjectPath() throws IOException {
+    public static File getProjectPath() {
         return getProjectPath(Common.getProjectName());
     }
 
@@ -226,25 +226,17 @@ public class FileUtils {
      *
      * @param dir 目录名
      */
-    @Deprecated
-    public static File createProjectDir(String dir) throws IOException {
+    public static File createProjectDir(String dir) {
         return createPath(getProjectPath(), dir);
     }
 
     /**
-     * 得到外部储存项目的临时目录，sd/{project_name}/temp/
-     */
-    @Deprecated
-    public static File getProjectTempDirectory() throws IOException {
-        return createProjectDir("temp");
-    }
-
-    /**
      * 得到外部储存项目的图片目录，sd/{project_name}/pictures/
+     *
+     * @see Environment#DIRECTORY_PICTURES
      */
-    @Deprecated
-    public static File getProjectPicturesDirectory() throws IOException {
-        return createProjectDir("pictures");
+    public static File getProjectPicturesDirectory() {
+        return createProjectDir(Environment.DIRECTORY_PICTURES);
     }
 
     /**
@@ -252,8 +244,7 @@ public class FileUtils {
      *
      * @param cacheDir 缓存目录名
      */
-    @Deprecated
-    public static File getProjectCacheDirectory(String cacheDir) throws IOException {
+    public static File getProjectCacheDirectory(String cacheDir) {
         return createHideMediaDirectory(createProjectDir(cacheDir));
     }
 
