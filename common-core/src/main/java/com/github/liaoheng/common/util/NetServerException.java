@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
  */
 @SystemExceptionNoVessel
 public class NetServerException extends NetException {
-    private Object mErrorBody;
 
     public NetServerException(Throwable e) {
         super(e);
@@ -18,12 +17,12 @@ public class NetServerException extends NetException {
 
     public NetServerException(String errorMessage, Object errorBody) {
         super(errorMessage);
-        mErrorBody = errorBody;
+        setErrorBody(errorBody);
     }
 
     public NetServerException(Object errorBody) {
         super("ServerError", null);
-        mErrorBody = errorBody;
+        setErrorBody(errorBody);
     }
 
     @NonNull

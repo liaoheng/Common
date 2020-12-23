@@ -2,7 +2,7 @@ package com.github.liaoheng.common.util;
 
 import android.content.Context;
 
-import com.github.liaoheng.common.BuildConfig;
+import com.github.liaoheng.common.Common;
 import com.github.liaoheng.common.cache.DiskLruCache;
 import com.google.common.io.ByteStreams;
 
@@ -43,8 +43,15 @@ public class CacheUtils {
      * @param maxSize Bytes
      */
     public void init(File cachePath, long maxSize) throws IOException {
+        init(cachePath, maxSize, Common.sAppVersion);
+    }
+
+    /**
+     * @param maxSize Bytes
+     */
+    public void init(File cachePath, long maxSize, int appVersion) throws IOException {
         //valueCount : 同一个key可以对应多少个缓存文件
-        diskLruCache = DiskLruCache.open(cachePath, BuildConfig.VERSION_CODE, 1,
+        diskLruCache = DiskLruCache.open(cachePath, appVersion, 1,
                 maxSize);
     }
 

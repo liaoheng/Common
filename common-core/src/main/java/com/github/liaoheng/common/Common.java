@@ -18,6 +18,7 @@ public class Common {
     private static String PROJECT_NAME;
     private static String PACKAGE_NAME;
     private static boolean sDebug;
+    public static int sAppVersion = 1;
 
     public static void baseInit(@NonNull Context context, String projectName, boolean isDebug) {
         baseInit(context, projectName, null, isDebug);

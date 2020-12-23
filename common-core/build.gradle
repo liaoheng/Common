@@ -23,7 +23,7 @@ android {
 dependencies {
     testImplementation deps.robolectric
     testImplementation deps.junit
-    testImplementation 'joda-time:joda-time:2.10.6'
+    testImplementation 'joda-time:joda-time:2.10.7'
 
     implementation deps.annotations
     implementation deps.core

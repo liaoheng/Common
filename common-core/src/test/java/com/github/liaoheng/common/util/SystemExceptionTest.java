@@ -101,8 +101,8 @@ public class SystemExceptionTest extends BaseTest {
         } catch (SystemException e) {
             Throwable cause = e.getCause();
             assertNotNull("is null", cause);
-            assertTrue("is not ArrayIndexOutOfBoundsException",
-                    cause instanceof ArrayIndexOutOfBoundsException);
+            assertTrue("is not IllegalStateException",
+                    cause instanceof IllegalStateException);
             assertEquals("msg incorrect", e.getMessage(), "error");
         }
     }

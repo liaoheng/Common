@@ -7,6 +7,7 @@ import android.app.ActivityManager;
 import android.app.WallpaperManager;
 import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
+import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -19,6 +20,7 @@ import android.os.PowerManager;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -236,13 +238,7 @@ public class AppUtils {
         if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.M) {
             return false;
         }
-        Intent intent = new Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS);
-        if (intent.resolveActivity(context.getPackageManager()) != null) {
-            context.startActivity(intent);
-            return true;
-        } else {
-            return false;
-        }
+        return startActivity(context, new Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS));
     }
 
     /**
@@ -259,11 +255,7 @@ public class AppUtils {
         }
         Intent intent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
         intent.setData(Uri.parse("package:" + context.getPackageName()));
-        if (intent.resolveActivity(context.getPackageManager()) != null) {
-            context.startActivity(intent);
-            return true;
-        }
-        return false;
+        return startActivity(context, intent);
     }
 
     /**
@@ -282,26 +274,32 @@ public class AppUtils {
         return powerManager == null || powerManager.isIgnoringBatteryOptimizations(context.getPackageName());
     }
 
+    public static boolean startActivity(Context context, Intent intent) {
+        try {
+            context.startActivity(intent);
+            return true;
+        } catch (ActivityNotFoundException e) {
+            return false;
+        }
+    }
+
     /**
      * open map application
      *
      * @param longitude 经度
      * @param latitude  纬度
      */
-    public static void openMap(Context context, String longitude, String latitude) {
+    public static boolean openMap(Context context, String longitude, String latitude) {
         if (TextUtils.isEmpty(latitude) || TextUtils.isEmpty(longitude)) {
-            return;
+            return false;
         }
         Uri uri = Uri.parse("geo:" + latitude + "," + longitude);
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(uri);
-        if (intent.resolveActivity(context.getPackageManager()) == null) {
-            return;
-        }
-        context.startActivity(intent);
+        return startActivity(context, intent);
     }
 
-    public static Intent sendEmail(String to[], String subject, String content) {
+    public static Intent sendEmail(String[] to, String subject, String content) {
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
         emailIntent.setType("message/rfc822");
         emailIntent.putExtra(Intent.EXTRA_EMAIL, to);
@@ -310,35 +308,30 @@ public class AppUtils {
         return emailIntent;
     }
 
-    public static boolean sendEmail(Context context, String to[], String subject, String content) {
-        Intent emailIntent = sendEmail(to, subject, content);
-
-        if (emailIntent.resolveActivity(context.getPackageManager()) == null) {
-            return false;
-        }
-
-        context.startActivity(Intent.createChooser(emailIntent, context.getString(R.string.lcm_send_email)));
-        return true;
+    public static boolean sendEmail(Context context, String[] to, String subject, String content) {
+        return startActivity(context,
+                Intent.createChooser(sendEmail(to, subject, content), context.getString(R.string.lcm_send_email)));
     }
 
     public static void openBrowser(Context context, String url) {
-        try {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-            if (intent.resolveActivity(context.getPackageManager()) == null) {
-                throw new IllegalArgumentException("Unknown component");
-            }
-            context.startActivity(intent);
-        } catch (Exception ignore) {
-            UIUtils.showToast(context, R.string.lcm_unable_open_url);
+        if (openBrowser2(context, url)) {
+            Toast.makeText(context, R.string.lcm_unable_open_url, Toast.LENGTH_LONG).show();
         }
+    }
+
+    public static boolean openBrowser2(Context context, String url) {
+        return startActivity(context, new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
     }
 
     @SuppressLint("MissingPermission")
     public static void setWallpaper(Context context, File file, int which) throws IOException {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             try (InputStream fileInputStream = new FileInputStream(file)) {
-                WallpaperManager.getInstance(context)
-                        .setStream(fileInputStream, null, true, which);
+                WallpaperManager manager = WallpaperManager.getInstance(context);
+                if (manager == null) {
+                    throw new IOException("WallpaperManager is null");
+                }
+                manager.setStream(fileInputStream, null, true, which);
             }
         } else {
             setWallpaper(context, file);

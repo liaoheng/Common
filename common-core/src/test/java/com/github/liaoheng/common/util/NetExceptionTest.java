@@ -30,7 +30,7 @@ public class NetExceptionTest extends BaseTest {
             Throwable cause = e.getCause();
             assertNotNull("is null", cause);
             //loge(cause);
-            assertTrue("is not NetException", cause instanceof NetException);
+            assertTrue("is not NetException", cause instanceof TimeoutException);
             assertEquals("msg incorrect", e.getMessage(), "NetException");
         }
     }

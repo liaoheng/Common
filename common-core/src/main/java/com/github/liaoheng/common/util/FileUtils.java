@@ -429,8 +429,7 @@ public class FileUtils {
     }
 
     public static String getName(String fullName) {
-        String extension = getExtension(fullName);
-        return Files.getNameWithoutExtension(fullName) + (Strings.isNullOrEmpty(extension) ? "" : "." + extension);
+        return Files.getNameWithoutExtension(fullName);
     }
 
     public static void copyInputStreamToFile(InputStream source, final File destination) throws IOException {
