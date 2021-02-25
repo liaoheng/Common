@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import javax.annotation.Nullable;
+
 /**
  * @author liaoheng
  * @version 2018-12-28 15:11
@@ -65,6 +67,7 @@ public class CacheUtils {
         }
     }
 
+    @Nullable
     public File put(String key, File file) {
         try (FileInputStream inputStream = new FileInputStream(file)) {
             return put(key, inputStream);
@@ -73,10 +76,12 @@ public class CacheUtils {
         return null;
     }
 
+    @Nullable
     public File put(int key, InputStream inputStream) {
         return put(String.valueOf(key), inputStream);
     }
 
+    @Nullable
     public File put(String key, InputStream inputStream) {
         if (diskLruCache == null) {
             return null;
@@ -84,6 +89,9 @@ public class CacheUtils {
         DiskLruCache.Editor edit = null;
         try {
             edit = diskLruCache.edit(key);
+            if (edit == null) {//open cache file failure
+                return null;
+            }
             try (OutputStream outputStream = edit.newOutputStream(0)) {
                 ByteStreams.copy(inputStream, outputStream);
             }
