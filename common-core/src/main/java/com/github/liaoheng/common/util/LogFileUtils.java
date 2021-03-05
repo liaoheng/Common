@@ -15,18 +15,16 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * 不带system log
+ * 日志写入文件
  *
  * @author liaoheng
- * @version 2016-09-22 16:26
+ * @date 2016-09-22 16:26
+ * @version 0.1.1
  */
 public class LogFileUtils {
-    private static final String TAG = LogFileUtils.class.getSimpleName();
-
     public final static String LEVEL_VERBOSE = " VERBOSE ";
     public final static String LEVEL_DEBUG = " DEBUG ";
     public final static String LEVEL_INFO = " INFO ";
@@ -38,9 +36,15 @@ public class LogFileUtils {
     @Retention(RetentionPolicy.SOURCE)
     public @interface LevelFlags {}
 
-    private static final String DEFAULT_FILE_NAME = "debug_log.txt";
-    private File mLogFile;
+    private final String DEFAULT_FILE_NAME = "debug_log.txt";
+    private final AtomicBoolean isClose = new AtomicBoolean(true);
     private FileOutputStream mFileOutputStream;
+    private String mLogFilePath = "";
+    private LogFileCallback mCallback;
+
+    public interface LogFileCallback {
+        File getFile();
+    }
 
     private static LogFileUtils instance;
 
@@ -58,54 +62,69 @@ public class LogFileUtils {
         return instance;
     }
 
-    public void init(Context context) throws IOException {
-        init(context, "");
+    public File init(Context context) throws IOException {
+        return init(context, "");
     }
 
-    public void init(Context context, String fileName) throws IOException {
-        init(context, "Log", fileName);
+    public File init(Context context, String fileName) throws IOException {
+        return init(context, "Log", fileName);
     }
 
-    public void init(Context context, String dir, String fileName) throws IOException {
+    public File init(Context context, String dir, String fileName) throws IOException {
         File log = FileUtils.createProjectSpaceDir(context, dir);
         if (TextUtils.isEmpty(fileName)) {
             fileName = DEFAULT_FILE_NAME;
         }
-        init(FileUtils.createFile(log, fileName));
+        return init(FileUtils.createFile(log, fileName));
     }
 
-    public void init(File logFile) {
-        mLogFile = logFile;
-        open();
+    public File init(File logFile) {
+        mLogFilePath = logFile.getAbsolutePath();
+        return logFile;
     }
 
-    public File getLogFile() {
-        return mLogFile;
+    public void init(LogFileCallback callback) {
+        mCallback = callback;
+        mLogFilePath = FileUtils.createFile(callback.getFile()).getAbsolutePath();
     }
 
     public void open() {
-        if (mLogFile == null) {
-            throw new IllegalStateException("No initialization");
+        if (TextUtils.isEmpty(mLogFilePath)) {
+            return;
         }
+        openStream(new File(mLogFilePath));
+        isClose.set(false);
+    }
+
+    private void openStream(File logFile) {
         try {
-            mFileOutputStream = new FileOutputStream(mLogFile, true);//不覆盖
+            mFileOutputStream = new FileOutputStream(logFile, true);//不覆盖
         } catch (IOException ignored) {
         }
     }
 
     public void close() {
+        isClose.set(true);
         if (mFileOutputStream == null) {
             return;
         }
         try {
             mFileOutputStream.close();
+            mFileOutputStream = null;
         } catch (IOException ignored) {
         }
     }
 
     public void clearFile() {
-        close();
-        FileUtils.delete(mLogFile);
+        FileUtils.delete(new File(mLogFilePath));
+    }
+
+    private void checkLogFile(File logFile) {
+        if (!mLogFilePath.equals(logFile.getAbsolutePath())) {
+            FileUtils.createFile(logFile);
+            mLogFilePath = logFile.getAbsolutePath();
+            openStream(logFile);
+        }
     }
 
     public synchronized void w(String tag, String logEntry, Object... o) {
@@ -144,19 +163,24 @@ public class LogFileUtils {
         return String.format(logEntry, o);
     }
 
-    public synchronized void log(@LevelFlags String level, String tag, String logEntry) {
+    public synchronized void log(@LevelFlags String level, String tag,
+            String logEntry) {
         writeLog(level, tag, null, logEntry);
     }
 
-    public synchronized void log(@LevelFlags String level, String tag, Throwable throwable,
+    public synchronized void log(@LevelFlags String level, String tag,
+            Throwable throwable,
             String logEntry) {
         writeLog(level, tag, throwable, logEntry);
     }
 
     private synchronized void writeLog(String severityLevel, String tag, Throwable throwable,
             String logEntry) {
-        if (mFileOutputStream == null) {
+        if (isClose.get()) {
             return;
+        }
+        if (mCallback != null) {
+            checkLogFile(mCallback.getFile());
         }
         String currentDateTime = DateTime.now().toString("yyyy-MM-dd HH:mm:ss.SSS");
         String stencil = currentDateTime + "   |" + severityLevel + "|   " + tag + " : " + logEntry;

@@ -193,9 +193,6 @@ public class BitmapUtils {
     @Nullable
     public static Bitmap getBitmapByUri(String filePath, int width,
             int height) {
-        if (FileUtils.existsBoolean(filePath)) {
-            return null;
-        }
 
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
@@ -214,8 +211,7 @@ public class BitmapUtils {
         Bitmap bitmap = null;
         try {
             bitmap = BitmapFactory.decodeFile(filePath, options);
-        } catch (OutOfMemoryError e) {
-            L.Log.w(TAG, e);
+        } catch (OutOfMemoryError ignored) {
         }
         if (null == bitmap) {
             return null;

@@ -15,7 +15,6 @@ import android.text.TextUtils;
 import androidx.annotation.RequiresApi;
 
 import com.github.liaoheng.common.Common;
-import com.google.common.base.Strings;
 import com.google.common.io.FileWriteMode;
 import com.google.common.io.Files;
 
@@ -24,7 +23,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.util.UUID;
 
 /**
  * 文件工具
@@ -33,7 +31,6 @@ import java.util.UUID;
  *
  * @author liaoheng
  */
-@SuppressWarnings("UnstableApiUsage")
 public class FileUtils {
     private static final String TAG = FileUtils.class.getSimpleName();
     public static final String ERROR_SDCARD_NOT_AVAILABLE = "error_sdcard_not_available";
@@ -52,16 +49,23 @@ public class FileUtils {
     }
 
     /**
-     * 在父目录下创建文件
-     *
-     * @param parent   父目录，不存在会自动创建
-     * @param fileName 需要创建文件名
+     * 创建文件
      */
     public static File createFile(File parent, String fileName) {
-        if (!parent.exists()) {
-            createPath(parent);
-        }
-        File newFile = new File(parent, fileName);
+        return createFile(new File(parent, fileName));
+    }
+
+    /**
+     * 创建文件
+     */
+    public static File createFile(String newFile) {
+        return createFile(new File(newFile));
+    }
+
+    /**
+     * 创建文件
+     */
+    public static File createFile(File newFile) {
         if (!newFile.exists()) {
             try {
                 if (newFile.createNewFile()) {
@@ -74,40 +78,7 @@ public class FileUtils {
     }
 
     /**
-     * 在父目录下创建临时文件，使用{@link UUID#randomUUID()}生成文件名
-     *
-     * @param parent 父目录，不存在会自动创建
-     * @param nameEx 需要创建文件格式
-     */
-    public static File createTempFile(File parent, String nameEx) {
-        String fileName = UUID.randomUUID().toString() + "." + nameEx;
-        return createFile(parent, fileName);
-    }
-
-    /**
-     * 在父目录下创建临时文件，使用{@link UUID#randomUUID()}生成文件名
-     *
-     * @param parent 父目录，不存在会自动创建
-     */
-    public static File createTempFile(File parent) {
-        return createTempFile(parent, "tmp");
-    }
-
-    /**
      * 创建路径
-     *
-     * @param rootPath 父路径
-     * @param path     建立的路径
-     */
-    public static File createPath(String rootPath, String path) {
-        return createPath(new File(rootPath, path));
-    }
-
-    /**
-     * 创建路径
-     *
-     * @param rootPath 父路径
-     * @param path     建立的路径
      */
     public static File createPath(File rootPath, String path) {
         return createPath(new File(rootPath, path));
@@ -115,8 +86,6 @@ public class FileUtils {
 
     /**
      * 创建路径
-     *
-     * @param path 路径
      */
     public static File createPath(String path) {
         return createPath(new File(path));
@@ -124,8 +93,6 @@ public class FileUtils {
 
     /**
      * 创建路径
-     *
-     * @param path 路径
      */
     public static File createPath(File path) {
         if (!path.exists()) {
@@ -137,21 +104,10 @@ public class FileUtils {
     }
 
     /**
-     * 建立隐藏所有媒体文件的文件夹
-     *
-     * @param path 缓存目录
-     * @return {@link File}
+     * 停止媒体库扫描文件夹中的内容
      */
-    @SuppressWarnings("ResultOfMethodCallIgnored")
     public static File createHideMediaDirectory(File path) {
-        File noMedia = new File(path, ".nomedia");
-        if (!noMedia.exists()) {
-            try {
-                noMedia.createNewFile();
-            } catch (IOException ignored) {
-            }
-        }
-        return path;
+        return createFile(new File(path, ".nomedia"));
     }
 
     //-----------------------------------------外部储存空间----------------------------------------------------
@@ -305,30 +261,6 @@ public class FileUtils {
     }
 
     /**
-     * 判断文件是否存在
-     */
-    public static boolean existsBoolean(File filePath) {
-        try {
-            exists(filePath, "");
-            return true;
-        } catch (IOException e) {
-            return false;
-        }
-    }
-
-    /**
-     * 判断文件是否存在
-     */
-    public static boolean existsBoolean(String filePath) {
-        try {
-            exists(filePath, "");
-            return true;
-        } catch (IOException e) {
-            return false;
-        }
-    }
-
-    /**
      * 删除文件或目录
      */
     public static void delete(File file) {
@@ -344,7 +276,7 @@ public class FileUtils {
     }
 
     /**
-     * 清空路径
+     * 删除目录下的所有文件
      */
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public static void cleanPath(File path) {
@@ -424,19 +356,31 @@ public class FileUtils {
                 + "TB";
     }
 
+    /**
+     * 获得文件格式名
+     */
     public static String getExtension(String fullName) {
         return Files.getFileExtension(fullName);
     }
 
+    /**
+     * 获得文件名
+     */
     public static String getName(String fullName) {
         return Files.getNameWithoutExtension(fullName);
     }
 
+    /**
+     * 流写入文件
+     */
     public static void copyInputStreamToFile(InputStream source, final File destination) throws IOException {
         Files.asByteSink(destination, FileWriteMode.APPEND).writeFrom(source);
     }
 
-    //https://juejin.im/post/5d0b1739e51d4510a73280cc
+    /**
+     * 保存文件到系统相册中，以适配<a href="https://developer.android.com/about/versions/11/privacy/storage">Scoped Storage</a>
+     * @see <a href="https://juejin.im/post/5d0b1739e51d4510a73280cc">juejin</a>
+     */
     public static Uri saveFileToPictureCompat(Context context, String name, File from) throws IOException {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
             return saveFileToPicture(context, name, from);
