@@ -21,8 +21,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * 日志写入文件
  *
  * @author liaoheng
- * @date 2016-09-22 16:26
  * @version 0.1.1
+ * @date 2016-09-22 16:26
  */
 public class LogFileUtils {
     public final static String LEVEL_VERBOSE = " VERBOSE ";
@@ -98,6 +98,7 @@ public class LogFileUtils {
 
     private void openStream(File logFile) {
         try {
+            FileUtils.createFile(logFile);
             mFileOutputStream = new FileOutputStream(logFile, true);//不覆盖
         } catch (IOException ignored) {
         }
@@ -121,10 +122,13 @@ public class LogFileUtils {
 
     private void checkLogFile(File logFile) {
         if (!mLogFilePath.equals(logFile.getAbsolutePath())) {
-            FileUtils.createFile(logFile);
-            mLogFilePath = logFile.getAbsolutePath();
             openStream(logFile);
+            mLogFilePath = logFile.getAbsolutePath();
         }
+    }
+
+    public File getLogFile() {
+        return new File(mLogFilePath);
     }
 
     public synchronized void w(String tag, String logEntry, Object... o) {
