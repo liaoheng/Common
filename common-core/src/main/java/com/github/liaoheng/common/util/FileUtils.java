@@ -156,7 +156,7 @@ public class FileUtils {
      * @param dir 缓存目录名
      */
     public static File getProjectSpaceCacheDirectory(Context context, String dir) throws IOException {
-        return createHideMediaDirectory(createPath(getProjectSpaceCachePath(context), dir));
+        return createPath(getProjectSpaceCachePath(context), dir);
     }
 
     //-----------------------------------------外部储存----------------------------------------------------
@@ -196,12 +196,12 @@ public class FileUtils {
     }
 
     /**
-     * 得到外部储存项目的缓存目录，sd/{project_name}/{cacheDir}/
+     * 得到外部储存项目的缓存目录，sd/{project_name}/cache/{cacheDir}/
      *
      * @param cacheDir 缓存目录名
      */
     public static File getProjectCacheDirectory(String cacheDir) {
-        return createHideMediaDirectory(createProjectDir(cacheDir));
+        return createPath(createProjectDir("cache"),cacheDir);
     }
 
     //-----------------------------------------内部储存----------------------------------------------------
