@@ -62,54 +62,48 @@ public class LogFileUtils {
         return instance;
     }
 
-    public File init(Context context) throws IOException {
-        return init(context, "");
-    }
-
-    public File init(Context context, String fileName) throws IOException {
-        return init(context, "Log", fileName);
-    }
-
-    public File init(Context context, String dir, String fileName) throws IOException {
+    public File createCachePath(Context context, String dir, String fileName) throws IOException {
         File log = FileUtils.createProjectSpaceDir(context, dir);
         if (TextUtils.isEmpty(fileName)) {
             fileName = DEFAULT_FILE_NAME;
         }
-        return init(FileUtils.createFile(log, fileName));
+        return FileUtils.createFile(log, fileName);
     }
 
-    public File init(File logFile) {
-        mLogFilePath = logFile.getAbsolutePath();
-        return logFile;
+    public File open(Context context) throws IOException {
+        return open(context, "");
     }
 
-    public void init(LogFileCallback callback) {
-        mCallback = callback;
-        mLogFilePath = FileUtils.createFile(callback.getFile()).getAbsolutePath();
+    public File open(Context context, String fileName) throws IOException {
+        return open(context, "Log", fileName);
     }
 
-    public void open() {
-        if (TextUtils.isEmpty(mLogFilePath)) {
-            return;
-        }
-        openStream(new File(mLogFilePath));
-        isClose.set(false);
+    public File open(Context context, String dir, String fileName) throws IOException {
+        return open(createCachePath(context,dir,fileName));
     }
 
-    private void openStream(File logFile) {
+    public File open(File logFile) {
         try {
             FileUtils.createFile(logFile);
             mFileOutputStream = new FileOutputStream(logFile, true);//不覆盖
+            mLogFilePath = logFile.getAbsolutePath();
+            isClose.set(false);
         } catch (IOException ignored) {
         }
+        return logFile;
+    }
+
+    public void open(LogFileCallback callback) {
+        mCallback = callback;
+        open(callback.getFile());
     }
 
     public void close() {
-        isClose.set(true);
         if (mFileOutputStream == null) {
             return;
         }
         try {
+            isClose.set(true);
             mFileOutputStream.close();
             mFileOutputStream = null;
         } catch (IOException ignored) {
@@ -122,8 +116,7 @@ public class LogFileUtils {
 
     private void checkLogFile(File logFile) {
         if (!mLogFilePath.equals(logFile.getAbsolutePath())) {
-            openStream(logFile);
-            mLogFilePath = logFile.getAbsolutePath();
+            open(logFile);
         }
     }
 
@@ -180,11 +173,14 @@ public class LogFileUtils {
 
     private synchronized void writeLog(String severityLevel, String tag, Throwable throwable,
             String logEntry) {
-        if (isClose.get()) {
+        if (isClose.get()){
             return;
         }
         if (mCallback != null) {
             checkLogFile(mCallback.getFile());
+        }
+        if (mFileOutputStream==null){
+            return;
         }
         String currentDateTime = DateTime.now().toString("yyyy-MM-dd HH:mm:ss.SSS");
         String stencil = currentDateTime + "   |" + severityLevel + "|   " + tag + " : " + logEntry;
