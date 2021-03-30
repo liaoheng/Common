@@ -52,7 +52,7 @@ public class FileUtils {
      * 创建文件
      */
     public static File createFile(File parent, String fileName) {
-        return createFile(new File(parent, fileName));
+        return createFile(new File(createPath(parent), fileName));
     }
 
     /**
