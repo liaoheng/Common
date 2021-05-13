@@ -7,6 +7,7 @@ import org.joda.time.LocalTime;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -104,7 +105,7 @@ public class DateTimeUtils {
      *
      * @param date 时间字符串(EEE MMM dd HH:mm:ss z yyyy)
      */
-    public static Date standardGMTparse(String date) {
+    public static Date parseStandardGMT(String date) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy",
                 Locale.ENGLISH);
         dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -119,7 +120,7 @@ public class DateTimeUtils {
      * 上一次操作与当前操作的距离，单位天
      *
      * @param lastDate 上一次操作, local date
-     * @param day 距离，天
+     * @param day      距离，天
      * @return true，超过或等于@param day
      */
     public static boolean isToDaysDo(long lastDate, int day) {
@@ -136,13 +137,98 @@ public class DateTimeUtils {
      * 上一次操作与当前操作的距离，单位天
      *
      * @param last 上一次操作, local date
-     * @param now 当前操作, local date
-     * @param day 距离，天
+     * @param now  当前操作, local date
+     * @param day  距离，天
      * @return true，超过或等于@param day
      */
     public static boolean isToDaysDo(DateTime last, DateTime now, int day) {
         int days = Days.daysBetween(last.toLocalDate(), now.toLocalDate()).getDays();
         return days >= day;
+    }
+
+    public static Calendar getCalendar(int hour, int minute, int second, int ms) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, minute);
+        calendar.set(Calendar.SECOND, second);
+        calendar.set(Calendar.MILLISECOND, ms);
+        return calendar;
+    }
+
+    public static Calendar getStartCalendar() {
+        return getCalendar(0, 0, 0, 0);
+    }
+
+    public static Calendar getEndCalendar() {
+        return getCalendar(23, 59, 59, 999);
+    }
+
+    /**
+     * The first day of this week
+     */
+    public static Date toWeekStartDay() {
+        Calendar calendar = getStartCalendar();
+        calendar.setFirstDayOfWeek(Calendar.MONDAY);
+        int day = calendar.get(Calendar.DAY_OF_WEEK);
+        if (Calendar.SUNDAY == day) {
+            calendar.add(Calendar.DATE, calendar.getFirstDayOfWeek() - 8);
+        } else {
+            calendar.add(Calendar.DATE, calendar.getFirstDayOfWeek() - day);
+        }
+        return calendar.getTime();
+    }
+
+    /**
+     * The last day of this week
+     */
+    public static Date toWeekEndDay() {
+        Calendar calendar = getEndCalendar();
+        calendar.setFirstDayOfWeek(Calendar.MONDAY);
+        int day = calendar.get(Calendar.DAY_OF_WEEK);
+        if (Calendar.SUNDAY != day) {
+            calendar.add(Calendar.DATE, 6 - (day - calendar.getFirstDayOfWeek()));
+        }
+        return calendar.getTime();
+    }
+
+    /**
+     * The first day of this month
+     */
+    public static Date toMonthStartDay() {
+        Calendar calendar = getStartCalendar();
+        calendar.add(Calendar.MONTH, 0);
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        return calendar.getTime();
+    }
+
+    /**
+     * The last day of this month
+     */
+    public static Date toMonthEndDay() {
+        Calendar calendar = getEndCalendar();
+        calendar.add(Calendar.MONTH, 1);
+        calendar.set(Calendar.DAY_OF_MONTH, 0);
+        return calendar.getTime();
+    }
+
+    /**
+     * The first day of this year
+     */
+    public static Date toYearStartDay() {
+        Calendar calendar = getStartCalendar();
+        calendar.set(Calendar.MONTH, Calendar.JANUARY);
+        calendar.set(Calendar.DATE, 1);
+        return calendar.getTime();
+    }
+
+    /**
+     * The last day of this year
+     */
+    public static Date toYearEndDay() {
+        Calendar calendar = getEndCalendar();
+        calendar.set(Calendar.MONTH, Calendar.DECEMBER);
+        calendar.set(Calendar.DATE, 31);
+        return calendar.getTime();
     }
 
     private static final long ONE_MINUTE = 60000L;
