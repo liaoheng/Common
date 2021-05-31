@@ -1,27 +1,29 @@
-//2021-2-25 18:03
+//2021-05-31 17:44
 ext {
     minSdkVersion = 21
     targetSdkVersion = 30
     compileSdkVersion = 30
-    buildToolsVersion = '30.0.1'
+    buildToolsVersion = '30.0.3'
     retrofitVersion = '2.9.0'
-    okhttpVersion = '4.9.0'
-    jacksonVersion = '2.12.0'
+    okhttpVersion = '4.9.1'
+    jacksonVersion = '2.12.3'
     glideVersion = '4.12.0'
-    roomVersion = '2.2.6'
+    roomVersion = '2.3.0'
+    coreVersion = '1.5.0'
+    fragmentVersion = '1.3.4'
 }
 ext.deps = [
         robolectric               : 'org.robolectric:robolectric:4.4',
         junit                     : 'junit:junit:4.12',
         //https://dl.google.com/dl/android/maven2/index.html
-        core                      : "androidx.core:core:1.3.2",
+        core                      : "androidx.core:core:$ext.coreVersion",
         annotations               : "androidx.annotation:annotation:1.1.0",
-        appcompat                 : "androidx.appcompat:appcompat:1.2.0",
-        fragment                  : "androidx.fragment:fragment:1.3.0",
+        appcompat                 : "androidx.appcompat:appcompat:1.3.0",
+        fragment                  : "androidx.fragment:fragment:$ext.fragmentVersion",
         coordinatorlayout         : "androidx.coordinatorlayout:coordinatorlayout:1.1.0",
         viewpager                 : "androidx.viewpager:viewpager:1.0.0",
         viewpager2                : "androidx.viewpager2:viewpager2:1.0.0",
-        recyclerview              : "androidx.recyclerview:recyclerview:1.1.0",
+        recyclerview              : "androidx.recyclerview:recyclerview:1.2.0",
         swiperefreshlayout        : "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0",
         cardview                  : "androidx.cardview:cardview:1.0.0",
         browser                   : "androidx.browser:browser:1.3.0",
@@ -39,9 +41,9 @@ ext.deps = [
         //https://github.com/FasterXML/jackson-core
         jackson_core              : "com.fasterxml.jackson.core:jackson-core:$ext.jacksonVersion",
         //https://github.com/google/gson
-        gson                      : "com.google.code.gson:gson:2.8.6",
+        gson                      : "com.google.code.gson:gson:2.8.7",
         //https://github.com/ReactiveX/RxJava
-        rxjava2                   : 'io.reactivex.rxjava2:rxjava:2.2.19',
+        rxjava2                   : 'io.reactivex.rxjava2:rxjava:2.2.21',
         //https://github.com/ReactiveX/RxAndroid
         rxandroid2                : 'io.reactivex.rxjava2:rxandroid:2.1.1',
         //https://github.com/trello/RxLifecycle
@@ -63,11 +65,11 @@ ext.deps = [
         //https://github.com/sockeqwe/AdapterDelegates
         adapterdelegates4         : 'com.hannesdorfmann:adapterdelegates4:4.0.0',
         //https://github.com/dlew/joda-time-android
-        joda_time_android         : 'net.danlew:android.joda:2.10.7.2',
+        joda_time_android         : 'net.danlew:android.joda:2.10.9.1',
 ]
 
 ext.kdeps = [
         //https://dl.google.com/dl/android/maven2/index.html
-        core                      : "androidx.core:core-ktx:1.3.2",
-        fragment                  : "androidx.fragment:fragment-ktx:1.2.5",
+        core                      : "androidx.core:core-ktx:$ext.coreVersion",
+        fragment                  : "androidx.fragment:fragment-ktx:$ext.fragmentVersion",
 ]
