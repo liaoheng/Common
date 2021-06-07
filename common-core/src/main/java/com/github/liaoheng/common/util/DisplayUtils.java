@@ -5,13 +5,16 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Insets;
 import android.graphics.Rect;
 import android.os.Build;
 import android.provider.Settings;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.WindowInsets;
 import android.view.WindowManager;
+import android.view.WindowMetrics;
 
 import androidx.core.content.ContextCompat;
 
@@ -26,12 +29,26 @@ public class DisplayUtils {
 
     /**
      * @param real 计算Navigation Bar的高度
-     * @see <a href="http://stackoverflow.com/questions/32226750/android-immersive-sticky-mode-creates-margins-on-left-and-right-of-screen">stackoverflow</a>
+     * @see <a href="http://stackoverflow.com/questions/32226750/android-immersive-sticky-mode-creates-margins-on-left-and-right-of-screen">Android</a>
+     * @see <a href="https://stackoverflow.com/questions/63407883/getting-screen-width-on-api-level-30-android-11-getdefaultdisplay-and-getme">Android R</a>
      */
     public static DisplayMetrics getScreenInfo(Context context, boolean real) {
-        WindowManager wm = ContextCompat.getSystemService(context, WindowManager.class);
         DisplayMetrics outMetrics = new DisplayMetrics();
+        WindowManager wm = ContextCompat.getSystemService(context, WindowManager.class);
         if (wm == null) {
+            return outMetrics;
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            WindowMetrics windowMetrics = wm.getCurrentWindowMetrics();
+            Insets insets = windowMetrics.getWindowInsets()
+                    .getInsetsIgnoringVisibility(WindowInsets.Type.systemBars());
+            if (real) {
+                outMetrics.widthPixels = windowMetrics.getBounds().width();
+                outMetrics.heightPixels = windowMetrics.getBounds().height();
+            } else {
+                outMetrics.widthPixels = windowMetrics.getBounds().width() - insets.left - insets.right;
+                outMetrics.heightPixels = windowMetrics.getBounds().height() - insets.top - insets.bottom;
+            }
             return outMetrics;
         }
         if (real) {
