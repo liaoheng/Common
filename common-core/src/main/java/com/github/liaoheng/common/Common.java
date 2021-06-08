@@ -7,8 +7,6 @@ import androidx.annotation.NonNull;
 
 import com.github.liaoheng.common.util.L;
 
-import net.danlew.android.joda.JodaTimeAndroid;
-
 /**
  * @author liaoheng
  * @version 2015-07-22 01:03
@@ -28,11 +26,6 @@ public class Common {
         PACKAGE_NAME = TextUtils.isEmpty(packageName) ? context.getPackageName() : packageName;
         PROJECT_NAME = TextUtils.isEmpty(projectName) ? PACKAGE_NAME : projectName;
         sDebug = isDebug;
-        try {
-            Class.forName("net.danlew.android.joda.JodaTimeAndroid");
-            JodaTimeAndroid.init(context);
-        } catch (ClassNotFoundException ignored) {
-        }
     }
 
     public static void init(@NonNull Context context, String projectName, boolean isDebug) {
