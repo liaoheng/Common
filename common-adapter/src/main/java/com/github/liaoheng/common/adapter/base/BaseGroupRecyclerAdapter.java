@@ -16,7 +16,7 @@ import androidx.annotation.Nullable;
  * @version 2017-01-25 09:42
  */
 public abstract class BaseGroupRecyclerAdapter<K>
-        extends BaseRecyclerAdapter<Group<K>, BaseRecyclerViewHolder<K>> {
+        extends BaseRecyclerAdapter<Group<K>, BaseRecyclerViewHolder<Group<K>>> {
 
     public BaseGroupRecyclerAdapter(Context context) {
         super(context);
@@ -33,7 +33,7 @@ public abstract class BaseGroupRecyclerAdapter<K>
 
     @NonNull
     @Override
-    public BaseRecyclerViewHolder<K> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public BaseRecyclerViewHolder<Group<K>> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == Group.GroupType.HEADER.getCode()) {
             return onCreateGroupHeaderViewHolder(parent, viewType);
         } else if (viewType == Group.GroupType.FOOTER.getCode()) {
@@ -44,12 +44,8 @@ public abstract class BaseGroupRecyclerAdapter<K>
     }
 
     @Override
-    public void onBindViewHolder(@NonNull BaseRecyclerViewHolder<K> holder, int position) {
+    public void onBindViewHolder(@NonNull BaseRecyclerViewHolder<Group<K>> holder, int position) {
         Group<K> item = getList().get(position);
-        if (item == null) {
-            onBindViewHolderItem(holder, null, position);
-            return;
-        }
         if (Group.GroupType.CONTENT.equals(item.getType())) {
             initOnItemClick(item, holder.itemView, position);
             initOnItemLongClick(item, holder.itemView, position);
@@ -58,18 +54,18 @@ public abstract class BaseGroupRecyclerAdapter<K>
     }
 
     @Override
-    public void onBindViewHolderItem(@NonNull BaseRecyclerViewHolder<K> holder, @Nullable Group<K> item,
+    public void onBindViewHolderItem(@NonNull BaseRecyclerViewHolder<Group<K>> holder, @Nullable Group<K> item,
             int position) {
-        holder.onHandle(item == null ? null : item.getContent(), position, item);
+        holder.onHandle(item, position);
     }
 
-    public abstract BaseRecyclerViewHolder<K> onCreateGroupHeaderViewHolder(ViewGroup parent,
+    public abstract BaseRecyclerViewHolder<Group<K>> onCreateGroupHeaderViewHolder(ViewGroup parent,
             int viewType);
 
-    public abstract BaseRecyclerViewHolder<K> onCreateGroupFooterViewHolder(ViewGroup parent,
+    public abstract BaseRecyclerViewHolder<Group<K>> onCreateGroupFooterViewHolder(ViewGroup parent,
             int viewType);
 
-    public abstract BaseRecyclerViewHolder<K> onCreateGroupContentViewHolder(ViewGroup parent,
+    public abstract BaseRecyclerViewHolder<Group<K>> onCreateGroupContentViewHolder(ViewGroup parent,
             int viewType);
 }
 
