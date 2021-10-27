@@ -1,65 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+        android:layout_height="match_parent">
 
     <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
         <Button
                 android:id="@+id/load_image"
-                android:text="open image list"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:text="open image list" />
 
         <Button
                 android:id="@+id/open_single_input_dialog"
-                android:text="open single input dialog"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:text="open single input dialog" />
 
         <Button
                 android:id="@+id/open_multi_input_dialog"
-                android:text="open multi input dialog"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:text="open multi input dialog" />
 
         <Button
                 android:id="@+id/open_bottom_sheet_dialog"
-                android:text="open bottom sheet dialog"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:text="open bottom sheet dialog" />
 
         <Button
                 android:id="@+id/open_toolbar"
-                android:text="open toolbar"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:text="open toolbar" />
 
         <Button
                 android:id="@+id/open_web_view"
-                android:text="open WebView"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:text="open WebView" />
 
 
         <com.github.liaoheng.common.ui.widget.ToggleImageButton
-                app:normalDrawableRes="@drawable/ic_wallpaper_black_24dp"
-                app:selectedDrawableRes="@drawable/ic_wallpaper_white_24dp"
-                app:enableSelected="true"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_wallpaper_black_24dp"
+                app:selectedDrawableRes="@drawable/ic_wallpaper_white_24dp" />
 
         <com.github.liaoheng.common.ui.widget.ToggleTextButton
-                android:textColor="@android:color/background_dark"
-                app:normalText="ok"
-                app:selectedText="off"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:text="ok"
+                android:textColor="@android:color/background_dark"
+                app:selectedText="off" />
 
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -2,23 +2,19 @@
 <resources>
 
     <attr name="enableAsync" format="boolean"/>
-    <attr name="checked" format="boolean"/>
-    <attr name="enableSelected" format="boolean"/>
+    <attr name="isSelected" format="boolean" />
 
     <declare-styleable name="ToggleImageButton">
         <attr name="enableAsync"/>
-        <attr name="checked"/>
-        <attr name="enableSelected"/>
-        <attr name="normalDrawableRes" format="reference"/>
+        <attr name="isSelected" />
         <attr name="selectedDrawableRes" format="reference"/>
     </declare-styleable>
 
     <declare-styleable name="ToggleTextButton">
         <attr name="enableAsync"/>
-        <attr name="checked"/>
-        <attr name="enableSelected"/>
-        <attr name="normalText" format="string"/>
+        <attr name="isSelected" />
         <attr name="selectedText" format="string"/>
+        <attr name="selectedTextColor" format="reference" />
     </declare-styleable>
 
     <declare-styleable name="CURightClickVisibleContentEditText">

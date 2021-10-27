@@ -4,10 +4,12 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.widget.Checkable;
+import android.widget.CompoundButton;
 
-import com.github.liaoheng.common.core.OnCheckedChangeListener;
 import com.github.liaoheng.common.ui.R;
+import com.github.liaoheng.common.ui.core.SwitchCheckable;
+import com.github.liaoheng.common.ui.core.SwitchHelper;
+import com.github.liaoheng.common.util.ResourceUtils;
 
 import androidx.appcompat.widget.AppCompatButton;
 
@@ -15,12 +17,12 @@ import androidx.appcompat.widget.AppCompatButton;
  * @author liaoheng
  * @version 2015年9月22日
  */
-public class ToggleTextButton extends AppCompatButton implements Checkable {
-    private OnCheckedChangeListener<ToggleTextButton> mOnCheckedChangeListener;
-    private boolean                                   mAsync;
-    private boolean                                   mAsyncSelect;
-    private String                                    mNormalText;
-    private String                                    mSelectedText;
+public class ToggleTextButton extends AppCompatButton implements SwitchCheckable {
+    private CharSequence mNormalText;
+    private CharSequence mSelectedText;
+    private int mNormalTextColor;
+    private int mSelectedTextColor;
+    private SwitchHelper mSwitchHelper;
 
     public ToggleTextButton(Context context) {
         super(context);
@@ -37,92 +39,72 @@ public class ToggleTextButton extends AppCompatButton implements Checkable {
     }
 
     private void init(Context context, AttributeSet attrs) {
-        if (attrs == null) {
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ToggleTextButton);
+        mNormalText = getText();
+        mSelectedText = a.getString(R.styleable.ToggleTextButton_selectedText);
+        mNormalTextColor = getCurrentTextColor();
+        mSelectedTextColor = a.getColor(R.styleable.ToggleTextButton_selectedTextColor,
+                ResourceUtils.getAttrColor(context, R.attr.colorAccent));
+        boolean isSelected = a.getBoolean(R.styleable.ToggleTextButton_isSelected, false);
+        updateSelected(isSelected);
+        boolean enableAsync = a.getBoolean(R.styleable.ToggleTextButton_enableAsync, false);
+        a.recycle();
+        mSwitchHelper = new SwitchHelper(this, enableAsync);
+    }
+
+    @Override
+    public void setSelected(boolean selected) {
+        mSwitchHelper.setSelected(selected);
+    }
+
+    @Override
+    public void updateSelected(boolean selected) {
+        super.setSelected(selected);
+        if (mSelectedTextColor > 1) {
+            if (selected) {
+                setTextColor(mSelectedTextColor);
+            } else {
+                setTextColor(mNormalTextColor);
+            }
+        }
+        if (TextUtils.isEmpty(mSelectedText)) {
             return;
         }
-        TypedArray a = null;
-        try {
-            a = context.obtainStyledAttributes(attrs, R.styleable.ToggleTextButton);
-            this.mAsync = a.getBoolean(R.styleable.ToggleTextButton_enableAsync, false);
-            mNormalText = a.getString(R.styleable.ToggleTextButton_normalText);
-            if (!TextUtils.isEmpty(mNormalText)) {
-                setText(mNormalText);
-            }
-            mSelectedText = a.getString(R.styleable.ToggleTextButton_selectedText);
-            boolean checked = a.getBoolean(R.styleable.ToggleTextButton_checked, false);
-            setSelected(checked);
-        } finally {
-            if (a != null) {
-                a.recycle();
-            }
-        }
-    }
-
-    /**
-     *async时，得到上次操作的状态
-     */
-    public boolean isAsyncSelect() {
-        return mAsyncSelect;
-    }
-
-    @Override public void setSelected(boolean selected) {
-        if (mAsync) {
-            mAsyncSelect = selected;
-        }
-        if (selected && !TextUtils.isEmpty(mSelectedText)) {
+        if (selected) {
             setText(mSelectedText);
-        } else if (!selected && !TextUtils.isEmpty(mNormalText)) {
+        } else {
             setText(mNormalText);
         }
-        super.setSelected(selected);
-    }
-    @Override
-    public boolean isChecked() {
-        return isSelected();
     }
 
-    /**
-     * async时，操作状态会被记录但不会改变控件状态，需自行调用{@link #setSelected(boolean)}改变。
-     * @param checked
-     */
-    @Override public void setChecked(boolean checked) {
-        if (mAsync) {
-            mAsyncSelect = checked;
-        } else {
-            setSelected(checked);
-            if (mOnCheckedChangeListener != null) {
-                mOnCheckedChangeListener.onCheckedChanged(this, checked);
-            }
-        }
+    @Override
+    public boolean isAsyncSelected() {
+        return mSwitchHelper.isAsyncSelected();
+    }
+
+    @Override
+    public boolean isChecked() {
+        return mSwitchHelper.isChecked();
+    }
+
+    @Override
+    public void setChecked(boolean checked) {
+        mSwitchHelper.setChecked(checked);
     }
 
     @Override
     public void toggle() {
-        setChecked(!isChecked());
+        mSwitchHelper.toggle();
     }
 
     @Override
     public boolean performClick() {
-        toggle();
+        mSwitchHelper.performClick();
         return super.performClick();
     }
 
-    /**
-     * 打开async
-     */
-    public void enableAsync() {
-        this.mAsync = true;
-    }
-
-    /**
-     * 关闭async
-     */
-    public void unableAsync() {
-        this.mAsync = false;
-    }
-
-    public void setOnCheckedChangeListener(
-            OnCheckedChangeListener<ToggleTextButton> onCheckedChangeListener) {
-        this.mOnCheckedChangeListener = onCheckedChangeListener;
+    @Override
+    public void setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener onCheckedChangeListener) {
+        mSwitchHelper.setOnCheckedChangeListener(onCheckedChangeListener);
     }
 }

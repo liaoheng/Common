@@ -5,16 +5,19 @@ import android.database.DataSetObserver;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.ListAdapter;
-
-import androidx.appcompat.widget.LinearLayoutCompat;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.liaoheng.common.adapter.base.BaseListAdapter;
 import com.github.liaoheng.common.adapter.base.BaseRecyclerAdapter;
 import com.github.liaoheng.common.adapter.base.IBaseAdapter;
 
+import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.recyclerview.widget.RecyclerView;
+
 /**
+ * List widget implemented based on {@link LinearLayoutCompat } and {@link Adapter}
+ *
  * @author liaoheng
  * @version 2016-12-19 16:13
  */
@@ -24,21 +27,14 @@ public class ListLinearLayout extends LinearLayoutCompat {
 
     public ListLinearLayout(Context context) {
         super(context);
-        init();
     }
 
     public ListLinearLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init();
     }
 
     public ListLinearLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
-    }
-
-    private void init() {
-        setOrientation(LinearLayoutCompat.VERTICAL);
     }
 
     private void checkNull(String hint, Object o) {
@@ -47,10 +43,11 @@ public class ListLinearLayout extends LinearLayoutCompat {
         }
     }
 
+    //system adapter
     private ListAdapter mSystemListAdapter;
     private RecyclerView.Adapter<RecyclerView.ViewHolder> mSystemRecyclerAdapter;
 
-    private DataSetObserver mSystemDataSetObserver = new DataSetObserver() {
+    private final DataSetObserver mSystemDataSetObserver = new DataSetObserver() {
         @Override
         public void onChanged() {
             Log.i(TAG, " ListView.DataSetObserver onChanged");
@@ -58,7 +55,7 @@ public class ListLinearLayout extends LinearLayoutCompat {
         }
     };
 
-    private RecyclerView.AdapterDataObserver mSystemDataObserver = new RecyclerView.AdapterDataObserver() {
+    private final RecyclerView.AdapterDataObserver mSystemDataObserver = new RecyclerView.AdapterDataObserver() {
         @Override
         public void onChanged() {
             Log.i(TAG, " RecyclerView.AdapterDataObserver onChanged");
@@ -106,11 +103,12 @@ public class ListLinearLayout extends LinearLayoutCompat {
         }
     }
 
+    //base adapter
     private BaseListAdapter<?> mListAdapter;
     private BaseRecyclerAdapter<?, ? extends RecyclerView.ViewHolder> mRecyclerAdapter;
     @SuppressWarnings("rawtypes") private IBaseAdapter.OnItemClickListener mOnItemClickListener;
 
-    private DataSetObserver dataSetObserver = new DataSetObserver() {
+    private final DataSetObserver mDataSetObserver = new DataSetObserver() {
         @Override
         public void onChanged() {
             Log.i(TAG, " BaseListAdapter.DataSetObserver onChanged");
@@ -118,7 +116,7 @@ public class ListLinearLayout extends LinearLayoutCompat {
         }
     };
 
-    private RecyclerView.AdapterDataObserver dataObserver = new RecyclerView.AdapterDataObserver() {
+    private final RecyclerView.AdapterDataObserver mDataObserver = new RecyclerView.AdapterDataObserver() {
         @Override
         public void onChanged() {
             Log.i(TAG, " BaseRecyclerAdapter.AdapterDataObserver onChanged");
@@ -150,7 +148,7 @@ public class ListLinearLayout extends LinearLayoutCompat {
         release();
         mOnItemClickListener = onItemClickListener;
         mListAdapter = adapter;
-        mListAdapter.registerDataSetObserver(dataSetObserver);
+        mListAdapter.registerDataSetObserver(mDataSetObserver);
         updateData(mListAdapter);
     }
 
@@ -160,7 +158,7 @@ public class ListLinearLayout extends LinearLayoutCompat {
         release();
         mOnItemClickListener = onItemClickListener;
         mRecyclerAdapter = adapter;
-        mRecyclerAdapter.registerAdapterDataObserver(dataObserver);
+        mRecyclerAdapter.registerAdapterDataObserver(mDataObserver);
         updateData(mRecyclerAdapter);
     }
 
@@ -204,11 +202,11 @@ public class ListLinearLayout extends LinearLayoutCompat {
 
     private void release() {
         if (mListAdapter != null) {
-            mListAdapter.unregisterDataSetObserver(dataSetObserver);
+            mListAdapter.unregisterDataSetObserver(mDataSetObserver);
             mListAdapter = null;
         }
         if (mRecyclerAdapter != null) {
-            mRecyclerAdapter.unregisterAdapterDataObserver(dataObserver);
+            mRecyclerAdapter.unregisterAdapterDataObserver(mDataObserver);
             mRecyclerAdapter = null;
         }
         if (mSystemListAdapter != null) {
