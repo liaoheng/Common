@@ -27,6 +27,8 @@ dependencies {
 
     implementation deps.annotations
     implementation deps.core
+    implementation deps.lifecycle_livedata
+    implementation deps.lifecycle_viewmodel
 
     implementation deps.guava
     //https://github.com/orhanobut/logger

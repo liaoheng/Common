@@ -12,8 +12,16 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.view.Surface;
 import android.widget.Toast;
-import androidx.core.content.ContextCompat;
+
 import com.github.liaoheng.common.R;
+
+import java.nio.ByteBuffer;
+import java.util.concurrent.ExecutorService;
+
+import androidx.core.content.ContextCompat;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelStoreOwner;
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -21,15 +29,8 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.ResourceObserver;
 import io.reactivex.subscribers.ResourceSubscriber;
 
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.ExecutorService;
-
 /**
- * 工具集
- * * <br/> Dependency : rxjava ,rxandroid
+ * 工具集 * <br/> Dependency : rxjava ,rxandroid
  *
  * @author liaoheng
  * @version 2015-11-25 23:33
@@ -344,5 +345,19 @@ public class Utils {
         observable.observeOn(AndroidSchedulers.mainThread())
                 .subscribe(resourceSubscriber);
         return resourceSubscriber;
+    }
+
+    public static <T extends ViewModel> T getViewModelFactory(ViewModelStoreOwner owner,
+            ViewModelProvider.Factory factory,
+            Class<T> clazz) {
+        return new ViewModelProvider(owner, factory).get(clazz);
+    }
+
+    public static <T extends ViewModel> T getViewModelFactory(ViewModelStoreOwner owner, Class<T> clazz) {
+        return getViewModelFactory(owner, ViewModelFactory.get(), clazz);
+    }
+
+    public static <T extends ViewModel> T getViewModel(ViewModelStoreOwner owner, Class<T> clazz) {
+        return new ViewModelProvider(owner).get(clazz);
     }
 }
