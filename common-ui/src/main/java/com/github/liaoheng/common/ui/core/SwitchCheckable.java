@@ -10,7 +10,7 @@ import android.widget.CompoundButton;
  */
 public interface SwitchCheckable extends Checkable {
     /**
-     * 覆写 {@link View#setSelected(boolean)} 方法
+     * 覆写 {@link View#setSelected(boolean)} 方法, 无OnCheckedChangeListener回调
      */
     void setSelected(boolean selected);
 
@@ -30,7 +30,7 @@ public interface SwitchCheckable extends Checkable {
     boolean isSelected();
 
     /**
-     * 覆写 {@link Checkable#setChecked(boolean)} 方法
+     * 覆写 {@link Checkable#setChecked(boolean)} 方法, 有OnCheckedChangeListener回调
      */
     @Override
     void setChecked(boolean checked);

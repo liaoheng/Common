@@ -4,7 +4,7 @@ android {
     compileSdkVersion rootProject.ext.compileSdkVersion
 
     defaultConfig {
-        minSdkVersion 19
+        minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode VERSION_CODE as int
         versionName VERSION_NAME
@@ -18,12 +18,15 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    lintOptions {
+        abortOnError false
+    }
 }
 
 dependencies {
     testImplementation deps.robolectric
     testImplementation deps.junit
-    testImplementation 'joda-time:joda-time:2.10.7'
+    testImplementation 'joda-time:joda-time:2.10.13'
 
     implementation deps.annotations
     implementation deps.core

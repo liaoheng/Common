@@ -1,13 +1,13 @@
-package com.github.liaoheng.common.util;
+package com.github.liaoheng.common.livedata;
 
 import android.util.SparseArray;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 
+import com.github.liaoheng.common.util.Callback1;
+
 /**
- * 使用SparseArray的MutableLiveData
- *
  * @author liaoheng
  * @date 2021-09-26 17:17
  */

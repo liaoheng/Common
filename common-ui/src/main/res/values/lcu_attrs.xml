@@ -10,12 +10,17 @@
         <attr name="selectedDrawableRes" format="reference"/>
     </declare-styleable>
 
-    <declare-styleable name="ToggleTextButton">
-        <attr name="enableAsync"/>
+    <declare-styleable name="SelectButton">
         <attr name="isSelected" />
-        <attr name="selectedText" format="string"/>
+        <attr name="selectedText" format="string" />
+        <attr name="selectedTextSize" format="dimension" />
         <attr name="selectedTextColor" format="reference" />
     </declare-styleable>
+
+    <declare-styleable name="ToggleButton">
+        <attr name="enableAsync" />
+    </declare-styleable>
+
 
     <declare-styleable name="CURightClickVisibleContentEditText">
         <attr name="showImage" format="reference"/>

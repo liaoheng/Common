@@ -2,39 +2,30 @@ package com.github.liaoheng.common.ui.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.widget.CompoundButton;
-
-import androidx.appcompat.widget.AppCompatImageButton;
 
 import com.github.liaoheng.common.ui.R;
 import com.github.liaoheng.common.ui.core.SwitchCheckable;
 import com.github.liaoheng.common.ui.core.SwitchHelper;
 
 /**
- * Toggle  imageButton
- *
  * @author liaoheng
- * @version 2016-11-4 13:53
+ * @version 2022-03-24 15:48:45
  */
-public class ToggleImageButton extends AppCompatImageButton implements SwitchCheckable {
-    public ToggleImageButton(Context context) {
+public class ToggleButton extends SelectButton implements SwitchCheckable {
+    public ToggleButton(Context context) {
         super(context);
     }
 
-    public ToggleImageButton(Context context, AttributeSet attrs) {
+    public ToggleButton(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(context, attrs);
     }
 
-    public ToggleImageButton(Context context, AttributeSet attrs, int defStyleAttr) {
+    public ToggleButton(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(context, attrs);
     }
 
-    private Drawable mNormalIcon;
-    private Drawable mSelectedDrawable;
     private SwitchHelper mSwitchHelper;
 
     @Override
@@ -43,12 +34,8 @@ public class ToggleImageButton extends AppCompatImageButton implements SwitchChe
     }
 
     public void init(Context context, AttributeSet attrs) {
-        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.ToggleImageButton);
-        mNormalIcon = getDrawable();
-        mSelectedDrawable = typedArray.getDrawable(R.styleable.ToggleImageButton_selectedDrawableRes);
-        boolean isSelected = typedArray.getBoolean(R.styleable.ToggleImageButton_isSelected, false);
-        updateSelected(isSelected);
-        boolean enableAsync = typedArray.getBoolean(R.styleable.ToggleImageButton_enableAsync, false);
+        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.ToggleButton);
+        boolean enableAsync = typedArray.getBoolean(R.styleable.ToggleButton_enableAsync, false);
         typedArray.recycle();
         mSwitchHelper = new SwitchHelper(this, enableAsync);
     }
@@ -66,14 +53,6 @@ public class ToggleImageButton extends AppCompatImageButton implements SwitchChe
     @Override
     public void updateSelected(boolean selected) {
         super.setSelected(selected);
-        if (mSelectedDrawable == null) {
-            return;
-        }
-        if (selected) {
-            setImageDrawable(mSelectedDrawable);
-        } else {
-            setImageDrawable(mNormalIcon);
-        }
     }
 
     @Override

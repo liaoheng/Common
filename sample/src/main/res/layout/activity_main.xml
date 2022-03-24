@@ -52,7 +52,7 @@
                 android:src="@drawable/ic_wallpaper_black_24dp"
                 app:selectedDrawableRes="@drawable/ic_wallpaper_white_24dp" />
 
-        <com.github.liaoheng.common.ui.widget.ToggleTextButton
+        <com.github.liaoheng.common.ui.widget.ToggleButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="ok"
