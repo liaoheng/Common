@@ -96,7 +96,7 @@ public class AsyncExecutor {
     /**
      * 将子线程结果传递到UI线程
      */
-    private void postCancel(final Worker worker) {
+    private <T> void postCancel(final Worker<T> worker) {
         HandlerUtils.post(new Runnable() {
             @Override
             public void run() {

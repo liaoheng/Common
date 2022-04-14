@@ -21,6 +21,9 @@
         <attr name="enableAsync" />
     </declare-styleable>
 
+    <declare-styleable name="SlideViewPager">
+        <attr name="android:orientation"/>
+    </declare-styleable>
 
     <declare-styleable name="CURightClickVisibleContentEditText">
         <attr name="showImage" format="reference"/>
