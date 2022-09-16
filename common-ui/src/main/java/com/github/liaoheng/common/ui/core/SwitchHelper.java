@@ -58,7 +58,7 @@ public class SwitchHelper implements SwitchCheckable {
 
     @Override
     public void toggle() {
-        setChecked(!mCheckable.isSelected());
+        mCheckable.setChecked(!mCheckable.isSelected());
     }
 
     @Override

@@ -2,11 +2,11 @@ package com.github.liaoheng.common.livedata;
 
 import androidx.lifecycle.MutableLiveData;
 
-import com.github.liaoheng.common.util.Callback2;
-
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * @author liaoheng
@@ -59,7 +59,7 @@ public class UpdateListLiveData<T> extends MutableLiveData<List<T>> {
         }
     }
 
-    public void put(int index, T t, Callback2<T, Boolean> function) {
+    public void put(int index, T t, Function<T, Boolean> function) {
         if (getValue() == null) {
             return;
         }
@@ -72,6 +72,20 @@ public class UpdateListLiveData<T> extends MutableLiveData<List<T>> {
             }
             getValue().remove(t);
             getValue().add(index, t);
+            postValue(getValue());
+        }
+    }
+
+    public void update(T t, Consumer<T> function) {
+        if (getValue() == null) {
+            return;
+        }
+        synchronized (mDataLock) {
+            T tt = get(t);
+            if (tt == null) {
+                return;
+            }
+            function.accept(tt);
             postValue(getValue());
         }
     }
