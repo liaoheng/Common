@@ -7,6 +7,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.github.liaoheng.common.adapter.internal.HeaderViewRecyclerAdapter;
+
 /**
  * RecyclerView子项间距离
  *
@@ -38,9 +40,13 @@ public class SpaceItemDecoration extends RecyclerView.ItemDecoration {
         } else {
             RecyclerView.LayoutManager layoutManager = parent.getLayoutManager();
             if (layoutManager instanceof GridLayoutManager) {
+                int headerCount = 0;
+                if (parent.getAdapter() instanceof HeaderViewRecyclerAdapter) {
+                    headerCount = ((HeaderViewRecyclerAdapter) parent.getAdapter()).getHeaderCount();
+                }
                 GridLayoutManager manager = (GridLayoutManager) layoutManager;
                 int spanCount = manager.getSpanCount();
-                int position = parent.getChildAdapterPosition(view);
+                int position = parent.getChildAdapterPosition(view) - headerCount;
                 if (position >= spanCount) {
                     outRect.top = mSpace;
                 }
