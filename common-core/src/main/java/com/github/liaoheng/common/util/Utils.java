@@ -15,7 +15,14 @@ import android.widget.Toast;
 
 import com.github.liaoheng.common.R;
 
+import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 
 import androidx.core.content.ContextCompat;
@@ -36,6 +43,46 @@ import io.reactivex.subscribers.ResourceSubscriber;
  * @version 2015-11-25 23:33
  */
 public class Utils {
+
+    public static Object reflectClassMethod(Object instance, Class<?> cls, String method, Class<?>[] paramTypes,
+            Object[] args) {
+        try {
+            Method m = cls.getMethod(method, paramTypes);
+            m.setAccessible(true);
+            return m.invoke(instance, args);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 随机获取长度为size的list<br>
+     * 获取的list顺序也是随机的
+     * 截取size比list长或相等,则返回全部
+     * //https://blog.csdn.net/flycp/article/details/106328878
+     *
+     * @param source
+     * @param size
+     */
+    public static <T> List<T> getRandomList(List<T> source, int size) {
+        if (source.size() <= size) {
+            Collections.shuffle(source);
+            return source;
+        }
+        List<T> target = new ArrayList<>(size);
+        Set<Integer> set = new HashSet<>(size);
+        while (set.size() < size) {
+            int random = new Random().nextInt(source.size());
+            if (!set.contains(random)) {
+                set.add(random);
+                target.add(source.get(random));
+            }
+        }
+        return target;
+
+    }
+
     /**
      * URL是否为指定网站
      */

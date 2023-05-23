@@ -22,4 +22,7 @@
     <item name="lcu_menu_web_share" type="id"/>
     <item name="lcu_menu_web_open_with_browser" type="id"/>
     <item name="lcu_menu_web_copy_url" type="id"/>
+
+
+    <item name="lcu_tabs_item_title" type="id"/>
 </resources>

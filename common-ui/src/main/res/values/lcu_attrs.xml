@@ -7,14 +7,18 @@
     <declare-styleable name="ToggleImageButton">
         <attr name="enableAsync"/>
         <attr name="isSelected" />
+        <attr name="normalDrawableRes" format="reference" />
         <attr name="selectedDrawableRes" format="reference"/>
     </declare-styleable>
 
     <declare-styleable name="SelectButton">
         <attr name="isSelected" />
+        <attr name="normalText" format="string" />
+        <attr name="normalTextColor" format="reference" />
         <attr name="selectedText" format="string" />
-        <attr name="selectedTextSize" format="dimension" />
         <attr name="selectedTextColor" format="reference" />
+        <attr name="normalTextSize" format="dimension" />
+        <attr name="selectedTextSize" format="dimension" />
     </declare-styleable>
 
     <declare-styleable name="ToggleButton">
@@ -23,6 +27,12 @@
 
     <declare-styleable name="SlideViewPager">
         <attr name="android:orientation"/>
+    </declare-styleable>
+
+    <declare-styleable name="ClickScaleButton">
+        <attr name="scaleXTo" format="float" />
+        <attr name="scaleYTo" format="float" />
+        <attr name="duration" format="integer" />
     </declare-styleable>
 
     <declare-styleable name="CURightClickVisibleContentEditText">

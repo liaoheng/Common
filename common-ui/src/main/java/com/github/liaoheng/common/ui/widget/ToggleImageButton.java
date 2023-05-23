@@ -33,9 +33,19 @@ public class ToggleImageButton extends AppCompatImageButton implements SwitchChe
         init(context, attrs);
     }
 
-    private Drawable mNormalIcon;
+    private Drawable mNormalDrawable;
     private Drawable mSelectedDrawable;
     private SwitchHelper mSwitchHelper;
+
+    public void setSelectedDrawable(Drawable selectedDrawable) {
+        mSelectedDrawable = selectedDrawable;
+        updateSelected(isChecked());
+    }
+
+    public void setNormalDrawable(Drawable normalDrawable) {
+        mNormalDrawable = normalDrawable;
+        updateSelected(isChecked());
+    }
 
     @Override
     public void setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener onCheckedChangeListener) {
@@ -44,7 +54,10 @@ public class ToggleImageButton extends AppCompatImageButton implements SwitchChe
 
     public void init(Context context, AttributeSet attrs) {
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.ToggleImageButton);
-        mNormalIcon = getDrawable();
+        mNormalDrawable = typedArray.getDrawable(R.styleable.ToggleImageButton_normalDrawableRes);
+        if (mNormalDrawable == null) {
+            mNormalDrawable = getDrawable();
+        }
         mSelectedDrawable = typedArray.getDrawable(R.styleable.ToggleImageButton_selectedDrawableRes);
         boolean isSelected = typedArray.getBoolean(R.styleable.ToggleImageButton_isSelected, false);
         updateSelected(isSelected);
@@ -72,7 +85,7 @@ public class ToggleImageButton extends AppCompatImageButton implements SwitchChe
         if (selected) {
             setImageDrawable(mSelectedDrawable);
         } else {
-            setImageDrawable(mNormalIcon);
+            setImageDrawable(mNormalDrawable);
         }
     }
 

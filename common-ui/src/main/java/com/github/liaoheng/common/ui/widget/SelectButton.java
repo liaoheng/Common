@@ -31,20 +31,29 @@ public class SelectButton extends AppCompatButton {
     }
 
     private CharSequence mNormalText;
-    private float mNormalTextSize;
     private CharSequence mSelectedText;
+    private float mNormalTextSize;
     private float mSelectedTextSize;
     private int mNormalTextColor;
     private int mSelectedTextColor;
 
     public void init(Context context, AttributeSet attrs) {
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.SelectButton);
-        mNormalText = getText();
-        mNormalTextColor = getCurrentTextColor();
-        mNormalTextSize = getTextSize();
+        mNormalText = typedArray.getString(R.styleable.SelectButton_normalText);
+        if (mNormalText == null) {
+            mNormalText = getText();
+        }
         mSelectedText = typedArray.getString(R.styleable.SelectButton_selectedText);
+        mNormalTextColor = typedArray.getColor(R.styleable.SelectButton_normalTextColor, -1);
+        if (mNormalTextColor == -1) {
+            mNormalTextColor = getCurrentTextColor();
+        }
         mSelectedTextColor = typedArray.getColor(R.styleable.SelectButton_selectedTextColor,
                 ResourceUtils.getAttrColor(context, R.attr.colorAccent));
+        mNormalTextSize = typedArray.getDimension(R.styleable.SelectButton_selectedTextSize, -1);
+        if (mNormalTextSize == -1) {
+            mNormalTextSize = getTextSize();
+        }
         mSelectedTextSize = typedArray.getDimension(R.styleable.SelectButton_selectedTextSize, 0);
         boolean isSelected = typedArray.getBoolean(R.styleable.SelectButton_isSelected, false);
         setSelected(isSelected);

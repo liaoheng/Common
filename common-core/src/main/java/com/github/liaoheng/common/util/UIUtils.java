@@ -28,10 +28,13 @@ import androidx.annotation.ColorRes;
 import androidx.annotation.IdRes;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.annotation.StringRes;
 import androidx.core.content.ContextCompat;
 
 import com.github.liaoheng.common.R;
+
+import java.util.function.Consumer;
 
 /**
  * 界面工具
@@ -431,6 +434,67 @@ public class UIUtils {
         for (TextView textView : textViews) {
             textView.setText("");
         }
+    }
+
+    private final static int FAST_CLICK_DELAY_TIME = 2000;
+    private static long lastClickTime;
+
+    /**
+     * 防抖动处理,防止多次点击
+     */
+    public static boolean isFastClick() {
+        return isFastClick(FAST_CLICK_DELAY_TIME);
+    }
+
+    /**
+     * 防抖动处理,防止多次点击
+     */
+    public static boolean isFastClick(int delayTime) {
+        boolean flag = true;
+        long currentClickTime = System.currentTimeMillis();
+        if ((currentClickTime - lastClickTime) >= delayTime) {
+            flag = false;
+        }
+        lastClickTime = currentClickTime;
+        return flag;
+    }
+
+    private static long viewLastClickTime;
+
+    /**
+     * 防抖动处理,防止多次点击
+     */
+    public static boolean isViewFastClick() {
+        boolean flag = true;
+        long currentClickTime = System.currentTimeMillis();
+        if ((currentClickTime - viewLastClickTime) >= 500) {
+            flag = false;
+        }
+        viewLastClickTime = currentClickTime;
+        return flag;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public static void addFastClickListener(View view, Consumer<View> consumer) {
+        view.setOnClickListener(v -> {
+            if (isViewFastClick()) {
+                return;
+            }
+            consumer.accept(v);
+        });
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public static <T> Consumer<T> getConsumer(Consumer<T> consumer) {
+        return o -> {
+            if (isFastClick()) {
+                return;
+            }
+            if (consumer == null) {
+                return;
+            }
+            consumer.accept(o);
+        };
     }
 
 }
