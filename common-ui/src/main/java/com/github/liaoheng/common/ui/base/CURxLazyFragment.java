@@ -1,109 +1,41 @@
 package com.github.liaoheng.common.ui.base;
 
-import android.content.Context;
-import android.os.Bundle;
 import androidx.annotation.CheckResult;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import com.trello.rxlifecycle3.LifecycleProvider;
-import com.trello.rxlifecycle3.LifecycleTransformer;
-import com.trello.rxlifecycle3.RxLifecycle;
-import com.trello.rxlifecycle3.android.FragmentEvent;
-import com.trello.rxlifecycle3.android.RxLifecycleAndroid;
-import io.reactivex.Observable;
-import io.reactivex.subjects.BehaviorSubject;
+import androidx.lifecycle.Lifecycle;
+
+import com.trello.lifecycle4.android.lifecycle.AndroidLifecycle;
+import com.trello.rxlifecycle4.LifecycleProvider;
+import com.trello.rxlifecycle4.LifecycleTransformer;
+
+import io.reactivex.rxjava3.core.Observable;
 
 /**
- * RxLifecycle3 Base LazyFragment
+ * RxLifecycle Base LazyFragment
  *
  * @author liaoheng
  * @version 2016-7-29 14:19
- * @see <a href="https://github.com/trello/RxLifecycle/blob/master/rxlifecycle-components/src/main/java/com/trello/rxlifecycle3/components/support/RxFragment.java">RxFragment</a>
  */
-public abstract class CURxLazyFragment extends CULazyFragment implements LifecycleProvider<FragmentEvent> {
-    private final BehaviorSubject<FragmentEvent> lifecycleSubject = BehaviorSubject.create();
-
-    public CURxLazyFragment getFragment() {
-        return this;
-    }
+public abstract class CURxLazyFragment extends CULazyFragment implements LifecycleProvider<Lifecycle.Event> {
+    private final LifecycleProvider<Lifecycle.Event> mLifecycleProvider = AndroidLifecycle.createLifecycleProvider(
+            this);
 
     @Override
     @NonNull
     @CheckResult
-    public final Observable<FragmentEvent> lifecycle() {
-        return lifecycleSubject.hide();
+    public final Observable<Lifecycle.Event> lifecycle() {
+        return mLifecycleProvider.lifecycle();
     }
 
     @Override
-    @NonNull
-    @CheckResult
-    public final <T> LifecycleTransformer<T> bindUntilEvent(@NonNull FragmentEvent event) {
-        return RxLifecycle.bindUntilEvent(lifecycleSubject, event);
+    public <T> LifecycleTransformer<T> bindUntilEvent(Lifecycle.Event event) {
+        return mLifecycleProvider.bindUntilEvent(event);
     }
 
     @Override
     @NonNull
     @CheckResult
     public final <T> LifecycleTransformer<T> bindToLifecycle() {
-        return RxLifecycleAndroid.bindFragment(lifecycleSubject);
-    }
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        lifecycleSubject.onNext(FragmentEvent.ATTACH);
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        lifecycleSubject.onNext(FragmentEvent.CREATE);
-    }
-
-    @Override
-    protected void onCreateViewLazy(Bundle savedInstanceState) {
-        lifecycleSubject.onNext(FragmentEvent.CREATE_VIEW);
-    }
-
-    @Override
-    protected void onStartLazy() {
-        super.onStartLazy();
-        lifecycleSubject.onNext(FragmentEvent.START);
-    }
-
-    @Override
-    protected void onResumeLazy() {
-        super.onResumeLazy();
-        lifecycleSubject.onNext(FragmentEvent.RESUME);
-    }
-
-    @Override
-    protected void onPauseLazy() {
-        lifecycleSubject.onNext(FragmentEvent.PAUSE);
-        super.onPauseLazy();
-    }
-
-    @Override
-    protected void onStopLazy() {
-        lifecycleSubject.onNext(FragmentEvent.STOP);
-        super.onStopLazy();
-    }
-
-    @Override
-    protected void onDestroyViewLazy() {
-        lifecycleSubject.onNext(FragmentEvent.DESTROY_VIEW);
-        super.onDestroyViewLazy();
-    }
-
-    @Override
-    public void onDestroy() {
-        lifecycleSubject.onNext(FragmentEvent.DESTROY);
-        super.onDestroy();
-    }
-
-    @Override
-    public void onDetach() {
-        lifecycleSubject.onNext(FragmentEvent.DETACH);
-        super.onDetach();
+        return mLifecycleProvider.bindToLifecycle();
     }
 }

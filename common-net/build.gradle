@@ -1,4 +1,6 @@
-apply plugin: 'com.android.library'
+plugins {
+    id 'com.android.library'
+}
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -29,8 +31,8 @@ dependencies {
     implementation deps.okhttp_logging
 
     compileOnly deps.glide
-    compileOnly deps.rxandroid2
-    compileOnly deps.rxjava2
+    compileOnly deps.rxandroid3
+    compileOnly deps.rxjava3
 
 //    implementation group: "com.github.liaoheng", name: "common-core", version: "0.1.0-SNAPSHOT", changing: true
     implementation project(':common-core')

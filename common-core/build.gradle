@@ -1,4 +1,6 @@
-apply plugin: 'com.android.library'
+plugins {
+    id 'com.android.library'
+}
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -41,8 +43,8 @@ dependencies {
     compileOnly deps.jackson_annotations
     compileOnly deps.jackson_databind
     compileOnly deps.jackson_core
-    compileOnly deps.rxandroid2
-    compileOnly deps.rxjava2
+    compileOnly deps.rxandroid3
+    compileOnly deps.rxjava3
 }
 
 apply from: rootProject.file('gradle-mvn-push.gradle')

@@ -31,12 +31,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
-import io.reactivex.ObservableTransformer;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Function;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.ObservableSource;
+import io.reactivex.rxjava3.core.ObservableTransformer;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.functions.Function;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import okhttp3.Cache;
 import okhttp3.Dispatcher;
 import okhttp3.Interceptor;
@@ -196,22 +196,19 @@ public class OkHttp3Utils {
         }
 
         public Init setDefaultErrorHandleListener() {
-            errorHandleListener = new ErrorHandleListener() {
-                @Override
-                public Response checkError(Response response) throws NetException {
-                    if (!response.isSuccessful()) {
-                        String string = "code : " + response.code();
-                        ResponseBody body = response.body();
-                        if (body != null && body.contentLength() > 0) {
-                            try {
-                                string = body.string();
-                            } catch (IOException ignored) {
-                            }
+            errorHandleListener = response -> {
+                if (!response.isSuccessful()) {
+                    String string = "code : " + response.code();
+                    ResponseBody body = response.body();
+                    if (body != null && body.contentLength() > 0) {
+                        try {
+                            string = body.string();
+                        } catch (IOException ignored) {
                         }
-                        throw new NetServerException(response.message(), string);
                     }
-                    return response;
+                    throw new NetServerException(response.message(), string);
                 }
+                return response;
             };
             return this;
         }
@@ -465,7 +462,7 @@ public class OkHttp3Utils {
     }
 
     public static class DefaultErrorInterceptor implements Interceptor {
-        private ErrorHandleListener mErrorHandleListener;
+        private final ErrorHandleListener mErrorHandleListener;
 
         public DefaultErrorInterceptor(ErrorHandleListener errorHandleListener) {
             mErrorHandleListener = errorHandleListener;
@@ -588,16 +585,14 @@ public class OkHttp3Utils {
 
     public Observable<String> postAsyncToJsonString(final String url,
             Observable<String> observable) {
-        return observable.subscribeOn(Schedulers.io()).flatMap(new Function<String, ObservableSource<String>>() {
-            @Override
-            public ObservableSource<String> apply(String jsonBody) {
-                try {
-                    return Observable.just(postSync(url, jsonBody));
-                } catch (IOException e) {
-                    return Observable.error(e);
-                }
-            }
-        });
+        return observable.subscribeOn(Schedulers.io()).flatMap(
+                (Function<String, ObservableSource<String>>) jsonBody -> {
+                    try {
+                        return Observable.just(postSync(url, jsonBody));
+                    } catch (IOException e) {
+                        return Observable.error(e);
+                    }
+                });
     }
 
     public class FileDownload {
@@ -657,83 +652,65 @@ public class OkHttp3Utils {
     }
 
     public ObservableTransformer<String, FileDownload> applyGetFileName() {
-        return new ObservableTransformer<String, FileDownload>() {
-            @Override
-            public ObservableSource<FileDownload> apply(Observable<String> upstream) {
-                return upstream
-                        .flatMap(new Function<String, Observable<FileDownload>>() {
-                            @Override
-                            public Observable<FileDownload> apply(String url) {
-                                try {
-                                    String extension = FileUtils.getExtension(url);
-                                    if (!TextUtils.isEmpty(extension)) {
-                                        return Observable
-                                                .just(new FileDownload(FileUtils.getName(url),
-                                                        url));
-                                    }
-                                    Response response = OkHttp3Utils.get().headSync(url);
-                                    String header = response.header("Content-Disposition");
-                                    String fileName = Utils.getContentDispositionFileName(header,
-                                            UUID.randomUUID().toString() + ".jpg");
-                                    return Observable.just(new FileDownload(fileName, url));
-                                } catch (IOException e) {
-                                    return Observable.error(e);
-                                }
-                            }
-                        });
-            }
-        };
+        return upstream -> upstream
+                .flatMap((Function<String, Observable<FileDownload>>) url -> {
+                    try {
+                        String extension = FileUtils.getExtension(url);
+                        if (!TextUtils.isEmpty(extension)) {
+                            return Observable
+                                    .just(new FileDownload(FileUtils.getName(url),
+                                            url));
+                        }
+                        Response response = OkHttp3Utils.get().headSync(url);
+                        String header = response.header("Content-Disposition");
+                        String fileName = Utils.getContentDispositionFileName(header,
+                                UUID.randomUUID().toString() + ".jpg");
+                        return Observable.just(new FileDownload(fileName, url));
+                    } catch (IOException e) {
+                        return Observable.error(e);
+                    }
+                });
     }
 
     public ObservableTransformer<FileDownload, FileDownload> applyDownloadFile() {
-        return new ObservableTransformer<FileDownload, FileDownload>() {
-            @Override
-            public ObservableSource<FileDownload> apply(Observable<FileDownload> upstream) {
-                return upstream
-                        .flatMap(new Function<FileDownload, ObservableSource<FileDownload>>() {
-                            @Override
-                            public ObservableSource<FileDownload> apply(FileDownload fileDownload) {
-                                try {
-                                    OkHttpClient.Builder builder = OkHttp3Utils.get().cloneClient();
-                                    builder.readTimeout(2, TimeUnit.MINUTES);
-                                    Request request = new Request.Builder()
-                                            .url(fileDownload.getUrl()).build();
-                                    Response response = builder.build().newCall(request).execute();
-                                    if (!response.isSuccessful()) {
-                                        return Observable.error(new IOException("Response error"));
-                                    }
-                                    ResponseBody body = response.body();
-                                    if (body == null) {
-                                        return Observable.error(new IOException("Response body is null"));
-                                    }
-                                    return Observable
-                                            .just(new FileDownload(fileDownload.getFileName(),
-                                                    body.byteStream()));
-                                } catch (IOException e) {
-                                    return Observable.error(e);
-                                }
-                            }
-                        });
-            }
-        };
+        return upstream -> upstream
+                .flatMap((Function<FileDownload, ObservableSource<FileDownload>>) fileDownload -> {
+                    try {
+                        OkHttpClient.Builder builder = OkHttp3Utils.get().cloneClient();
+                        builder.readTimeout(2, TimeUnit.MINUTES);
+                        Request request = new Request.Builder()
+                                .url(fileDownload.getUrl()).build();
+                        Response response = builder.build().newCall(request).execute();
+                        if (!response.isSuccessful()) {
+                            return Observable.error(new IOException("Response error"));
+                        }
+                        ResponseBody body = response.body();
+                        if (body == null) {
+                            return Observable.error(new IOException("Response body is null"));
+                        }
+                        return Observable
+                                .just(new FileDownload(fileDownload.getFileName(),
+                                        body.byteStream()));
+                    } catch (IOException e) {
+                        return Observable.error(e);
+                    }
+                });
     }
 
     public Disposable downloadFile(String url, final File dir,
             Callback<FileDownload> callback) {
         Observable<FileDownload> observable = Observable.just(url).subscribeOn(Schedulers.io())
                 .compose(applyGetFileName())
-                .compose(applyDownloadFile()).flatMap(new Function<FileDownload, ObservableSource<FileDownload>>() {
-                    @Override
-                    public ObservableSource<FileDownload> apply(FileDownload fileName) {
-                        try {
-                            File file = FileUtils.createFile(dir, fileName.getFileName());
-                            FileUtils.copyInputStreamToFile(fileName.getInputStream(), file);
-                            return Observable.just(new FileDownload(file));
-                        } catch (IOException e) {
-                            return Observable.error(e);
-                        }
-                    }
-                });
+                .compose(applyDownloadFile()).flatMap(
+                        (Function<FileDownload, ObservableSource<FileDownload>>) fileName -> {
+                            try {
+                                File file = FileUtils.createFile(dir, fileName.getFileName());
+                                FileUtils.copyInputStreamToFile(fileName.getInputStream(), file);
+                                return Observable.just(new FileDownload(file));
+                            } catch (IOException e) {
+                                return Observable.error(e);
+                            }
+                        });
         return Utils.addSubscribe(observable, callback);
     }
 

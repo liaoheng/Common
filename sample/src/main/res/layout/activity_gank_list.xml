@@ -5,4 +5,13 @@
              android:orientation="vertical">
 
     <include layout="@layout/lca_view_list" />
+
+    <com.github.liaoheng.common.ui.widget.RotateAnimationImageView
+        android:visibility="gone"
+        android:id="@+id/loading"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
 </FrameLayout>

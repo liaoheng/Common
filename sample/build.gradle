@@ -1,4 +1,6 @@
-apply plugin: 'com.android.application'
+plugins {
+  id 'com.android.application'
+}
 
 android {
   compileSdkVersion rootProject.ext.compileSdkVersion
@@ -25,6 +27,9 @@ android {
     sourceCompatibility JavaVersion.VERSION_1_8
     targetCompatibility JavaVersion.VERSION_1_8
   }
+  composeOptions {
+    kotlinCompilerExtensionVersion = "1.4.3"
+  }
 }
 
 dependencies {
@@ -41,6 +46,9 @@ dependencies {
 
   implementation 'com.jakewharton:butterknife:10.2.0'
   annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.0'
+
+  //https://stackoverflow.com/questions/75263047/duplicate-class-in-kotlin-android
+  implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.10"))
 
 
 //  api group: "com.github.liaoheng", name: "common-plus", version: "0.1.0-SNAPSHOT", changing: true

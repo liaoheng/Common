@@ -40,7 +40,7 @@ public class CUBottomSheetDialog extends BottomSheetDialog {
     }
 
     public void setContentView(@LayoutRes int layoutResId, HandleView handleView) {
-        setContentView(layoutResId);
+        super.setContentView(layoutResId);
         if (handleView != null) {
             handleView.handle(getWindow().getDecorView());
         }

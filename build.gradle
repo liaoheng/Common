@@ -1,21 +1,6 @@
-buildscript {
-    repositories {
-        mavenLocal()
-        google()
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:7.0.3'
-    }
-}
-
-allprojects {
-    repositories {
-        mavenLocal()
-        google()
-        mavenCentral()
-        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-    }
+plugins {
+    id 'com.android.application' version '7.4.2' apply false
+    id 'com.android.library' version '7.4.2' apply false
 }
 
 task clean(type: Delete) {

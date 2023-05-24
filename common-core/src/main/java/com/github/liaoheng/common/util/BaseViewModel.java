@@ -2,9 +2,10 @@ package com.github.liaoheng.common.util;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-import io.reactivex.Observable;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
+
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.disposables.Disposable;
 
 /**
  * base {@link ViewModel}
@@ -27,11 +28,11 @@ public abstract class BaseViewModel extends ViewModel {
      */
     private final CompositeDisposable mDisposables = new CompositeDisposable();
 
-    public MutableLiveData<Throwable> getLoadError() {
+    public MutableLiveData<Throwable> monitorLoadError() {
         return mLoadErrorLiveData;
     }
 
-    public MutableLiveData<Boolean> getLoadStatus() {
+    public MutableLiveData<Boolean> monitorLoadStatus() {
         return mLoadStatusLiveData;
     }
 

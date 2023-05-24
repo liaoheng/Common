@@ -1,4 +1,6 @@
-apply plugin: 'com.android.library'
+plugins {
+    id 'com.android.library'
+}
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -27,8 +29,8 @@ dependencies {
     implementation deps.appcompat
 
     compileOnly deps.material
-    compileOnly deps.rxlifecycle3
-    compileOnly deps.rxlifecycle_android3
+    compileOnly deps.rxlifecycle4
+    compileOnly deps.rxlifecycle_android4
 
 //    implementation group: "com.github.liaoheng", name: "common-core", version: "0.1.0-SNAPSHOT", changing: true
     implementation project(':common-core')

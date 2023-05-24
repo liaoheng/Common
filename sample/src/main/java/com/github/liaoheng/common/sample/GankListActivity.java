@@ -31,7 +31,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.Observable;
+import io.reactivex.rxjava3.core.Observable;
 
 /**
  * @author liaoheng
@@ -51,6 +51,8 @@ public class GankListActivity extends CURxBaseActivity {
                     openBrowser(getActivity(), item.getPageURL());
                 }).setAdapter(mAdapter).build();
 
+        View loading = findViewById(R.id.loading);
+
         Observable<String> photo = OkHttp3Utils.get()
                 .getAsyncToJsonString(
                         "https://pixabay.com/api/?key=11234205-21f02ee751cd3cd4f1fa49b70&image_type=photo");
@@ -58,11 +60,13 @@ public class GankListActivity extends CURxBaseActivity {
                 new Callback.EmptyCallback<String>() {
                     @Override
                     public void onPreExecute() {
+                        loading.setVisibility(View.VISIBLE);
                         mRecyclerViewHelper.setSwipeRefreshing(true);
                     }
 
                     @Override
                     public void onPostExecute() {
+                        loading.setVisibility(View.GONE);
                         mRecyclerViewHelper.setSwipeRefreshing(false);
                     }
 

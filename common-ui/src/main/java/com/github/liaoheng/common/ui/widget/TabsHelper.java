@@ -5,7 +5,6 @@ import android.os.Build;
 import android.widget.TextView;
 
 import androidx.annotation.LayoutRes;
-import androidx.annotation.RequiresApi;
 
 import com.github.liaoheng.common.ui.R;
 import com.github.liaoheng.common.ui.adapter.PagerAdapter;
@@ -21,7 +20,6 @@ import java.util.function.Consumer;
  * @author liaoheng
  * @date 2021-10-19 10:33
  */
-@RequiresApi(api = Build.VERSION_CODES.N)
 public class TabsHelper {
     private final String TAG = TabsHelper.class.getSimpleName();
 
