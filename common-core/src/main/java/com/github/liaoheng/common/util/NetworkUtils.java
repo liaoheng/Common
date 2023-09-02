@@ -8,6 +8,7 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.text.TextUtils;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
@@ -171,5 +172,20 @@ public class NetworkUtils {
      */
     public static String getMacAddress(@NonNull Context context) {
         return getWifiInfo(context).getMacAddress();
+    }
+
+    /**
+     * 判断是否有外网连接（普通方法不能判断外网的网络是否连接，比如连接上局域网）
+     */
+    public static boolean ping(String ip) {
+        try {
+            Process p = Runtime.getRuntime().exec("ping -c 3 -w 100 " + ip);// ping thrice
+            // ping的状态
+            if (p.waitFor() == 0) {
+                return true;
+            }
+        } catch (IOException | InterruptedException ignored) {
+        }
+        return false;
     }
 }

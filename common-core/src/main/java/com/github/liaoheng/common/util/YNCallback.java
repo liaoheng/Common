@@ -4,12 +4,12 @@ package com.github.liaoheng.common.util;
  * @author liaoheng
  * @version 2019-12-06 11:35
  */
-public interface Callback5 {
+public interface YNCallback {
     void onAllow();
 
     void onDeny();
 
-    class EmptyCallback implements Callback5 {
+    class EmptyCallback implements YNCallback {
         @Override
         public void onAllow() {
 

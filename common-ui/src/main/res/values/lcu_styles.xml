@@ -18,6 +18,7 @@
         <item name="colorPrimary">@color/lcu_colorPrimary</item>
         <item name="colorPrimaryDark">@color/lcu_colorPrimaryDark</item>
         <item name="colorAccent">@color/lcu_colorAccent</item>
+        <item name="background">@android:color/background_light</item>
     </style>
 
     <!--ActionBar-->
@@ -36,24 +37,6 @@
     <style name="LCU.AppTheme.Fullscreen" parent="LCU.AppTheme.NoActionBar">
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowContentOverlay">@null</item>
-    </style>
-
-    <!--ActionBar 滑动返回-->
-    <style name="LCU.AppTheme.ActionBar.SwipeBack" parent="LCU.AppTheme.ActionBar">
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
-    </style>
-
-    <!--NoActionBar 滑动返回-->
-    <style name="LCU.AppTheme.NoActionBar.SwipeBack" parent="LCU.AppTheme.NoActionBar">
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
-    </style>
-
-    <!--ToolBar 滑动返回-->
-    <style name="LCU.AppTheme.ToolBar.SwipeBack" parent="LCU.AppTheme.ToolBar">
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
 </resources>

@@ -5,7 +5,7 @@ import android.text.TextUtils;
 
 import androidx.appcompat.app.AlertDialog;
 
-import com.github.liaoheng.common.util.Callback5;
+import com.github.liaoheng.common.util.YNCallback;
 
 /**
  * @author liaoheng
@@ -17,7 +17,7 @@ public class UIUtils {
      * 是否提示框
      */
     public static AlertDialog createYNAlertDialog(Context context, String message,
-            final Callback5 call) {
+            final YNCallback call) {
         return createAlertDialog(context, message, call);
     }
 
@@ -25,7 +25,7 @@ public class UIUtils {
      * 是否提示框
      */
     public static AlertDialog showYNAlertDialog(Context context, String message,
-            final Callback5 call) {
+            final YNCallback call) {
         AlertDialog dialog = createYNAlertDialog(context, message, call);
         dialog.show();
         return dialog;
@@ -35,9 +35,9 @@ public class UIUtils {
      * 信息提示框
      */
     public static AlertDialog createInfoAlertDialog(Context context, String message,
-            final Callback5 call) {
+            final YNCallback call) {
         return createAlertDialog(context, message, context.getString(com.github.liaoheng.common.R.string.lcm_ok),
-                null, new Callback5() {
+                null, new YNCallback() {
                     @Override
                     public void onAllow() {
                         call.onAllow();
@@ -53,7 +53,7 @@ public class UIUtils {
      * 信息提示框
      */
     public static AlertDialog showInfoAlertDialog(Context context, String message,
-            final Callback5 call) {
+            final YNCallback call) {
         AlertDialog alb = createInfoAlertDialog(context, message, call);
         alb.show();
         return alb;
@@ -63,7 +63,7 @@ public class UIUtils {
      * 对话框
      */
     public static AlertDialog createAlertDialog(Context context, String message,
-            final Callback5 call) {
+            final YNCallback call) {
         return createAlertDialog(context, message, context.getString(com.github.liaoheng.common.R.string.lcm_ok),
                 context.getString(com.github.liaoheng.common.R.string.lcm_no), call);
     }
@@ -72,7 +72,7 @@ public class UIUtils {
      * 对话框
      */
     public static AlertDialog showAlertDialog(Context context, String message,
-            final Callback5 call) {
+            final YNCallback call) {
         AlertDialog alb = createAlertDialog(context, message, call);
         alb.show();
         return alb;
@@ -84,7 +84,7 @@ public class UIUtils {
     public static AlertDialog createAlertDialog(Context context, String message,
             String positiveButtonText,
             String negativeButtonText,
-            Callback5 call) {
+            YNCallback call) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context).setMessage(message);
         if (!TextUtils.isEmpty(positiveButtonText)) {
             builder.setPositiveButton(positiveButtonText, (dialog, which) -> call.onAllow());

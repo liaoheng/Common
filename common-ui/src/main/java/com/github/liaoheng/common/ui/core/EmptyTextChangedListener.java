@@ -4,9 +4,9 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 
-import com.github.liaoheng.common.util.Callback4;
-
 import androidx.annotation.NonNull;
+
+import java.util.function.Consumer;
 
 /**
  * 检查是否为输入字符是否为空
@@ -17,14 +17,14 @@ import androidx.annotation.NonNull;
 public class EmptyTextChangedListener implements TextWatcher {
 
     private boolean empty = true;
-    private Callback4<CharSequence> mCallback;
+    private final Consumer<CharSequence> mCallback;
 
     /**
      * 检查是否为输入字符是否为空
      *
      * @param callback yes 非空  no 空
      */
-    public EmptyTextChangedListener(@NonNull Callback4<CharSequence> callback) {
+    public EmptyTextChangedListener(@NonNull Consumer<CharSequence> callback) {
         mCallback = callback;
     }
 
@@ -39,10 +39,6 @@ public class EmptyTextChangedListener implements TextWatcher {
 
     @Override
     public void afterTextChanged(Editable s) {
-        if (empty) {
-            mCallback.onNo(s);
-        } else {
-            mCallback.onYes(s);
-        }
+        mCallback.accept(empty ? null : s);
     }
 }

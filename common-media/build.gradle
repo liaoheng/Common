@@ -20,27 +20,27 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    lintOptions {
+        abortOnError false
+    }
 }
 
 dependencies {
     testImplementation deps.robolectric
     testImplementation deps.junit
+    testImplementation 'joda-time:joda-time:2.10.13'
 
-    implementation deps.appcompat
+    implementation deps.annotations
+    implementation deps.core
+    implementation 'androidx.media:media:1.6.0'
+    implementation deps.lifecycle_livedata
+    implementation deps.lifecycle_viewmodel
 
-    compileOnly deps.material
-    compileOnly deps.coordinatorlayout
-    compileOnly deps.rxlifecycle4
-    compileOnly deps.rxlifecycle_android4
+    compileOnly deps.guava
+    compileOnly deps.rxandroid3
+    compileOnly deps.rxjava3
 
-//    implementation group: "com.github.liaoheng", name: "common-core", version: "0.1.0-SNAPSHOT", changing: true
     implementation project(':common-core')
-//    implementation group: "com.github.liaoheng", name: "common-adapter", version: "0.1.0-SNAPSHOT", changing: true
-    implementation project(':common-adapter')
 }
-apply from: rootProject.file('gradle-mvn-push.gradle')
 
-//configurations.all {
-//  // check for updates every build
-//  resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
-//}
+apply from: rootProject.file('gradle-mvn-push.gradle')

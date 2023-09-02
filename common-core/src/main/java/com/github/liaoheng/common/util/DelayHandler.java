@@ -9,13 +9,13 @@ import androidx.annotation.NonNull;
  * @author liaoheng
  * @date 2021-12-02 11:27
  */
-public class DHandler extends Handler {
+public class DelayHandler extends Handler {
 
-    public DHandler(@NonNull Looper looper) {
+    public DelayHandler(@NonNull Looper looper) {
         super(looper);
     }
 
-    public DHandler(@NonNull Looper looper, Callback callback) {
+    public DelayHandler(@NonNull Looper looper, Callback callback) {
         super(looper, callback);
     }
 
@@ -27,5 +27,10 @@ public class DHandler extends Handler {
     public void sendDelayed(int what, Object obj, long delayMillis) {
         removeMessages(what);
         sendMessageDelayed(obtainMessage(what, obj), delayMillis);
+    }
+
+    public void sendDelayed(int what, int arg1, int arg2, Object obj, long delayMillis) {
+        removeMessages(what);
+        sendMessageDelayed(obtainMessage(what,arg1,arg2, obj), delayMillis);
     }
 }

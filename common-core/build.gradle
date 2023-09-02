@@ -32,13 +32,12 @@ dependencies {
 
     implementation deps.annotations
     implementation deps.core
-    implementation deps.lifecycle_livedata
-    implementation deps.lifecycle_viewmodel
 
-    implementation deps.guava
     //https://github.com/orhanobut/logger
-    implementation 'com.orhanobut:logger:2.2.0'
-
+    compileOnly 'com.orhanobut:logger:2.2.0'
+    compileOnly deps.guava
+    compileOnly deps.lifecycle_livedata
+    compileOnly deps.lifecycle_viewmodel
     compileOnly deps.joda_time_android
     compileOnly deps.jackson_annotations
     compileOnly deps.jackson_databind

@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
 
-import com.github.liaoheng.common.util.DHandler;
+import com.github.liaoheng.common.util.DelayHandler;
 
 /**
  * 加载动画控件
@@ -45,7 +45,7 @@ public abstract class BaseAnimationImageView extends AppCompatImageView {
 
     }
 
-    private final DHandler mHandler = new DHandler(Looper.getMainLooper()) {
+    private final DelayHandler mHandler = new DelayHandler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(@NonNull Message msg) {
             if (msg.what == 1) {

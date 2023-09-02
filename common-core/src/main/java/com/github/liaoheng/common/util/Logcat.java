@@ -2,14 +2,14 @@ package com.github.liaoheng.common.util;
 
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.FormatStrategy;
 import com.orhanobut.logger.PrettyFormatStrategy;
 
 import java.util.Arrays;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 /**
  * 日志处理
@@ -282,7 +282,7 @@ public final class Logcat {
         void e(@NonNull String TAG, @NonNull Throwable e);
     }
 
-    public abstract class BaseLogcat implements ILogcat {
+    public static abstract class BaseLogcat implements ILogcat {
         protected String createTag(String tag, String prefix) {
             return TextUtils.isEmpty(prefix) ? tag : prefix + (TextUtils.isEmpty(tag) ? "" : "-" + tag);
         }
@@ -443,10 +443,14 @@ public final class Logcat {
     public synchronized ILogcat logger() {
         if (mLogger == null) {
             synchronized (Logger.class) {
-                mLogger = new Logger();
+                mLogger = newLogger();
             }
         }
         return mLogger;
+    }
+
+    public ILogcat newLogger() {
+        return new Logger();
     }
 
     public class Log extends BaseLogcat {
@@ -627,6 +631,10 @@ public final class Logcat {
             }
         }
         return mLog;
+    }
+
+    public ILogcat newLog() {
+        return new Log(mGlobalTag);
     }
 
     private boolean isNull(Object object) {

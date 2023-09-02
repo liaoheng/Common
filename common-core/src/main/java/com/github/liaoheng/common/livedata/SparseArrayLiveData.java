@@ -3,9 +3,8 @@ package com.github.liaoheng.common.livedata;
 import android.util.SparseArray;
 
 import androidx.annotation.Nullable;
+import androidx.core.util.Consumer;
 import androidx.lifecycle.MutableLiveData;
-
-import com.github.liaoheng.common.util.Callback1;
 
 /**
  * @author liaoheng
@@ -30,7 +29,7 @@ public class SparseArrayLiveData<T> extends MutableLiveData<SparseArray<T>> {
         put(key, t, this::setValue);
     }
 
-    public void put(int key, T t, Callback1<SparseArray<T>> consumer) {
+    public void put(int key, T t, Consumer<SparseArray<T>> consumer) {
         SparseArray<T> value = getValue();
         if (value == null) {
             value = new SparseArray<>();
@@ -49,7 +48,7 @@ public class SparseArrayLiveData<T> extends MutableLiveData<SparseArray<T>> {
         remove(key, this::setValue);
     }
 
-    public void remove(int key, Callback1<SparseArray<T>> consumer) {
+    public void remove(int key, Consumer<SparseArray<T>> consumer) {
         if (getValue() == null) {
             return;
         }

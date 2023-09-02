@@ -45,7 +45,7 @@ public class ListLinearLayout extends LinearLayoutCompat {
 
     //system adapter
     private ListAdapter mSystemListAdapter;
-    private RecyclerView.Adapter<RecyclerView.ViewHolder> mSystemRecyclerAdapter;
+    private RecyclerView.Adapter<? extends RecyclerView.ViewHolder> mSystemRecyclerAdapter;
 
     private final DataSetObserver mSystemDataSetObserver = new DataSetObserver() {
         @Override
@@ -82,7 +82,7 @@ public class ListLinearLayout extends LinearLayoutCompat {
         }
     }
 
-    public void setAdapter(RecyclerView.Adapter<RecyclerView.ViewHolder> adapter) {
+    public void setAdapter(RecyclerView.Adapter<? extends RecyclerView.ViewHolder> adapter) {
         checkNull("RecyclerView.Adapter is null", adapter);
         release();
         mSystemRecyclerAdapter = adapter;
@@ -90,7 +90,8 @@ public class ListLinearLayout extends LinearLayoutCompat {
         updateDataAdapter(mSystemRecyclerAdapter);
     }
 
-    private void updateDataAdapter(RecyclerView.Adapter<RecyclerView.ViewHolder> adapter) {
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    private void updateDataAdapter(RecyclerView.Adapter adapter) {
         removeAllViews();
         if (adapter.getItemCount() == 0) {
             return;
@@ -198,6 +199,12 @@ public class ListLinearLayout extends LinearLayoutCompat {
         if (getChildAt(position) != null) {
             removeViewAt(position);
         }
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        release();
+        super.onDetachedFromWindow();
     }
 
     private void release() {

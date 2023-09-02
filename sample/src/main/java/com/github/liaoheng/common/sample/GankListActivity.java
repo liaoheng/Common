@@ -21,6 +21,7 @@ import com.github.liaoheng.common.adapter.core.RecyclerViewHelper;
 import com.github.liaoheng.common.adapter.holder.BaseRecyclerViewHolder;
 import com.github.liaoheng.common.network.OkHttp3Utils;
 import com.github.liaoheng.common.ui.base.CURxBaseActivity;
+import com.github.liaoheng.common.ui.core.LoadStatusHelper;
 import com.github.liaoheng.common.util.AppUtils;
 import com.github.liaoheng.common.util.Callback;
 import com.github.liaoheng.common.util.JsonUtils;
@@ -40,6 +41,7 @@ import io.reactivex.rxjava3.core.Observable;
 public class GankListActivity extends CURxBaseActivity {
     GankRecyclerAdapter mAdapter;
     RecyclerViewHelper mRecyclerViewHelper;
+    LoadStatusHelper mStatusHelper;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,7 +53,7 @@ public class GankListActivity extends CURxBaseActivity {
                     openBrowser(getActivity(), item.getPageURL());
                 }).setAdapter(mAdapter).build();
 
-        View loading = findViewById(R.id.loading);
+        mStatusHelper = LoadStatusHelper.with(getWindow().getDecorView());
 
         Observable<String> photo = OkHttp3Utils.get()
                 .getAsyncToJsonString(
@@ -60,25 +62,29 @@ public class GankListActivity extends CURxBaseActivity {
                 new Callback.EmptyCallback<String>() {
                     @Override
                     public void onPreExecute() {
-                        loading.setVisibility(View.VISIBLE);
+                        mStatusHelper.isLoading(true);
                         mRecyclerViewHelper.setSwipeRefreshing(true);
                     }
 
                     @Override
                     public void onPostExecute() {
-                        loading.setVisibility(View.GONE);
+                        mStatusHelper.isLoading(false);
                         mRecyclerViewHelper.setSwipeRefreshing(false);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        L.getToast().e(TAG, getActivity(), e);
+                        mStatusHelper.error();
+                        L.alog().e(TAG, getActivity(), e);
                     }
 
                     @Override
                     public void onSuccess(String json) {
                         try {
                             List<PixabayImage> ganks = JsonUtils.parseList(json, "hits", PixabayImage.class);
+                            if (ganks==null || ganks.isEmpty()) {
+                                mStatusHelper.empty();
+                            }
                             mAdapter.setList(ganks);
                             mAdapter.notifyDataSetChanged();
                         } catch (Exception e) {

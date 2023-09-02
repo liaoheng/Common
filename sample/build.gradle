@@ -39,6 +39,7 @@ dependencies {
   implementation deps.recyclerview
   implementation deps.browser
   implementation deps.material
+  implementation deps.coordinatorlayout
 
   implementation deps.glide
   annotationProcessor deps.glide_compiler

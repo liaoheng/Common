@@ -25,4 +25,7 @@
 
 
     <item name="lcu_tabs_item_title" type="id"/>
+
+    <item name="lcu_view_load_error" type="id"/>
+    <item name="lcu_view_load_empty" type="id"/>
 </resources>

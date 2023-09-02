@@ -7,4 +7,8 @@
     <string name="lcu_open_with_browser">Open With Browser</string>
     <string name="lcu_copy_url">@android:string/copyUrl</string>
     <string name="lcu_url_copied">URL copied to clipboard</string>
+    <string name="lcu_loading">Loading</string>
+    <string name="lcu_empty_data">Empty data</string>
+    <string name="lcu_load_error">Load error</string>
+    <string name="lcu_retry">Retry</string>
 </resources>

@@ -15,6 +15,7 @@ import com.github.liaoheng.common.thread.WorkProcessThread;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 /**
  * @author liaoheng
@@ -25,18 +26,18 @@ public class TtsHelper {
     private TextToSpeech mTTS;
     private WorkProcessQueueHelper<String> mQueueHelper;
 
-    public TtsHelper(Context context, Callback4<Integer> initCallback) {
+    public TtsHelper(Context context, Consumer<Boolean> initCallback) {
         this(context, initCallback, null);
     }
 
-    public TtsHelper(Context context, Callback4<Integer> initCallback, Callback<String> callback) {
+    public TtsHelper(Context context, Consumer<Boolean> initCallback, Callback<String> callback) {
         this(context, "", initCallback, callback);
     }
 
     /**
      * @param engine3rd packageName
      */
-    public TtsHelper(Context context, String engine3rd, Callback4<Integer> initCallback, Callback<String> callback) {
+    public TtsHelper(Context context, String engine3rd, Consumer<Boolean> initCallback, Callback<String> callback) {
         init(context, engine3rd, initCallback);
         mQueueHelper = new WorkProcessQueueHelper<>(
                 new WorkProcessThread(new IWorkProcessThread.BaseHandler(L.alog(), TAG) {
@@ -67,17 +68,13 @@ public class TtsHelper {
     /**
      * @param engine3rd packageName
      */
-    private void init(Context context, String engine3rd, Callback4<Integer> callback) {
+    private void init(Context context, String engine3rd, Consumer<Boolean> callback) {
         String ttsPackage = null;
         if (!TextUtils.isEmpty(engine3rd) && getEngineInfo(context, engine3rd) != null) {
             ttsPackage = engine3rd;
         }
         mTTS = new TextToSpeech(context, status -> {
-            if (status == TextToSpeech.SUCCESS) {
-                callback.onYes(status);
-            } else {
-                callback.onNo(status);
-            }
+            callback.accept(status == TextToSpeech.SUCCESS);
         }, ttsPackage);
         mTTS.setSpeechRate(0.7f);
         L.alog().d(TAG, "init tts : %s", ttsPackage);

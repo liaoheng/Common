@@ -5,10 +5,11 @@ import android.content.Intent;
 import android.view.View;
 import com.github.liaoheng.common.ui.R;
 import com.github.liaoheng.common.ui.widget.WebViewLayout;
-import com.github.liaoheng.common.util.Callback4;
 import com.github.liaoheng.common.util.UIUtils;
 
 import androidx.annotation.NonNull;
+
+import java.util.function.Consumer;
 
 /**
  *  may use {@link R.layout#lcu_layout_web}
@@ -63,9 +64,9 @@ public class WebHelper {
         }
     }
 
-    public void onBackPressed(Callback4<Void> callback) {
+    public void onBackPressed(Consumer<Void> callback) {
         if (getWebView().backPressed()) {
-            callback.onYes(null);
+            callback.accept(null);
         }
     }
 

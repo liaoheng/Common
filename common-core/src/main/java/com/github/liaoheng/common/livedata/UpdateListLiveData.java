@@ -1,8 +1,5 @@
 package com.github.liaoheng.common.livedata;
 
-import androidx.lifecycle.MutableLiveData;
-
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Consumer;
@@ -12,7 +9,7 @@ import java.util.function.Function;
  * @author liaoheng
  * @date 2021-09-10 13:55
  */
-public class UpdateListLiveData<T> extends MutableLiveData<List<T>> {
+public class UpdateListLiveData<T> extends DefMutableLiveData<List<T>> {
     final Object mDataLock = new Object();
 
     public UpdateListLiveData() {
@@ -94,9 +91,11 @@ public class UpdateListLiveData<T> extends MutableLiveData<List<T>> {
         if (getValue() == null) {
             return null;
         }
-        int index = getValue().indexOf(t);
-        if (index > -1) {
-            return getValue().get(index);
+        synchronized (mDataLock) {
+            int index = getValue().indexOf(t);
+            if (index > -1) {
+                return getValue().get(index);
+            }
         }
         return null;
     }
@@ -112,7 +111,7 @@ public class UpdateListLiveData<T> extends MutableLiveData<List<T>> {
         if (getValue() == null || getValue().isEmpty()) {
             return;
         }
-        Collections.sort(getValue(), c);
+        getValue().sort(c);
     }
 
     public void remove(T t) {
@@ -144,6 +143,13 @@ public class UpdateListLiveData<T> extends MutableLiveData<List<T>> {
             return;
         }
         getValue().clear();
+    }
+
+    public int size() {
+        if (getValue() == null) {
+            return 0;
+        }
+        return getValue().size();
     }
 
 }
