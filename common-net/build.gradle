@@ -3,22 +3,20 @@ plugins {
 }
 
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
+    namespace 'com.github.liaoheng.common.network'
+    compileSdk rootProject.ext.compileSdkVersion
 
     defaultConfig {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode VERSION_CODE as int
-        versionName VERSION_NAME
     }
     testOptions {
         unitTests {
             includeAndroidResources = true
         }
     }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+    publishing {
+        singleVariant("release")
     }
 }
 

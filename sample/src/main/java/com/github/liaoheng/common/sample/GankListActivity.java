@@ -30,8 +30,6 @@ import com.github.liaoheng.common.util.Utils;
 
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import io.reactivex.rxjava3.core.Observable;
 
 /**
@@ -82,7 +80,7 @@ public class GankListActivity extends CURxBaseActivity {
                     public void onSuccess(String json) {
                         try {
                             List<PixabayImage> ganks = JsonUtils.parseList(json, "hits", PixabayImage.class);
-                            if (ganks==null || ganks.isEmpty()) {
+                            if (ganks == null || ganks.isEmpty()) {
                                 mStatusHelper.empty();
                             }
                             mAdapter.setList(ganks);
@@ -126,84 +124,83 @@ public class GankListActivity extends CURxBaseActivity {
         private String userImageURL;
         private String previewURL;
 
-        public String getLargeImageURL() { return largeImageURL;}
+        public String getLargeImageURL() {return largeImageURL;}
 
-        public void setLargeImageURL(String largeImageURL) { this.largeImageURL = largeImageURL;}
+        public void setLargeImageURL(String largeImageURL) {this.largeImageURL = largeImageURL;}
 
-        public int getWebformatHeight() { return webformatHeight;}
+        public int getWebformatHeight() {return webformatHeight;}
 
-        public void setWebformatHeight(int webformatHeight) { this.webformatHeight = webformatHeight;}
+        public void setWebformatHeight(int webformatHeight) {this.webformatHeight = webformatHeight;}
 
-        public int getWebformatWidth() { return webformatWidth;}
+        public int getWebformatWidth() {return webformatWidth;}
 
-        public void setWebformatWidth(int webformatWidth) { this.webformatWidth = webformatWidth;}
+        public void setWebformatWidth(int webformatWidth) {this.webformatWidth = webformatWidth;}
 
-        public int getImageWidth() { return imageWidth;}
+        public int getImageWidth() {return imageWidth;}
 
-        public void setImageWidth(int imageWidth) { this.imageWidth = imageWidth;}
+        public void setImageWidth(int imageWidth) {this.imageWidth = imageWidth;}
 
-        public int getId() { return id;}
+        public int getId() {return id;}
 
-        public void setId(int id) { this.id = id;}
+        public void setId(int id) {this.id = id;}
 
-        public int getUser_id() { return user_id;}
+        public int getUser_id() {return user_id;}
 
-        public void setUser_id(int user_id) { this.user_id = user_id;}
+        public void setUser_id(int user_id) {this.user_id = user_id;}
 
-        public String getPageURL() { return pageURL;}
+        public String getPageURL() {return pageURL;}
 
-        public void setPageURL(String pageURL) { this.pageURL = pageURL;}
+        public void setPageURL(String pageURL) {this.pageURL = pageURL;}
 
-        public int getImageHeight() { return imageHeight;}
+        public int getImageHeight() {return imageHeight;}
 
-        public void setImageHeight(int imageHeight) { this.imageHeight = imageHeight;}
+        public void setImageHeight(int imageHeight) {this.imageHeight = imageHeight;}
 
-        public String getWebformatURL() { return webformatURL;}
+        public String getWebformatURL() {return webformatURL;}
 
-        public void setWebformatURL(String webformatURL) { this.webformatURL = webformatURL;}
+        public void setWebformatURL(String webformatURL) {this.webformatURL = webformatURL;}
 
-        public String getType() { return type;}
+        public String getType() {return type;}
 
-        public void setType(String type) { this.type = type;}
+        public void setType(String type) {this.type = type;}
 
-        public int getPreviewHeight() { return previewHeight;}
+        public int getPreviewHeight() {return previewHeight;}
 
-        public void setPreviewHeight(int previewHeight) { this.previewHeight = previewHeight;}
+        public void setPreviewHeight(int previewHeight) {this.previewHeight = previewHeight;}
 
-        public String getTags() { return tags;}
+        public String getTags() {return tags;}
 
-        public void setTags(String tags) { this.tags = tags;}
+        public void setTags(String tags) {this.tags = tags;}
 
-        public String getUser() { return user;}
+        public String getUser() {return user;}
 
-        public void setUser(String user) { this.user = user;}
+        public void setUser(String user) {this.user = user;}
 
-        public int getImageSize() { return imageSize;}
+        public int getImageSize() {return imageSize;}
 
-        public void setImageSize(int imageSize) { this.imageSize = imageSize;}
+        public void setImageSize(int imageSize) {this.imageSize = imageSize;}
 
-        public int getPreviewWidth() { return previewWidth;}
+        public int getPreviewWidth() {return previewWidth;}
 
-        public void setPreviewWidth(int previewWidth) { this.previewWidth = previewWidth;}
+        public void setPreviewWidth(int previewWidth) {this.previewWidth = previewWidth;}
 
-        public String getUserImageURL() { return userImageURL;}
+        public String getUserImageURL() {return userImageURL;}
 
-        public void setUserImageURL(String userImageURL) { this.userImageURL = userImageURL;}
+        public void setUserImageURL(String userImageURL) {this.userImageURL = userImageURL;}
 
-        public String getPreviewURL() { return previewURL;}
+        public String getPreviewURL() {return previewURL;}
 
-        public void setPreviewURL(String previewURL) { this.previewURL = previewURL;}
+        public void setPreviewURL(String previewURL) {this.previewURL = previewURL;}
     }
 
     public class GankRecyclerViewHolder extends BaseRecyclerViewHolder<PixabayImage> {
-        @BindView(R.id.gank_list_item_image)
         ImageView image;
-        @BindView(R.id.gank_list_item_content)
         TextView content;
 
         public GankRecyclerViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this, itemView);
+            image = findViewById(R.id.gank_list_item_image);
+            content = findViewById(R.id.gank_list_item_content);
         }
 
         @SuppressLint("SetTextI18n")
