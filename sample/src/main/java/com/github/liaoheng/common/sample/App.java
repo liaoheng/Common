@@ -2,14 +2,16 @@ package com.github.liaoheng.common.sample;
 
 import android.app.Application;
 
-import com.github.liaoheng.common.plus.CommonPlus;
+import com.github.liaoheng.Common;
+import com.github.liaoheng.network.CommonNet;
 
 /**
  * @author liaoheng
  * @version 2016-06-24 16:55
  */
 public class App extends Application {
-    @Override public void onCreate() {
+    @Override
+    public void onCreate() {
         super.onCreate();
         //Common.init(this, "CommonSample", BuildConfig.DEBUG);
         //OkHttp3Utils.init().setDefaultCache().addHeaderPlus(new OkHttp3Utils.HeaderPlusListener() {
@@ -21,6 +23,7 @@ public class App extends Application {
         //    }
         //}).initialization();
 
-        CommonPlus.init(this, "CommonSample", BuildConfig.DEBUG);
+        Common.init(this, "CommonSample", true);
+        CommonNet.init(this);
     }
 }

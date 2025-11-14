@@ -1,39 +1,44 @@
 plugins {
-    id 'com.android.library'
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.maven.publish)
 }
 
 android {
-    namespace 'com.github.liaoheng.common.adapter'
-    compileSdk rootProject.ext.compileSdkVersion
+    compileSdkVersion libs.versions.compileSdkVersion.get() as int
 
     defaultConfig {
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
+        namespace "com.github.liaoheng.adapter"
+        minSdk libs.versions.minSdk.get() as int
+        targetSdk libs.versions.targetSdk.get() as int
     }
     testOptions {
         unitTests {
             includeAndroidResources = true
         }
     }
-    publishing {
-        singleVariant("release")
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
 dependencies {
-    testImplementation deps.robolectric
-    testImplementation deps.junit
+    testImplementation libs.robolectric
+    testImplementation libs.junit
 
-    implementation deps.core
-    implementation deps.recyclerview
-    implementation(deps.swiperefreshlayout) {
+    implementation libs.androidx.core
+    implementation libs.androidx.recyclerview
+    implementation(libs.androidx.swiperefreshlayout) {
         exclude module: 'core'
     }
-    compileOnly(deps.appcompat){
+    compileOnly(libs.androidx.appcompat){
         exclude module: 'activity'
         exclude module: 'collection'
     }
-    compileOnly deps.adapterdelegates4
+    compileOnly "com.hannesdorfmann:adapterdelegates4:4.3.2"
 }
 
-apply from: rootProject.file('gradle-mvn-push.gradle')
+import com.vanniktech.maven.publish.AndroidSingleVariantLibrary
+mavenPublishing {
+    configure(new AndroidSingleVariantLibrary("release", true, false))
+}

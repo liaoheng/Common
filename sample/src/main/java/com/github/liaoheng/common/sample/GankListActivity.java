@@ -4,10 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.View;
+import android.view.LayoutInflater;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,18 +13,20 @@ import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.core.content.ContextCompat;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.github.liaoheng.common.adapter.base.BaseRecyclerAdapter;
-import com.github.liaoheng.common.adapter.base.IBaseAdapter;
-import com.github.liaoheng.common.adapter.core.RecyclerViewHelper;
-import com.github.liaoheng.common.adapter.holder.BaseRecyclerViewHolder;
-import com.github.liaoheng.common.network.OkHttp3Utils;
-import com.github.liaoheng.common.ui.base.CURxBaseActivity;
-import com.github.liaoheng.common.ui.core.LoadStatusHelper;
-import com.github.liaoheng.common.util.AppUtils;
-import com.github.liaoheng.common.util.Callback;
-import com.github.liaoheng.common.util.JsonUtils;
-import com.github.liaoheng.common.util.L;
-import com.github.liaoheng.common.util.Utils;
+import com.github.liaoheng.adapter.base.BaseRecyclerAdapter;
+import com.github.liaoheng.adapter.base.IBaseAdapter;
+import com.github.liaoheng.adapter.core.RecyclerViewHelper;
+import com.github.liaoheng.adapter.holder.BaseRecyclerViewHolder;
+import com.github.liaoheng.common.sample.databinding.ActivityGankListBinding;
+import com.github.liaoheng.common.sample.databinding.ViewGankListItemBinding;
+import com.github.liaoheng.network.OkHttp3Utils;
+import com.github.liaoheng.ui.base.CURxBaseActivity;
+import com.github.liaoheng.util.AppUtils;
+import com.github.liaoheng.util.Callback;
+import com.github.liaoheng.util.JsonUtils;
+import com.github.liaoheng.util.L;
+import com.github.liaoheng.util.UIUtils;
+import com.github.liaoheng.util.Utils;
 
 import java.util.List;
 
@@ -39,67 +39,60 @@ import io.reactivex.rxjava3.core.Observable;
 public class GankListActivity extends CURxBaseActivity {
     GankRecyclerAdapter mAdapter;
     RecyclerViewHelper mRecyclerViewHelper;
-    LoadStatusHelper mStatusHelper;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_gank_list);
+        ActivityGankListBinding viewBinding = ActivityGankListBinding.inflate(getLayoutInflater());
+        UIUtils.setStatusBarColor(this, viewBinding.getRoot(), R.color.colorPrimaryDark);
+        setContentView(viewBinding.getRoot());
         mAdapter = new GankRecyclerAdapter(this);
-        mRecyclerViewHelper = RecyclerViewHelper.newBuilder(this).setOnItemClickListener(
-                (IBaseAdapter.OnItemClickListener<PixabayImage>) (item, view, position) -> {
+        mRecyclerViewHelper = RecyclerViewHelper.newBuilder(this)
+                .setOnItemClickListener((IBaseAdapter.OnItemClickListener<PixabayImage>) (item, view, position) -> {
                     openBrowser(getActivity(), item.getPageURL());
-                }).setAdapter(mAdapter).build();
-
-        mStatusHelper = LoadStatusHelper.with(getWindow().getDecorView());
+                })
+                .setAdapter(mAdapter)
+                .build();
 
         Observable<String> photo = OkHttp3Utils.get()
                 .getAsyncToJsonString(
                         "https://pixabay.com/api/?key=11234205-21f02ee751cd3cd4f1fa49b70&image_type=photo");
-        Utils.addSubscribe(photo.compose(bindToLifecycle()),
-                new Callback.EmptyCallback<String>() {
-                    @Override
-                    public void onPreExecute() {
-                        mStatusHelper.isLoading(true);
-                        mRecyclerViewHelper.setSwipeRefreshing(true);
-                    }
+        Utils.addSubscribe(photo.compose(bindToLifecycle()), new Callback.EmptyCallback<String>() {
+            @Override
+            public void onPreExecute() {
+                mRecyclerViewHelper.setSwipeRefreshing(true);
+            }
 
-                    @Override
-                    public void onPostExecute() {
-                        mStatusHelper.isLoading(false);
-                        mRecyclerViewHelper.setSwipeRefreshing(false);
-                    }
+            @Override
+            public void onPostExecute() {
+                mRecyclerViewHelper.setSwipeRefreshing(false);
+            }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        mStatusHelper.error();
-                        L.alog().e(TAG, getActivity(), e);
-                    }
+            @Override
+            public void onError(Throwable e) {
+                L.getToast().e(TAG, getActivity(), e);
+            }
 
-                    @Override
-                    public void onSuccess(String json) {
-                        try {
-                            List<PixabayImage> ganks = JsonUtils.parseList(json, "hits", PixabayImage.class);
-                            if (ganks == null || ganks.isEmpty()) {
-                                mStatusHelper.empty();
-                            }
-                            mAdapter.setList(ganks);
-                            mAdapter.notifyDataSetChanged();
-                        } catch (Exception e) {
-                            onError(e);
-                        }
-                    }
-                });
+            @Override
+            public void onSuccess(String json) {
+                try {
+                    List<PixabayImage> ganks = JsonUtils.parseList(json, "hits", PixabayImage.class);
+                    mAdapter.setList(ganks);
+                    mAdapter.notifyDataSetChanged();
+                } catch (Exception e) {
+                    onError(e);
+                }
+            }
+        });
     }
 
     public static void openBrowser(Context context, String url) {
         try {
-            new CustomTabsIntent.Builder()
-                    .setToolbarColor(ContextCompat.getColor(context, R.color.colorPrimary))
+            new CustomTabsIntent.Builder().setToolbarColor(ContextCompat.getColor(context, R.color.colorPrimary))
                     .build()
                     .launchUrl(context, Uri.parse(url));
         } catch (Exception ignore) {
-            AppUtils.openBrowser(context, url);
+            AppUtils.openBrowser(context, url, "unable open url");
         }
     }
 
@@ -194,20 +187,19 @@ public class GankListActivity extends CURxBaseActivity {
     }
 
     public class GankRecyclerViewHolder extends BaseRecyclerViewHolder<PixabayImage> {
-        ImageView image;
-        TextView content;
 
-        public GankRecyclerViewHolder(View itemView) {
-            super(itemView);
-            image = findViewById(R.id.gank_list_item_image);
-            content = findViewById(R.id.gank_list_item_content);
+        ViewGankListItemBinding itemBinding;
+
+        public GankRecyclerViewHolder(ViewGankListItemBinding itemView) {
+            super(itemView.getRoot());
+            itemBinding = itemView;
         }
 
         @SuppressLint("SetTextI18n")
         @Override
         public void onHandle(@Nullable PixabayImage item, int position) {
-            content.setText("Photo by " + item.getUser() + " on Pixabay");
-            GlideApp.with(itemView.getContext()).load(item.getPreviewURL()).into(image);
+            itemBinding.gankListItemContent.setText("Photo by " + item.getUser() + " on Pixabay");
+            GlideApp.with(itemView.getContext()).load(item.getPreviewURL()).into(itemBinding.gankListItemImage);
         }
     }
 
@@ -220,8 +212,8 @@ public class GankListActivity extends CURxBaseActivity {
         @NonNull
         @Override
         public GankRecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View inflate = inflate(R.layout.view_gank_list_item, parent);
-            return new GankRecyclerViewHolder(inflate);
+            return new GankRecyclerViewHolder(
+                    ViewGankListItemBinding.inflate(LayoutInflater.from(getContext()), parent, false));
         }
 
         @Override

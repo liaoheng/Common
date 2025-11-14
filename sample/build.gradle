@@ -1,61 +1,60 @@
 plugins {
-  id 'com.android.application'
+    alias(libs.plugins.android.application)
 }
 
 android {
-  namespace 'com.github.liaoheng.common.sample'
-  compileSdk rootProject.ext.compileSdkVersion
+    compileSdkVersion libs.versions.compileSdkVersion.get() as int
 
-  defaultConfig {
-    minSdkVersion rootProject.ext.minSdkVersion
-    targetSdkVersion rootProject.ext.targetSdkVersion
-    applicationId "com.github.liaoheng.common.sample"
-    versionCode 1
-    versionName "1.0"
-  }
-  buildTypes {
-    release {
-      minifyEnabled false
-      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    defaultConfig {
+        namespace "com.github.liaoheng.common.sample"
+        minSdk libs.versions.minSdk.get() as int
+        targetSdk libs.versions.targetSdk.get() as int
+        versionCode 1
+        versionName "1.0"
     }
-  }
-  testOptions {
-    unitTests {
-      includeAndroidResources = true
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
     }
-  }
-  composeOptions {
-    kotlinCompilerExtensionVersion = "1.4.3"
-  }
-  buildFeatures{
-    buildConfig = true
-  }
-  lint {
-    baseline = file("lint-baseline.xml")
-  }
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
+    buildFeatures {
+        viewBinding true
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
+    }
 }
 
 dependencies {
-  implementation fileTree(dir: 'libs', include: ['*.jar'])
-  testImplementation deps.junit
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    testImplementation libs.junit
 
-  implementation deps.recyclerview
-  implementation deps.browser
-  implementation deps.material
-  implementation deps.coordinatorlayout
+    implementation libs.androidx.appcompat
+    implementation libs.androidx.recyclerview
+    implementation libs.androidx.coordinatorlayout
+    implementation libs.androidx.browser
 
-  implementation deps.glide
-  annotationProcessor deps.glide_compiler
-  implementation deps.glide_okhttp3_integration
+    implementation libs.glide
+    annotationProcessor libs.glide.compiler
+    implementation libs.glide.okhttp3.integration
 
-  //https://stackoverflow.com/questions/75263047/duplicate-class-in-kotlin-android
-  implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.10"))
+    implementation libs.rxlifecycle4
+    implementation libs.rxlifecycle4.android
+    implementation libs.jackson.annotations
+    implementation libs.jackson.databind
+    implementation libs.jackson.core
+    implementation libs.rxandroid3
+    implementation libs.rxjava3
 
-
-//  api group: "com.github.liaoheng", name: "common-plus", version: "0.1.0-SNAPSHOT", changing: true
-  api project(':common-plus')
+    implementation project(':common-core')
+    implementation project(':common-ui')
+    implementation project(':common-adapter')
+    implementation project(':common-net')
 }
-//configurations.all {
-//  // check for updates every build
-//  resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
-//}

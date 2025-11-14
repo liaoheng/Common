@@ -1,44 +1,45 @@
 plugins {
-    id 'com.android.library'
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.maven.publish)
 }
 
 android {
-    namespace 'com.github.liaoheng.common'
-    compileSdk rootProject.ext.compileSdkVersion
+    compileSdkVersion libs.versions.compileSdkVersion.get() as int
 
     defaultConfig {
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
+        namespace "com.github.liaoheng"
+        minSdk libs.versions.minSdk.get() as int
+        targetSdk libs.versions.targetSdk.get() as int
     }
     testOptions {
         unitTests {
             includeAndroidResources = true
         }
     }
-    publishing {
-        singleVariant("release")
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
 dependencies {
-    testImplementation deps.robolectric
-    testImplementation deps.junit
-    testImplementation 'joda-time:joda-time:2.10.13'
+    testImplementation libs.robolectric
+    testImplementation libs.junit
+    testImplementation libs.joda.time
 
-    implementation deps.annotations
-    implementation deps.core
+    implementation libs.androidx.annotation
+    implementation libs.androidx.core
+    implementation libs.google.guava
+    implementation libs.joda.time.android
 
-    //https://github.com/orhanobut/logger
-    compileOnly 'com.orhanobut:logger:2.2.0'
-    compileOnly deps.guava
-    compileOnly deps.lifecycle_livedata
-    compileOnly deps.lifecycle_viewmodel
-    compileOnly deps.joda_time_android
-    compileOnly deps.jackson_annotations
-    compileOnly deps.jackson_databind
-    compileOnly deps.jackson_core
-    compileOnly deps.rxandroid3
-    compileOnly deps.rxjava3
+    compileOnly libs.jackson.annotations
+    compileOnly libs.jackson.databind
+    compileOnly libs.jackson.core
+    compileOnly libs.rxandroid3
+    compileOnly libs.rxjava3
 }
 
-apply from: rootProject.file('gradle-mvn-push.gradle')
+import com.vanniktech.maven.publish.AndroidSingleVariantLibrary
+mavenPublishing {
+    configure(new AndroidSingleVariantLibrary("release", true, false))
+}

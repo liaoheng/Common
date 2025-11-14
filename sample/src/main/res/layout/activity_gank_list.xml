@@ -5,7 +5,4 @@
              android:orientation="vertical">
 
     <include layout="@layout/lca_view_list" />
-
-    <include layout="@layout/lcu_view_load_status"/>
-
 </FrameLayout>
