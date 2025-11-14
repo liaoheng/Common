@@ -7,19 +7,16 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.github.liaoheng.common.adapter.base.BaseListAdapter;
-import com.github.liaoheng.common.adapter.base.BaseRecyclerAdapter;
-import com.github.liaoheng.common.adapter.base.IBaseAdapter;
-import com.github.liaoheng.common.adapter.holder.BaseRecyclerViewHolder;
-import com.github.liaoheng.common.adapter.widget.ListLinearLayout;
-import com.github.liaoheng.common.ui.base.CUBaseActivity;
-import com.github.liaoheng.common.util.UIUtils;
+import com.github.liaoheng.adapter.base.BaseListAdapter;
+import com.github.liaoheng.adapter.base.BaseRecyclerAdapter;
+import com.github.liaoheng.adapter.base.IBaseAdapter;
+import com.github.liaoheng.adapter.holder.BaseRecyclerViewHolder;
+import com.github.liaoheng.common.sample.databinding.ActivityListBinding;
+import com.github.liaoheng.ui.base.CUBaseActivity;
+import com.github.liaoheng.util.UIUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,9 +26,7 @@ import java.util.List;
  */
 public class ListActivity extends CUBaseActivity {
 
-    @BindView(R.id.list) ListLinearLayout list;
 
-    @OnClick(R.id.list_update)
     void update(){
 
         List<String> strings =new ArrayList<>();
@@ -47,7 +42,7 @@ public class ListActivity extends CUBaseActivity {
         //systemListAdapter.notifyDataSetChanged();
     }
 
-
+    ActivityListBinding mViewBinding;
 
     ListAdapter listAdapter;
 
@@ -57,9 +52,10 @@ public class ListActivity extends CUBaseActivity {
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_list);
-        ButterKnife.bind(this);
+        mViewBinding = ActivityListBinding.inflate(getLayoutInflater());
+        setContentView(mViewBinding.getRoot());
 
+        mViewBinding.listUpdate.setOnClickListener(v -> update());
 
         List<String> strings =new ArrayList<>();
         for (int i = 0; i < 5; i++) {
@@ -70,7 +66,7 @@ public class ListActivity extends CUBaseActivity {
 
          listAdapter = new ListAdapter(this, strings);
         recyclerAdapter = new RecyclerAdapter(this,strings);
-        list.setAdapter(recyclerAdapter,new IBaseAdapter.OnItemClickListener<String>() {
+        mViewBinding.list.setAdapter(recyclerAdapter,new IBaseAdapter.OnItemClickListener<String>() {
             @Override public void onItemClick(String item, View view, int position) {
                 UIUtils.showToast(getApplicationContext(),item);
             }

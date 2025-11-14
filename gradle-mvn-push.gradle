@@ -1,1 +1,0 @@
-apply from: 'https://raw.githubusercontent.com/liaoheng/gradle-mvn-push/master/gradle-mvn-push-android.gradle'

@@ -5,7 +5,7 @@ import android.content.Context;
 import com.bumptech.glide.GlideBuilder;
 import com.bumptech.glide.annotation.GlideModule;
 import com.bumptech.glide.module.AppGlideModule;
-import com.github.liaoheng.common.network.CNGlideModule;
+import com.github.liaoheng.network.CNGlideModule;
 
 import androidx.annotation.NonNull;
 

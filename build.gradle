@@ -1,26 +1,5 @@
-buildscript {
-    repositories {
-        mavenLocal()
-        google()
-        mavenCentral()
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:4.0.1'
-    }
+plugins {
+    alias(libs.plugins.android.application) apply false
+    alias(libs.plugins.android.library) apply false
+    alias(libs.plugins.maven.publish) apply false
 }
-
-allprojects {
-    repositories {
-        mavenLocal()
-        google()
-        mavenCentral()
-        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-        jcenter()
-    }
-}
-
-task clean(type: Delete) {
-    delete rootProject.buildDir
-}
-apply from: rootProject.file('dependencies.gradle')

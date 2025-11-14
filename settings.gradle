@@ -1,5 +1,24 @@
+pluginManagement {
+    repositories {
+        mavenLocal()
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+dependencyResolutionManagement {
+    //    repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
+    repositories {
+        mavenLocal()
+        google()
+        mavenCentral()
+        maven { url "https://central.sonatype.com/repository/maven-snapshots/" }
+        maven { url "https://jitpack.io" }
+    }
+}
+
+rootProject.name = "Common"
 include ':common-core'
-include ':common-plus'
 include ':common-adapter'
 include ':common-net'
 include ':common-ui'

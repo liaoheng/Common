@@ -1,0 +1,65 @@
+[versions]
+compileSdkVersion = "36"
+minSdk = "21"
+targetSdk = "36"
+
+agp = "8.13.1"
+maven_publish = "0.35.0"
+core = "1.17.0"
+annotation = "1.9.1"
+recyclerview = "1.4.0"
+coordinatorlayout = "1.1.0"
+swiperefreshlayout = "1.1.0"
+appcompat = "1.7.1"
+browser = "1.9.0"
+
+guava = "33.5.0-android"
+gson = "2.13.2"
+
+robolectric = "4.16"
+junit = "4.13.2"
+
+joda_time ="2.13.1"
+jackson = "2.19.4"
+glide = "5.0.5"
+okhttp = "5.3.0"
+rxjava = "3.1.12"
+rxandroid = "3.0.2"
+rxlifecycle = "4.0.2"
+
+[libraries]
+androidx-core = { group = "androidx.core", name = "core", version.ref = "core" }
+androidx-annotation = { group = "androidx.annotation", name = "annotation", version.ref = "annotation" }
+androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
+androidx-coordinatorlayout = { group = "androidx.coordinatorlayout", name = "coordinatorlayout", version.ref = "coordinatorlayout" }
+androidx-swiperefreshlayout = { group = "androidx.swiperefreshlayout", name = "swiperefreshlayout", version.ref = "swiperefreshlayout" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+androidx-browser = { group = "androidx.browser", name = "browser", version.ref = "browser" }
+
+google-guava = { group = "com.google.guava", name = "guava", version.ref = "guava" }
+google-gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
+
+#test
+robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+
+#third party
+joda-time= { group = "joda-time", name = "joda-time", version.ref = "joda_time" }
+joda-time-android= { group = "net.danlew", name = "android.joda", version.ref = "joda_time" }
+jackson-core= { group = "com.fasterxml.jackson.core", name = "jackson-core", version.ref = "jackson" }
+jackson-databind= { group = "com.fasterxml.jackson.core", name = "jackson-databind", version.ref = "jackson" }
+jackson-annotations= { group = "com.fasterxml.jackson.core", name = "jackson-annotations", version.ref = "jackson" }
+glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
+glide-compiler = { group = "com.github.bumptech.glide", name = "compiler", version.ref = "glide" }
+glide-okhttp3-integration = { group = "com.github.bumptech.glide", name = "okhttp3-integration", version.ref = "glide" }
+okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
+okhttp-logging = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
+rxjava3 = { group = "io.reactivex.rxjava3", name = "rxjava", version.ref = "rxjava" }
+rxandroid3 = { group = "io.reactivex.rxjava3", name = "rxandroid", version.ref = "rxandroid" }
+rxlifecycle4 = { group = "com.trello.rxlifecycle4", name = "rxlifecycle", version.ref = "rxlifecycle" }
+rxlifecycle4-android = { group = "com.trello.rxlifecycle4", name = "rxlifecycle-android-lifecycle", version.ref = "rxlifecycle" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+android-library = { id = "com.android.library", version.ref = "agp" }
+maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "maven_publish" }

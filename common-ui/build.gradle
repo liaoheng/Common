@@ -1,13 +1,15 @@
-apply plugin: 'com.android.library'
+plugins {
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.maven.publish)
+}
 
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
+    compileSdkVersion libs.versions.compileSdkVersion.get() as int
 
     defaultConfig {
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode VERSION_CODE as int
-        versionName VERSION_NAME
+        namespace "com.github.liaoheng.ui"
+        minSdk libs.versions.minSdk.get() as int
+        targetSdk libs.versions.targetSdk.get() as int
     }
     testOptions {
         unitTests {
@@ -21,23 +23,19 @@ android {
 }
 
 dependencies {
-    testImplementation deps.robolectric
-    testImplementation deps.junit
+    testImplementation libs.robolectric
+    testImplementation libs.junit
 
-    implementation deps.appcompat
+    implementation libs.androidx.appcompat
 
-    compileOnly deps.material
-    compileOnly deps.rxlifecycle3
-    compileOnly deps.rxlifecycle_android3
+    compileOnly libs.rxlifecycle4
+    compileOnly libs.rxlifecycle4.android
 
-//    implementation group: "com.github.liaoheng", name: "common-core", version: "0.1.0-SNAPSHOT", changing: true
     implementation project(':common-core')
-//    implementation group: "com.github.liaoheng", name: "common-adapter", version: "0.1.0-SNAPSHOT", changing: true
     implementation project(':common-adapter')
 }
-apply from: rootProject.file('gradle-mvn-push.gradle')
 
-//configurations.all {
-//  // check for updates every build
-//  resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
-//}
+import com.vanniktech.maven.publish.AndroidSingleVariantLibrary
+mavenPublishing {
+    configure(new AndroidSingleVariantLibrary("release", true, false))
+}

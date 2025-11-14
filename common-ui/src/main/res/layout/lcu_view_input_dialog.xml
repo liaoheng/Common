@@ -50,7 +50,7 @@
                     android:layout_height="36dp"
                     android:layout_marginRight="8dp"
                     android:background="?selectableItemBackground"
-                    android:text="@string/lcm_no"
+                    android:text="@android:string/no"
                     android:textColor="?colorAccent" />
 
             <Button
@@ -60,7 +60,7 @@
                     android:layout_height="36dp"
                     android:layout_marginRight="8dp"
                     android:background="?selectableItemBackground"
-                    android:text="@string/lcm_ok"
+                    android:text="@android:string/ok"
                     android:textColor="?colorAccent" />
         </LinearLayout>
     </LinearLayout>
