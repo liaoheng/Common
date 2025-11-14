@@ -8,7 +8,7 @@ on:
 jobs:
   build-and-push-release:
     runs-on: ubuntu-latest
-    if: github.ref_type == 'tag' && github.base_ref == 'refs/heads/master'
+    if: github.ref_type == 'tag'
 
     steps:
       - name: Checkout code
